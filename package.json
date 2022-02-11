@@ -1,5 +1,8 @@
 {
   "name": "incept-front-webapp",
+  "engines": {
+    "node": ">= 14.18.1"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +23,7 @@
     "react-query": "^3.34.14"
   },
   "devDependencies": {
+    "@emotion/babel-plugin": "^11.7.2",
     "@types/node": "17.0.17",
     "@types/react": "17.0.39",
     "eslint": "8.8.0",
