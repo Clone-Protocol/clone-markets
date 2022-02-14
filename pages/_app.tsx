@@ -3,6 +3,8 @@ import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '~/theme'
 import GNB from '~/components/GNB'
+import Drawer from '~/components/Drawer'
+import Box from '@mui/material/Box';
 import { SnackbarProvider } from 'notistack'
 import { NextPage } from 'next'
 import React, { ReactElement, ReactNode } from 'react'
@@ -12,12 +14,24 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <GNB />
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <GNB />
+        <Drawer />
 
-      <SnackbarProvider maxSnack={3}>
-        {getLayout(<Component {...pageProps} />)}
-      </SnackbarProvider>
+        <SnackbarProvider maxSnack={3}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              height: '100vh',
+              overflow: 'auto',
+            }}
+          >
+            {getLayout(<Component {...pageProps} />)}
+          </Box>
+        </SnackbarProvider>
+      </Box>
     </ThemeProvider>
   )
 }

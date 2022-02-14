@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Tab from '@mui/material/Tab'
@@ -53,9 +55,9 @@ const GNB: React.FC = () => {
 			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth="xl">
 					<Toolbar disableGutters>
-						<h2>Incept Protocol</h2>
+						<h2>Incept</h2>
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
-							{isDesktop && (
+							{/* {isDesktop && (
 								<StyledTabs
 									TabIndicatorProps={{ children: <div /> }}
 									classes={classes}
@@ -65,7 +67,7 @@ const GNB: React.FC = () => {
 										<Tab key={route.label} label={route.label} value={route.path} />
 									))}
 								</StyledTabs>
-							)}
+							)} */}
 						</Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
@@ -86,7 +88,9 @@ export default withCsrOnly(GNB)
 
 const RightMenu = () => {
   return (
-    <Box display="flex">Connect</Box>
+    <Box display="flex">
+      <Button variant="outlined" startIcon={<AccountBalanceWalletOutlinedIcon />}>Connect Wallet</Button>
+    </Box>
   )
 }
 
