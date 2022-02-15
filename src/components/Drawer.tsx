@@ -30,18 +30,22 @@ const Drawer: React.FC = () => {
             <ListItemText primary="iPortfolio" />
           </ListItemButton>
         </Link>
-        <ListItemButton>
-          <ListItemIcon>
-            <BarChartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Markets" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Swap" />
-        </ListItemButton>
+        <Link href="/markets">
+          <ListItemButton>
+            <ListItemIcon>
+              <BarChartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Markets" />
+          </ListItemButton>
+        </Link>
+        <Link href="/swap">
+          <ListItemButton>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Swap" />
+          </ListItemButton>
+        </Link>
       </List>
     </StyledDrawer>
   )

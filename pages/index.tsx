@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
 import { Container } from '@mui/material'
+import WelcomeMsg from '~/components/Home/WelcomeMsg'
 
 const Home: NextPage = () => {
   return (
@@ -17,7 +18,7 @@ const Home: NextPage = () => {
           backgroundColor: '#FAFAFA',
         }}>
           <Container>
-            Home
+            <WelcomeMsg />
           </Container>
         </StyledSection>
       </main>

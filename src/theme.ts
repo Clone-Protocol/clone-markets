@@ -86,6 +86,7 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 	},
 	typography: {
 		fontFamily: [
+      'Montserrat',
 			'Pretendard',
 			'-apple-system',
 			'BlinkMacSystemFont',
