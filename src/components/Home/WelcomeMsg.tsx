@@ -22,6 +22,10 @@ const StyledPaper = styled(Paper)`
   letter-spacing: normal;
   text-align: center;
   color: #606060;
+  padding: 17px 37px 17px 46px;
+  border-radius: 8px;
+  box-shadow: 0 0 7px 3px #ebedf2;
+  border: solid 1px #e4e9ed;
 `
 
 export default WelcomeMsg
