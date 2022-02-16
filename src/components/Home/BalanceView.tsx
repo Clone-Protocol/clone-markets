@@ -1,7 +1,4 @@
-import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
-import { styled } from '@mui/material'
+import { styled, Box, Divider, Paper } from '@mui/material'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
 const BalanceView: React.FC = () => {

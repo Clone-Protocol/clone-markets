@@ -1,8 +1,9 @@
 import * as React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Typography from '@mui/material/Typography'
+import { styled } from '@mui/system'
 import Container from '@mui/material/Container'
+import TradingBox from '~/components/Markets/TradingBox'
 
 const MarketsPage: NextPage = () => {
 	return (
@@ -11,12 +12,25 @@ const MarketsPage: NextPage = () => {
 				<title>Markets</title>
 			</Head>
 			<main>
-				<Container>
-					<Typography variant="h1">Markets Page</Typography>
-				</Container>
+        <StyledSection sx={{
+          backgroundColor: '#FAFAFA',
+        }}>
+          <Container>
+            <TradingBox />
+          </Container>
+        </StyledSection>
 			</main>
 		</div>
 	)
 }
+
+const StyledSection = styled('section')`
+	${(props) => props.theme.breakpoints.up('md')} {
+		padding-top: 100px;
+	}
+	${(props) => props.theme.breakpoints.down('md')} {
+		padding: 50px 0px;
+	}
+`
 
 export default MarketsPage
