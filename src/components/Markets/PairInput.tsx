@@ -1,13 +1,13 @@
 import { FormControl, Input, InputAdornment, InputLabel, styled } from '@mui/material'
-import { withCsrOnly } from '~/hocs/CsrOnly'
 
 interface Props {
   title: string | null,
   ticker: string | null,
-  onChange: () => void
+  value?: number,
+  onChange?: () => void
 }
 
-const PairInput: React.FC<Props> = ({ title, ticker, onChange }) => {
+const PairInput: React.FC<Props> = ({ title, ticker, value, onChange }) => {
   
   return (
     <FormControl variant='standard'>
@@ -21,10 +21,12 @@ const PairInput: React.FC<Props> = ({ title, ticker, onChange }) => {
             <>{ticker}</>
           </InputAdornment>
         }
+        type='number'
+        value={value}
         onChange={onChange}
         />
     </FormControl>
   )
 }
 
-export default withCsrOnly(PairInput)
+export default PairInput
