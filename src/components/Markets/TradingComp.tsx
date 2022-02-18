@@ -1,11 +1,16 @@
-import { styled, Tab, Tabs, Paper, Stack, Button } from '@mui/material'
+import { styled, Tab, Tabs, Box, Stack, Button } from '@mui/material'
 import React, { useState } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import BrightnessLowIcon from '@mui/icons-material/BrightnessLow'
 
-const TradingBox: React.FC = () => {
+interface Props {
+  onShowOption: () => void
+  onReviewOrder: () => void
+}
+
+const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
   const [tabIdx, setTabIdx] = useState(0)
   const [fromAmount, setFromAmount] = useState(0.0)
   const [convertVal, setConvertVal] = useState(50)
@@ -30,48 +35,40 @@ const TradingBox: React.FC = () => {
   }
 
   return (
-    <StyledPaper variant="outlined">
+    <Box sx={{
+      p: '20px'
+    }}>
       <StyledTabs value={tabIdx} onChange={handleChangeTab}>
         <Tab label="Buy"></Tab>
         <Tab label="Sell"></Tab>
       </StyledTabs>
-      <div>
+      <Box sx={{marginTop: '30px'}}>
         <PairInput title="How much?" ticker="iSOL" onChange={handleChangeAmount} />
-      </div>
+      </Box>
 
-      <div>
+      <Box sx={{marginTop: '30px', marginBottom: '30px'}}>
         <ConvertSlider value={convertVal} onChange={handleChangeConvert} />
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <PairInput title="Total" ticker="USDi" value={fromAmount} />
-      </div>
+      </Box>
 
       <Stack
         direction="row"
         justifyContent="flex-end"
         alignItems="center"
         spacing={2}
+        sx={{marginTop: '16px', marginBottom: '16px'}}
       >
         <IconButton size="small"><RefreshIcon /></IconButton>
-        <IconButton size="small"><BrightnessLowIcon /></IconButton>
+        <IconButton size="small" onClick={onShowOption}><BrightnessLowIcon /></IconButton>
       </Stack>
 
-      <ActionButton>Review Order</ActionButton>
-    </StyledPaper>
+      <ActionButton onClick={onReviewOrder}>Review Order</ActionButton>
+    </Box>
   )
 }
-
-const StyledPaper = styled(Paper)`
-  font-size: 14px;
-  font-weight: 500; 
-  text-align: center;
-  color: #606060;
-  padding: 48px 53px 51px 49px;
-  border-radius: 8px;
-  box-shadow: 0 0 7px 3px #ebedf2;
-  border: solid 1px #e4e9ed;
-`
 
 const StyledTabs = styled(Tabs)`
 
@@ -83,8 +80,11 @@ const IconButton = styled(Button)`
 `
 
 const ActionButton = styled(Button)`
+  width: 100%;
   background: #3461ff;
   color: #fff;
+  border-radius: 8px;
+  margin-bottom: 15px;
 `
 
-export default TradingBox
+export default TradingComp

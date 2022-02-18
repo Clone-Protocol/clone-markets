@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
 import Container from '@mui/material/Container'
-import TradingBox from '~/components/Markets/TradingBox'
+import TradingBox from '~/containers/Markets/TradingBox'
 
 const MarketsPage: NextPage = () => {
 	return (

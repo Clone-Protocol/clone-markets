@@ -1,4 +1,4 @@
-import { Box, FormControl, Input, InputAdornment, InputLabel, Slider, styled } from '@mui/material'
+import { Box, Slider, styled } from '@mui/material'
 
 interface Props {
   value: number,
@@ -12,7 +12,9 @@ const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
   }
 
   return (
-    <FormControl variant='standard'>
+    <Box sx={{
+      display: 'flex'
+    }}>
       <Box>{valueLabelFormat(value)}</Box>
       <Slider
         value={value}
@@ -23,7 +25,7 @@ const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
         onChange={onChange}
         valueLabelDisplay="auto"
       />
-    </FormControl>
+    </Box>
   )
 }
 
