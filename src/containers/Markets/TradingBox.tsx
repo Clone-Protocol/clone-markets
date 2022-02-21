@@ -1,29 +1,45 @@
 import { Box, Paper, styled } from '@mui/material'
 import { useState } from 'react'
-import OrderSetting from '~/components/Markets/OrderSetting'
-import ReviewOrder from '~/components/Markets/ReviewOrder'
-import TradingComp from '~/components/Markets/TradingComp'
+import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
+import ReviewOrder from '~/components/Markets/TradingBox/ReviewOrder'
+import TradingComp from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
 
 const TradingBox: React.FC = () => {
   const [showTradingComp, setShowTradingComp] = useState(true)
   const [showReviewOrder, setShowReviewOrder] = useState(true)
-  const [showOrderSetting, setOrderSetting] = useState(true)
+  const [showOrderSetting, setShowOrderSetting] = useState(true)
+
+  enum Section {
+    TradingComp,
+    ReviewOrder,
+    OrderSetting
+  }
+
+  const showSection = (section: Section) => {
+    switch(section) {
+      case Section.TradingComp:
+        setShowOrderSetting(false)
+        setShowReviewOrder(false)
+        setShowTradingComp(true)
+      break;
+      case Section.ReviewOrder:
+        setShowOrderSetting(false)
+        setShowReviewOrder(true)
+        setShowTradingComp(false)
+      break;
+      case Section.OrderSetting:
+        setShowOrderSetting(true)
+        setShowReviewOrder(false)
+        setShowTradingComp(false)
+      break;
+    }
+
+  }
 
   const onSetting = (slippage: number) => {
     console.log('slippage', slippage)
-    setOrderSetting(false)
-    setShowTradingComp(true)
-  }
-
-  const onShowOption = () => {
-    setShowTradingComp(false)
-    setOrderSetting(true)
-  }
-
-  const onReviewOrder = () => {
-    setShowTradingComp(false)
-    setShowReviewOrder(true)
+    showSection(Section.TradingComp)
   }
 
   const onConfirm = () => {
@@ -33,10 +49,10 @@ const TradingBox: React.FC = () => {
   return (
     <StyledPaper variant="outlined">
       {showTradingComp &&
-        <TradingComp onShowOption={onShowOption} onReviewOrder={onReviewOrder} /> 
+        <TradingComp onShowOption={() => showSection(Section.OrderSetting)} onReviewOrder={() => showSection(Section.ReviewOrder)} /> 
       }
       {showReviewOrder &&
-        <ReviewOrder onConfirm={onConfirm} />
+        <ReviewOrder onConfirm={onConfirm} onCancel={() => showSection(Section.TradingComp)} />
       }
       {showOrderSetting &&
         <OrderSetting onSetting={onSetting} />

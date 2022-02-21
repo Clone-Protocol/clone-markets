@@ -89,7 +89,9 @@ export default withCsrOnly(GNB)
 const RightMenu = () => {
   return (
     <Box display="flex">
+      <Button variant="outlined">Get USDi</Button>
       <Button variant="outlined" startIcon={<AccountBalanceWalletOutlinedIcon />}>Connect Wallet</Button>
+      <Button variant="outlined">...</Button>
     </Box>
   )
 }

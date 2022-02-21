@@ -1,17 +1,18 @@
 import { Box, Stack, Button, styled, Divider } from '@mui/material'
 
 interface Props {
-  onConfirm: () => void
+  onConfirm: () => void,
+  onCancel: () => void,
 }
 
-const ReviewOrder: React.FC<Props> = ({ onConfirm }) => {
+const ReviewOrder: React.FC<Props> = ({ onConfirm, onCancel }) => {
   
   return (
     <Box sx={{
       p: '20px'
     }}>
       <StyledStack direction="row" justifyContent="space-between">
-        <div>{'<'}</div>
+        <div onClick={onCancel}>{'<'}</div>
         <div>Sell iSOL</div>
         <div></div>
       </StyledStack>
