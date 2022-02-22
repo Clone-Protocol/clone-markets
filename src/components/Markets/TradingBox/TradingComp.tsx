@@ -2,8 +2,10 @@ import { styled, Tab, Tabs, Box, Stack, Button } from '@mui/material'
 import React, { useState } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
-import RefreshIcon from '@mui/icons-material/Refresh'
-import BrightnessLowIcon from '@mui/icons-material/BrightnessLow'
+import Image from 'next/image'
+import reloadIcon from '../../../../public/images/reload-icon.png'
+import settingsIcon from '../../../../public/images/settings-icon.png'
+
 
 interface Props {
   onShowOption: () => void
@@ -36,14 +38,15 @@ const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
 
   return (
     <Box sx={{
-      p: '20px'
+      p: '20px',
+      maxWidth: '325px'
     }}>
       <StyledTabs value={tabIdx} onChange={handleChangeTab}>
         <Tab label="Buy"></Tab>
         <Tab label="Sell"></Tab>
       </StyledTabs>
       <Box sx={{marginTop: '30px'}}>
-        <PairInput title="How much?" ticker="iSOL" onChange={handleChangeAmount} />
+        <PairInput title="How much?" tickerIcon={reloadIcon} ticker="iSOL" onChange={handleChangeAmount} />
       </Box>
 
       <Box sx={{marginTop: '30px', marginBottom: '30px'}}>
@@ -51,7 +54,7 @@ const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
       </Box>
 
       <Box>
-        <PairInput title="Total" ticker="USDi" value={fromAmount} />
+        <PairInput title="Total" tickerIcon={settingsIcon} ticker="USDi" value={fromAmount} />
       </Box>
 
       <Stack
@@ -61,8 +64,8 @@ const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
         spacing={2}
         sx={{marginTop: '16px', marginBottom: '16px'}}
       >
-        <IconButton size="small"><RefreshIcon /></IconButton>
-        <IconButton size="small" onClick={onShowOption}><BrightnessLowIcon /></IconButton>
+        <IconButton size="small"><Image src={reloadIcon} alt="reload" /></IconButton>
+        <IconButton size="small" onClick={onShowOption}><Image src={settingsIcon} alt="settings" /></IconButton>
       </Stack>
 
       <ActionButton onClick={onReviewOrder}>Review Order</ActionButton>

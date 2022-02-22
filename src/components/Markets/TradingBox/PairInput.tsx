@@ -1,13 +1,15 @@
 import { FormControl, Input, InputAdornment, InputLabel, styled } from '@mui/material'
+import Image from 'next/image'
 
 interface Props {
   title: string | null,
+  tickerIcon: string,
   ticker: string | null,
   value?: number,
   onChange?: () => void
 }
 
-const PairInput: React.FC<Props> = ({ title, ticker, value, onChange }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, value, onChange }) => {
   
   return (
     <FormControl variant='standard'>
@@ -18,6 +20,7 @@ const PairInput: React.FC<Props> = ({ title, ticker, value, onChange }) => {
         id="ip-amount"
         startAdornment={
           <InputAdornment position="start">
+            <><Image src={tickerIcon} width="26px" height="26px" /></>
             <>{ticker}</>
           </InputAdornment>
         }
