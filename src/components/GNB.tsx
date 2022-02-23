@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
+import Image from 'next/image'
+import logoIcon from '../../public/images/incept-logo.png'
+import walletIcon from '../../public/images/wallet-icon.png'
 import { IconButton, styled, Theme, useMediaQuery } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { GNB_ROUTES } from '~/routes'
@@ -30,11 +32,11 @@ const GNB: React.FC = () => {
 		return pathname.split('/').slice(0, 2).join('/')
 	}, [pathname])
 
-	const handleChange = (_: React.SyntheticEvent, path: string) => {
-		if (firstPathname === path) return
-		setPath(path)
-		push({ pathname: path })
-	}
+	// const handleChange = (_: React.SyntheticEvent, path: string) => {
+	// 	if (firstPathname === path) return
+	// 	setPath(path)
+	// 	push({ pathname: path })
+	// }
 
 	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 
@@ -55,7 +57,7 @@ const GNB: React.FC = () => {
 			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth="xl">
 					<Toolbar disableGutters>
-						<h2>Incept</h2>
+						<Image src={logoIcon} alt="incept" />
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
 							{/* {isDesktop && (
 								<StyledTabs
@@ -89,9 +91,9 @@ export default withCsrOnly(GNB)
 const RightMenu = () => {
   return (
     <Box display="flex">
-      <Button variant="outlined">Get USDi</Button>
-      <Button variant="outlined" startIcon={<AccountBalanceWalletOutlinedIcon />}>Connect Wallet</Button>
-      <Button variant="outlined">...</Button>
+      <Button variant="outlined" sx={{marginRight: '16px'}}>Get USDi</Button>
+      <Button variant="outlined" startIcon={<Image src={walletIcon} alt="wallet" />}>Connect Wallet</Button>
+      {/* <Button variant="outlined">...</Button> */}
     </Box>
   )
 }

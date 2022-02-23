@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
+import Swap from '~/containers/Swap'
 
 const Swap: NextPage = () => {
 	return (
@@ -13,6 +14,7 @@ const Swap: NextPage = () => {
 			<main>
 				<Container>
 					<Typography variant="h1">Swap Page</Typography>
+          <Swap />
 				</Container>
 			</main>
 		</div>

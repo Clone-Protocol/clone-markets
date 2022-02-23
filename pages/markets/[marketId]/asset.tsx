@@ -5,11 +5,11 @@ import { styled } from '@mui/system'
 import Container from '@mui/material/Container'
 import TradingBox from '~/containers/Markets/TradingBox'
 
-const MarketsPage: NextPage = () => {
+const AssetPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Markets</title>
+				<title>Asset</title>
 			</Head>
 			<main>
         <StyledSection sx={{
@@ -33,4 +33,4 @@ const StyledSection = styled('section')`
 	}
 `
 
-export default MarketsPage
+export default AssetPage
