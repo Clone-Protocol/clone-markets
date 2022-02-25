@@ -1,15 +1,11 @@
 import MuiDrawer from '@mui/material/Drawer';
-import { styled } from '@mui/material'
+import { styled, List, ListItemButton, ListItemIcon, ListItemText, Box, Stack } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
 import menuHomeIcon from '../../public/images/menu/home-icon.png'
 import menuPortfolioIcon from '../../public/images/menu/portfolio-icon.png'
 import menuMarketIcon from '../../public/images/menu/market-icon.png'
 import menuSwapIcon from '../../public/images/menu/swap-icon.png'
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
 const Drawer: React.FC = () => {
@@ -19,37 +15,41 @@ const Drawer: React.FC = () => {
       <List component="nav">
         <Link href="/">
           <ListItemButton>
-            <ListItemIcon>
+            <ListItemIcon sx={{ marginLeft: '20px'}}>
               <Image src={menuHomeIcon} alt="home" />
             </ListItemIcon>
-            <ListItemText primary="Home" />
+            <StyledListItemText>Home</StyledListItemText>
           </ListItemButton>
         </Link>
         <Link href="/iportfolio">
           <ListItemButton>
-            <ListItemIcon>
+            <ListItemIcon sx={{ marginLeft: '20px'}}>
               <Image src={menuPortfolioIcon} alt="portfolio" />
             </ListItemIcon>
-            <ListItemText primary="iPortfolio" />
+            <StyledListItemText>iPortfolio</StyledListItemText>
           </ListItemButton>
         </Link>
         <Link href="/markets">
           <ListItemButton>
-            <ListItemIcon>
+            <ListItemIcon sx={{ marginLeft: '20px'}}>
               <Image src={menuMarketIcon} alt="markets" />
             </ListItemIcon>
-            <ListItemText primary="Markets" />
+            <StyledListItemText>Markets</StyledListItemText>
           </ListItemButton>
         </Link>
         <Link href="/swap">
           <ListItemButton>
-            <ListItemIcon>
+            <ListItemIcon sx={{ marginLeft: '20px'}}>
               <Image src={menuSwapIcon} alt="swap" />
             </ListItemIcon>
-            <ListItemText primary="Swap" />
+            <StyledListItemText>Swap</StyledListItemText>
           </ListItemButton>
         </Link>
       </List>
+      <Stack sx={{ position: 'absolute', left: '35px', bottom: '15px', fontSize: '12px', color: '#6c6c6c', textAlign: 'center' }} spacing={2}>
+        <div>V1: Polaris Devnet</div>
+        <div>© Incept 2022</div>
+      </Stack>
     </StyledDrawer>
   )
 }
@@ -61,7 +61,7 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
     '& .MuiDrawer-paper': {
       position: 'relative',
       whiteSpace: 'nowrap',
-      width: 240,
+      width: 206,
       marginTop: 100,
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
@@ -82,3 +82,10 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
     },
   }),
 )
+
+const StyledListItemText = styled(Box)`
+  font-size: 14px;
+  font-weight: 600;
+  height: 44px;
+  line-height: 44px;
+`

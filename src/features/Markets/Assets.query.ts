@@ -6,10 +6,19 @@ const fetchAssets = async ({ filter }: GetAssetsProps) => {
       id: 1,
       tickerName: 'iSolana',
       tickerSymbol: 'iSOL',
-      tickerIcon: '',
+      tickerIcon: '/images/assets/ethereum-eth-logo.svg',
       price: 160.51,
       change24h: 2.551,
       changePercent: 1.58
+    },
+    {
+      id: 2,
+      tickerName: 'iEthereum',
+      tickerSymbol: 'iETH',
+      tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+      price: 2300.53,
+      change24h: -46.842,
+      changePercent: -2.04
     }
   ]
   return result

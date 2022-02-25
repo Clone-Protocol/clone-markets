@@ -4,8 +4,8 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
+// import Tab from '@mui/material/Tab'
+// import Tabs from '@mui/material/Tabs'
 import Image from 'next/image'
 import logoIcon from '../../public/images/incept-logo.png'
 import walletIcon from '../../public/images/wallet-icon.png'
@@ -56,7 +56,7 @@ const GNB: React.FC = () => {
 			<NavPlaceholder />
 			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth="xl">
-					<Toolbar disableGutters>
+					<Toolbar disableGutters sx={{ paddingLeft: '10px' }}>
 						<Image src={logoIcon} alt="incept" />
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
 							{/* {isDesktop && (
@@ -91,8 +91,8 @@ export default withCsrOnly(GNB)
 const RightMenu = () => {
   return (
     <Box display="flex">
-      <Button variant="outlined" sx={{marginRight: '16px'}}>Get USDi</Button>
-      <Button variant="outlined" startIcon={<Image src={walletIcon} alt="wallet" />}>Connect Wallet</Button>
+      <HeaderButton variant="outlined" sx={{width: '86px', marginRight: '16px'}}>Get USDi</HeaderButton>
+      <HeaderButton variant="outlined" sx={{width: '163px'}} startIcon={<Image src={walletIcon} alt="wallet" />}>Connect Wallet</HeaderButton>
       {/* <Button variant="outlined">...</Button> */}
     </Box>
   )
@@ -137,21 +137,30 @@ const NavPlaceholder = styled('div')`
 	}
 `
 
-const StyledTabs = styled(Tabs)`
-	&:first-of-type {
-		padding-left: 0px;
-		margin-left: 40px;
-	}
-	.MuiTab-root {
-		height: 100%;
-		font-weight: bold;
-		font-size: 15px;
-		padding: 0px 20px;
-		&:not(.Mui-selected) {
-			color: #ffffff;
-		}
-	}
+// const StyledTabs = styled(Tabs)`
+// 	&:first-of-type {
+// 		padding-left: 0px;
+// 		margin-left: 40px;
+// 	}
+// 	.MuiTab-root {
+// 		height: 100%;
+// 		font-weight: bold;
+// 		font-size: 15px;
+// 		padding: 0px 20px;
+// 		&:not(.Mui-selected) {
+// 			color: #ffffff;
+// 		}
+// 	}
+// `
+
+const HeaderButton = styled(Button)`
+  padding: 14px 11px 12px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  height: 41px;
 `
+
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
 	indicator: {
