@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { styled } from '@mui/system'
 import { Container } from '@mui/material'
 import WelcomeMsg from '~/components/Home/WelcomeMsg'
-import BalanceView from '~/components/Home/BalanceView'
+import BalanceComp from '~/containers/Home/BalanceComp'
 
 const Home: NextPage = () => {
   return (
@@ -20,7 +20,7 @@ const Home: NextPage = () => {
         }}>
           <Container>
             <WelcomeMsg />
-            <BalanceView />
+            <BalanceComp />
           </Container>
         </StyledSection>
       </main>
