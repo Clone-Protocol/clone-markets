@@ -2,7 +2,7 @@ import * as React from 'react'
 import type { NextPage } from 'next'
 import { styled } from '@mui/system'
 import Head from 'next/head'
-import Container from '@mui/material/Container'
+import { Container, Box } from '@mui/material'
 import BalanceView from '~/containers/Home/BalanceView'
 import BalanceList from '~/containers/Portfolio/BalanceList'
 
@@ -18,7 +18,9 @@ const IportfolioPage: NextPage = () => {
         }}>
           <Container>
             <BalanceView />
-            <BalanceList />
+            <Box sx={{ marginTop: '58px' }}>
+              <BalanceList />
+            </Box>
           </Container>
         </StyledSection>
 			</main>

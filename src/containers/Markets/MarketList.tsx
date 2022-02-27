@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useState } from 'react'
 import { FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
-
+import Link from 'next/link'
 
 const MarketList = () => {
   const [filter, setFilter] = useState<FilterType>('all')
@@ -32,6 +32,9 @@ const MarketList = () => {
 				</RadioGroup>
       </Stack>
       <DataGrid
+        sx={{
+          border: 0
+        }}
 				disableColumnFilter
 				disableSelectionOnClick
 				disableColumnSelector
@@ -94,9 +97,9 @@ let columns: GridColDef[] = [
     flex: 1, 
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <Button variant="outlined">
-          Trade
-        </Button>
+        <Link href="/markets/1/asset">
+          <TradeButton>Trade</TradeButton>
+        </Link>
       )
     }
   },
@@ -111,6 +114,15 @@ const ChangePriceMinus = styled(Box)`
   font-size: 14px;
   font-weight: 500;
   color: #c94738;
+`
+
+const TradeButton = styled(Button)`
+  border-radius: 8px;
+  background-color: rgba(235, 237, 242, 0.97);
+  font-size: 12px;
+  font-weight: 600;
+  width: 100px;
+  height: 30px;
 `
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, resizable: true, filterable: false }))

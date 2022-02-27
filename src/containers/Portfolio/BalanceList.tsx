@@ -19,6 +19,7 @@ const BalanceList = () => {
 
   return (
     <>
+      <Box sx={{fontSize: '20px', fontWeight: '600', marginBottom: '30px'}}>Balance</Box>
       <Stack mb={2} direction="row" justifyContent="space-between">
         <RadioGroup row value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
@@ -32,6 +33,9 @@ const BalanceList = () => {
 				</RadioGroup>
       </Stack>
       <DataGrid
+        sx={{
+          border: 0
+        }}
 				disableColumnFilter
 				disableSelectionOnClick
 				disableColumnSelector
@@ -86,9 +90,9 @@ let columns: GridColDef[] = [
     flex: 1, 
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <Button variant="outlined">
+        <TradeButton>
           Trade
-        </Button>
+        </TradeButton>
       )
     }
   },
@@ -103,6 +107,15 @@ const ChangePriceMinus = styled(Box)`
   font-size: 12px;
   font-weight: 500;
   color: #c94738;
+`
+
+const TradeButton = styled(Button)`
+  border-radius: 8px;
+  background-color: rgba(235, 237, 242, 0.97);
+  font-size: 12px;
+  font-weight: 600;
+  width: 100px;
+  height: 30px;
 `
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, resizable: true, filterable: false }))

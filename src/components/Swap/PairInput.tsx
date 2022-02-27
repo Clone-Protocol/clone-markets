@@ -1,27 +1,28 @@
-import { FormControl, Input, InputAdornment, InputLabel, Stack, Box, styled } from '@mui/material'
+import { FormControl, Input, InputAdornment, InputLabel, styled, Stack, Box } from '@mui/material'
 import Image from 'next/image'
 
 interface Props {
   title: string | null,
   tickerIcon: string,
-  ticker: string | null,
+  tickerName: string | null,
+  tickerSymbol: string | null,
   value?: number,
   onChange?: () => void
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, value, onChange }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, tickerName, tickerSymbol, value, onChange }) => {
   
   return (
     <FormControl variant='standard'>
-      <Stack direction="row" justifyContent="space-between" sx={{ fontSize: '12px', fontWeight: '500' }}>
-        <Box>{title}</Box>
-        <Box>Balance: _</Box>
+      <Stack direction="row" justifyContent="flex-end">
+        <Box sx={{ fontSize: '12px', fontWeight: '500' }}>Balance: _</Box>
       </Stack>
       <FormStack direction="row" justifyContent="space-between" alignItems="center">
         <Box display="flex">
           <Image src={tickerIcon} width="28px" height="28px" />
           <Box sx={{ width: '100px', marginLeft: '8px', textAlign: 'left' }}>
-            <div>{ticker}</div>
+            <TickerSymbol>{tickerSymbol}</TickerSymbol>
+            <TickerName>{tickerName}</TickerName>
           </Box>
         </Box>
         <InputAmount
@@ -38,14 +39,26 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, value, onChange
 const FormStack = styled(Stack)`
   display: flex;
   width: 100%;
-  height: 55px;
-  padding: 15px 15px 14px 14px;
+  height: 65px;
+  padding: 15px 25px 14px 34px;
   border-radius: 8px;
   background-color: #ebedf2;
 `
 
+const TickerSymbol = styled('div')`
+  font-size: 15px;
+  font-weight: 600;
+`
+
+const TickerName = styled('div')`
+  color: #757a7f;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 5px;
+`
+
 const InputAmount = styled(`input`)`
-  width: 150px;
+  width: 330px;
   margin-left: 30px;
   text-align: right;
   border: 0px;

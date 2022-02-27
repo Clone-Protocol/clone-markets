@@ -7,8 +7,8 @@ import withSuspense from '~/hocs/withSuspense'
 
 const TradingBox: React.FC = () => {
   const [showTradingComp, setShowTradingComp] = useState(true)
-  const [showReviewOrder, setShowReviewOrder] = useState(true)
-  const [showOrderSetting, setShowOrderSetting] = useState(true)
+  const [showReviewOrder, setShowReviewOrder] = useState(false)
+  const [showOrderSetting, setShowOrderSetting] = useState(false)
 
   enum Section {
     TradingComp,

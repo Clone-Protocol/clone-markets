@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
-import { Container } from '@mui/material'
+import { Container, Box } from '@mui/material'
 import WelcomeMsg from '~/components/Home/WelcomeMsg'
-import BalanceComp from '~/containers/Home/BalanceComp'
+import BalanceView from '~/containers/Home/BalanceView'
 
 const Home: NextPage = () => {
   return (
@@ -20,7 +20,9 @@ const Home: NextPage = () => {
         }}>
           <Container>
             <WelcomeMsg />
-            <BalanceComp />
+            <Box sx={{ marginTop: '40px' }}>
+              <BalanceView />
+            </Box>
           </Container>
         </StyledSection>
       </main>

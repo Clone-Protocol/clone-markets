@@ -38,8 +38,7 @@ const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
 
   return (
     <Box sx={{
-      p: '20px',
-      maxWidth: '325px'
+      p: '20px'      
     }}>
       <StyledTabs value={tabIdx} onChange={handleChangeTab}>
         <Tab label="Buy"></Tab>
