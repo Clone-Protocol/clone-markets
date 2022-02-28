@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
 import Container from '@mui/material/Container'
+import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
 
 const AssetPage: NextPage = () => {
@@ -16,6 +17,7 @@ const AssetPage: NextPage = () => {
           backgroundColor: '#FAFAFA',
         }}>
           <Container>
+            <MarketDetail />
             <TradingBox />
           </Container>
         </StyledSection>
