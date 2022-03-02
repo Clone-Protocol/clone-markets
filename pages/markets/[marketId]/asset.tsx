@@ -2,9 +2,9 @@ import * as React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
-import Container from '@mui/material/Container'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
+import { Grid } from '@mui/material'
 
 const AssetPage: NextPage = () => {
 	return (
@@ -13,14 +13,19 @@ const AssetPage: NextPage = () => {
 				<title>Asset</title>
 			</Head>
 			<main>
-        <StyledSection sx={{
-          backgroundColor: '#FAFAFA',
-        }}>
-          <Container>
-            <MarketDetail />
-            <TradingBox />
-          </Container>
-        </StyledSection>
+				<StyledSection
+					sx={{
+						backgroundColor: '#FAFAFA',
+					}}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={8}>
+                <MarketDetail />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TradingBox />
+              </Grid>
+            </Grid>
+				</StyledSection>
 			</main>
 		</div>
 	)

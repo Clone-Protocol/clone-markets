@@ -6,28 +6,29 @@ import WelcomeMsg from '~/components/Home/WelcomeMsg'
 import BalanceView from '~/containers/Home/BalanceView'
 
 const Home: NextPage = () => {
-  return (
-    <div>
-      <Head>
-        <title>Incept Protocol</title>
-        <meta name="description" content="Incept Protocol" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+	return (
+		<div>
+			<Head>
+				<title>Incept Protocol</title>
+				<meta name="description" content="Incept Protocol" />
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
 
-      <main>
-        <StyledSection sx={{
-          backgroundColor: '#FAFAFA',
-        }}>
-          <Container>
-            <WelcomeMsg />
-            <Box sx={{ marginTop: '40px' }}>
-              <BalanceView />
-            </Box>
-          </Container>
-        </StyledSection>
-      </main>
-    </div>
-  )
+			<main>
+				<StyledSection
+					sx={{
+						backgroundColor: '#FAFAFA',
+					}}>
+					<Container>
+						<WelcomeMsg />
+						<Box sx={{ marginTop: '40px' }}>
+							<BalanceView />
+						</Box>
+					</Container>
+				</StyledSection>
+			</main>
+		</div>
+	)
 }
 
 const StyledSection = styled('section')`

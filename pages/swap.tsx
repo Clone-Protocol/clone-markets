@@ -13,13 +13,14 @@ const Swap: NextPage = () => {
 				<title>Swap</title>
 			</Head>
 			<main>
-        <StyledSection sx={{
-          backgroundColor: '#FAFAFA',
-        }}>
-          <Container>
-            <SwapBox />
-          </Container>
-        </StyledSection>
+				<StyledSection
+					sx={{
+						backgroundColor: '#FAFAFA',
+					}}>
+					<Container>
+						<SwapBox />
+					</Container>
+				</StyledSection>
 			</main>
 		</div>
 	)

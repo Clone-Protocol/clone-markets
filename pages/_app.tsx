@@ -7,38 +7,37 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '~/theme'
 import GNB from '~/components/GNB'
 import Drawer from '~/components/Drawer'
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
 import { SnackbarProvider } from 'notistack'
 import { NextPage } from 'next'
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page)
+	const getLayout = Component.getLayout ?? ((page) => page)
 
-  return (
-    <QueryProvider>
-      <ThemeProvider theme={theme}>
-        <Box sx={{ display: 'flex' }}>
-          <CssBaseline />
-          <GNB />
-          <Drawer />
+	return (
+		<QueryProvider>
+			<ThemeProvider theme={theme}>
+				<Box sx={{ display: 'flex' }}>
+					<CssBaseline />
+					<GNB />
+					<Drawer />
 
-          <SnackbarProvider maxSnack={3}>
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                height: '100vh',
-                overflow: 'auto',
-              }}
-            >
-              {getLayout(<Component {...pageProps} />)}
-            </Box>
-          </SnackbarProvider>
-        </Box>
-      </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryProvider>
-  )
+					<SnackbarProvider maxSnack={3}>
+						<Box
+							component="main"
+							sx={{
+								flexGrow: 1,
+								height: '100vh',
+								overflow: 'auto',
+							}}>
+							{getLayout(<Component {...pageProps} />)}
+						</Box>
+					</SnackbarProvider>
+				</Box>
+			</ThemeProvider>
+			<ReactQueryDevtools initialIsOpen={false} />
+		</QueryProvider>
+	)
 }
 
 type NextPageWithLayout = NextPage & {

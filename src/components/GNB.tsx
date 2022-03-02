@@ -89,18 +89,25 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
-  return (
-    <Box display="flex">
-      <HeaderButton variant="outlined" sx={{width: '86px', marginRight: '16px'}}>Get USDi</HeaderButton>
-      <HeaderButton variant="outlined" sx={{width: '163px'}} startIcon={<Image src={walletIcon} alt="wallet" />}>Connect Wallet</HeaderButton>
-      {/* <Button variant="outlined">...</Button> */}
-    </Box>
-  )
+	return (
+		<Box display="flex">
+			<HeaderButton variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
+				Get USDi
+			</HeaderButton>
+			<HeaderButton
+				variant="outlined"
+				sx={{ width: '163px' }}
+				startIcon={<Image src={walletIcon} alt="wallet" />}>
+				Connect Wallet
+			</HeaderButton>
+			{/* <Button variant="outlined">...</Button> */}
+		</Box>
+	)
 }
 
 const StyledAppBar = styled(AppBar)`
 	z-index: 200;
-	background-color: #FFF;
+	background-color: #fff;
 	position: fixed;
 	z-index: 300;
 	top: 0px;
@@ -154,13 +161,12 @@ const NavPlaceholder = styled('div')`
 // `
 
 const HeaderButton = styled(Button)`
-  padding: 14px 11px 12px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  height: 41px;
+	padding: 14px 11px 12px 14px;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: 600;
+	height: 41px;
 `
-
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
 	indicator: {

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useState } from 'react'
 import { FilterType, FilterTypeMap, useBalanceQuery } from '~/features/Portfolio/Balance.query'
-
+import Link from 'next/link'
 
 const BalanceList = () => {
   const [filter, setFilter] = useState<FilterType>('all')
@@ -90,9 +90,11 @@ let columns: GridColDef[] = [
     flex: 1, 
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <TradeButton>
-          Trade
-        </TradeButton>
+        <Link href="/markets/1/asset">
+          <TradeButton>
+            Trade
+          </TradeButton>
+        </Link>
       )
     }
   },

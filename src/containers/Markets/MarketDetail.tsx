@@ -1,4 +1,4 @@
-import { Box, Stack, Button, Image, styled } from '@mui/material'
+import { Box, Stack, Button, styled } from '@mui/material'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 
 const MarketDetail = () => {
