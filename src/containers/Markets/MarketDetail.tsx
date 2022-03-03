@@ -17,6 +17,7 @@ const MarketDetail = () => {
 
         <Box>
          <Chart />
+         <></>
         </Box>
 
         <Box sx={{ marginBottom: '88px' }}>
