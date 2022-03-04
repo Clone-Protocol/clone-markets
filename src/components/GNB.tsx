@@ -18,6 +18,9 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
+import * as anchor from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
+import { Incept, Network } from '../../sdk/src/index'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -30,7 +33,10 @@ const GNB: React.FC = () => {
 	const { scrolled } = useScroll()
 
 	const firstPathname = useMemo(() => {
-		return pathname.split('/').slice(0, 2).join('/')
+		return pathname
+			.split('/')
+			.slice(0, 2)
+			.join('/')
 	}, [pathname])
 
 	// const handleChange = (_: React.SyntheticEvent, path: string) => {
@@ -93,6 +99,14 @@ const RightMenu = () => {
 	const { wallet, connect, connecting, connected, publicKey, disconnect } = useWallet()
 	const { open, setOpen } = useWalletDialog()
 
+	const inceptConstructor = () => {
+		const inceptProgramID = new PublicKey('Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi')
+		const provider = anchor.Provider.local()
+		const connection = provider.connection
+
+		const incept = new Incept(connection, Network.LOCAL, inceptProgramID)
+	}
+
 	const handleWalletClick = () => {
 		try {
 			if (!connected) {
@@ -111,7 +125,7 @@ const RightMenu = () => {
 
 	return (
 		<Box display="flex">
-			<HeaderButton variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
+			<HeaderButton onClick={inceptConstructor} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
 				Get USDi
 			</HeaderButton>
 
@@ -120,7 +134,8 @@ const RightMenu = () => {
 				variant="outlined"
 				sx={{ width: '163px' }}
 				disabled={connecting}
-				startIcon={<Image src={walletIcon} alt="wallet" />}>
+				startIcon={<Image src={walletIcon} alt="wallet" />}
+			>
 				{!connected ? (
 					<>Connect Wallet</>
 				) : (
