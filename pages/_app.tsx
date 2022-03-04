@@ -10,6 +10,7 @@ import Drawer from '~/components/Drawer'
 import Box from '@mui/material/Box'
 import { SnackbarProvider } from 'notistack'
 import { NextPage } from 'next'
+import ClientWalletProvider from '~/hocs/ClientWalletProvider'
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout = Component.getLayout ?? ((page) => page)
@@ -17,23 +18,25 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	return (
 		<QueryProvider>
 			<ThemeProvider theme={theme}>
-				<Box sx={{ display: 'flex' }}>
-					<CssBaseline />
-					<GNB />
-					<Drawer />
+				<SnackbarProvider maxSnack={3}>
+					<ClientWalletProvider>
+						<Box sx={{ display: 'flex' }}>
+							<CssBaseline />
+							<GNB />
+							<Drawer />
 
-					<SnackbarProvider maxSnack={3}>
-						<Box
-							component="main"
-							sx={{
-								flexGrow: 1,
-								height: '100vh',
-								overflow: 'auto',
-							}}>
-							{getLayout(<Component {...pageProps} />)}
+							<Box
+								component="main"
+								sx={{
+									flexGrow: 1,
+									height: '100vh',
+									overflow: 'auto',
+								}}>
+								{getLayout(<Component {...pageProps} />)}
+							</Box>
 						</Box>
-					</SnackbarProvider>
-				</Box>
+					</ClientWalletProvider>
+				</SnackbarProvider>
 			</ThemeProvider>
 			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryProvider>

@@ -39,6 +39,20 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 				size: 'medium',
 			},
 		},
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          background: '#fff'
+        }
+      }
+    },
+    MuiDialogContentText: {
+      styleOverrides: {
+				root: {
+          color: '#fff'
+        }
+      }
+    },
 		MuiTab: {
 			defaultProps: {
 				disableRipple: true,

@@ -4,8 +4,6 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
-// import Tab from '@mui/material/Tab'
-// import Tabs from '@mui/material/Tabs'
 import Image from 'next/image'
 import logoIcon from '../../public/images/incept-logo.png'
 import walletIcon from '../../public/images/wallet-icon.png'
@@ -17,6 +15,9 @@ import CancelIcon from './Icons/CancelIcon'
 import MenuIcon from './Icons/MenuIcon'
 import { useScroll } from '~/hooks/useScroll'
 import { withCsrOnly } from '~/hocs/CsrOnly'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { shortenAddress } from '~/utils/address'
+import { useWalletDialog } from '~/hooks/useWalletDialog'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -89,17 +90,53 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
+	const { wallet, connect, connecting, connected, publicKey, disconnect } = useWallet()
+	const { open, setOpen } = useWalletDialog()
+
+	const handleWalletClick = () => {
+		try {
+			if (!connected) {
+				if (!wallet) {
+					setOpen(true)
+				} else {
+					connect()
+				}
+			} else {
+				disconnect()
+			}
+		} catch (error) {
+			console.log('Error connecting to the wallet: ', (error as any).message)
+		}
+	}
+
 	return (
 		<Box display="flex">
 			<HeaderButton variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
 				Get USDi
 			</HeaderButton>
+
 			<HeaderButton
+				onClick={handleWalletClick}
 				variant="outlined"
 				sx={{ width: '163px' }}
+				disabled={connecting}
 				startIcon={<Image src={walletIcon} alt="wallet" />}>
-				Connect Wallet
+				{!connected ? (
+					<>Connect Wallet</>
+				) : (
+					<>
+						Disconnect Wallet{' '}
+						{publicKey ? (
+							<Box sx={{ marginLeft: '10px', color: '#6c6c6c' }}>
+								{shortenAddress(publicKey.toString())}
+							</Box>
+						) : (
+							<></>
+						)}
+					</>
+				)}
 			</HeaderButton>
+
 			{/* <Button variant="outlined">...</Button> */}
 		</Box>
 	)
@@ -143,22 +180,6 @@ const NavPlaceholder = styled('div')`
 		height: 65px;
 	}
 `
-
-// const StyledTabs = styled(Tabs)`
-// 	&:first-of-type {
-// 		padding-left: 0px;
-// 		margin-left: 40px;
-// 	}
-// 	.MuiTab-root {
-// 		height: 100%;
-// 		font-weight: bold;
-// 		font-size: 15px;
-// 		padding: 0px 20px;
-// 		&:not(.Mui-selected) {
-// 			color: #ffffff;
-// 		}
-// 	}
-// `
 
 const HeaderButton = styled(Button)`
 	padding: 14px 11px 12px 14px;

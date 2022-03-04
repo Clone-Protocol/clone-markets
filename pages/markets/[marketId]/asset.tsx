@@ -17,14 +17,14 @@ const AssetPage: NextPage = () => {
 					sx={{
 						backgroundColor: '#FAFAFA',
 					}}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={8}>
-                <MarketDetail />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TradingBox />
-              </Grid>
-            </Grid>
+					<Grid container spacing={2}>
+						<Grid item xs={12} md={8}>
+							<MarketDetail />
+						</Grid>
+						<Grid item xs={12} md={4}>
+							<TradingBox />
+						</Grid>
+					</Grid>
 				</StyledSection>
 			</main>
 		</div>
