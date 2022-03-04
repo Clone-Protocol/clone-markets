@@ -18,25 +18,25 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	return (
 		<QueryProvider>
 			<ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}>
-          <ClientWalletProvider>
-            <Box sx={{ display: 'flex' }}>
-              <CssBaseline />
-              <GNB />
-              <Drawer />
-              
-              <Box
-                component="main"
-                sx={{
-                  flexGrow: 1,
-                  height: '100vh',
-                  overflow: 'auto',
-                }}>
-                {getLayout(<Component {...pageProps} />)}
-              </Box>
-            </Box>
-          </ClientWalletProvider>
-        </SnackbarProvider>
+				<SnackbarProvider maxSnack={3}>
+					<ClientWalletProvider>
+						<Box sx={{ display: 'flex' }}>
+							<CssBaseline />
+							<GNB />
+							<Drawer />
+
+							<Box
+								component="main"
+								sx={{
+									flexGrow: 1,
+									height: '100vh',
+									overflow: 'auto',
+								}}>
+								{getLayout(<Component {...pageProps} />)}
+							</Box>
+						</Box>
+					</ClientWalletProvider>
+				</SnackbarProvider>
 			</ThemeProvider>
 			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryProvider>

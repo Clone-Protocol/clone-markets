@@ -15,9 +15,9 @@ import CancelIcon from './Icons/CancelIcon'
 import MenuIcon from './Icons/MenuIcon'
 import { useScroll } from '~/hooks/useScroll'
 import { withCsrOnly } from '~/hocs/CsrOnly'
-import { useWallet } from "@solana/wallet-adapter-react"
+import { useWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
-import { useWalletDialog } from '@solana/wallet-adapter-material-ui'
+import { useWalletDialog } from '~/hooks/useWalletDialog'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -90,24 +90,24 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
-  const { wallet, connect, connecting, connected, publicKey, disconnect } = useWallet();
-  const { open, setOpen } = useWalletDialog()
+	const { wallet, connect, connecting, connected, publicKey, disconnect } = useWallet()
+	const { open, setOpen } = useWalletDialog()
 
-  const handleWalletClick = () => {
-    try {
-      if (!connected) {
-        if (!wallet) {
-          setOpen(true)
-        } else {
-          connect()
-        }
-      } else {
-        disconnect()
-      }
-    } catch (error) {
-      console.log("Error connecting to the wallet: ", (error as any).message)
-    }
-  }
+	const handleWalletClick = () => {
+		try {
+			if (!connected) {
+				if (!wallet) {
+					setOpen(true)
+				} else {
+					connect()
+				}
+			} else {
+				disconnect()
+			}
+		} catch (error) {
+			console.log('Error connecting to the wallet: ', (error as any).message)
+		}
+	}
 
 	return (
 		<Box display="flex">
@@ -115,14 +115,26 @@ const RightMenu = () => {
 				Get USDi
 			</HeaderButton>
 
-      
 			<HeaderButton
-        onClick={handleWalletClick}
+				onClick={handleWalletClick}
 				variant="outlined"
 				sx={{ width: '163px' }}
-        disabled={connecting}
+				disabled={connecting}
 				startIcon={<Image src={walletIcon} alt="wallet" />}>
-				{!connected ? <>Connect Wallet</> : <>Disconnect Wallet { publicKey ? <Box sx={{ marginLeft: '10px', color: '#6c6c6c'}}>{shortenAddress(publicKey.toString())}</Box> : <></> }</>}
+				{!connected ? (
+					<>Connect Wallet</>
+				) : (
+					<>
+						Disconnect Wallet{' '}
+						{publicKey ? (
+							<Box sx={{ marginLeft: '10px', color: '#6c6c6c' }}>
+								{shortenAddress(publicKey.toString())}
+							</Box>
+						) : (
+							<></>
+						)}
+					</>
+				)}
 			</HeaderButton>
 
 			{/* <Button variant="outlined">...</Button> */}

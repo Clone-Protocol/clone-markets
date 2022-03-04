@@ -1,7 +1,5 @@
-
-import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
-import { WalletDialogProvider } from '@solana/wallet-adapter-material-ui';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base'
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
 import {
     LedgerWalletAdapter,
     PhantomWalletAdapter,
@@ -10,10 +8,11 @@ import {
     SolletExtensionWalletAdapter,
     SolletWalletAdapter,
     TorusWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import { useSnackbar } from 'notistack';
-import React, { FC, ReactNode, useCallback, useMemo } from 'react';
+} from '@solana/wallet-adapter-wallets'
+import { WalletDialogProvider } from '~/hocs/WalletDialogProvider'
+import { clusterApiUrl } from '@solana/web3.js'
+import { useSnackbar } from 'notistack'
+import React, { FC, ReactNode, useCallback, useMemo } from 'react'
 
 const ClientWalletProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const network = WalletAdapterNetwork.Devnet;
@@ -46,7 +45,7 @@ const ClientWalletProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} onError={onError} autoConnect>
-          <WalletDialogProvider>{children}</WalletDialogProvider>
+        <WalletDialogProvider>{children}</WalletDialogProvider>
       </WalletProvider>
     </ConnectionProvider>
   );
