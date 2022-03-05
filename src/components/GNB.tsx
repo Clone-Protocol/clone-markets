@@ -21,6 +21,7 @@ import { useWalletDialog } from '~/hooks/useWalletDialog'
 import * as anchor from '@project-serum/anchor'
 import { PublicKey, Connection } from '@solana/web3.js'
 import { Incept, Network } from '../../sdk/src/index'
+import { initProvider, incept } from '~/hooks/useIncept'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -96,12 +97,12 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
-	const { wallet, connect, connecting, connected, publicKey, disconnect } = useWallet()
+	const { connect, connecting, connected, publicKey, disconnect } = useWallet()
+  const wallet = useAnchorWallet()
 	const { open, setOpen } = useWalletDialog()
 
 	const inceptConstructor = () => {
 		const inceptProgramID = new PublicKey('Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi')
-		
     const opts = {
       preflightCommitment: "processed"
     }
