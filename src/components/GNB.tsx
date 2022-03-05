@@ -21,7 +21,7 @@ import { useWalletDialog } from '~/hooks/useWalletDialog'
 import * as anchor from '@project-serum/anchor'
 import { PublicKey, Connection } from '@solana/web3.js'
 import { Incept, Network } from '../../sdk/src/index'
-import { initProvider, incept } from '~/hooks/useIncept'
+//import { initProvider, incept } from '~/hooks/useIncept'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -98,23 +98,26 @@ export default withCsrOnly(GNB)
 
 const RightMenu = () => {
 	const { connect, connecting, connected, publicKey, disconnect } = useWallet()
-  const wallet = useAnchorWallet()
+	const wallet = useAnchorWallet()
 	const { open, setOpen } = useWalletDialog()
 
+	let x = "Get USDi"
+
 	const inceptConstructor = () => {
-		const inceptProgramID = new PublicKey('Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi')
-    const opts = {
-      preflightCommitment: "processed"
-    }
-    // const endpoint = 'https://explorer-api.devnet.solana.com'
-    const endpoint = 'https://127.0.0.1:8899' //localnet
-    const connection = new Connection(endpoint)
-    
-    // @ts-ignore
-    const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
+		const inceptProgramID = new PublicKey('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
+		const opts = {
+			preflightCommitment: 'processed',
+		}
+		// const endpoint = 'https://explorer-api.devnet.solana.com'
+		const endpoint = 'https://127.0.0.1:8899' //localnet
+		const connection = new Connection(endpoint)
+
+		// @ts-ignore
+		const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
 
 		const incept = new Incept(connection, Network.LOCAL, inceptProgramID, provider)
-    console.log(incept.tokenData)
+		// incept.initializeManager(provider.wallet.publicKey)
+		console.log(incept.managerAddress[0].toString())
 	}
 
 	const handleWalletClick = () => {
@@ -136,7 +139,7 @@ const RightMenu = () => {
 	return (
 		<Box display="flex">
 			<HeaderButton onClick={inceptConstructor} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
-				Get USDi
+				{x}
 			</HeaderButton>
 
 			<HeaderButton
