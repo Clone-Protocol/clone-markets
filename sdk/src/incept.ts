@@ -35,6 +35,7 @@ export class Incept {
     connection: Connection,
     network: Network,
     programId = PublicKey.default,
+    provider: Provider,
     opts?: ConfirmOptions
   ) {
     this.managerAddress = [PublicKey.default, 0];
@@ -48,20 +49,20 @@ export class Incept {
         console.log("test");
         this.programId = programId;
         console.log("test");
-        this.program = new Program<InceptProgram>(IDL, this.programId);
+        this.program = new Program<InceptProgram>(IDL, this.programId, provider);
         console.log("test");
         break;
       case Network.TEST:
         this.programId = TEST_NET.incept;
-        this.program = new Program<InceptProgram>(IDL, this.programId);
+        this.program = new Program<InceptProgram>(IDL, this.programId, provider);
         break;
       case Network.DEV:
         this.programId = DEV_NET.incept;
-        this.program = new Program<InceptProgram>(IDL, this.programId);
+        this.program = new Program<InceptProgram>(IDL, this.programId, provider);
         break;
       case Network.MAIN:
         this.programId = MAIN_NET.incept;
-        this.program = new Program<InceptProgram>(IDL, this.programId);
+        this.program = new Program<InceptProgram>(IDL, this.programId, provider);
         break;
       default:
         throw new Error("Not supported");

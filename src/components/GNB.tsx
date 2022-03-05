@@ -15,11 +15,11 @@ import CancelIcon from './Icons/CancelIcon'
 import MenuIcon from './Icons/MenuIcon'
 import { useScroll } from '~/hooks/useScroll'
 import { withCsrOnly } from '~/hocs/CsrOnly'
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import * as anchor from '@project-serum/anchor'
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, Connection } from '@solana/web3.js'
 import { Incept, Network } from '../../sdk/src/index'
 
 const GNB: React.FC = () => {
@@ -101,10 +101,19 @@ const RightMenu = () => {
 
 	const inceptConstructor = () => {
 		const inceptProgramID = new PublicKey('Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi')
-		const provider = anchor.Provider.local()
-		const connection = provider.connection
+		
+    const opts = {
+      preflightCommitment: "processed"
+    }
+    // const endpoint = 'https://explorer-api.devnet.solana.com'
+    const endpoint = 'https://127.0.0.1:8899' //localnet
+    const connection = new Connection(endpoint)
+    
+    // @ts-ignore
+    const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
 
-		const incept = new Incept(connection, Network.LOCAL, inceptProgramID)
+		const incept = new Incept(connection, Network.LOCAL, inceptProgramID, provider)
+    console.log(incept.tokenData)
 	}
 
 	const handleWalletClick = () => {
