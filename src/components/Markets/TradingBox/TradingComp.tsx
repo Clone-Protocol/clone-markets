@@ -6,32 +6,69 @@ import Image from 'next/image'
 import reloadIcon from '../../../../public/images/reload-icon.png'
 import settingsIcon from '../../../../public/images/settings-icon.png'
 
-interface Props {
-	onShowOption: () => void
-	onReviewOrder: () => void
+export interface TradingData {
+  tabIdx: number
+  fromAmount: number
+  convertVal: number
 }
 
-const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
-	const [tabIdx, setTabIdx] = useState(0)
-	const [fromAmount, setFromAmount] = useState(0.0)
-	const [convertVal, setConvertVal] = useState(50)
+interface Props {
+  totalAmount: number
+  onChangeData: (tradingData: TradingData) => void
+	onShowOption: () => void
+	onReviewOrder: (fromAmount: number, convertVal: number) => void
+}
+
+const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption, onReviewOrder }) => {
+	// const [tabIdx, setTabIdx] = useState(0)
+	// const [fromAmount, setFromAmount] = useState(0.0)
+	// const [convertVal, setConvertVal] = useState(50)
+  const [tradingData, setTradingData] = useState<TradingData>({
+    tabIdx: 0,
+    fromAmount: 0.0,
+    convertVal: 50
+  })
 
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
-		setTabIdx(newTabIdx)
+		// setTabIdx(newTabIdx)
+    const newData = {
+      ...tradingData,
+      tabIdx: newTabIdx
+    }
+    setTradingData(newData)
+    onChangeData(newData)
 	}
 
 	const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newData
 		if (e.currentTarget.value) {
 			const amount = parseFloat(e.currentTarget.value)
-			setFromAmount(amount)
+			// setFromAmount(amount)
+      newData = {
+        ...tradingData,
+        fromAmount: amount
+      }
+      setTradingData(newData)
 		} else {
-			setFromAmount(0.0)
+			// setFromAmount(0.0)
+      newData = {
+        ...tradingData,
+        fromAmount: 0.0
+      }
+      setTradingData(newData)
 		}
+    onChangeData(newData)
 	}
 
 	const handleChangeConvert = (event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
-			setConvertVal(newValue)
+			// setConvertVal(newValue)
+      const newData = {
+        ...tradingData,
+        convertVal: newValue
+      }
+      setTradingData(newData)
+      onChangeData(newData)
 		}
 	}
 
@@ -40,20 +77,20 @@ const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
 			sx={{
 				p: '20px',
 			}}>
-			<StyledTabs value={tabIdx} onChange={handleChangeTab}>
+			<StyledTabs value={tradingData.tabIdx} onChange={handleChangeTab}>
 				<Tab label="Buy"></Tab>
 				<Tab label="Sell"></Tab>
 			</StyledTabs>
 			<Box sx={{ marginTop: '30px' }}>
-				<PairInput title="How much?" tickerIcon={reloadIcon} ticker="iSOL" onChange={handleChangeAmount} />
+				<PairInput title="How much?" tickerIcon={reloadIcon} ticker="iSOL" onChange={handleChangeAmount} value={tradingData.fromAmount} />
 			</Box>
 
 			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
-				<ConvertSlider value={convertVal} onChange={handleChangeConvert} />
+				<ConvertSlider value={tradingData.convertVal} onChange={handleChangeConvert} />
 			</Box>
 
 			<Box>
-				<PairInput title="Total" tickerIcon={settingsIcon} ticker="USDi" value={fromAmount} />
+				<PairInput title="Total" tickerIcon={settingsIcon} ticker="USDi" value={totalAmount} />
 			</Box>
 
 			<Stack
@@ -70,7 +107,7 @@ const TradingComp: React.FC<Props> = ({ onShowOption, onReviewOrder }) => {
 				</IconButton>
 			</Stack>
 
-			<ActionButton onClick={onReviewOrder}>Review Order</ActionButton>
+			<ActionButton onClick={() => onReviewOrder(tradingData)}>Review Order</ActionButton>
 		</Box>
 	)
 }

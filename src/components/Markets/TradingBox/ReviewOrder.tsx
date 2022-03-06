@@ -1,11 +1,21 @@
 import { Box, Stack, Button, styled, Divider } from '@mui/material'
 
+export interface OrderForm {
+  tabIdx: number;
+  amountFrom: number;
+  amountTo: number;
+  amountTotal: number;
+  convertVal: number;
+  tradingFee: number;
+}
+
 interface Props {
+  orderForm: OrderForm
 	onConfirm: () => void
 	onCancel: () => void
 }
 
-const ReviewOrder: React.FC<Props> = ({ onConfirm, onCancel }) => {
+const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 	return (
 		<Box
 			sx={{
@@ -13,7 +23,7 @@ const ReviewOrder: React.FC<Props> = ({ onConfirm, onCancel }) => {
 			}}>
 			<StyledStack direction="row" justifyContent="space-between">
 				<div onClick={onCancel}>{'<'}</div>
-				<div>Sell iSOL</div>
+				<div>{ orderForm.tabIdx === 0 ? 'Buy iSOL' : 'Sell iSOL' }</div>
 				<div></div>
 			</StyledStack>
 
@@ -22,8 +32,8 @@ const ReviewOrder: React.FC<Props> = ({ onConfirm, onCancel }) => {
 				<Stack sx={{ marginBottom: '13px' }} spacing={1} direction="row" justifyContent="space-between">
 					<div>Amount</div>
 					<Stack spacing={1} alignItems="flex-end">
-						<div>1.00 SOL</div>
-						<div>$102.95 USDi</div>
+						<div>{orderForm.amountFrom} SOL</div>
+						<div>${orderForm.amountTo} USDi</div>
 					</Stack>
 				</Stack>
 				<Stack
@@ -33,14 +43,14 @@ const ReviewOrder: React.FC<Props> = ({ onConfirm, onCancel }) => {
 					justifyContent="space-between">
 					<div>Trading Fee</div>
 					<Stack spacing={1} alignItems="flex-end">
-						<div>0.03%</div>
-						<div>$0.308 USDi</div>
+						<div>{orderForm.tradingFee}%</div>
+						<div>${orderForm.amountTo * orderForm.tradingFee} USDi</div>
 					</Stack>
 				</Stack>
 				<Divider />
 				<TotalStack spacing={1} direction="row" justifyContent="space-between">
 					<div>Total</div>
-					<div>$103.26 USDi</div>
+					<div>${orderForm.amountTotal} USDi</div>
 				</TotalStack>
 			</Box>
 
