@@ -18,9 +18,8 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
-import * as anchor from '@project-serum/anchor'
-import { PublicKey, Connection } from '@solana/web3.js'
-import { Incept, Network } from '../../sdk/src/index'
+import { useIncept } from '~/hooks/useIncept'
+import { PublicKey } from '@solana/web3.js'
 //import { initProvider, incept } from '~/hooks/useIncept'
 
 const GNB: React.FC = () => {
@@ -99,26 +98,19 @@ export default withCsrOnly(GNB)
 const RightMenu = () => {
 	const { connect, connecting, connected, publicKey, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
-	const { open, setOpen } = useWalletDialog()
-
-	let x = "Get USDi"
+	const { setOpen } = useWalletDialog()
+  const { Program, setInceptApp } = useIncept()
 
 	const inceptConstructor = () => {
 		const inceptProgramID = new PublicKey('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
-		const opts = {
-			preflightCommitment: 'processed',
-		}
-		// const endpoint = 'https://explorer-api.devnet.solana.com'
-		const endpoint = 'https://127.0.0.1:8899' //localnet
-		const connection = new Connection(endpoint)
-
-		// @ts-ignore
-		const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
-
-		const incept = new Incept(connection, Network.LOCAL, inceptProgramID, provider)
-		// incept.initializeManager(provider.wallet.publicKey)
-		console.log(incept.managerAddress[0].toString())
+    setInceptApp(inceptProgramID)
 	}
+
+  useEffect(() => {
+    if (Program) {
+      console.log(Program.managerAddress[0].toString())
+    }
+  }, [Program])
 
 	const handleWalletClick = () => {
 		try {
@@ -139,7 +131,7 @@ const RightMenu = () => {
 	return (
 		<Box display="flex">
 			<HeaderButton onClick={inceptConstructor} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
-				{x}
+        Get USDi
 			</HeaderButton>
 
 			<HeaderButton

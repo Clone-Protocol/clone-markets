@@ -1,36 +1,15 @@
-import { Provider } from '@project-serum/anchor'
-import { useEffect, useState } from 'react'
-import { AnchorWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
-import { PublicKey, Connection } from '@solana/web3.js'
-import { Incept, Network } from '../../sdk/src/index'
+import { Provider } from '@project-serum/anchor';
+import { createContext, useContext } from 'react';
+import { PublicKey } from '@solana/web3.js'
 
-const useIncept = () => {
-  const [AnchorConnection, setConnection] = useState<any>()
-  const [AnchorProvider, setProvider] = useState<Provider>()
-	
-  const initProvider = (wallet: AnchorWallet | undefined, endpoint: string) => {
-    const opts = {
-      preflightCommitment: "processed"
-    }
-    
-    const connection = new Connection(endpoint)
-
-    // @ts-ignore
-    const provider = new Provider(connection, wallet, opts.preflightCommitment)
-
-    setConnection(connection)
-    setProvider(provider)
-  }
-
-  const incept = (connection: any, provider: Provider | undefined, inceptProgramID: PublicKey) => {
-    if (provider) {
-      const incept = new Incept(connection, Network.LOCAL, inceptProgramID, provider)
-      return incept
-    }
-    return null
-  }
-
-  return { initProvider, AnchorConnection, AnchorProvider, incept }
+export interface InceptContextState {
+    AnchorProvider: Provider | undefined;
+    Program: any;
+    setInceptApp: (inceptProgramID: PublicKey) => void;
 }
 
-export default useIncept
+export const InceptContext = createContext<InceptContextState>({} as InceptContextState);
+
+export function useIncept(): InceptContextState {
+    return useContext(InceptContext);
+}
