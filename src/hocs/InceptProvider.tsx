@@ -26,19 +26,22 @@ export const InceptProvider: FC<InceptProviderProps> = ({ children, ...props }) 
     setProvider(provider)
   }, [connection])
 
-  const setInceptApp = (inceptProgramID: PublicKey) => {
+  const getInceptApp = (inceptProgramID: string) : Incept | null => {
     if (AnchorProvider) {
-      const incept = new Incept(connection, Network.LOCAL, inceptProgramID, AnchorProvider)
+      console.log('ffffff')
+      const pubProgram = new PublicKey(inceptProgramID)
+      const incept = new Incept(connection, Network.LOCAL, pubProgram, AnchorProvider)
       setProgram(incept)
+      return incept
     }
+    return null
   }
 
   return (
     <InceptContext.Provider
         value={{
-          AnchorProvider,
           Program,
-          setInceptApp
+          getInceptApp
         }}
     >
       {children}

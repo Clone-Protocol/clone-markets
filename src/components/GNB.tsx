@@ -19,8 +19,6 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
-import { PublicKey } from '@solana/web3.js'
-//import { initProvider, incept } from '~/hooks/useIncept'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -99,18 +97,19 @@ const RightMenu = () => {
 	const { connect, connecting, connected, publicKey, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
-  const { Program, setInceptApp } = useIncept()
+  const { Program, getInceptApp } = useIncept()
 
 	const inceptConstructor = () => {
-		const inceptProgramID = new PublicKey('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
-    setInceptApp(inceptProgramID)
+		const inceptProgramID = '9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR'
+    const program = getInceptApp(inceptProgramID)
+    console.log(program.managerAddress[0].toString())
 	}
 
-  useEffect(() => {
-    if (Program) {
-      console.log(Program.managerAddress[0].toString())
-    }
-  }, [Program])
+  // useEffect(() => {
+  //   if (Program) {
+  //     console.log(Program.managerAddress[0].toString())
+  //   }
+  // }, [Program])
 
 	const handleWalletClick = () => {
 		try {

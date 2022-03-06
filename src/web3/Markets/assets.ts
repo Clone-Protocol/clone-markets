@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js"
-import { QueryObserverOptions, useQuery } from "react-query"
 import { Incept } from "sdk/src"
 
 enum Asset {
@@ -14,10 +13,9 @@ enum AssetType {
 	Comodotities,
 }
 
-const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
+export const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
   if (!userPubKey) return []
 
-  console.log('dd', userPubKey)
 	const iassetMints = await program.getiAssetInfo(userPubKey)
 	const result: AssetList[] = []
 
@@ -76,21 +74,10 @@ const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
   return result
 }
 
-export function useAssetsQuery({ program, userPubKey, filter, refetchOnMount }: GetAssetsProps) {
-  return useQuery(
-    ['assets', filter],
-    () => fetchAssets({ program, userPubKey, filter }),
-    {
-      refetchOnMount,
-    }
-  )
-}
-
 interface GetAssetsProps {
   program: Incept,
   userPubKey: PublicKey | null,
   filter: FilterType,
-  refetchOnMount?: QueryObserverOptions['refetchOnMount']
 }
 
 export enum FilterTypeMap {
