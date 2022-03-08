@@ -21,7 +21,7 @@ const MarketList = () => {
   // })
 
   useEffect(() => {
-    const program = getInceptApp('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
+    const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
 
     async function fetch() {
       const data = await fetchAssets({
