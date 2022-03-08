@@ -91,6 +91,13 @@ export class Incept {
 		this.manager = (await this.program.account.manager.fetch(this.managerAddress[0])) as Manager
 	}
 
+
+	public async loadManager() {
+		this.managerAddress = await this.getManagerAddress();
+		// @ts-ignore
+		this.manager = (await this.program.account.manager.fetch(this.managerAddress[0])) as Manager;
+	}
+
 	public onManagerAccountChange(fn: (state: Manager) => void) {
 		this.program.account.manager.subscribe(this.managerAddress[0]).on('change', (state: Manager) => {
 			fn(state)
