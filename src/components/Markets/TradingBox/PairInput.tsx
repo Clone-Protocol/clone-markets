@@ -5,16 +5,17 @@ interface Props {
 	title: string | null
 	tickerIcon: StaticImageData
 	ticker: string | null
+  balance?: number
 	value?: number
 	onChange?: any
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, value, onChange }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, value, onChange }) => {
 	return (
 		<FormControl variant="standard">
 			<Stack direction="row" justifyContent="space-between" sx={{ fontSize: '12px', fontWeight: '500' }}>
 				<Box>{title}</Box>
-				<Box>Balance: _</Box>
+				<Box>Balance: {balance?.toLocaleString()}</Box>
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display="flex">

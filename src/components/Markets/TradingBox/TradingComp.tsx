@@ -10,6 +10,7 @@ import settingsIcon from 'public/images/settings-icon.png'
 export interface TradingData {
   tabIdx: number
   fromAmount: number
+  fromBalance : number
   convertVal: number
 }
 
@@ -21,17 +22,14 @@ interface Props {
 }
 
 const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption, onReviewOrder }) => {
-	// const [tabIdx, setTabIdx] = useState(0)
-	// const [fromAmount, setFromAmount] = useState(0.0)
-	// const [convertVal, setConvertVal] = useState(50)
   const [tradingData, setTradingData] = useState<TradingData>({
     tabIdx: 0,
     fromAmount: 0.0,
+    fromBalance: 0,
     convertVal: 50
   })
 
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
-		// setTabIdx(newTabIdx)
     const newData = {
       ...tradingData,
       tabIdx: newTabIdx
@@ -44,14 +42,12 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
     let newData
 		if (e.currentTarget.value) {
 			const amount = parseFloat(e.currentTarget.value)
-			// setFromAmount(amount)
       newData = {
         ...tradingData,
         fromAmount: amount
       }
       setTradingData(newData)
 		} else {
-			// setFromAmount(0.0)
       newData = {
         ...tradingData,
         fromAmount: 0.0
@@ -63,7 +59,6 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 
 	const handleChangeConvert = (event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
-			// setConvertVal(newValue)
       const newData = {
         ...tradingData,
         convertVal: newValue
@@ -83,7 +78,7 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 				<Tab label="Sell"></Tab>
 			</StyledTabs>
 			<Box sx={{ marginTop: '30px' }}>
-				<PairInput title="How much?" tickerIcon={ethLogo} ticker="iSOL" onChange={handleChangeAmount} value={tradingData.fromAmount} />
+				<PairInput title="How much?" tickerIcon={ethLogo} ticker="iSOL" onChange={handleChangeAmount} value={tradingData.fromAmount} balance={tradingData.fromBalance} />
 			</Box>
 
 			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>

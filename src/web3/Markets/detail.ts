@@ -1,12 +1,24 @@
 import { PublicKey } from "@solana/web3.js"
 import { Incept } from "sdk/src"
+import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 
 export const fetchAsset = async ({ program, userPubKey }: GetProps) => {
   if (!userPubKey) return null
 
 	return {
-    totalVal: 1000.0,
-    balanceVal: 0.0
+    id: 1,
+    tickerName: 'iSolana',
+    tickerSymbol: 'iSol',
+    tickerIcon: ethLogo,
+    price: 160.51,
+    volume: 1230000,
+    avgLiquidity: 50700000,
+    maxOrderSize: 150,
+    avgPremium: 0.013,
+    detailOverview: 'iSOL, appreviated from iSolana, is a synthetic asset of Solana on Incept. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.',
+    myHolding: 5.234,
+    myNotionalVal: 840.11,
+    myPortfolioPercentage: 31.64
   }
 }
 
@@ -15,7 +27,18 @@ interface GetProps {
   userPubKey: PublicKey | null,
 }
 
-export interface Balance {
-  totalVal: number
-  balanceVal: number
+export interface Asset {
+  id: number
+  tickerName: string
+  tickerSymbol: string
+  tickerIcon: string
+  price: number
+  volume: number
+  avgLiquidity: number
+  maxOrderSize: number
+  avgPremium: number
+  detailOverview: string
+  myHolding: number
+  myNotionalVal: number
+  myPortfolioPercentage: number
 }
