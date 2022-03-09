@@ -8,7 +8,7 @@ export enum Network {
 }
 
 export const DEV_NET = {
-  incept: new PublicKey("Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi"),
+  incept: new PublicKey("DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3"),
   oracle: new PublicKey("Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi"),
 };
 export const TEST_NET = {

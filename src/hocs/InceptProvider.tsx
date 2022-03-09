@@ -30,7 +30,7 @@ export const InceptProvider: FC<InceptProviderProps> = ({ children, ...props }) 
     if (AnchorProvider) {
       console.log('ffffff')
       const pubProgram = new PublicKey(inceptProgramID)
-      const incept = new Incept(connection, Network.LOCAL, pubProgram, AnchorProvider)
+      const incept = new Incept(connection, Network.DEV, pubProgram, AnchorProvider)
       setProgram(incept)
       return incept
     }

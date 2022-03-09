@@ -18,10 +18,10 @@ const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
   if (!userPubKey) return []
 
   console.log('dd', userPubKey)
-	const iassetMints = await program.getiAssetInfo(userPubKey)
+	const iassetInfos = await program.getiAssetInfo(userPubKey)
 	const result: AssetList[] = []
 
-	for (var info of iassetMints) {
+	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''

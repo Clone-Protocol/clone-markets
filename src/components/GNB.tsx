@@ -97,13 +97,35 @@ const RightMenu = () => {
 	const { connect, connecting, connected, publicKey, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
-  const { Program, getInceptApp } = useIncept()
+  	const { Program, getInceptApp } = useIncept()
 
 	const inceptConstructor = () => {
-		const inceptProgramID = '9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR'
-    const program = getInceptApp(inceptProgramID)
-    console.log(program.managerAddress[0].toString())
+		const inceptProgramID = 'DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3'
+		const program = getInceptApp(inceptProgramID)
+		console.log(program.managerAddress[0].toString())
 	}
+
+	let userAccount;
+	const tryUserInitialization = () => {
+		console.log(`PUBLIC KEY: ${publicKey?.toString()}`);
+
+		if (!publicKey) {return;}
+
+		const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
+
+		// If the user doest not have an account, try to create one.
+		// Perhaps should be some sort of prompt for this...
+		try {
+			program.getUserAccount(publicKey).then(
+				acnt => {userAccount = acnt;}
+			);
+
+		} catch (error) {
+			program.initializeUser(publicKey).then(
+				() => {;}
+			);
+		}
+	};
 
   // useEffect(() => {
   //   if (Program) {
@@ -118,6 +140,7 @@ const RightMenu = () => {
 					setOpen(true)
 				} else {
 					connect()
+					tryUserInitialization()
 				}
 			} else {
 				disconnect()
