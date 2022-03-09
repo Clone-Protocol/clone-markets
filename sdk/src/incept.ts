@@ -368,7 +368,7 @@ export class Incept {
 	}
 
 	public async getUserAccount(userWalletAddress: PublicKey) {
-		return (await this.program.account.manager.fetch((await this.getUserAddress(userWalletAddress))[0])) as User
+		return (await this.program.account.user.fetch((await this.getUserAddress(userWalletAddress))[0])) as User
 	}
 
 	public async mintUsdi(

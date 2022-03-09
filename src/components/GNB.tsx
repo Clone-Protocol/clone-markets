@@ -105,25 +105,27 @@ const RightMenu = () => {
 		console.log(program.managerAddress[0].toString())
 	}
 
-  useEffect(() => {
-    async function getAccount() {
-      if (connected && publicKey) {
-        console.log(`PUBLIC KEY: ${publicKey?.toString()}`);
-  
-        const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
-        try {
-          const userAccount = await program.getUserAccount(publicKey)
-          console.log('acc', userAccount)
-        } catch (error) {
-          // got error : Error: Invalid account discriminator
-          const response = await program.initializeUser(publicKey)
-          console.log('initialized:', response)
-        }
-      }
-    }
-    getAccount()
-  }, [connected, publicKey])
+	useEffect(() => {
+		async function getAccount() {
+		  if (connected && publicKey) {
+			console.log(`PUBLIC KEY: ${publicKey?.toString()}`);
+	
+			const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
+			await program.loadManager();
 
+			try {
+			  const userAccount = await program.getUserAccount(publicKey)
+			  console.log('acc', userAccount)
+			} catch (error) {
+			  // got error : Error: Invalid account discriminator
+			  const response = await program.initializeUser(publicKey)
+			  console.log('initialized:', response)
+			}
+		  }
+		}
+		getAccount()
+	  }, [connected, publicKey])
+	
 	const handleWalletClick = () => {
 		try {
 			if (!connected) {
