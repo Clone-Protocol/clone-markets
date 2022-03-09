@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
-import reloadIcon from '../../../../public/images/reload-icon.png'
-import settingsIcon from '../../../../public/images/settings-icon.png'
+import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
+import reloadIcon from 'public/images/reload-icon.png'
+import settingsIcon from 'public/images/settings-icon.png'
 
 export interface TradingData {
   tabIdx: number
@@ -16,7 +17,7 @@ interface Props {
   totalAmount: number
   onChangeData: (tradingData: TradingData) => void
 	onShowOption: () => void
-	onReviewOrder: (fromAmount: number, convertVal: number) => void
+	onReviewOrder: (tradingData: TradingData) => void
 }
 
 const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption, onReviewOrder }) => {
@@ -82,7 +83,7 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 				<Tab label="Sell"></Tab>
 			</StyledTabs>
 			<Box sx={{ marginTop: '30px' }}>
-				<PairInput title="How much?" tickerIcon={reloadIcon} ticker="iSOL" onChange={handleChangeAmount} value={tradingData.fromAmount} />
+				<PairInput title="How much?" tickerIcon={ethLogo} ticker="iSOL" onChange={handleChangeAmount} value={tradingData.fromAmount} />
 			</Box>
 
 			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
@@ -90,14 +91,13 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 			</Box>
 
 			<Box>
-				<PairInput title="Total" tickerIcon={settingsIcon} ticker="USDi" value={totalAmount} />
+				<PairInput title="Total" tickerIcon={ethLogo} ticker="USDi" value={totalAmount} />
 			</Box>
 
 			<Stack
 				direction="row"
 				justifyContent="flex-end"
 				alignItems="center"
-				spacing={2}
 				sx={{ marginTop: '16px', marginBottom: '16px' }}>
 				<IconButton size="small">
 					<Image src={reloadIcon} alt="reload" />

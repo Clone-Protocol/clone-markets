@@ -1,22 +1,27 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
 import { withCsrOnly } from '~/hocs/CsrOnly'
+import { Balance } from '~/web3/Home/balance'
 
-const BalanceView: React.FC = () => {
-	return (
+interface Props {
+  balance: Balance
+}
+
+const BalanceView: React.FC<Props> = ({ balance }) => {
+	return balance ? (
 		<StyledPaper variant="outlined">
 			<Box sx={{ marginBottom: '160px' }}>
 				<Title>Total Value</Title>
 				<BalanceValue>
-					<NumValue>100000</NumValue> USDi
+					<NumValue>{balance.totalVal.toLocaleString()}</NumValue> USDi
 				</BalanceValue>
 			</Box>
 			<Divider />
 			<BottomContent>
 				<div>USDi Balance</div>
-				<div>0 USDi</div>
+				<div>{balance.balanceVal.toLocaleString()} USDi</div>
 			</BottomContent>
 		</StyledPaper>
-	)
+	): <></>
 }
 
 export default withCsrOnly(BalanceView)

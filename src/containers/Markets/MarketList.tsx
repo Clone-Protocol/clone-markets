@@ -146,6 +146,6 @@ const TradeButton = styled(Button)`
   height: 30px;
 `
 
-columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, resizable: true, filterable: false }))
+columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
 export default MarketList
