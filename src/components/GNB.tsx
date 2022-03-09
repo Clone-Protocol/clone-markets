@@ -94,10 +94,10 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
-	const { connect, connecting, connected, publicKey, disconnect } = useWallet()
+	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
-  	const { Program, getInceptApp } = useIncept()
+  const { getInceptApp } = useIncept()
 
 	const inceptConstructor = () => {
 		const inceptProgramID = 'DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3'
@@ -105,33 +105,24 @@ const RightMenu = () => {
 		console.log(program.managerAddress[0].toString())
 	}
 
-	let userAccount;
-	const tryUserInitialization = () => {
-		console.log(`PUBLIC KEY: ${publicKey?.toString()}`);
-
-		if (!publicKey) {return;}
-
-		const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
-
-		// If the user doest not have an account, try to create one.
-		// Perhaps should be some sort of prompt for this...
-		try {
-			program.getUserAccount(publicKey).then(
-				acnt => {userAccount = acnt;}
-			);
-
-		} catch (error) {
-			program.initializeUser(publicKey).then(
-				() => {;}
-			);
-		}
-	};
-
-  // useEffect(() => {
-  //   if (Program) {
-  //     console.log(Program.managerAddress[0].toString())
-  //   }
-  // }, [Program])
+  useEffect(() => {
+    async function getAccount() {
+      if (connected && publicKey) {
+        console.log(`PUBLIC KEY: ${publicKey?.toString()}`);
+  
+        const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
+        try {
+          const userAccount = await program.getUserAccount(publicKey)
+          console.log('acc', userAccount)
+        } catch (error) {
+          // got error : Error: Invalid account discriminator
+          const response = await program.initializeUser(publicKey)
+          console.log('initialized:', response)
+        }
+      }
+    }
+    getAccount()
+  }, [connected, publicKey])
 
 	const handleWalletClick = () => {
 		try {
@@ -140,7 +131,6 @@ const RightMenu = () => {
 					setOpen(true)
 				} else {
 					connect()
-					tryUserInitialization()
 				}
 			} else {
 				disconnect()
