@@ -16,10 +16,10 @@ enum AssetType {
 export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsProps) => {
 	if (!userPubKey) return []
 
-	const iassetMints = await program.getUseriAssetInfo(userPubKey)
+	const iassetInfos = await program.getUseriAssetInfo(userPubKey)
 	const result: BalanceList[] = []
 
-	for (var info of iassetMints) {
+	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''

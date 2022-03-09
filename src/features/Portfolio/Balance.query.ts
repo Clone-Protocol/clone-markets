@@ -19,19 +19,19 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 	const opts = {
 		preflightCommitment: 'processed',
 	}
-	// const endpoint = 'https://explorer-api.devnet.solana.com'
-	const endpoint = 'https://127.0.0.1:8899' //localnet
+	const endpoint = 'https://explorer-api.devnet.solana.com'
+	// const endpoint = 'https://127.0.0.1:8899' //localnet
 	const connection = new Connection(endpoint)
 
 	// @ts-ignore
 	const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
 
-	const incept = new Incept(connection, Network.LOCAL, inceptProgramID, provider)
+	const incept = new Incept(connection, Network.DEV, inceptProgramID, provider)
 
-	const iassetMints = await incept.getUseriAssetInfo(provider.wallet.publicKey)
+	const iassetInfos = await incept.getUseriAssetInfo(provider.wallet.publicKey)
 	const result: BalanceList[] = []
 
-	for (var info of iassetMints) {
+	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''
