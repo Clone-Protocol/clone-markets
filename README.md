@@ -20,7 +20,7 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 ### Switching Networks
 
-In the `.env.local` file you can set the `NEXT_PUBLIC_USE_NETWORK` variable to either `LOCAL_NET` or `DEV_NET`. This will switch the network endpoint and program IDs to the default values defined in `sdk/src/network.ts`.
+In the `.env.local` file you can set the `NEXT_PUBLIC_USE_NETWORK` variable to either `LOCAL_NET` or `DEV_NET` (will default to `LOCAL_NET`). This will switch the network endpoint and program IDs to the default values defined in `sdk/src/network.ts`.
 
 You may also override these values by setting the `NEXT_PUBLIC_INCEPT_PROGRAM_ID` and `NEXT_PUBLIC_NETWORK_ENDPOINT` variables.
 
