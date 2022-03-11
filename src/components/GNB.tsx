@@ -19,6 +19,7 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
+import { Transaction } from '@solana/web3.js'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -97,34 +98,59 @@ const RightMenu = () => {
 	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
-  const { getInceptApp } = useIncept()
+  	const { getInceptApp } = useIncept()
+	const [ mintUsdi, setMintUsdi ] = useState(false);
 
 	const inceptConstructor = () => {
-		const inceptProgramID = 'DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3'
-		const program = getInceptApp(inceptProgramID)
+		const program = getInceptApp()
 		console.log(program.managerAddress[0].toString())
 	}
 
 	useEffect(() => {
 		async function getAccount() {
-		  if (connected && publicKey) {
-			console.log(`PUBLIC KEY: ${publicKey?.toString()}`);
+		  if (connected && publicKey && wallet) {
 	
-			const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
+			const program = getInceptApp();
 			await program.loadManager();
 
+			if (!program.provider.wallet) {
+				console.log("NO PROVIDER WALLET!");
+				return;
+			}
+
 			try {
+			  console.log("GETTING USER ACCOUNT!");
 			  const userAccount = await program.getUserAccount(publicKey)
 			  console.log('acc', userAccount)
 			} catch (error) {
-			  // got error : Error: Invalid account discriminator
-			  const response = await program.initializeUser(publicKey)
-			  console.log('initialized:', response)
+				console.log(error);
+				const response = await program.initializeUser(publicKey)
+				console.log('initialized:', response)
 			}
 		  }
 		}
 		getAccount()
 	  }, [connected, publicKey])
+
+	useEffect(() => {
+
+		async function userMintUsdi() {
+			if (connected && publicKey && mintUsdi) {
+		
+				const program = getInceptApp();
+				await program.loadManager();
+	
+				try {
+					const usdiAccount = await program.getOrCreateUsdiAssociatedTokenAccount();
+					await program.hackathonMintUsdi(usdiAccount.address, 100000000000000);
+
+				} finally {
+					setMintUsdi(false);
+				}
+			}
+		}
+		userMintUsdi()
+	}, [mintUsdi, connected, publicKey])
 	
 	const handleWalletClick = () => {
 		try {
@@ -142,10 +168,14 @@ const RightMenu = () => {
 		}
 	}
 
+	const handleGetUsdiClick = () => {
+		setMintUsdi(true)
+	}
+
 	return (
 		<Box display="flex">
-			<HeaderButton onClick={inceptConstructor} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
-        Get USDi
+			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
+        Get USDi	
 			</HeaderButton>
 
 			<HeaderButton
