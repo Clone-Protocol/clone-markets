@@ -41,7 +41,7 @@ const SwapBox = () => {
     console.log(fromPair)
     console.log(toPair)
     // call contract
-    const program = getInceptApp('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
+    const program = getInceptApp()
     await callSwap({ program, userPubKey: publicKey })
     
   }

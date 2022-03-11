@@ -4,6 +4,7 @@ import { Incept } from "sdk/src"
 enum Asset {
 	Solana,
 	Ethereum,
+	Bitcoin
 }
 
 enum AssetType {
@@ -15,41 +16,47 @@ enum AssetType {
 
 export const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
   if (!userPubKey) return []
-
 	const iassetInfos = await program.getiAssetInfo(userPubKey)
 	const result: AssetList[] = []
 
+	let i = 1
 	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''
-    let assetType: number
+    	let assetType: number
 		switch (info[0]) {
 			case Asset.Solana:
 				tickerName = 'iSolana'
 				tickerSymbol = 'iSOL'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        assetType = AssetType.Crypto
+        		assetType = AssetType.Crypto
 				break
 			case Asset.Ethereum:
 				tickerName = 'iEthereum'
 				tickerSymbol = 'iETH'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        assetType = AssetType.Crypto
+        		assetType = AssetType.Crypto
+			case Asset.Bitcoin:
+				tickerName = 'iBitcoin'
+				tickerSymbol = 'iBTC'
+				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
+				assetType = AssetType.Crypto
 				break
 			default:
 				throw new Error('Not supported')
 		}
 		result.push({
-			id: info[0],
+			id: i,
 			tickerName: tickerName,
 			tickerSymbol: tickerSymbol,
 			tickerIcon: tickerIcon,
 			price: info[1]!,
-      assetType: assetType,
+      		assetType: assetType,
 			change24h: 0, //coming soon
 			changePercent: 0, //coming soon
 		})
+		i++
 	}
   // const result: AssetList[] = [
   //   {
