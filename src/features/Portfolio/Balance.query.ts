@@ -1,6 +1,7 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { Incept, Network } from '../../../sdk/src/index'
 import { PublicKey, Connection } from '@solana/web3.js'
+import { getNetworkDetailsFromEnv } from 'sdk/src/network';
 
 enum Asset {
 	Solana,
@@ -15,44 +16,47 @@ enum AssetType {
 }
 
 const fetchBalance = async ({ filter }: GetAssetsProps) => {
-	const inceptProgramID = new PublicKey('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
+	const network = getNetworkDetailsFromEnv();
+
 	const opts = {
 		preflightCommitment: 'processed',
 	}
-	const endpoint = 'https://explorer-api.devnet.solana.com'
-	// const endpoint = 'https://127.0.0.1:8899' //localnet
-	const connection = new Connection(endpoint)
+
+	const connection = new Connection(network.endpoint)
 
 	// @ts-ignore
 	const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
-
-	const incept = new Incept(connection, Network.DEV, inceptProgramID, provider)
+	
+	const incept = new Incept(connection, network.incept, provider)
 
 	const iassetInfos = await incept.getUseriAssetInfo(provider.wallet.publicKey)
+
 	const result: BalanceList[] = []
+
+	let usdiBalance = await incept.getUsdiBalance();
 
 	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''
-    let assetType: number
+    	let assetType: number
 		switch (info[0]) {
 			case Asset.Solana:
 				tickerName = 'iSolana'
 				tickerSymbol = 'iSOL'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        assetType = AssetType.Crypto
+        		assetType = AssetType.Crypto
 				break
 			case Asset.Ethereum:
 				tickerName = 'iEthereum'
 				tickerSymbol = 'iETH'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        assetType = AssetType.Crypto
+        		assetType = AssetType.Crypto
 				break
 			default:
 				throw new Error('Not supported')
 		}
-		let usdiBalance = await incept.getUsdiBalance(provider.wallet.publicKey)
+
 		result.push({
 			id: info[0],
 			tickerName: tickerName,
@@ -60,7 +64,7 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 			tickerIcon: tickerIcon,
 			price: info[1]!,
 			//changePercent: 1.58, 
-      assetType: assetType,
+      		assetType: assetType,
 			assetBalance: info[2]!,
 			usdiBalance: usdiBalance!,
 		})

@@ -4,6 +4,7 @@ import { Incept } from "sdk/src"
 enum Asset {
 	Solana,
 	Ethereum,
+	Bitcoin
 }
 
 enum AssetType {
@@ -17,41 +18,50 @@ export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsPro
 	if (!userPubKey) return []
 
 	const iassetInfos = await program.getUseriAssetInfo(userPubKey)
+	let usdiBalance = await program.getUsdiBalance()
+
 	const result: BalanceList[] = []
 
+	let i = 1;
 	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''
-    let assetType: number
+    	let assetType: number
 		switch (info[0]) {
 			case Asset.Solana:
 				tickerName = 'iSolana'
 				tickerSymbol = 'iSOL'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        assetType = AssetType.Crypto
+        		assetType = AssetType.Crypto
 				break
 			case Asset.Ethereum:
 				tickerName = 'iEthereum'
 				tickerSymbol = 'iETH'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        assetType = AssetType.Crypto
+        		assetType = AssetType.Crypto
+				break
+			case Asset.Bitcoin:
+				tickerName = 'iBitcoin'
+				tickerSymbol = 'iBTC'
+				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
+				assetType = AssetType.Crypto
 				break
 			default:
 				throw new Error('Not supported')
 		}
-		let usdiBalance = await program.getUsdiBalance(userPubKey)
 		result.push({
-			id: info[0],
+			id: i,
 			tickerName: tickerName,
 			tickerSymbol: tickerSymbol,
 			tickerIcon: tickerIcon,
 			price: info[1]!,
 			//changePercent: 1.58, 
-      assetType: assetType,
+      		assetType: assetType,
 			assetBalance: info[2]!,
 			usdiBalance: usdiBalance!,
 		})
+		i++;
 	}
 
 	// const result: BalanceList[] = [
