@@ -21,7 +21,7 @@ const BalanceList = () => {
   // })
 
   useEffect(() => {
-    const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
+    const program = getInceptApp();
 
     async function fetch() {
       const data = await fetchBalance({

@@ -11,8 +11,8 @@ const BalanceView = () => {
   const [balance, setBalance] = useState<Balance>()
 
   useEffect(() => {
-    const program = getInceptApp('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
-
+    const program = getInceptApp()
+    
     async function fetch() {
       const data = await fetchBalance({
         program,

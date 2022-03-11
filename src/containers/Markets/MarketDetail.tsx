@@ -12,7 +12,7 @@ const MarketDetail = () => {
   const [asset, setAsset] = useState<Asset>()
 
   useEffect(() => {
-    const program = getInceptApp('9MccekuZVBMDsz2ijjkYCBXyzfj8fZvgEu11zToXAnRR')
+    const program = getInceptApp()
 
     async function fetch() {
       const data = await fetchAsset({
