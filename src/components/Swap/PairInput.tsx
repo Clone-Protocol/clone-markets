@@ -2,19 +2,19 @@ import { FormControl, Input, InputAdornment, InputLabel, styled, Stack, Box } fr
 import Image from 'next/image'
 
 interface Props {
-	title: string | null
 	tickerIcon: string
 	tickerName: string | null
 	tickerSymbol: string | null
+  balance: number
 	value?: number
-	onChange?: () => void
+	onChange?: any
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, tickerName, tickerSymbol, value, onChange }) => {
+const PairInput: React.FC<Props> = ({ tickerIcon, tickerName, tickerSymbol, balance, value, onChange }) => {
 	return (
 		<FormControl variant="standard">
 			<Stack direction="row" justifyContent="flex-end">
-				<Box sx={{ fontSize: '12px', fontWeight: '500' }}>Balance: _</Box>
+				<Box sx={{ fontSize: '12px', fontWeight: '500' }}>Balance: {balance}</Box>
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display="flex">

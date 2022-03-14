@@ -1,11 +1,10 @@
-import { QueryObserverOptions, useQuery } from 'react-query'
-import { Incept, Network } from '../../../sdk/src/index'
-import { PublicKey, Connection } from '@solana/web3.js'
-import { getNetworkDetailsFromEnv } from 'sdk/src/network';
+import { PublicKey } from '@solana/web3.js'
+import { Incept } from "sdk/src"
 
 enum Asset {
 	Solana,
 	Ethereum,
+	Bitcoin
 }
 
 enum AssetType {
@@ -15,26 +14,15 @@ enum AssetType {
 	Comodotities,
 }
 
-const fetchBalance = async ({ filter }: GetAssetsProps) => {
-	const network = getNetworkDetailsFromEnv();
+export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsProps) => {
+	if (!userPubKey) return []
 
-	const opts = {
-		preflightCommitment: 'processed',
-	}
-
-	const connection = new Connection(network.endpoint)
-
-	// @ts-ignore
-	const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
-	
-	const incept = new Incept(connection, network.incept, provider)
-
-	const iassetInfos = await incept.getUseriAssetInfo(provider.wallet.publicKey)
+	const iassetInfos = await program.getUseriAssetInfo(userPubKey)
+	let usdiBalance = await program.getUsdiBalance()
 
 	const result: BalanceList[] = []
 
-	let usdiBalance = await incept.getUsdiBalance();
-
+	let i = 1;
 	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
@@ -53,12 +41,17 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
         		assetType = AssetType.Crypto
 				break
+			case Asset.Bitcoin:
+				tickerName = 'iBitcoin'
+				tickerSymbol = 'iBTC'
+				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
+				assetType = AssetType.Crypto
+				break
 			default:
 				throw new Error('Not supported')
 		}
-
 		result.push({
-			id: info[0],
+			id: i,
 			tickerName: tickerName,
 			tickerSymbol: tickerSymbol,
 			tickerIcon: tickerIcon,
@@ -68,6 +61,7 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 			assetBalance: info[2]!,
 			usdiBalance: usdiBalance!,
 		})
+		i++;
 	}
 
 	// const result: BalanceList[] = [
@@ -95,15 +89,12 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 	return result
 }
 
-export function useBalanceQuery({ filter, refetchOnMount }: GetAssetsProps) {
-	return useQuery(['assets', filter], () => fetchBalance({ filter }), {
-		refetchOnMount,
-	})
-}
+
 
 interface GetAssetsProps {
+  program: Incept,
+  userPubKey: PublicKey | null,
 	filter: FilterType
-	refetchOnMount?: QueryObserverOptions['refetchOnMount']
 }
 
 export enum FilterTypeMap {

@@ -2,16 +2,37 @@ import { Box, Stack, RadioGroup, FormControlLabel, Radio, Button } from '@mui/ma
 import { styled } from '@mui/system'
 import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useState } from 'react'
-import { FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
+import { useEffect, useState } from 'react'
+// import { AssetList, FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
+import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
 import Link from 'next/link'
+import { useIncept } from '~/hooks/useIncept'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const MarketList = () => {
   const [filter, setFilter] = useState<FilterType>('all')
-  const { data: assets } = useAssetsQuery({
-    filter,
-    refetchOnMount: 'always'
-  })
+  const [assets, setAssets] = useState<AssetList[]>([])
+  const { publicKey } = useWallet()
+  const { getInceptApp } = useIncept()
+
+  // const { data: assets } = useAssetsQuery({
+  //   filter,
+  //   refetchOnMount: 'always'
+  // })
+
+  useEffect(() => {
+    const program = getInceptApp('DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3')
+
+    async function fetch() {
+      const data = await fetchAssets({
+        program,
+        userPubKey: publicKey,
+        filter
+      })
+      setAssets(data)
+    }
+    fetch()
+  }, [publicKey])
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setFilter((event.target as HTMLInputElement).value as FilterType)
@@ -125,6 +146,6 @@ const TradeButton = styled(Button)`
   height: 30px;
 `
 
-columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, resizable: true, filterable: false }))
+columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
 export default MarketList

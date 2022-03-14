@@ -2,16 +2,37 @@ import { Box, Stack, RadioGroup, FormControlLabel, Radio, Button } from '@mui/ma
 import { styled } from '@mui/system'
 import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useState } from 'react'
-import { FilterType, FilterTypeMap, useBalanceQuery } from '~/features/Portfolio/Balance.query'
+import { useEffect, useState } from 'react'
+// import { FilterType, FilterTypeMap, useBalanceQuery } from '~/features/Portfolio/Balance.query'
+import { FilterType, FilterTypeMap, BalanceList as BalList, fetchBalance } from '~/web3/Portfolio/balance'
 import Link from 'next/link'
+import { useIncept } from '~/hooks/useIncept'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const BalanceList = () => {
   const [filter, setFilter] = useState<FilterType>('all')
-  const { data: assets } = useBalanceQuery({
-    filter,
-    refetchOnMount: 'always'
-  })
+  const [assets, setAssets] = useState<BalList[]>([])
+  const { publicKey } = useWallet()
+  const { getInceptApp } = useIncept()
+
+  // const { data: assets } = useBalanceQuery({
+  //   filter,
+  //   refetchOnMount: 'always'
+  // })
+
+  useEffect(() => {
+    const program = getInceptApp();
+
+    async function fetch() {
+      const data = await fetchBalance({
+        program,
+        userPubKey: publicKey,
+        filter
+      })
+      setAssets(data)
+    }
+    fetch()
+  }, [publicKey])
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setFilter((event.target as HTMLInputElement).value as FilterType)
@@ -120,6 +141,6 @@ const TradeButton = styled(Button)`
   height: 30px;
 `
 
-columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, resizable: true, filterable: false }))
+columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
 export default BalanceList

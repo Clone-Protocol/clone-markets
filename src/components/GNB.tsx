@@ -15,9 +15,11 @@ import CancelIcon from './Icons/CancelIcon'
 import MenuIcon from './Icons/MenuIcon'
 import { useScroll } from '~/hooks/useScroll'
 import { withCsrOnly } from '~/hocs/CsrOnly'
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
+import { useIncept } from '~/hooks/useIncept'
+import { Transaction } from '@solana/web3.js'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -30,7 +32,10 @@ const GNB: React.FC = () => {
 	const { scrolled } = useScroll()
 
 	const firstPathname = useMemo(() => {
-		return pathname.split('/').slice(0, 2).join('/')
+		return pathname
+			.split('/')
+			.slice(0, 2)
+			.join('/')
 	}, [pathname])
 
 	// const handleChange = (_: React.SyntheticEvent, path: string) => {
@@ -90,9 +95,63 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
-	const { wallet, connect, connecting, connected, publicKey, disconnect } = useWallet()
-	const { open, setOpen } = useWalletDialog()
+	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
+	const wallet = useAnchorWallet()
+	const { setOpen } = useWalletDialog()
+  	const { getInceptApp } = useIncept()
+	const [ mintUsdi, setMintUsdi ] = useState(false);
 
+	const inceptConstructor = () => {
+		const program = getInceptApp()
+		console.log(program.managerAddress[0].toString())
+	}
+
+	useEffect(() => {
+		async function getAccount() {
+		  if (connected && publicKey && wallet) {
+	
+			const program = getInceptApp();
+			await program.loadManager();
+
+			if (!program.provider.wallet) {
+				console.log("NO PROVIDER WALLET!");
+				return;
+			}
+
+			try {
+			  console.log("GETTING USER ACCOUNT!");
+			  const userAccount = await program.getUserAccount(publicKey)
+			  console.log('acc', userAccount)
+			} catch (error) {
+				console.log(error);
+				const response = await program.initializeUser(publicKey)
+				console.log('initialized:', response)
+			}
+		  }
+		}
+		getAccount()
+	  }, [connected, publicKey])
+
+	useEffect(() => {
+
+		async function userMintUsdi() {
+			if (connected && publicKey && mintUsdi) {
+		
+				const program = getInceptApp();
+				await program.loadManager();
+	
+				try {
+					const usdiAccount = await program.getOrCreateUsdiAssociatedTokenAccount();
+					await program.hackathonMintUsdi(usdiAccount.address, 100000000000000);
+
+				} finally {
+					setMintUsdi(false);
+				}
+			}
+		}
+		userMintUsdi()
+	}, [mintUsdi, connected, publicKey])
+	
 	const handleWalletClick = () => {
 		try {
 			if (!connected) {
@@ -109,10 +168,14 @@ const RightMenu = () => {
 		}
 	}
 
+	const handleGetUsdiClick = () => {
+		setMintUsdi(true)
+	}
+
 	return (
 		<Box display="flex">
-			<HeaderButton variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
-				Get USDi
+			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
+        Get USDi	
 			</HeaderButton>
 
 			<HeaderButton
@@ -120,7 +183,8 @@ const RightMenu = () => {
 				variant="outlined"
 				sx={{ width: '163px' }}
 				disabled={connecting}
-				startIcon={<Image src={walletIcon} alt="wallet" />}>
+				startIcon={<Image src={walletIcon} alt="wallet" />}
+			>
 				{!connected ? (
 					<>Connect Wallet</>
 				) : (

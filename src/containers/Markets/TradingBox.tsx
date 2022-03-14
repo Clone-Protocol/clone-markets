@@ -1,20 +1,30 @@
 import { Box, Paper, styled } from '@mui/material'
 import { useState } from 'react'
 import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
-import ReviewOrder from '~/components/Markets/TradingBox/ReviewOrder'
-import TradingComp from '~/components/Markets/TradingBox/TradingComp'
+import ReviewOrder, { OrderForm } from '~/components/Markets/TradingBox/ReviewOrder'
+import TradingComp, { TradingData } from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
+
+enum Section {
+  TradingComp,
+  ReviewOrder,
+  OrderSetting
+}
 
 const TradingBox: React.FC = () => {
   const [showTradingComp, setShowTradingComp] = useState(true)
   const [showReviewOrder, setShowReviewOrder] = useState(false)
   const [showOrderSetting, setShowOrderSetting] = useState(false)
-
-  enum Section {
-    TradingComp,
-    ReviewOrder,
-    OrderSetting
-  }
+  const [totalAmount, setTotalAmount] = useState(0.0)
+  const [slippage, setSlippage] = useState(0.5)
+  const [orderForm, setOrderForm] = useState<OrderForm>({
+    tabIdx: 0,
+    amountFrom: 0.0,
+    amountTo: 0.0,
+    amountTotal: 0.0,
+    convertVal: 50,
+    tradingFee: 0.03
+  })
 
   const showSection = (section: Section) => {
     switch(section) {
@@ -34,25 +44,47 @@ const TradingBox: React.FC = () => {
         setShowTradingComp(false)
       break;
     }
-
   }
 
-  const onSetting = (slippage: number) => {
-    console.log('slippage', slippage)
+  const onChangeData = (tradingData: TradingData) => {
+    // const amountTo = tradingData.fromAmount * tradingData.convertVal / 100
+    const amountTotal = tradingData.fromAmount * tradingData.convertVal / 100
+    console.log('aaa', tradingData)
+    setTotalAmount(amountTotal)
+  }
+
+  const onReviewOrder = (tradingData: TradingData) => {
+    const amountTo = tradingData.fromAmount * tradingData.convertVal / 100
+    const amountTotal = tradingData.fromAmount * tradingData.convertVal / 100
+    setOrderForm({
+      tabIdx: tradingData.tabIdx,
+      amountFrom: tradingData.fromAmount,
+      amountTo,
+      amountTotal,
+      convertVal: tradingData.convertVal,
+      tradingFee: 0.03
+    })
+    showSection(Section.ReviewOrder)
+  }
+
+  const onSetting = (slippage: number) => {    
+    setSlippage(slippage)
     showSection(Section.TradingComp)
   }
 
   const onConfirm = () => {
-    
+    //call contract with orderForm
+    console.log('slippage', slippage)
+    console.log('form', orderForm)
   }
 
   return (
     <StyledPaper variant="outlined">
       {showTradingComp &&
-        <TradingComp onShowOption={() => showSection(Section.OrderSetting)} onReviewOrder={() => showSection(Section.ReviewOrder)} /> 
+        <TradingComp totalAmount={totalAmount} onChangeData={onChangeData} onShowOption={() => showSection(Section.OrderSetting)} onReviewOrder={onReviewOrder} /> 
       }
       {showReviewOrder &&
-        <ReviewOrder onConfirm={onConfirm} onCancel={() => showSection(Section.TradingComp)} />
+        <ReviewOrder orderForm={orderForm} onConfirm={onConfirm} onCancel={() => showSection(Section.TradingComp)} />
       }
       {showOrderSetting &&
         <OrderSetting onSetting={onSetting} />
