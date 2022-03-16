@@ -235,15 +235,17 @@ export class Incept {
 		return Number((await this.connection.getTokenAccountBalance(userIassetTokenAccount.address, 'confirmed')).value!.amount)
 	}
 
+	
+
+	/**
+	 * Performs the swap calculation based on (iAsset + dIasset)(Usdi + dUsdi) = k
+	 * `amountInput` can be pos/neg and `isUsdi` should reflect if it is `iAsset` or `usdi`.
+	 */
 	public async calculateSwapAmount(amountInput: number, poolIndex: number, isUsdi: boolean) {
 		const [iassetBalanceRaw, usdiBalanceRaw] = await this.getPoolBalances(poolIndex);
-
 		const iassetBalance = iassetBalanceRaw * 10 ** (-DEVNET_TOKEN_SCALE);
-
 		const usdiBalance = usdiBalanceRaw * 10 ** (-DEVNET_TOKEN_SCALE);
-
 		const k = iassetBalance * usdiBalance;
-
 		const origPrice = usdiBalance / iassetBalance;
 
 		let amountOutput;
