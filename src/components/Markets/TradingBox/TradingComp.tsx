@@ -42,7 +42,6 @@ const TradingComp: React.FC<Props> = ({ orderForm, onChangeData, onShowOption, o
 		const newData = {
 			...tradingData,
 			tabIdx: newTabIdx,
-			effect: ComponentEffect.TabIndex
 		}
 		setTradingData(newData)
 		onChangeData(newData, ComponentEffect.TabIndex)
