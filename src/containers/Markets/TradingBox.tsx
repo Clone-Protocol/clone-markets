@@ -11,7 +11,11 @@ enum Section {
   OrderSetting
 }
 
-const TradingBox: React.FC = () => {
+interface Props {
+	assetId: string
+}
+
+const TradingBox: React.FC<Props> = ({ assetId }) => {
   const [showTradingComp, setShowTradingComp] = useState(true)
   const [showReviewOrder, setShowReviewOrder] = useState(false)
   const [showOrderSetting, setShowOrderSetting] = useState(false)

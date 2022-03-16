@@ -6,13 +6,14 @@ import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Asset, fetchAsset } from '~/web3/Markets/detail'
 
-const MarketDetail = () => {
+const MarketDetail = ({ assetId }: { assetId: string }) => {
   const { publicKey } = useWallet()
   const { getInceptApp } = useIncept()
   const [asset, setAsset] = useState<Asset>()
 
   useEffect(() => {
     const program = getInceptApp()
+    console.log(assetId)
 
     async function fetch() {
       const data = await fetchAsset({
@@ -24,7 +25,7 @@ const MarketDetail = () => {
       }
     }
     fetch()
-  }, [publicKey])
+  }, [publicKey, assetId])
 
   return (
     <>

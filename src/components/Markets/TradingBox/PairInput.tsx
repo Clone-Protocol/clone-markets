@@ -1,9 +1,9 @@
-import { FormControl, Input, InputAdornment, InputLabel, Stack, Box, styled } from '@mui/material'
+import { FormControl, Stack, Box, styled } from '@mui/material'
 import Image from 'next/image'
 
 interface Props {
 	title: string | null
-	tickerIcon: StaticImageData
+	tickerIcon: string
 	ticker: string | null
   balance?: number
 	value?: number

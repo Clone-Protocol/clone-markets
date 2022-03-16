@@ -9,6 +9,9 @@ import settingsIcon from 'public/images/settings-icon.png'
 
 export interface TradingData {
   tabIdx: number
+  tickerIcon: string
+  tickerName: string | null
+  tickerSymbol: string | null
   fromAmount: number
   fromBalance : number
   convertVal: number
@@ -24,6 +27,9 @@ interface Props {
 const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption, onReviewOrder }) => {
   const [tradingData, setTradingData] = useState<TradingData>({
     tabIdx: 0,
+    tickerIcon: ethLogo,
+    tickerName: 'iSolana',
+    tickerSymbol: 'iSOL',
     fromAmount: 0.0,
     fromBalance: 0,
     convertVal: 50
@@ -78,7 +84,7 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 				<Tab label="Sell"></Tab>
 			</StyledTabs>
 			<Box sx={{ marginTop: '30px' }}>
-				<PairInput title="How much?" tickerIcon={ethLogo} ticker="iSOL" onChange={handleChangeAmount} value={tradingData.fromAmount} balance={tradingData.fromBalance} />
+				<PairInput title="How much?" tickerIcon={tradingData.tickerIcon} ticker={tradingData.tickerSymbol} onChange={handleChangeAmount} value={tradingData.fromAmount} balance={tradingData.fromBalance} />
 			</Box>
 
 			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { styled } from '@mui/system'
 import MarketDetail from '~/containers/Markets/MarketDetail'
@@ -7,6 +8,9 @@ import TradingBox from '~/containers/Markets/TradingBox'
 import { Grid } from '@mui/material'
 
 const AssetPage: NextPage = () => {
+  const router = useRouter()
+  const { assetId } = router.query
+
 	return (
 		<div>
 			<Head>
@@ -19,10 +23,10 @@ const AssetPage: NextPage = () => {
 					}}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} md={8}>
-							<MarketDetail />
+							<MarketDetail assetId={assetId} />
 						</Grid>
 						<Grid item xs={12} md={4}>
-							<TradingBox />
+							<TradingBox assetId={assetId} />
 						</Grid>
 					</Grid>
 				</StyledSection>
