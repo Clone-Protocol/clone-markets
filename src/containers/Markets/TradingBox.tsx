@@ -2,7 +2,7 @@ import { Box, Paper, styled } from '@mui/material'
 import { useState, useEffect } from 'react'
 import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
 import ReviewOrder, { OrderForm } from '~/components/Markets/TradingBox/ReviewOrder'
-import TradingComp, { TradingData } from '~/components/Markets/TradingBox/TradingComp'
+import TradingComp, { TradingData, ComponentEffect } from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
@@ -24,6 +24,8 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
   const [showTradingComp, setShowTradingComp] = useState(true)
   const [showReviewOrder, setShowReviewOrder] = useState(false)
   const [showOrderSetting, setShowOrderSetting] = useState(false)
+  const [totalAmount, setTotalAmount] = useState(0.0)
+  const [toAmount, setToAmount] = useState(0.0)
   const [slippage, setSlippage] = useState(0.5)
   const [orderForm, setOrderForm] = useState<OrderForm>({
     tabIdx: 0,
@@ -43,7 +45,6 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
     console.log(assetId)
 
     async function fetch() {
-      
     }
     fetch()
   }, [publicKey, assetId])
@@ -68,14 +69,39 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
     }
   }
 
-  const onChangeData = (tradingData: TradingData) => {
-    // const amountTo = tradingData.fromAmount * tradingData.convertVal / 100
-    const amountTotal = tradingData.fromAmount * tradingData.convertVal / 100
-    
-    setOrderForm({
-      ...orderForm,
-      amountTotal
-    })
+  const onChangeData = async (tradingData: TradingData, effect: ComponentEffect) => {
+    const program = getInceptApp();
+    await program.loadManager()
+
+    switch (effect) {
+      case ComponentEffect.BarValue: {
+        // Hold bar value static and set the input value as usdi or iasset depending on tab, then calc output.
+        break;
+      }
+      case ComponentEffect.iAssetAmount: {
+        // Hold Iasset amount static and set Iasset as the input value, then calc output and adjust bar value.
+        break;
+      }
+      case ComponentEffect.TabIndex: {
+        // Hold Iasset amount static and set Iasset as the input value, then calc output and adjust bar value.
+      }
+      default:
+        break
+
+    }
+    const poolIndex = 2;
+
+    const isBuy = (tradingData.tabIdx == 0);
+
+    const amountTotal = tradingData.fromBalance * tradingData.convertVal / 100;
+
+    let {amountOutput, priceImpact} = await program.calculateSwapAmount(amountTotal, poolIndex, isBuy);
+
+    console.log(amountTotal, amountOutput, priceImpact, effect)
+
+    console.log('aaa', tradingData, amountTotal, priceImpact);
+    setTotalAmount(amountTotal)
+    setToAmount(amountOutput)
   }
 
   const onReviewOrder = (tradingData: TradingData) => {

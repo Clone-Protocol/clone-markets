@@ -14,6 +14,8 @@ const COMET_POSITIONS_SIZE = 59208
 const MINT_POSITIONS_SIZE = 24528
 const LIQUIDITY_POSITIONS_SIZE = 16368
 
+const DEVNET_TOKEN_SCALE = 8;
+
 const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL')
 
 export class Incept {
@@ -223,8 +225,40 @@ export class Incept {
 	public async getUsdiBalance() {
 
 		let associatedTokenAccount = await this.getOrCreateUsdiAssociatedTokenAccount();
+		return Number(associatedTokenAccount.amount) / 100000000;
+	}
 
-		return Number(associatedTokenAccount.amount) / 1000000000000;
+	public async getUserIAssetBalance(poolIndex: number) {
+		let pool = await this.getPool(poolIndex);
+
+		let userIassetTokenAccount = await this.getOrCreateAssociatedTokenAccount(pool.assetInfo.iassetMint);
+		return Number((await this.connection.getTokenAccountBalance(userIassetTokenAccount.address, 'confirmed')).value!.amount)
+	}
+
+	public async calculateSwapAmount(amountInput: number, poolIndex: number, isUsdi: boolean) {
+		const [iassetBalanceRaw, usdiBalanceRaw] = await this.getPoolBalances(poolIndex);
+
+		const iassetBalance = iassetBalanceRaw * 10 ** (-DEVNET_TOKEN_SCALE);
+
+		const usdiBalance = usdiBalanceRaw * 10 ** (-DEVNET_TOKEN_SCALE);
+
+		const k = iassetBalance * usdiBalance;
+
+		const origPrice = usdiBalance / iassetBalance;
+
+		let amountOutput;
+		let impactedPrice;
+		if (isUsdi) { // Amount should be USDI to put into pool
+			amountOutput = (k / (usdiBalance + amountInput)) - iassetBalance;
+			impactedPrice = (usdiBalance + amountInput) / (iassetBalance + amountOutput);
+		} else {
+			amountOutput = (k / (iassetBalance + amountInput)) - usdiBalance;
+			impactedPrice = (usdiBalance + amountOutput) / (iassetBalance + amountInput);
+		}
+
+		const priceImpact = (impactedPrice - origPrice) / origPrice;
+
+		return {amountOutput, priceImpact};
 	}
 
 	public async getiAssetMints() {
