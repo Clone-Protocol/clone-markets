@@ -6,30 +6,25 @@ import Image from 'next/image'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import reloadIcon from 'public/images/reload-icon.png'
 import settingsIcon from 'public/images/settings-icon.png'
+import { OrderForm } from './ReviewOrder'
 
 export interface TradingData {
   tabIdx: number
-  tickerIcon: string
-  tickerName: string | null
-  tickerSymbol: string | null
   fromAmount: number
   fromBalance : number
   convertVal: number
 }
 
 interface Props {
-  totalAmount: number
+  orderForm: OrderForm
   onChangeData: (tradingData: TradingData) => void
 	onShowOption: () => void
 	onReviewOrder: (tradingData: TradingData) => void
 }
 
-const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption, onReviewOrder }) => {
+const TradingComp: React.FC<Props> = ({ orderForm, onChangeData, onShowOption, onReviewOrder }) => {
   const [tradingData, setTradingData] = useState<TradingData>({
     tabIdx: 0,
-    tickerIcon: ethLogo,
-    tickerName: 'iSolana',
-    tickerSymbol: 'iSOL',
     fromAmount: 0.0,
     fromBalance: 0,
     convertVal: 50
@@ -84,7 +79,7 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 				<Tab label="Sell"></Tab>
 			</StyledTabs>
 			<Box sx={{ marginTop: '30px' }}>
-				<PairInput title="How much?" tickerIcon={tradingData.tickerIcon} ticker={tradingData.tickerSymbol} onChange={handleChangeAmount} value={tradingData.fromAmount} balance={tradingData.fromBalance} />
+				<PairInput title="How much?" tickerIcon={orderForm.tickerIcon} ticker={orderForm.tickerSymbol} onChange={handleChangeAmount} value={tradingData.fromAmount} balance={tradingData.fromBalance} />
 			</Box>
 
 			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
@@ -92,7 +87,7 @@ const TradingComp: React.FC<Props> = ({ totalAmount, onChangeData, onShowOption,
 			</Box>
 
 			<Box>
-				<PairInput title="Total" tickerIcon={ethLogo} ticker="USDi" value={totalAmount} />
+				<PairInput title="Total" tickerIcon={ethLogo} ticker="USDi" value={orderForm.amountTotal} />
 			</Box>
 
 			<Stack

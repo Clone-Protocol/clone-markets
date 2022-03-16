@@ -1,9 +1,12 @@
 import { Box, Paper, styled } from '@mui/material'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
 import ReviewOrder, { OrderForm } from '~/components/Markets/TradingBox/ReviewOrder'
 import TradingComp, { TradingData } from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
+import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
+import { useIncept } from '~/hooks/useIncept'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 enum Section {
   TradingComp,
@@ -16,19 +19,34 @@ interface Props {
 }
 
 const TradingBox: React.FC<Props> = ({ assetId }) => {
+  const { publicKey } = useWallet()
+  const { getInceptApp } = useIncept()
   const [showTradingComp, setShowTradingComp] = useState(true)
   const [showReviewOrder, setShowReviewOrder] = useState(false)
   const [showOrderSetting, setShowOrderSetting] = useState(false)
-  const [totalAmount, setTotalAmount] = useState(0.0)
   const [slippage, setSlippage] = useState(0.5)
   const [orderForm, setOrderForm] = useState<OrderForm>({
     tabIdx: 0,
+    tickerIcon: ethLogo,
+    tickerName: 'iSolana',
+    tickerSymbol: 'iSOL',
     amountFrom: 0.0,
+    balanceFrom: 0.0,
     amountTo: 0.0,
     amountTotal: 0.0,
     convertVal: 50,
     tradingFee: 0.03
   })
+
+  useEffect(() => {
+    const program = getInceptApp()
+    console.log(assetId)
+
+    async function fetch() {
+      
+    }
+    fetch()
+  }, [publicKey, assetId])
 
   const showSection = (section: Section) => {
     switch(section) {
@@ -53,16 +71,21 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
   const onChangeData = (tradingData: TradingData) => {
     // const amountTo = tradingData.fromAmount * tradingData.convertVal / 100
     const amountTotal = tradingData.fromAmount * tradingData.convertVal / 100
-    console.log('aaa', tradingData)
-    setTotalAmount(amountTotal)
+    
+    setOrderForm({
+      ...orderForm,
+      amountTotal
+    })
   }
 
   const onReviewOrder = (tradingData: TradingData) => {
     const amountTo = tradingData.fromAmount * tradingData.convertVal / 100
     const amountTotal = tradingData.fromAmount * tradingData.convertVal / 100
     setOrderForm({
+      ...orderForm,
       tabIdx: tradingData.tabIdx,
       amountFrom: tradingData.fromAmount,
+      balanceFrom: tradingData.fromBalance,
       amountTo,
       amountTotal,
       convertVal: tradingData.convertVal,
@@ -85,7 +108,7 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
   return (
     <StyledPaper variant="outlined">
       {showTradingComp &&
-        <TradingComp totalAmount={totalAmount} onChangeData={onChangeData} onShowOption={() => showSection(Section.OrderSetting)} onReviewOrder={onReviewOrder} /> 
+        <TradingComp orderForm={orderForm} onChangeData={onChangeData} onShowOption={() => showSection(Section.OrderSetting)} onReviewOrder={onReviewOrder} /> 
       }
       {showReviewOrder &&
         <ReviewOrder orderForm={orderForm} onConfirm={onConfirm} onCancel={() => showSection(Section.TradingComp)} />

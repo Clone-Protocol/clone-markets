@@ -2,7 +2,11 @@ import { Box, Stack, Button, styled, Divider } from '@mui/material'
 
 export interface OrderForm {
   tabIdx: number;
+  tickerIcon: string
+  tickerName: string | null
+  tickerSymbol: string | null
   amountFrom: number;
+  balanceFrom: number;
   amountTo: number;
   amountTotal: number;
   convertVal: number;
