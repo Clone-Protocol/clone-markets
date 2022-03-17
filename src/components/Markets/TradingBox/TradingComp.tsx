@@ -8,6 +8,13 @@ import reloadIcon from 'public/images/reload-icon.png'
 import settingsIcon from 'public/images/settings-icon.png'
 import { OrderForm } from './ReviewOrder'
 
+export enum ComponentEffect {
+	iAssetAmount,
+	UsdiAmount,
+	BarValue,
+	TabIndex
+}
+
 export interface TradingData {
   tabIdx: number
   fromAmount: number
@@ -17,7 +24,8 @@ export interface TradingData {
 
 interface Props {
   orderForm: OrderForm
-  onChangeData: (tradingData: TradingData) => void
+  totalAmount: number
+  onChangeData: (tradingData: TradingData, effect: ComponentEffect) => void
 	onShowOption: () => void
 	onReviewOrder: (tradingData: TradingData) => void
 }
@@ -27,45 +35,45 @@ const TradingComp: React.FC<Props> = ({ orderForm, onChangeData, onShowOption, o
     tabIdx: 0,
     fromAmount: 0.0,
     fromBalance: 0,
-    convertVal: 50
+    convertVal: 50,
   })
 
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
-    const newData = {
-      ...tradingData,
-      tabIdx: newTabIdx
-    }
-    setTradingData(newData)
-    onChangeData(newData)
+		const newData = {
+			...tradingData,
+			tabIdx: newTabIdx,
+		}
+		setTradingData(newData)
+		onChangeData(newData, ComponentEffect.TabIndex)
 	}
 
 	const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newData
-		if (e.currentTarget.value) {
-			const amount = parseFloat(e.currentTarget.value)
-      newData = {
-        ...tradingData,
-        fromAmount: amount
-      }
-      setTradingData(newData)
-		} else {
-      newData = {
-        ...tradingData,
-        fromAmount: 0.0
-      }
-      setTradingData(newData)
-		}
-    onChangeData(newData)
+		let newData
+			if (e.currentTarget.value) {
+				const amount = parseFloat(e.currentTarget.value)
+				newData = {
+					...tradingData,
+					fromAmount: amount
+				}
+				setTradingData(newData)
+			} else {
+				newData = {
+					...tradingData,
+					fromAmount: 0.0
+				}
+				setTradingData(newData)
+			}
+		onChangeData(newData, ComponentEffect.iAssetAmount)
 	}
 
 	const handleChangeConvert = (event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
-      const newData = {
-        ...tradingData,
-        convertVal: newValue
-      }
-      setTradingData(newData)
-      onChangeData(newData)
+			const newData = {
+				...tradingData,
+				convertVal: newValue
+			}
+			setTradingData(newData)
+			onChangeData(newData, ComponentEffect.BarValue)
 		}
 	}
 
