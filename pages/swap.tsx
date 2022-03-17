@@ -1,29 +1,24 @@
+import * as React from 'react'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { styled } from '@mui/system'
-import { Container, Box } from '@mui/material'
-import WelcomeMsg from '~/components/Home/WelcomeMsg'
-import BalanceView from '~/containers/Home/BalanceView'
+import Head from 'next/head'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import SwapBox from '~/containers/Swap/SwapBox'
 
-const Home: NextPage = () => {
+const Swap: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Incept Protocol</title>
-				<meta name="description" content="Incept Protocol" />
-				<link rel="icon" href="/favicon.ico" />
+				<title>Swap</title>
 			</Head>
-
 			<main>
 				<StyledSection
 					sx={{
 						backgroundColor: '#FAFAFA',
 					}}>
 					<Container>
-						<WelcomeMsg />
-						<Box sx={{ marginTop: '40px' }}>
-							<BalanceView />
-						</Box>
+						<SwapBox />
 					</Container>
 				</StyledSection>
 			</main>
@@ -40,4 +35,4 @@ const StyledSection = styled('section')`
 	}
 `
 
-export default Home
+export default Swap

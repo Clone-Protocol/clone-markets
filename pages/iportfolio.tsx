@@ -1,28 +1,26 @@
+import * as React from 'react'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { styled } from '@mui/system'
+import Head from 'next/head'
 import { Container, Box } from '@mui/material'
-import WelcomeMsg from '~/components/Home/WelcomeMsg'
 import BalanceView from '~/containers/Home/BalanceView'
+import BalanceList from '~/containers/Portfolio/BalanceList'
 
-const Home: NextPage = () => {
+const IportfolioPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Incept Protocol</title>
-				<meta name="description" content="Incept Protocol" />
-				<link rel="icon" href="/favicon.ico" />
+				<title>iPortfolio - Incept Protocol</title>
 			</Head>
-
 			<main>
 				<StyledSection
 					sx={{
 						backgroundColor: '#FAFAFA',
 					}}>
 					<Container>
-						<WelcomeMsg />
-						<Box sx={{ marginTop: '40px' }}>
-							<BalanceView />
+						<BalanceView />
+						<Box sx={{ marginTop: '58px' }}>
+							<BalanceList />
 						</Box>
 					</Container>
 				</StyledSection>
@@ -40,4 +38,4 @@ const StyledSection = styled('section')`
 	}
 `
 
-export default Home
+export default IportfolioPage
