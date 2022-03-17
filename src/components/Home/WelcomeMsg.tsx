@@ -8,7 +8,7 @@ const WelcomeMsg = () => {
 	}
 	return (
 		<StyledPaper variant="outlined">
-			👋 Hi and welcome to Incept! We are a one stop shop DeFi platform where you can trade plathora of asset
+			👋 Hi and welcome to Incept! We are a one stop shop DeFi platform where you can trade a plethora of asset
 			classes through our pioneering <span style={underlineStyle}>Comet Liquidity System</span>.
 		</StyledPaper>
 	)
