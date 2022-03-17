@@ -31,8 +31,6 @@ export const InceptProvider: FC<InceptProviderProps> = ({ children, ...props }) 
 
   const getInceptApp = () : Incept | null => {
     if (AnchorProvider) {
-  
-      console.log(':::getInceptApp:::')
 
       const network = getNetworkDetailsFromEnv();
       const incept = new Incept(AnchorProvider.connection, network.incept, AnchorProvider)

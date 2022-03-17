@@ -10,7 +10,6 @@ const OrderSetting: React.FC<Props> = ({ onSetting }) => {
 
 	const handleSlippageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const selValue = (event.target as HTMLInputElement).value
-		console.log('s', selValue)
 		if (selValue !== 'custom') {
 			setSlippage(parseFloat(selValue))
 		} else {

@@ -333,8 +333,7 @@ export class Incept {
 					isSigner: false,
 				}
 			})
-		console.log(`TOKEN DATA POOLS:`)
-		console.log(priceFeeds[0].pubkey)
+
 		return (await this.program.instruction.updatePrices({
 			remainingAccounts: priceFeeds,
 			accounts: {

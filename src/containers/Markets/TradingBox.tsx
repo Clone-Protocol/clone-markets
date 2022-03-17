@@ -26,7 +26,6 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 	const [showTradingComp, setShowTradingComp] = useState(true)
 	const [showReviewOrder, setShowReviewOrder] = useState(false)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
-	const [totalAmount, setTotalAmount] = useState(0.0)
 	const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
 	const [maxIassetRecieve, setMaxIassetRecieve] = useState(0.0)
 	const [maxUsdiRecieve, setMaxUsdiRecieve] = useState(0.0)
@@ -54,36 +53,8 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 		convertVal: 50,
 	})
 
-	// useEffect(() => {
-	//   const program = getInceptApp()
-	//   console.log(assetId)
-
-	//   async function fetch() {
-	//     await program.loadManager()
-
-	//     let poolIndex = 2;
-	//     // Index should be pulled from assetId
-	//     const userIAssetBalance = await program.getUserIAssetBalance(poolIndex);
-	//     setiAssetUserBalance(120);
-
-	//     const userUsdiBalance = await program.getUsdiBalance();
-	//     setusdiUserBalance(userUsdiBalance);
-
-	//     // Should be set as limits on the UI somehow.
-	//     let swapIassetOutput =  await program.calculateSwapAmount(userUsdiBalance, poolIndex, true);
-	//     setMaxIassetRecieve(Math.abs(swapIassetOutput.amountOutput));
-
-	//     let swapUsdiOutput =  await program.calculateSwapAmount(userIAssetBalance, poolIndex, false);
-	//     setMaxUsdiRecieve(Math.abs(swapUsdiOutput.amountOutput));
-
-	//     console.log(userIAssetBalance, userUsdiBalance);
-	//   }
-	//   fetch()
-	// }, [publicKey, assetId])
-
 	useEffect(() => {
 		const program = getInceptApp()
-		console.log(assetId)
 
 		async function fetch() {
 			const data = await fetchAsset({
@@ -228,11 +199,8 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 			}
 		}
 
-		console.log('aaa', tradingData)
-		console.log('bbb', newData)
 		setTradingData(newData)
 		setSlippage(slippage)
-		setTotalAmount(1200)
 	}
 
 	const onReviewOrder = (tradingData: TradingData) => {

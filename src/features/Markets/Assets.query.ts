@@ -17,7 +17,6 @@ enum AssetType {
 const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
   if (!userPubKey) return []
 
-  console.log('dd', userPubKey)
 	const iassetInfos = await program.getiAssetInfo(userPubKey)
 	const result: AssetList[] = []
 

@@ -106,7 +106,6 @@ export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	let price = balances[1] / balances[0]
 	let userIassetBalance = await program.getUserIAssetBalance(index)
   let liquidity = balances[1] * 2
-  console.log(liquidity)
 
   const userBalances = await fetchBalance({program, userPubKey})
   let portfolioPercentage = userIassetBalance * price * 100 / (userBalances!.totalVal)

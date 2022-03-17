@@ -38,8 +38,6 @@ const SwapBox = () => {
   }
 
   const onConfirm = async () => {
-    console.log(fromPair)
-    console.log(toPair)
     // call contract
     const program = getInceptApp()
     await callSwap({ program, userPubKey: publicKey })

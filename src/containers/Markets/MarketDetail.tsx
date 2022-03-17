@@ -14,7 +14,6 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
   useEffect(() => {
     const program = getInceptApp()
-    console.log(assetId)
 
     async function fetch() {
       const data = await fetchAsset({
@@ -35,7 +34,6 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
           avgLiquidity: data.liquidity,
           myNotionalVal: data.balance * data.price
         })
-        console.log(asset.tickerSymbol)
       }
     }
     fetch()
