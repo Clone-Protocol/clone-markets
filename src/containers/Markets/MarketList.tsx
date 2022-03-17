@@ -8,6 +8,7 @@ import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Market
 import Link from 'next/link'
 import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { PageTabs, PageTab } from '~/components/Common/Tabs'
 
 const MarketList = () => {
   const [filter, setFilter] = useState<FilterType>('all')
@@ -34,23 +35,22 @@ const MarketList = () => {
     fetch()
   }, [publicKey])
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setFilter((event.target as HTMLInputElement).value as FilterType)
+  const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
+		setFilter(newValue)
 	}
 
   return (
     <>
       <Stack mb={2} direction="row" justifyContent="space-between">
-        <RadioGroup row value={filter} onChange={handleFilterChange}>
+        <PageTabs value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
-						<FormControlLabel
-							key={f}
-							value={f}
-							control={<Radio />}
-							label={FilterTypeMap[f as FilterType]}
-						/>
+						<PageTab 
+              key={f}
+              value={f}
+              label={FilterTypeMap[f as FilterType]}
+            />
 					))}
-				</RadioGroup>
+				</PageTabs>
       </Stack>
       <DataGrid
         sx={{

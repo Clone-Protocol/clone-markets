@@ -6,14 +6,19 @@ import menuHomeIcon from '../../public/images/menu/home-icon.png'
 import menuPortfolioIcon from '../../public/images/menu/portfolio-icon.png'
 import menuMarketIcon from '../../public/images/menu/market-icon.png'
 import menuSwapIcon from '../../public/images/menu/swap-icon.png'
+import { useRouter } from 'next/router'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
+
+
 const Drawer: React.FC = () => {
+  const router = useRouter()
+  
 	return (
 		<StyledDrawer variant="permanent" open={true}>
 			<List component="nav">
 				<Link href="/">
-					<ListItemButton>
+					<ListItemButton sx={ router.asPath === '/' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuHomeIcon} alt="home" />
 						</ListItemIcon>
@@ -21,7 +26,7 @@ const Drawer: React.FC = () => {
 					</ListItemButton>
 				</Link>
 				<Link href="/iportfolio">
-					<ListItemButton>
+					<ListItemButton sx={ router.asPath === '/iportfolio' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuPortfolioIcon} alt="portfolio" />
 						</ListItemIcon>
@@ -29,7 +34,7 @@ const Drawer: React.FC = () => {
 					</ListItemButton>
 				</Link>
 				<Link href="/markets">
-					<ListItemButton>
+					<ListItemButton sx={ router.asPath === '/markets' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuMarketIcon} alt="markets" />
 						</ListItemIcon>
@@ -37,7 +42,7 @@ const Drawer: React.FC = () => {
 					</ListItemButton>
 				</Link>
 				{/* <Link href="/swap">
-					<ListItemButton>
+					<ListItemButton sx={ router.asPath === '/swap' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuSwapIcon} alt="swap" />
 						</ListItemIcon>
@@ -69,7 +74,7 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
 		position: 'relative',
 		whiteSpace: 'nowrap',
 		width: 206,
-		marginTop: 100,
+		marginTop: 60,
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.enteringScreen,
