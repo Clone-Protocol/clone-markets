@@ -12,27 +12,26 @@ export enum ComponentEffect {
 	iAssetAmount,
 	UsdiAmount,
 	BarValue,
-	TabIndex
+	TabIndex,
 }
 
 export interface TradingData {
-  tabIdx: number
-  fromAmount: number
-  fromBalance : number
-  convertVal: number
+	tabIdx: number
+	fromAmount: number
+	fromBalance: number
+	convertVal: number
 }
 
 interface Props {
-  orderForm: OrderForm
-  tradingData: TradingData
-  totalAmount: number
-  onChangeData: (tradingData: TradingData, effect: ComponentEffect) => void
+	orderForm: OrderForm
+	tradingData: TradingData
+	totalAmount: number
+	onChangeData: (tradingData: TradingData, effect: ComponentEffect) => void
 	onShowOption: () => void
 	onReviewOrder: (tradingData: TradingData) => void
 }
 
 const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, onShowOption, onReviewOrder }) => {
-
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
 		const newData = {
 			...tradingData,
@@ -43,35 +42,35 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 
 	const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let newData
-			if (e.currentTarget.value) {
-				const amount = parseFloat(e.currentTarget.value)
-				newData = {
-					...tradingData,
-					fromAmount: amount
-				}
-			} else {
-				newData = {
-					...tradingData,
-					fromAmount: 0.0
-				}
+		if (e.currentTarget.value) {
+			const amount = parseFloat(e.currentTarget.value)
+			newData = {
+				...tradingData,
+				fromAmount: amount,
 			}
+		} else {
+			newData = {
+				...tradingData,
+				fromAmount: 0.0,
+			}
+		}
 		onChangeData(newData, ComponentEffect.iAssetAmount)
 	}
 
 	const handleChangeUsdi = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let newData
-			if (e.currentTarget.value) {
-				const amount = parseFloat(e.currentTarget.value)
-				newData = {
-					...tradingData,
-					fromAmount: amount
-				}
-			} else {
-				newData = {
-					...tradingData,
-					fromAmount: 0.0
-				}
+		if (e.currentTarget.value) {
+			const amount = parseFloat(e.currentTarget.value)
+			newData = {
+				...tradingData,
+				fromAmount: amount,
 			}
+		} else {
+			newData = {
+				...tradingData,
+				fromAmount: 0.0,
+			}
+		}
 		onChangeData(newData, ComponentEffect.UsdiAmount)
 	}
 
@@ -79,7 +78,7 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 		if (typeof newValue === 'number') {
 			const newData = {
 				...tradingData,
-				convertVal: newValue
+				convertVal: newValue,
 			}
 			onChangeData(newData, ComponentEffect.BarValue)
 		}
@@ -95,7 +94,14 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				<Tab label="Sell"></Tab>
 			</StyledTabs>
 			<Box sx={{ marginTop: '30px' }}>
-				<PairInput title="How much?" tickerIcon={orderForm.tickerIcon} ticker={orderForm.tickerSymbol} onChange={handleChangeAmount} value={orderForm.amountIasset} balance={tradingData.fromBalance} />
+				<PairInput
+					title="How much?"
+					tickerIcon={orderForm.tickerIcon}
+					ticker={orderForm.tickerSymbol}
+					onChange={handleChangeAmount}
+					value={orderForm.amountIasset}
+					balance={tradingData.fromBalance}
+				/>
 			</Box>
 
 			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
@@ -103,7 +109,14 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 			</Box>
 
 			<Box>
-				<PairInput title="Total" tickerIcon={'/images/assets/USDi.png'} ticker="USDi" value={orderForm.amountUsdi} onChange={handleChangeUsdi} balance={orderForm.balanceFrom} />
+				<PairInput
+					title="Total"
+					tickerIcon={'/images/assets/USDi.png'}
+					ticker="USDi"
+					value={orderForm.amountUsdi}
+					onChange={handleChangeUsdi}
+					balance={orderForm.balanceFrom}
+				/>
 			</Box>
 
 			<Stack

@@ -9,16 +9,14 @@ import menuSwapIcon from '../../public/images/menu/swap-icon.png'
 import { useRouter } from 'next/router'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
-
-
 const Drawer: React.FC = () => {
-  const router = useRouter()
-  
+	const router = useRouter()
+
 	return (
 		<StyledDrawer variant="permanent" open={true}>
 			<List component="nav">
 				<Link href="/">
-					<ListItemButton sx={ router.asPath === '/' ? { background: '#ebedf2' } : {}}>
+					<ListItemButton sx={router.asPath === '/' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuHomeIcon} alt="home" />
 						</ListItemIcon>
@@ -26,7 +24,7 @@ const Drawer: React.FC = () => {
 					</ListItemButton>
 				</Link>
 				<Link href="/iportfolio">
-					<ListItemButton sx={ router.asPath === '/iportfolio' ? { background: '#ebedf2' } : {}}>
+					<ListItemButton sx={router.asPath === '/iportfolio' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuPortfolioIcon} alt="portfolio" />
 						</ListItemIcon>
@@ -34,7 +32,7 @@ const Drawer: React.FC = () => {
 					</ListItemButton>
 				</Link>
 				<Link href="/markets">
-					<ListItemButton sx={ router.asPath === '/markets' ? { background: '#ebedf2' } : {}}>
+					<ListItemButton sx={router.asPath === '/markets' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuMarketIcon} alt="markets" />
 						</ListItemIcon>

@@ -19,7 +19,6 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
-import { Transaction } from '@solana/web3.js'
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -32,10 +31,7 @@ const GNB: React.FC = () => {
 	const { scrolled } = useScroll()
 
 	const firstPathname = useMemo(() => {
-		return pathname
-			.split('/')
-			.slice(0, 2)
-			.join('/')
+		return pathname.split('/').slice(0, 2).join('/')
 	}, [pathname])
 
 	// const handleChange = (_: React.SyntheticEvent, path: string) => {
@@ -98,8 +94,8 @@ const RightMenu = () => {
 	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
-  	const { getInceptApp } = useIncept()
-	const [ mintUsdi, setMintUsdi ] = useState(false);
+	const { getInceptApp } = useIncept()
+	const [mintUsdi, setMintUsdi] = useState(false)
 
 	const inceptConstructor = () => {
 		const program = getInceptApp()
@@ -107,45 +103,41 @@ const RightMenu = () => {
 
 	useEffect(() => {
 		async function getAccount() {
-		  if (connected && publicKey && wallet) {
-	
-			const program = getInceptApp();
-			await program.loadManager();
+			if (connected && publicKey && wallet) {
+				const program = getInceptApp()
+				await program.loadManager()
 
-			if (!program.provider.wallet) {
-				return;
-			}
+				if (!program.provider.wallet) {
+					return
+				}
 
-			try {
-			  const userAccount = await program.getUserAccount(publicKey)
-			} catch (error) {
-				const response = await program.initializeUser(publicKey)
+				try {
+					const userAccount = await program.getUserAccount(publicKey)
+				} catch (error) {
+					const response = await program.initializeUser(publicKey)
+				}
 			}
-		  }
 		}
 		getAccount()
-	  }, [connected, publicKey])
+	}, [connected, publicKey])
 
 	useEffect(() => {
-
 		async function userMintUsdi() {
 			if (connected && publicKey && mintUsdi) {
-		
-				const program = getInceptApp();
-				await program.loadManager();
-	
-				try {
-					const usdiAccount = await program.getOrCreateUsdiAssociatedTokenAccount();
-					await program.hackathonMintUsdi(usdiAccount.address, 10000000000);
+				const program = getInceptApp()
+				await program.loadManager()
 
+				try {
+					const usdiAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
+					await program.hackathonMintUsdi(usdiAccount.address, 10000000000)
 				} finally {
-					setMintUsdi(false);
+					setMintUsdi(false)
 				}
 			}
 		}
 		userMintUsdi()
 	}, [mintUsdi, connected, publicKey])
-	
+
 	const handleWalletClick = () => {
 		try {
 			if (!connected) {
@@ -169,7 +161,7 @@ const RightMenu = () => {
 	return (
 		<Box display="flex">
 			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
-        Get USDi	
+				Get USDi
 			</HeaderButton>
 
 			<HeaderButton
@@ -177,8 +169,7 @@ const RightMenu = () => {
 				variant="outlined"
 				sx={{ width: '163px' }}
 				disabled={connecting}
-				startIcon={<Image src={walletIcon} alt="wallet" />}
-			>
+				startIcon={<Image src={walletIcon} alt="wallet" />}>
 				{!connected ? (
 					<>Connect Wallet</>
 				) : (
@@ -203,15 +194,15 @@ const RightMenu = () => {
 const StyledAppBar = styled(AppBar)`
 	z-index: 200;
 	background-color: #fff;
-  height: 60px;
+	height: 60px;
 	position: fixed;
 	z-index: 300;
-  border-bottom: 1px solid #e4e9ed;
+	border-bottom: 1px solid #e4e9ed;
 	top: 0px;
 	left: 0px;
-  -webkit-box-shadow: none;
+	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
-  box-shadow: none;
+	box-shadow: none;
 	.MuiContainer-root,
 	.MuiTabs-flexContainer {
 		${(props) => props.theme.breakpoints.up('md')} {

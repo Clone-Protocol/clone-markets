@@ -1,17 +1,17 @@
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from "sdk/src"
+import { Incept } from 'sdk/src'
 
 enum Asset {
 	Euro,
 	Gold,
 	Solana,
-	Ethereum ,
+	Ethereum,
 	Bitcoin,
 	Luna,
 	Avalanche,
 	Tesla,
 	Apple,
-	Amazon
+	Amazon,
 }
 
 enum AssetType {
@@ -92,7 +92,7 @@ const assetMapping = (index: number) => {
 	}
 
 	return { tickerName, tickerSymbol, tickerIcon, assetType }
-} 
+}
 
 export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsProps) => {
 	if (!userPubKey) return []
@@ -102,7 +102,7 @@ export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsPro
 
 	const result: BalanceList[] = []
 
-	let i = 1;
+	let i = 1
 	for (var info of iassetInfos) {
 		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info[0])
 		result.push({
@@ -111,12 +111,12 @@ export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsPro
 			tickerSymbol: tickerSymbol,
 			tickerIcon: tickerIcon,
 			price: info[1]!,
-			//changePercent: 1.58, 
-      		assetType: assetType,
+			//changePercent: 1.58,
+			assetType: assetType,
 			assetBalance: info[2]!,
 			usdiBalance: usdiBalance!,
 		})
-		i++;
+		i++
 	}
 
 	// const result: BalanceList[] = [
@@ -144,11 +144,9 @@ export const fetchBalance = async ({ program, userPubKey, filter }: GetAssetsPro
 	return result
 }
 
-
-
 interface GetAssetsProps {
-  program: Incept,
-  userPubKey: PublicKey | null,
+	program: Incept
+	userPubKey: PublicKey | null
 	filter: FilterType
 }
 

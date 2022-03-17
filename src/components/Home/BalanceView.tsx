@@ -3,7 +3,7 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { Balance } from '~/web3/Home/balance'
 
 interface Props {
-  balance: Balance
+	balance: Balance
 }
 
 const BalanceView: React.FC<Props> = ({ balance }) => {
@@ -21,7 +21,9 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
 				<div>{balance.balanceVal.toLocaleString()} USDi</div>
 			</BottomContent>
 		</StyledPaper>
-	): <></>
+	) : (
+		<></>
+	)
 }
 
 export default withCsrOnly(BalanceView)
