@@ -36,14 +36,14 @@ const Drawer: React.FC = () => {
 						<StyledListItemText>Markets</StyledListItemText>
 					</ListItemButton>
 				</Link>
-				<Link href="/swap">
+				{/* <Link href="/swap">
 					<ListItemButton>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuSwapIcon} alt="swap" />
 						</ListItemIcon>
 						<StyledListItemText>Swap</StyledListItemText>
 					</ListItemButton>
-				</Link>
+				</Link> */}
 			</List>
 			<Stack
 				sx={{

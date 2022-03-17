@@ -9,7 +9,7 @@ import { Grid } from '@mui/material'
 
 const AssetPage: NextPage = () => {
   const router = useRouter()
-  const { assetId } = router.query
+  const { marketId } = router.query
 
 	return (
 		<div>
@@ -23,10 +23,10 @@ const AssetPage: NextPage = () => {
 					}}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} md={8}>
-							<MarketDetail assetId={assetId} />
+							<MarketDetail assetId={marketId} />
 						</Grid>
 						<Grid item xs={12} md={4}>
-							<TradingBox assetId={assetId} />
+							<TradingBox assetId={marketId} />
 						</Grid>
 					</Grid>
 				</StyledSection>
