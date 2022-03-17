@@ -209,10 +209,15 @@ const RightMenu = () => {
 const StyledAppBar = styled(AppBar)`
 	z-index: 200;
 	background-color: #fff;
+  height: 60px;
 	position: fixed;
 	z-index: 300;
+  border-bottom: 1px solid #e4e9ed;
 	top: 0px;
 	left: 0px;
+  -webkit-box-shadow: none;
+	-moz-box-shadow: none;
+  box-shadow: none;
 	.MuiContainer-root,
 	.MuiTabs-flexContainer {
 		${(props) => props.theme.breakpoints.up('md')} {
