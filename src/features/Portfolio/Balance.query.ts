@@ -1,7 +1,7 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { Incept, Network } from '../../../sdk/src/index'
 import { PublicKey, Connection } from '@solana/web3.js'
-import { getNetworkDetailsFromEnv } from 'sdk/src/network';
+import { getNetworkDetailsFromEnv } from 'sdk/src/network'
 
 enum Asset {
 	Solana,
@@ -16,7 +16,7 @@ enum AssetType {
 }
 
 const fetchBalance = async ({ filter }: GetAssetsProps) => {
-	const network = getNetworkDetailsFromEnv();
+	const network = getNetworkDetailsFromEnv()
 
 	const opts = {
 		preflightCommitment: 'processed',
@@ -26,32 +26,32 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 
 	// @ts-ignore
 	const provider = new anchor.Provider(connection, wallet, opts.preflightCommitment)
-	
+
 	const incept = new Incept(connection, network.incept, provider)
 
 	const iassetInfos = await incept.getUseriAssetInfo(provider.wallet.publicKey)
 
 	const result: BalanceList[] = []
 
-	let usdiBalance = await incept.getUsdiBalance();
+	let usdiBalance = await incept.getUsdiBalance()
 
 	for (var info of iassetInfos) {
 		let tickerName = ''
 		let tickerSymbol = ''
 		let tickerIcon = ''
-    	let assetType: number
+		let assetType: number
 		switch (info[0]) {
 			case Asset.Solana:
 				tickerName = 'iSolana'
 				tickerSymbol = 'iSOL'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        		assetType = AssetType.Crypto
+				assetType = AssetType.Crypto
 				break
 			case Asset.Ethereum:
 				tickerName = 'iEthereum'
 				tickerSymbol = 'iETH'
 				tickerIcon = '/images/assets/ethereum-eth-logo.svg'
-        		assetType = AssetType.Crypto
+				assetType = AssetType.Crypto
 				break
 			default:
 				throw new Error('Not supported')
@@ -63,8 +63,8 @@ const fetchBalance = async ({ filter }: GetAssetsProps) => {
 			tickerSymbol: tickerSymbol,
 			tickerIcon: tickerIcon,
 			price: info[1]!,
-			//changePercent: 1.58, 
-      		assetType: assetType,
+			//changePercent: 1.58,
+			assetType: assetType,
 			assetBalance: info[2]!,
 			usdiBalance: usdiBalance!,
 		})

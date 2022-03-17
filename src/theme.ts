@@ -39,20 +39,20 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 				size: 'medium',
 			},
 		},
-    MuiDialogTitle: {
-      styleOverrides: {
-        root: {
-          background: '#fff'
-        }
-      }
-    },
-    MuiDialogContentText: {
-      styleOverrides: {
+		MuiDialogTitle: {
+			styleOverrides: {
 				root: {
-          color: '#fff'
-        }
-      }
-    },
+					background: '#fff',
+				},
+			},
+		},
+		MuiDialogContentText: {
+			styleOverrides: {
+				root: {
+					color: '#fff',
+				},
+			},
+		},
 		MuiTab: {
 			defaultProps: {
 				disableRipple: true,
@@ -100,7 +100,7 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 	},
 	typography: {
 		fontFamily: [
-      'Montserrat',
+			'Montserrat',
 			'Pretendard',
 			'-apple-system',
 			'BlinkMacSystemFont',

@@ -7,13 +7,13 @@ enum Assets {
 	Euro,
 	Gold,
 	Solana,
-	Ethereum ,
+	Ethereum,
 	Bitcoin,
 	Luna,
 	Avalanche,
 	Tesla,
 	Apple,
-	Amazon
+	Amazon,
 }
 
 enum AssetType {
@@ -93,35 +93,32 @@ const assetMapping = (index: number) => {
 	}
 
 	return { tickerName, tickerSymbol, tickerIcon, assetType }
-} 
+}
 
 export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
 
-  const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
+	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
 	const balances = await program.getPoolBalances(index)
 	let price = balances[1] / balances[0]
 	let userIassetBalance = await program.getUserIAssetBalance(index)
-  let liquidity = balances[1] * 2
-  console.log(liquidity)
+	let liquidity = balances[1] * 2
 
-  const userBalances = await fetchBalance({program, userPubKey})
-  let portfolioPercentage = userIassetBalance * price * 100 / (userBalances!.totalVal)
+	const userBalances = await fetchBalance({ program, userPubKey })
+	let portfolioPercentage = (userIassetBalance * price * 100) / userBalances!.totalVal
 
-
-  return {
-    tickerName: tickerName,
-    tickerSymbol: tickerSymbol,
-    tickerIcon: tickerIcon,
-    price: price,
-    balance: userIassetBalance,
-    portfolioPercentage: portfolioPercentage,
-    liquidity: liquidity
-  }
-
+	return {
+		tickerName: tickerName,
+		tickerSymbol: tickerSymbol,
+		tickerIcon: tickerIcon,
+		price: price,
+		balance: userIassetBalance,
+		portfolioPercentage: portfolioPercentage,
+		liquidity: liquidity,
+	}
 }
 
 export const fetchAssetDefault = () => {
@@ -146,7 +143,7 @@ export const fetchAssetDefault = () => {
 interface GetProps {
 	program: Incept
 	userPubKey: PublicKey | null
-  index: number
+	index: number
 }
 
 export interface Asset {

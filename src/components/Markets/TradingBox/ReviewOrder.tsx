@@ -1,20 +1,20 @@
 import { Box, Stack, Button, styled, Divider } from '@mui/material'
 
 export interface OrderForm {
-  tabIdx: number;
-  tickerIcon: string
-  tickerName: string | null
-  tickerSymbol: string | null
-  amountIasset: number;
-  balanceFrom: number;
-  amountUsdi: number;
-  amountTotal: number;
-  convertVal: number;
-  tradingFee: number;
+	tabIdx: number
+	tickerIcon: string
+	tickerName: string | null
+	tickerSymbol: string | null
+	amountIasset: number
+	balanceFrom: number
+	amountUsdi: number
+	amountTotal: number
+	convertVal: number
+	tradingFee: number
 }
 
 interface Props {
-  orderForm: OrderForm
+	orderForm: OrderForm
 	onConfirm: () => void
 	onCancel: () => void
 }
@@ -27,7 +27,7 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 			}}>
 			<StyledStack direction="row" justifyContent="space-between">
 				<div onClick={onCancel}>{'<'}</div>
-				<div>{ orderForm.tabIdx === 0 ? 'Buy ' + orderForm.tickerSymbol : 'Sell ' + orderForm.tickerSymbol }</div>
+				<div>{orderForm.tabIdx === 0 ? 'Buy ' + orderForm.tickerSymbol : 'Sell ' + orderForm.tickerSymbol}</div>
 				<div></div>
 			</StyledStack>
 
@@ -36,7 +36,9 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 				<Stack sx={{ marginBottom: '13px' }} spacing={1} direction="row" justifyContent="space-between">
 					<div>Amount</div>
 					<Stack spacing={1} alignItems="flex-end">
-						<div>{orderForm.amountIasset} {orderForm.tickerSymbol}</div>
+						<div>
+							{orderForm.amountIasset} {orderForm.tickerSymbol}
+						</div>
 						<div>${orderForm.amountUsdi} USDi</div>
 					</Stack>
 				</Stack>

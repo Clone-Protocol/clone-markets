@@ -1,5 +1,5 @@
-import { PublicKey } from "@solana/web3.js"
-import { Incept } from "sdk/src"
+import { PublicKey } from '@solana/web3.js'
+import { Incept } from 'sdk/src'
 
 enum Asset {
 	Euro = 1,
@@ -11,7 +11,7 @@ enum Asset {
 	Avalanche = 7,
 	Tesla = 8,
 	Apple = 9,
-	Amazon = 10
+	Amazon = 10,
 }
 
 enum AssetType {
@@ -92,16 +92,16 @@ const assetMapping = (index: number) => {
 	}
 
 	return { tickerName, tickerSymbol, tickerIcon, assetType }
-} 
+}
 
 export const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProps) => {
-  if (!userPubKey) return []
+	if (!userPubKey) return []
 	const iassetInfos = await program.getiAssetInfo(userPubKey)
 	const result: AssetList[] = []
 
 	let i = 1
 	for (var info of iassetInfos) {
-		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i);
+		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
 
 		result.push({
 			id: i,
@@ -109,39 +109,39 @@ export const fetchAssets = async ({ program, userPubKey, filter }: GetAssetsProp
 			tickerSymbol: tickerSymbol,
 			tickerIcon: tickerIcon,
 			price: info[1]!,
-      		assetType: assetType,
+			assetType: assetType,
 			change24h: 0, //coming soon
 			changePercent: 0, //coming soon
 		})
 		i++
 	}
-  // const result: AssetList[] = [
-  //   {
-  //     id: 1,
-  //     tickerName: 'iSolana',
-  //     tickerSymbol: 'iSOL',
-  //     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-  //     price: 160.51,
-  //     change24h: 2.551,
-  //     changePercent: 1.58
-  //   },
-  //   {
-  //     id: 2,
-  //     tickerName: 'iEthereum',
-  //     tickerSymbol: 'iETH',
-  //     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-  //     price: 2300.53,
-  //     change24h: -46.842,
-  //     changePercent: -2.04
-  //   }
-  // ]
-  return result
+	// const result: AssetList[] = [
+	//   {
+	//     id: 1,
+	//     tickerName: 'iSolana',
+	//     tickerSymbol: 'iSOL',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 160.51,
+	//     change24h: 2.551,
+	//     changePercent: 1.58
+	//   },
+	//   {
+	//     id: 2,
+	//     tickerName: 'iEthereum',
+	//     tickerSymbol: 'iETH',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 2300.53,
+	//     change24h: -46.842,
+	//     changePercent: -2.04
+	//   }
+	// ]
+	return result
 }
 
 interface GetAssetsProps {
-  program: Incept,
-  userPubKey: PublicKey | null,
-  filter: FilterType,
+	program: Incept
+	userPubKey: PublicKey | null
+	filter: FilterType
 }
 
 export enum FilterTypeMap {
@@ -149,7 +149,7 @@ export enum FilterTypeMap {
 	'crypto' = 'Crypto',
 	'stocks' = 'Stocks',
 	'fx' = 'FX',
-  'commodities' = 'Commodities'
+	'commodities' = 'Commodities',
 }
 export type FilterType = keyof typeof FilterTypeMap
 
@@ -159,12 +159,12 @@ export type FilterType = keyof typeof FilterTypeMap
 // }
 
 export interface AssetList {
-  id: number
-  tickerName: string
-  tickerSymbol: string
-  tickerIcon: string
-  price: number
-  assetType: number
-  change24h: number
-  changePercent: number
+	id: number
+	tickerName: string
+	tickerSymbol: string
+	tickerIcon: string
+	price: number
+	assetType: number
+	change24h: number
+	changePercent: number
 }

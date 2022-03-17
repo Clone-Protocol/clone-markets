@@ -8,8 +8,8 @@ import TradingBox from '~/containers/Markets/TradingBox'
 import { Grid } from '@mui/material'
 
 const AssetPage: NextPage = () => {
-  const router = useRouter()
-  const { marketId } = router.query
+	const router = useRouter()
+	const { marketId } = router.query
 
 	return (
 		<div>

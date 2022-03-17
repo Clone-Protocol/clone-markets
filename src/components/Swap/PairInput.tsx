@@ -5,7 +5,7 @@ interface Props {
 	tickerIcon: string
 	tickerName: string | null
 	tickerSymbol: string | null
-  balance: number
+	balance: number
 	value?: number
 	onChange?: any
 }

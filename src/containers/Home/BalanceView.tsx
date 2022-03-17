@@ -6,30 +6,30 @@ import { Balance, fetchBalance } from '~/web3/Home/balance'
 import { Box } from '@mui/material'
 
 const BalanceView = () => {
-  const { publicKey } = useWallet()
-  const { getInceptApp } = useIncept()
-  const [balance, setBalance] = useState<Balance>()
+	const { publicKey } = useWallet()
+	const { getInceptApp } = useIncept()
+	const [balance, setBalance] = useState<Balance>()
 
-  useEffect(() => {
-    const program = getInceptApp()
-    
-    async function fetch() {
-      const data = await fetchBalance({
-        program,
-        userPubKey: publicKey,
-      })
-      if (data) {
-        setBalance(data)
-      }
-    }
-    fetch()
-  }, [publicKey])
+	useEffect(() => {
+		const program = getInceptApp()
 
-  return (
-    <Box sx={{ maxWidth: '806px' }}>
-      <BalanceViewComp balance={balance} />
-    </Box>
-  )
+		async function fetch() {
+			const data = await fetchBalance({
+				program,
+				userPubKey: publicKey,
+			})
+			if (data) {
+				setBalance(data)
+			}
+		}
+		fetch()
+	}, [publicKey])
+
+	return (
+		<Box sx={{ maxWidth: '806px' }}>
+			<BalanceViewComp balance={balance} />
+		</Box>
+	)
 }
 
 export default BalanceView
