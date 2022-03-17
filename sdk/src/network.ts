@@ -10,7 +10,7 @@ export enum Network {
 export const LOCAL_NET = {
   incept: new PublicKey("Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi"),
   oracle: new PublicKey("Aw4gPAFKNV9hQpSZB9pdkBnniVDR13uidY3D5NMKKFUi"),
-  endpoint: "https://127.0.0.1:8899"
+  endpoint: "http://127.0.0.1:8899"
 };
 export const DEV_NET = {
   incept: new PublicKey("DhCxHrB6LarA8r8kbBD2jUfEUTLTmVab4xkzRjpv5Jd3"),

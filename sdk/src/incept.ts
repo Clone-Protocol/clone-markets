@@ -210,12 +210,12 @@ export class Incept {
 		let usdi = 0;
 
 		try {
-			iasset = Number((await this.connection.getTokenAccountBalance(pool.iassetTokenAccount, 'confirmed')).value!.amount)
+			iasset = Number((await this.connection.getTokenAccountBalance(pool.iassetTokenAccount, 'confirmed')).value!.uiAmount)
 		} catch (error) {
 		}
 
 		try {
-			usdi = Number((await this.connection.getTokenAccountBalance(pool.usdiTokenAccount, 'confirmed')).value!.amount)
+			usdi = Number((await this.connection.getTokenAccountBalance(pool.usdiTokenAccount, 'confirmed')).value!.uiAmount)
 		} catch (error) {
 		}
 
@@ -232,7 +232,7 @@ export class Incept {
 		let pool = await this.getPool(poolIndex);
 
 		let userIassetTokenAccount = await this.getOrCreateAssociatedTokenAccount(pool.assetInfo.iassetMint);
-		return Number((await this.connection.getTokenAccountBalance(userIassetTokenAccount.address, 'confirmed')).value!.amount)
+		return Number((await this.connection.getTokenAccountBalance(userIassetTokenAccount.address, 'confirmed')).value!.uiAmount)
 	}
 
 	
@@ -242,20 +242,18 @@ export class Incept {
 	 * `amountInput` can be pos/neg and `isUsdi` should reflect if it is `iAsset` or `usdi`.
 	 */
 	public async calculateSwapAmount(amountInput: number, poolIndex: number, isUsdi: boolean) {
-		const [iassetBalanceRaw, usdiBalanceRaw] = await this.getPoolBalances(poolIndex);
-		const iassetBalance = iassetBalanceRaw * 10 ** (-DEVNET_TOKEN_SCALE);
-		const usdiBalance = usdiBalanceRaw * 10 ** (-DEVNET_TOKEN_SCALE);
-		const k = iassetBalance * usdiBalance;
-		const origPrice = usdiBalance / iassetBalance;
+		const balances = await this.getPoolBalances(poolIndex);
+		const invariant = balances[1] * balances[0];
+		const origPrice =  balances[1] / balances[0];
 
-		let amountOutput;
-		let impactedPrice;
+		let amountOutput: number;
+		let impactedPrice: number;
 		if (isUsdi) { // Amount should be USDI to put into pool
-			amountOutput = (k / (usdiBalance + amountInput)) - iassetBalance;
-			impactedPrice = (usdiBalance + amountInput) / (iassetBalance + amountOutput);
+			amountOutput = (invariant / (balances[1] + amountInput)) - balances[0];
+			impactedPrice = (balances[1] + amountInput) / (balances[0] + amountOutput);
 		} else {
-			amountOutput = (k / (iassetBalance + amountInput)) - usdiBalance;
-			impactedPrice = (usdiBalance + amountOutput) / (iassetBalance + amountInput);
+			amountOutput = (invariant / (balances[0] + amountInput)) - balances[1];
+			impactedPrice = (balances[1] + amountOutput) / (balances[0] + amountInput);
 		}
 
 		const priceImpact = (impactedPrice - origPrice) / origPrice;
@@ -288,20 +286,20 @@ export class Incept {
 		return iassetInfo
 	}
 
-	public async getUseriAssetInfo(walletAddress: PublicKey) {
+	public async getUseriAssetInfo() {
 		const mints = await this.getiAssetMints()
 		const userInfo = []
 		let i = 0
 		for (var mint of mints) {
 			let associatedTokenAddress = (
 				await PublicKey.findProgramAddress(
-					[walletAddress.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+					[this.provider.wallet.publicKey.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
 					SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
 				)
 			)[0]
 			let amount = 0;
 			try {
-				amount = (await this.connection.getTokenAccountBalance(associatedTokenAddress, 'confirmed')).value!.uiAmount;
+				amount = (await this.connection.getTokenAccountBalance(associatedTokenAddress, 'confirmed')).value!.uiAmount!;
 			} catch {}
 
 			if (amount > 0) {
@@ -874,14 +872,12 @@ export class Incept {
 
 	public async buySynth(
 		iassetAmount: BN,
-		user: PublicKey,
 		userUsdiTokenAccount: PublicKey,
 		userIassetTokenAccount: PublicKey,
 		poolIndex: number,
 		signers: Array<Keypair>
 	) {
 		const buySynthIx = await this.buySynthInstruction(
-			user,
 			userUsdiTokenAccount,
 			userIassetTokenAccount,
 			iassetAmount,
@@ -890,7 +886,6 @@ export class Incept {
 		await this.provider.send(new Transaction().add(buySynthIx), signers)
 	}
 	public async buySynthInstruction(
-		user: PublicKey,
 		userUsdiTokenAccount: PublicKey,
 		userIassetTokenAccount: PublicKey,
 		iassetAmount: BN,
@@ -900,7 +895,7 @@ export class Incept {
 
 		return (await this.program.instruction.buySynth(this.managerAddress[1], poolIndex, iassetAmount, {
 			accounts: {
-				user: user,
+				user: this.provider.wallet.publicKey,
 				manager: this.managerAddress[0],
 				tokenData: this.manager.tokenData,
 				userUsdiTokenAccount: userUsdiTokenAccount,
@@ -914,23 +909,20 @@ export class Incept {
 
 	public async sellSynth(
 		iassetAmount: BN,
-		user: PublicKey,
 		userUsdiTokenAccount: PublicKey,
 		userIassetTokenAccount: PublicKey,
 		poolIndex: number,
 		signers: Array<Keypair>
 	) {
-		const buySynthIx = await this.buySynthInstruction(
-			user,
+		const sellSynthIx = await this.sellSynthInstruction(
 			userUsdiTokenAccount,
 			userIassetTokenAccount,
 			iassetAmount,
 			poolIndex
 		)
-		await this.provider.send(new Transaction().add(buySynthIx), signers)
+		await this.provider.send(new Transaction().add(sellSynthIx), signers)
 	}
 	public async sellSynthInstruction(
-		user: PublicKey,
 		userUsdiTokenAccount: PublicKey,
 		userIassetTokenAccount: PublicKey,
 		iassetAmount: BN,
@@ -940,7 +932,7 @@ export class Incept {
 
 		return (await this.program.instruction.sellSynth(this.managerAddress[1], poolIndex, iassetAmount, {
 			accounts: {
-				user: user,
+				user: this.provider.wallet.publicKey,
 				manager: this.managerAddress[0],
 				tokenData: this.manager.tokenData,
 				userUsdiTokenAccount: userUsdiTokenAccount,

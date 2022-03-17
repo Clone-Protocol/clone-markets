@@ -7,6 +7,7 @@ import {
   ConfirmOptions,
   sendAndConfirmRawTransaction
 } from "@solana/web3.js";
+import { Value } from './incept'
 
 export const signAndSend = async (
   tx: Transaction,
@@ -26,4 +27,8 @@ export const signAndSend = async (
 
 export const sleep = async (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export const toScaledNumber = (value: Value) => {
+	return Number(value.val) / Math.pow(10, value.scale)
 }

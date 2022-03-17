@@ -4,12 +4,13 @@ import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
 import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Asset, fetchAsset } from '~/web3/Markets/detail'
+import { Asset, fetchAsset, fetchAssetDefault } from '~/web3/Markets/detail'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
   const { publicKey } = useWallet()
   const { getInceptApp } = useIncept()
-  const [asset, setAsset] = useState<Asset>()
+  const [asset, setAsset] = useState<Asset>(fetchAssetDefault())
+  const [assetIndex, _] = useState(parseInt(assetId) - 1)
 
   useEffect(() => {
     const program = getInceptApp()
@@ -18,10 +19,23 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
     async function fetch() {
       const data = await fetchAsset({
         program,
-        userPubKey: publicKey,
+        userPubKey: publicKey!,
+        index: assetIndex
       })
       if (data) {
-        setAsset(data)
+        setAsset({
+          ...asset,
+          tickerIcon: data.tickerIcon,
+          tickerSymbol: data.tickerSymbol,
+          tickerName: data.tickerName,
+          detailOverview: data.tickerName,
+          price: data.price,
+          myHolding: data.balance,
+          myPortfolioPercentage: data.portfolioPercentage,
+          avgLiquidity: data.liquidity,
+          myNotionalVal: data.balance * data.price
+        })
+        console.log(asset.tickerSymbol)
       }
     }
     fetch()
@@ -82,7 +96,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
             <Stack direction="row" justifyContent="space-evenly">
               <Box>
                 <ContentHeader>Holding</ContentHeader>
-                <ContentValue>{asset.myHolding} iSOL</ContentValue>
+                <ContentValue>{asset.myHolding} {asset.tickerSymbol}</ContentValue>
               </Box>
               <Box>
                 <ContentHeader>Notional Value</ContentHeader>

@@ -1,19 +1,20 @@
 import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
 import { fetchBalance } from '../Home/balance'
+import { BN } from '@project-serum/anchor'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 
 enum Assets {
 	Euro,
 	Gold,
 	Solana,
-	Ethereum ,
+	Ethereum,
 	Bitcoin,
 	Luna,
 	Avalanche,
 	Tesla,
 	Apple,
-	Amazon
+	Amazon,
 }
 
 enum AssetType {
@@ -93,35 +94,70 @@ const assetMapping = (index: number) => {
 	}
 
 	return { tickerName, tickerSymbol, tickerIcon, assetType }
-} 
+}
+
+export const onBuy = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
+	if (!userPubKey) return null
+
+	await program.loadManager()
+
+	let assetInfo = await program.getAssetInfo(index)
+
+	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
+	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
+
+	await program.buySynth(
+		new BN(iassetAmount * 10 ** 8),
+		collateralAssociatedTokenAccount.address,
+		iassetAssociatedTokenAccount.address,
+		index,
+		[]
+	)
+}
+
+export const onSell = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
+	if (!userPubKey) return null
+
+	await program.loadManager()
+
+	let assetInfo = await program.getAssetInfo(index)
+
+	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
+	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
+
+	await program.sellSynth(
+		new BN(iassetAmount * 10 ** 8),
+		collateralAssociatedTokenAccount.address,
+		iassetAssociatedTokenAccount.address,
+		index,
+		[]
+	)
+}
 
 export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
 
-  const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
+	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
 	const balances = await program.getPoolBalances(index)
 	let price = balances[1] / balances[0]
 	let userIassetBalance = await program.getUserIAssetBalance(index)
-  let liquidity = balances[1] * 2
-  console.log(liquidity)
+	let liquidity = balances[1] * 2
 
-  const userBalances = await fetchBalance({program, userPubKey})
-  let portfolioPercentage = userIassetBalance * price * 100 / (userBalances!.totalVal)
+	const userBalances = await fetchBalance({ program, userPubKey })
+	let portfolioPercentage = userBalances!.totalVal - userBalances!.balanceVal
 
-
-  return {
-    tickerName: tickerName,
-    tickerSymbol: tickerSymbol,
-    tickerIcon: tickerIcon,
-    price: price,
-    balance: userIassetBalance,
-    portfolioPercentage: portfolioPercentage,
-    liquidity: liquidity
-  }
-
+	return {
+		tickerName: tickerName,
+		tickerSymbol: tickerSymbol,
+		tickerIcon: tickerIcon,
+		price: price,
+		balance: userIassetBalance,
+		portfolioPercentage: portfolioPercentage,
+		liquidity: liquidity,
+	}
 }
 
 export const fetchAssetDefault = () => {
@@ -146,7 +182,7 @@ export const fetchAssetDefault = () => {
 interface GetProps {
 	program: Incept
 	userPubKey: PublicKey | null
-  index: number
+	index: number
 }
 
 export interface Asset {

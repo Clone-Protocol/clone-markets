@@ -5,9 +5,9 @@ export interface OrderForm {
   tickerIcon: string
   tickerName: string | null
   tickerSymbol: string | null
-  amountFrom: number;
+  amountIasset: number;
   balanceFrom: number;
-  amountTo: number;
+  amountUsdi: number;
   amountTotal: number;
   convertVal: number;
   tradingFee: number;
@@ -27,7 +27,7 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 			}}>
 			<StyledStack direction="row" justifyContent="space-between">
 				<div onClick={onCancel}>{'<'}</div>
-				<div>{ orderForm.tabIdx === 0 ? 'Buy iSOL' : 'Sell iSOL' }</div>
+				<div>{ orderForm.tabIdx === 0 ? 'Buy ' + orderForm.tickerSymbol : 'Sell ' + orderForm.tickerSymbol }</div>
 				<div></div>
 			</StyledStack>
 
@@ -36,8 +36,8 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 				<Stack sx={{ marginBottom: '13px' }} spacing={1} direction="row" justifyContent="space-between">
 					<div>Amount</div>
 					<Stack spacing={1} alignItems="flex-end">
-						<div>{orderForm.amountFrom} SOL</div>
-						<div>${orderForm.amountTo} USDi</div>
+						<div>{orderForm.amountIasset} {orderForm.tickerSymbol}</div>
+						<div>${orderForm.amountUsdi} USDi</div>
 					</Stack>
 				</Stack>
 				<Stack
@@ -48,7 +48,7 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 					<div>Trading Fee</div>
 					<Stack spacing={1} alignItems="flex-end">
 						<div>{orderForm.tradingFee}%</div>
-						<div>${orderForm.amountTo * orderForm.tradingFee} USDi</div>
+						<div>${orderForm.amountUsdi * orderForm.tradingFee} USDi</div>
 					</Stack>
 				</Stack>
 				<Divider />

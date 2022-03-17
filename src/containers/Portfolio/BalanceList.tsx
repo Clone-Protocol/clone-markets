@@ -111,7 +111,7 @@ let columns: GridColDef[] = [
     flex: 1, 
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <Link href={`/markets/${params.row.id}/asset`}>
+        <Link href={`/markets/`}>
           <TradeButton>
             Trade
           </TradeButton>
