@@ -28,9 +28,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 							<Box
 								component="main"
 								sx={{
-									flexGrow: 1,
-									height: '100vh',
-									overflow: 'auto',
+									flexGrow: 1
 								}}>
 								{getLayout(<Component {...pageProps} />)}
 							</Box>
