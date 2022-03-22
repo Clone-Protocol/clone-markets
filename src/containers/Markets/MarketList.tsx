@@ -51,6 +51,31 @@ const MarketList = () => {
 			<DataGrid
 				sx={{
 					border: 0,
+          '& .MuiDataGrid-columnHeaderTitle': {
+            color: '#424242', fontSize: '12px', fontWeight: '600', margin: '0 auto'
+          },
+          '& .first--header': { 
+            '& .MuiDataGrid-columnHeaderTitle': {
+              margin: '1px'
+            },
+          },
+          '& .last--header': { 
+            '& .MuiDataGrid-columnHeaderTitle': {
+              display: 'none'
+            },
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none',
+          },
+          '& .MuiDataGrid-row': {
+            border: 0,
+          },
+          '& .MuiDataGrid-cell': {
+						border: 0,
+					},
+          '& .MuiDataGrid-withBorder': {
+            borderRight: 0,
+          }
 				}}
 				disableColumnFilter
 				disableSelectionOnClick
@@ -59,7 +84,7 @@ const MarketList = () => {
 				disableDensitySelector
 				disableExtendRowFullWidth
 				hideFooter
-				rowHeight={100}
+				rowHeight={90}
 				autoHeight
 				columns={columns}
 				rows={assets || []}
@@ -71,6 +96,7 @@ const MarketList = () => {
 let columns: GridColDef[] = [
 	{
 		field: 'iAssets',
+    headerClassName: 'first--header',
 		headerName: 'iAssets',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -92,7 +118,7 @@ let columns: GridColDef[] = [
 		headerName: 'Price(USDi)',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box sx={{ fontSize: '16px', fontWeight: '500' }}>${params.value.toLocaleString()}</Box>
+			return <Box sx={{ fontSize: '16px', fontWeight: '500', margin: '0 auto' }}>${params.value.toLocaleString()}</Box>
 		},
 	},
 	{
@@ -123,6 +149,7 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: 'trade',
+    headerClassName: 'last--header',
 		headerName: 'Trade',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -139,11 +166,13 @@ const ChangePricePlus = styled(Box)`
 	font-size: 14px;
 	font-weight: 500;
 	color: #308c54;
+  margin: 0 auto;
 `
 const ChangePriceMinus = styled(Box)`
 	font-size: 14px;
 	font-weight: 500;
 	color: #c94738;
+  margin: 0 auto;
 `
 
 const TradeButton = styled(Button)`

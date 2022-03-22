@@ -2,10 +2,10 @@ import MuiDrawer from '@mui/material/Drawer'
 import { styled, List, ListItemButton, ListItemIcon, ListItemText, Box, Stack } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
-import menuHomeIcon from '../../public/images/menu/home-icon.png'
-import menuPortfolioIcon from '../../public/images/menu/portfolio-icon.png'
-import menuMarketIcon from '../../public/images/menu/market-icon.png'
-import menuSwapIcon from '../../public/images/menu/swap-icon.png'
+import menuHomeIcon from 'public/images/menu/home-icon.png'
+import menuPortfolioIcon from 'public/images/menu/portfolio-icon.png'
+import menuMarketIcon from 'public/images/menu/market-icon.png'
+import menuSwapIcon from 'public/images/menu/swap-icon.png'
 import { useRouter } from 'next/router'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
@@ -13,7 +13,7 @@ const Drawer: React.FC = () => {
 	const router = useRouter()
 
 	return (
-		<StyledDrawer variant="permanent" open={true}>
+		<StyledDrawer variant="permanent" open={true} anchor="left">
 			<List component="nav">
 				<Link href="/">
 					<ListItemButton sx={router.asPath === '/' ? { background: '#ebedf2' } : {}}>
@@ -39,14 +39,14 @@ const Drawer: React.FC = () => {
 						<StyledListItemText>Markets</StyledListItemText>
 					</ListItemButton>
 				</Link>
-				{/* <Link href="/swap">
+				<Link href="/swap">
 					<ListItemButton sx={ router.asPath === '/swap' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuSwapIcon} alt="swap" />
 						</ListItemIcon>
 						<StyledListItemText>Swap</StyledListItemText>
 					</ListItemButton>
-				</Link> */}
+				</Link>
 			</List>
 			<Stack
 				sx={{
@@ -68,10 +68,11 @@ const Drawer: React.FC = () => {
 export default withCsrOnly(Drawer)
 
 const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
+  flexShrink: 0,
 	'& .MuiDrawer-paper': {
 		position: 'relative',
 		whiteSpace: 'nowrap',
-		width: 206,
+		width: 209,
 		marginTop: 60,
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,

@@ -5,8 +5,8 @@ import Button from '@mui/material/Button'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Image from 'next/image'
-import logoIcon from '../../public/images/incept-logo.png'
-import walletIcon from '../../public/images/wallet-icon.png'
+import logoIcon from 'public/images/incept-logo.png'
+import walletIcon from 'public/images/wallet-icon.png'
 import { IconButton, styled, Theme, useMediaQuery } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { GNB_ROUTES } from '~/routes'
@@ -56,23 +56,11 @@ const GNB: React.FC = () => {
 	return (
 		<>
 			<NavPlaceholder />
-			<StyledAppBar className={navClassName} position="static">
+			<StyledAppBar className={navClassName} position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 				<Container maxWidth="xl">
 					<Toolbar disableGutters sx={{ paddingLeft: '10px' }}>
 						<Image src={logoIcon} alt="incept" />
-						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
-							{/* {isDesktop && (
-								<StyledTabs
-									TabIndicatorProps={{ children: <div /> }}
-									classes={classes}
-									value={path}
-									onChange={handleChange}>
-									{GNB_ROUTES.map((route) => (
-										<Tab key={route.label} label={route.label} value={route.path} />
-									))}
-								</StyledTabs>
-							)} */}
-						</Box>
+						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
 						</Box>
@@ -200,9 +188,7 @@ const StyledAppBar = styled(AppBar)`
 	border-bottom: 1px solid #e4e9ed;
 	top: 0px;
 	left: 0px;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+	box-shadow: 0 0 7px 3px #ebedf2;
 	.MuiContainer-root,
 	.MuiTabs-flexContainer {
 		${(props) => props.theme.breakpoints.up('md')} {
