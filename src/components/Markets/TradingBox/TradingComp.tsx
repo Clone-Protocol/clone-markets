@@ -1,12 +1,12 @@
 import { styled, Tab, Tabs, Box, Stack, Button } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
-import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import reloadIcon from 'public/images/reload-icon.png'
 import settingsIcon from 'public/images/settings-icon.png'
 import { OrderForm } from './ReviewOrder'
+import { TabPanel, StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
 
 export enum ComponentEffect {
 	iAssetAmount,
@@ -89,10 +89,12 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 			sx={{
 				p: '20px',
 			}}>
-			<StyledTabs value={tradingData.tabIdx} onChange={handleChangeTab}>
-				<Tab label="Buy"></Tab>
-				<Tab label="Sell"></Tab>
-			</StyledTabs>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <StyledTabs value={tradingData.tabIdx} onChange={handleChangeTab}>
+          <StyledTab label="Buy"></StyledTab>
+          <StyledTab label="Sell"></StyledTab>
+        </StyledTabs>
+      </Box>
 			<Box sx={{ marginTop: '30px' }}>
 				<PairInput
 					title="How much?"
@@ -136,8 +138,6 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 		</Box>
 	)
 }
-
-const StyledTabs = styled(Tabs)``
 
 const IconButton = styled(Button)`
 	background: #ebedf2;
