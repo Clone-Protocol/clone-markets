@@ -27,18 +27,11 @@ const GNB: React.FC = () => {
 	const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
-	const classes = useStyles()
 	const { scrolled } = useScroll()
 
 	const firstPathname = useMemo(() => {
 		return pathname.split('/').slice(0, 2).join('/')
 	}, [pathname])
-
-	// const handleChange = (_: React.SyntheticEvent, path: string) => {
-	// 	if (firstPathname === path) return
-	// 	setPath(path)
-	// 	push({ pathname: path })
-	// }
 
 	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 
@@ -84,10 +77,6 @@ const RightMenu = () => {
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
 	const [mintUsdi, setMintUsdi] = useState(false)
-
-	const inceptConstructor = () => {
-		const program = getInceptApp()
-	}
 
 	useEffect(() => {
 		async function getAccount() {
