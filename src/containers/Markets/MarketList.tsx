@@ -1,39 +1,26 @@
-import { Box, Stack, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material'
+import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
 import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
-// import { AssetList, FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
-import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
+import { AssetList, FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
+// import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
 import Link from 'next/link'
-import { useIncept } from '~/hooks/useIncept'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 
 const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
-	const [assets, setAssets] = useState<AssetList[]>([])
 	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
 
-	// const { data: assets } = useAssetsQuery({
-	//   filter,
-	//   refetchOnMount: 'always'
-	// })
-
-	useEffect(() => {
-		const program = getInceptApp()
-
-		async function fetch() {
-			const data = await fetchAssets({
-				program,
-				userPubKey: publicKey,
-				filter,
-			})
-			setAssets(data)
-		}
-		fetch()
-	}, [publicKey])
+	const { data: assets } = useAssetsQuery({
+    userPubKey: publicKey,
+	  filter,
+	  refetchOnMount: 'always',
+    enabled: publicKey != null
+	})
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
 		setFilter(newValue)
@@ -186,4 +173,4 @@ const TradeButton = styled(Button)`
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
-export default MarketList
+export default withSuspense(MarketList, <LoadingProgress />)
