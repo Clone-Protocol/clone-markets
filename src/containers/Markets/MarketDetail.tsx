@@ -1,43 +1,21 @@
-import { useEffect, useState } from 'react'
 import { Box, Stack, Button, styled } from '@mui/material'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
-import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Asset, fetchAsset, fetchAssetDefault } from '~/web3/Markets/detail'
+// import { Asset, fetchAsset, fetchAssetDefault } from '~/web3/Markets/detail'
+import { useDetailQuery } from '~/features/Markets/Detail.query'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
-	const [asset, setAsset] = useState<Asset>(fetchAssetDefault())
-	const [assetIndex, _] = useState(parseInt(assetId) - 1)
 
-	useEffect(() => {
-		const program = getInceptApp()
-
-		async function fetch() {
-			const data = await fetchAsset({
-				program,
-				userPubKey: publicKey!,
-				index: assetIndex,
-			})
-			if (data) {
-				setAsset({
-					...asset,
-					tickerIcon: data.tickerIcon,
-					tickerSymbol: data.tickerSymbol,
-					tickerName: data.tickerName,
-					detailOverview: data.tickerName,
-					price: data.price,
-					myHolding: data.balance,
-					myPortfolioPercentage: data.portfolioPercentage,
-					avgLiquidity: data.liquidity,
-					myNotionalVal: data.balance * data.price,
-				})
-			}
-		}
-		fetch()
-	}, [publicKey, assetId])
+  const { data: asset } = useDetailQuery({
+    userPubKey: publicKey,
+	  index: parseInt(assetId) - 1,
+	  refetchOnMount: true,
+    enabled: publicKey != null && !!assetId
+	})
 
 	return (
 		<>
@@ -168,6 +146,7 @@ const DetailDesc = styled(Box)`
 
 const SubValue = styled('span')`
   font-size: 12px;
+  font-weight: 600;
 `
 
-export default MarketDetail
+export default withSuspense(MarketDetail, <LoadingProgress />)

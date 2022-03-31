@@ -14,7 +14,7 @@ const Drawer: React.FC = () => {
 
 	return (
 		<StyledDrawer variant="permanent" open={true} anchor="left">
-			<List component="nav">
+			<List component="nav" sx={{ flexGrow: 1 }}>
 				<Link href="/">
 					<ListItemButton sx={router.asPath === '/' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
@@ -50,12 +50,10 @@ const Drawer: React.FC = () => {
 			</List>
 			<Stack
 				sx={{
-					position: 'absolute',
-					left: '35px',
-					bottom: '15px',
 					fontSize: '12px',
 					color: '#6c6c6c',
 					textAlign: 'center',
+          flexShrink: 0,
 				}}
 				spacing={2}>
 				<div>V1: Polaris Devnet</div>
@@ -68,7 +66,6 @@ const Drawer: React.FC = () => {
 export default withCsrOnly(Drawer)
 
 const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
-  flexShrink: 0,
 	'& .MuiDrawer-paper': {
 		position: 'relative',
 		whiteSpace: 'nowrap',

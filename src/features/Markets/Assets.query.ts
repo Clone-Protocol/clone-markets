@@ -3,7 +3,6 @@ import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
 import { useIncept } from '~/hooks/useIncept'
 
-
 enum Asset {
 	Euro = 1,
 	Gold = 2,

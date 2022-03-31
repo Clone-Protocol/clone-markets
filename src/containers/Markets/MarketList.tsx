@@ -3,7 +3,7 @@ import { styled } from '@mui/system'
 import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
-import { AssetList, FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
+import { FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
 // import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
 import Link from 'next/link'
 import { LoadingProgress } from '~/components/Common/Loading'
@@ -18,7 +18,7 @@ const MarketList = () => {
 	const { data: assets } = useAssetsQuery({
     userPubKey: publicKey,
 	  filter,
-	  refetchOnMount: 'always',
+	  refetchOnMount: true,
     enabled: publicKey != null
 	})
 
@@ -169,6 +169,9 @@ const TradeButton = styled(Button)`
 	font-weight: 600;
 	width: 100px;
 	height: 30px;
+  &:hover {
+    color: #fff;
+  }
 `
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))

@@ -18,7 +18,7 @@ const BalanceList = () => {
   const { data: assets } = useBalanceQuery({
     userPubKey: publicKey,
     filter,
-	  refetchOnMount: 'always',
+	  refetchOnMount: true,
     enabled: publicKey != null
 	})
 

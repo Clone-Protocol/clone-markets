@@ -126,10 +126,10 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				justifyContent="flex-end"
 				alignItems="center"
 				sx={{ marginTop: '16px', marginBottom: '16px' }}>
-				<IconButton size="small">
+				<IconButton>
 					<Image src={reloadIcon} alt="reload" />
 				</IconButton>
-				<IconButton size="small" onClick={onShowOption}>
+				<IconButton onClick={onShowOption}>
 					<Image src={settingsIcon} alt="settings" />
 				</IconButton>
 			</Stack>
@@ -139,9 +139,16 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 	)
 }
 
-const IconButton = styled(Button)`
+const IconButton = styled('div')`
 	background: #ebedf2;
 	color: #737373;
+  width: 29px;
+  height: 29px;
+  margin-left: 12px;
+  cursor: pointer;
+  align-content: center;
+  padding-top: 6px;
+  border-radius: 4px;
 `
 
 const ActionButton = styled(Button)`
