@@ -1,5 +1,4 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
-import { withCsrOnly } from '~/hocs/CsrOnly'
 import { Balance } from '~/web3/Home/balance'
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
 }
 
 const BalanceView: React.FC<Props> = ({ balance }) => {
-	return balance ? (
+	return balance.totalVal ? (
 		<StyledPaper variant="outlined">
 			<Box sx={{ marginBottom: '160px' }}>
 				<Title>Total Value</Title>
@@ -26,7 +25,7 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
 	)
 }
 
-export default withCsrOnly(BalanceView)
+export default BalanceView
 
 const StyledPaper = styled(Paper)`
 	font-size: 14px;

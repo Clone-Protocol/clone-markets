@@ -2,10 +2,10 @@ import MuiDrawer from '@mui/material/Drawer'
 import { styled, List, ListItemButton, ListItemIcon, ListItemText, Box, Stack } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
-import menuHomeIcon from '../../public/images/menu/home-icon.png'
-import menuPortfolioIcon from '../../public/images/menu/portfolio-icon.png'
-import menuMarketIcon from '../../public/images/menu/market-icon.png'
-import menuSwapIcon from '../../public/images/menu/swap-icon.png'
+import menuHomeIcon from 'public/images/menu/home-icon.png'
+import menuPortfolioIcon from 'public/images/menu/portfolio-icon.png'
+import menuMarketIcon from 'public/images/menu/market-icon.png'
+import menuSwapIcon from 'public/images/menu/swap-icon.png'
 import { useRouter } from 'next/router'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
@@ -13,8 +13,8 @@ const Drawer: React.FC = () => {
 	const router = useRouter()
 
 	return (
-		<StyledDrawer variant="permanent" open={true}>
-			<List component="nav">
+		<StyledDrawer variant="permanent" open={true} anchor="left">
+			<List component="nav" sx={{ flexGrow: 1 }}>
 				<Link href="/">
 					<ListItemButton sx={router.asPath === '/' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
@@ -39,23 +39,21 @@ const Drawer: React.FC = () => {
 						<StyledListItemText>Markets</StyledListItemText>
 					</ListItemButton>
 				</Link>
-				{/* <Link href="/swap">
+				<Link href="/swap">
 					<ListItemButton sx={ router.asPath === '/swap' ? { background: '#ebedf2' } : {}}>
 						<ListItemIcon sx={{ marginLeft: '20px' }}>
 							<Image src={menuSwapIcon} alt="swap" />
 						</ListItemIcon>
 						<StyledListItemText>Swap</StyledListItemText>
 					</ListItemButton>
-				</Link> */}
+				</Link>
 			</List>
 			<Stack
 				sx={{
-					position: 'absolute',
-					left: '35px',
-					bottom: '15px',
 					fontSize: '12px',
 					color: '#6c6c6c',
 					textAlign: 'center',
+          flexShrink: 0,
 				}}
 				spacing={2}>
 				<div>V1: Polaris Devnet</div>
@@ -71,7 +69,7 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
 	'& .MuiDrawer-paper': {
 		position: 'relative',
 		whiteSpace: 'nowrap',
-		width: 206,
+		width: 209,
 		marginTop: 60,
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,

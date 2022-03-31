@@ -1,43 +1,21 @@
-import { useEffect, useState } from 'react'
 import { Box, Stack, Button, styled } from '@mui/material'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
-import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Asset, fetchAsset, fetchAssetDefault } from '~/web3/Markets/detail'
+// import { Asset, fetchAsset, fetchAssetDefault } from '~/web3/Markets/detail'
+import { useDetailQuery } from '~/features/Markets/Detail.query'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
-	const [asset, setAsset] = useState<Asset>(fetchAssetDefault())
-	const [assetIndex, _] = useState(parseInt(assetId) - 1)
 
-	useEffect(() => {
-		const program = getInceptApp()
-
-		async function fetch() {
-			const data = await fetchAsset({
-				program,
-				userPubKey: publicKey!,
-				index: assetIndex,
-			})
-			if (data) {
-				setAsset({
-					...asset,
-					tickerIcon: data.tickerIcon,
-					tickerSymbol: data.tickerSymbol,
-					tickerName: data.tickerName,
-					detailOverview: data.tickerName,
-					price: data.price,
-					myHolding: data.balance,
-					myPortfolioPercentage: data.portfolioPercentage,
-					avgLiquidity: data.liquidity,
-					myNotionalVal: data.balance * data.price,
-				})
-			}
-		}
-		fetch()
-	}, [publicKey, assetId])
+  const { data: asset } = useDetailQuery({
+    userPubKey: publicKey,
+	  index: parseInt(assetId) - 1,
+	  refetchOnMount: true,
+    enabled: publicKey != null && !!assetId
+	})
 
 	return (
 		<>
@@ -53,12 +31,11 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Box>
 					</Box>
 					<Box>
-						<Box sx={{ fontSize: '40px', fontWeight: 'normal' }}>${asset.price}</Box>
+						<PriceValue>${asset.price.toLocaleString()}</PriceValue>
 					</Box>
 
 					<Box>
 						<Chart />
-						<></>
 					</Box>
 
 					<Box sx={{ marginBottom: '40px' }}>
@@ -66,45 +43,45 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						<Stack direction="row" justifyContent="space-between">
 							<Box>
 								<ContentHeader>Volume (24h)</ContentHeader>
-								<ContentValue>${asset.volume.toLocaleString()} USDi</ContentValue>
+								<ContentValue>${asset.volume.toLocaleString()} <SubValue>USDi</SubValue></ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>Avg Liquidity (24h)</ContentHeader>
-								<ContentValue>${asset.avgLiquidity.toLocaleString()} USDi</ContentValue>
+								<ContentValue>${asset.avgLiquidity.toLocaleString()} <SubValue>USDi</SubValue></ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>Maximum Order Size</ContentHeader>
 								<ContentValue>
-									{asset.maxOrderSize} {asset.tickerSymbol}
+									{asset.maxOrderSize} <SubValue>{asset.tickerSymbol}</SubValue>
 								</ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>Avg Premium (24h)</ContentHeader>
-								<ContentValue>{asset.avgPremium}%</ContentValue>
+								<ContentValue>{asset.avgPremium.toFixed(3)}%</ContentValue>
 							</Box>
 						</Stack>
 					</Box>
 
 					<Box sx={{ marginBottom: '40px' }}>
 						<SubTitle>About {asset.tickerSymbol}</SubTitle>
-						<Box sx={{ fontSize: '14px', fontWeight: '300' }}>{asset.detailOverview}</Box>
-						<Box sx={{ fontSize: '14px', fontWeight: '600', textDecoration: 'underline' }}>
+						<DetailDesc>{asset.detailOverview}</DetailDesc>
+						<Box sx={{ fontSize: '14px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
 							Tell me more
 						</Box>
 					</Box>
 
 					<Box>
 						<SubTitle>My {asset.tickerSymbol}</SubTitle>
-						<Stack direction="row" justifyContent="space-evenly">
+						<Stack direction="row" justifyContent="flex-start" spacing={7}>
 							<Box>
 								<ContentHeader>Holding</ContentHeader>
 								<ContentValue>
-									{asset.myHolding} {asset.tickerSymbol}
+									{asset.myHolding} <SubValue>{asset.tickerSymbol}</SubValue>
 								</ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>Notional Value</ContentHeader>
-								<ContentValue>${asset.myNotionalVal} USDi</ContentValue>
+								<ContentValue>${asset.myNotionalVal} <SubValue>USDi</SubValue></ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>iPortfolio Percentage</ContentHeader>
@@ -120,11 +97,25 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	)
 }
 
+const PriceValue = styled(Box)`
+  font-size: 40px;
+  margin-top: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+`
+
 const SubTitle = styled('div')`
 	font-size: 24px;
 	font-weight: 600;
 	margin-top: 20px;
 	margin-bottom: 20px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 `
 
 const ContentHeader = styled('div')`
@@ -135,6 +126,27 @@ const ContentHeader = styled('div')`
 
 const ContentValue = styled('div')`
 	font-size: 23px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  margin-top: 10px;
 `
 
-export default MarketDetail
+const DetailDesc = styled(Box)`
+  font-size: 14px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+`
+
+const SubValue = styled('span')`
+  font-size: 12px;
+  font-weight: 600;
+`
+
+export default withSuspense(MarketDetail, <LoadingProgress />)

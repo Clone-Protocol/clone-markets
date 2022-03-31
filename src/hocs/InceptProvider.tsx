@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react'
+import React, { FC, ReactNode, useCallback } from 'react'
 import { Provider } from '@project-serum/anchor'
 import { Connection } from '@solana/web3.js'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -12,37 +12,30 @@ export interface InceptProviderProps {
 }
 
 export const InceptProvider: FC<InceptProviderProps> = ({ children, ...props }) => {
-	const [AnchorProvider, setProvider] = useState<Provider>()
-	const [Program, setProgram] = useState<Incept>()
 	const wallet = useAnchorWallet()
-	const { connection } = useConnection()
+	// const { connection } = useConnection()
 
-	// Probably need to clean this up. Not ideal.
-	useEffect(() => {
-		const opts = {
-			preflightCommitment: 'processed',
-		}
-		const network = getNetworkDetailsFromEnv()
-		let new_connection = new Connection(network.endpoint)
-		// @ts-ignore
-		const provider = new Provider(new_connection, wallet, opts.preflightCommitment)
-		setProvider(provider)
-	}, [connection])
+	const getInceptApp = useCallback((): Incept | null => {
+    const opts = {
+      preflightCommitment: 'processed',
+    }
+    const network = getNetworkDetailsFromEnv()
+    let new_connection = new Connection(network.endpoint)
+    //TODO: to connect wallet's network, use useConnection instead
 
-	const getInceptApp = (): Incept | null => {
-		if (AnchorProvider) {
-			const network = getNetworkDetailsFromEnv()
-			const incept = new Incept(AnchorProvider.connection, network.incept, AnchorProvider)
-			setProgram(incept)
-			return incept
-		}
-		return null
-	}
+    // @ts-ignore
+    const provider = new Provider(new_connection, wallet, opts.preflightCommitment)
+    const incept = new Incept(provider.connection, network.incept, provider)
+
+    console.log('anchor-wallet', provider.wallet)
+    return incept
+	}, [wallet])
+
 
 	return (
 		<InceptContext.Provider
 			value={{
-				Program,
+				// @ts-ignore
 				getInceptApp,
 			}}>
 			{children}

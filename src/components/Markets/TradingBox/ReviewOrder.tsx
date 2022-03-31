@@ -23,23 +23,23 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 	return (
 		<Box
 			sx={{
-				p: '20px',
+				padding: '15px 30px'
 			}}>
 			<StyledStack direction="row" justifyContent="space-between">
-				<div onClick={onCancel}>{'<'}</div>
+				<div style={{ cursor: 'pointer' }} onClick={onCancel}>{'<'}</div>
 				<div>{orderForm.tabIdx === 0 ? 'Buy ' + orderForm.tickerSymbol : 'Sell ' + orderForm.tickerSymbol}</div>
 				<div></div>
 			</StyledStack>
 
-			<Box>
+			<Box sx={{ fontWeight: '500' }}>
 				<Subtitle>Order Summary</Subtitle>
 				<Stack sx={{ marginBottom: '13px' }} spacing={1} direction="row" justifyContent="space-between">
 					<div>Amount</div>
 					<Stack spacing={1} alignItems="flex-end">
 						<div>
-							{orderForm.amountIasset} {orderForm.tickerSymbol}
+							{orderForm.amountIasset.toLocaleString()} {orderForm.tickerSymbol}
 						</div>
-						<div>${orderForm.amountUsdi} USDi</div>
+						<div>${orderForm.amountUsdi.toLocaleString()} USDi</div>
 					</Stack>
 				</Stack>
 				<Stack
@@ -49,14 +49,14 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 					justifyContent="space-between">
 					<div>Trading Fee</div>
 					<Stack spacing={1} alignItems="flex-end">
-						<div>{orderForm.tradingFee}%</div>
-						<div>${orderForm.amountUsdi * orderForm.tradingFee} USDi</div>
+						<div>{orderForm.tradingFee.toFixed(2)}%</div>
+						<div>${(orderForm.amountUsdi * orderForm.tradingFee).toLocaleString()} USDi</div>
 					</Stack>
 				</Stack>
 				<Divider />
 				<TotalStack spacing={1} direction="row" justifyContent="space-between">
 					<div>Total</div>
-					<div>${orderForm.amountTotal} USDi</div>
+					<div>${orderForm.amountTotal.toLocaleString()} USDi</div>
 				</TotalStack>
 			</Box>
 
@@ -68,6 +68,10 @@ const ReviewOrder: React.FC<Props> = ({ orderForm, onConfirm, onCancel }) => {
 const StyledStack = styled(Stack)`
 	font-size: 20px;
 	font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 	margin-bottom: 30px;
 `
 
@@ -81,6 +85,10 @@ const Subtitle = styled(Box)`
 const TotalStack = styled(Stack)`
 	font-size: 14px;
 	font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 	margin-top: 29px;
 	margin-bottom: 29px;
 `

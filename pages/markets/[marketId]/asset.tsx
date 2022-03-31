@@ -21,11 +21,11 @@ const AssetPage: NextPage = () => {
 					sx={{
 						backgroundColor: '#FAFAFA',
 					}}>
-					<Grid container spacing={2}>
-						<Grid item xs={12} md={8}>
+					<Grid container spacing={1}>
+						<Grid item xs={12} md={8} sx={{ padding: '30px' }}>
 							<MarketDetail assetId={marketId} />
 						</Grid>
-						<Grid item xs={12} md={4}>
+						<Grid item xs={12} md={4} sx={{ padding: '30px' }}>
 							<TradingBox assetId={marketId} />
 						</Grid>
 					</Grid>

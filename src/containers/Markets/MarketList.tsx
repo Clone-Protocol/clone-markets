@@ -1,39 +1,26 @@
-import { Box, Stack, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material'
+import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
 import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
-// import { AssetList, FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
-import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
+import { FilterType, FilterTypeMap, useAssetsQuery } from '~/features/Markets/Assets.query'
+// import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
 import Link from 'next/link'
-import { useIncept } from '~/hooks/useIncept'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 
 const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
-	const [assets, setAssets] = useState<AssetList[]>([])
 	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
 
-	// const { data: assets } = useAssetsQuery({
-	//   filter,
-	//   refetchOnMount: 'always'
-	// })
-
-	useEffect(() => {
-		const program = getInceptApp()
-
-		async function fetch() {
-			const data = await fetchAssets({
-				program,
-				userPubKey: publicKey,
-				filter,
-			})
-			setAssets(data)
-		}
-		fetch()
-	}, [publicKey])
+	const { data: assets } = useAssetsQuery({
+    userPubKey: publicKey,
+	  filter,
+	  refetchOnMount: true,
+    enabled: publicKey != null
+	})
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
 		setFilter(newValue)
@@ -51,6 +38,31 @@ const MarketList = () => {
 			<DataGrid
 				sx={{
 					border: 0,
+          '& .MuiDataGrid-columnHeaderTitle': {
+            color: '#424242', fontSize: '12px', fontWeight: '600', margin: '0 auto'
+          },
+          '& .first--header': { 
+            '& .MuiDataGrid-columnHeaderTitle': {
+              margin: '1px'
+            },
+          },
+          '& .last--header': { 
+            '& .MuiDataGrid-columnHeaderTitle': {
+              display: 'none'
+            },
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none',
+          },
+          '& .MuiDataGrid-row': {
+            border: 0,
+          },
+          '& .MuiDataGrid-cell': {
+						border: 0,
+					},
+          '& .MuiDataGrid-withBorder': {
+            borderRight: 0,
+          }
 				}}
 				disableColumnFilter
 				disableSelectionOnClick
@@ -59,7 +71,7 @@ const MarketList = () => {
 				disableDensitySelector
 				disableExtendRowFullWidth
 				hideFooter
-				rowHeight={100}
+				rowHeight={90}
 				autoHeight
 				columns={columns}
 				rows={assets || []}
@@ -71,6 +83,7 @@ const MarketList = () => {
 let columns: GridColDef[] = [
 	{
 		field: 'iAssets',
+    headerClassName: 'first--header',
 		headerName: 'iAssets',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -92,7 +105,7 @@ let columns: GridColDef[] = [
 		headerName: 'Price(USDi)',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box sx={{ fontSize: '16px', fontWeight: '500' }}>${params.value.toLocaleString()}</Box>
+			return <Box sx={{ fontSize: '16px', fontWeight: '500', margin: '0 auto' }}>${params.value.toLocaleString()}</Box>
 		},
 	},
 	{
@@ -123,6 +136,7 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: 'trade',
+    headerClassName: 'last--header',
 		headerName: 'Trade',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -139,11 +153,13 @@ const ChangePricePlus = styled(Box)`
 	font-size: 14px;
 	font-weight: 500;
 	color: #308c54;
+  margin: 0 auto;
 `
 const ChangePriceMinus = styled(Box)`
 	font-size: 14px;
 	font-weight: 500;
 	color: #c94738;
+  margin: 0 auto;
 `
 
 const TradeButton = styled(Button)`
@@ -153,8 +169,11 @@ const TradeButton = styled(Button)`
 	font-weight: 600;
 	width: 100px;
 	height: 30px;
+  &:hover {
+    color: #fff;
+  }
 `
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
-export default MarketList
+export default withSuspense(MarketList, <LoadingProgress />)

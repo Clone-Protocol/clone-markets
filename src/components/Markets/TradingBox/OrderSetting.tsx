@@ -18,24 +18,21 @@ const OrderSetting: React.FC<Props> = ({ onSetting }) => {
 	}
 
 	return (
-		<Box>
+		<Box sx={{ padding: '15px 30px' }}>
 			<StyledStack direction="row" justifyContent="space-between">
-				<div onClick={() => onSetting(slippage)}>{'<'}</div>
+				<div style={{ cursor: 'pointer' }} onClick={() => onSetting(slippage)}>{'<'}</div>
 				<div>Order Setting</div>
 				<div></div>
 			</StyledStack>
 
-			<Box>
-				<Box>
-					<Subtitle>Slippage Tolerance</Subtitle>
-					<RadioGroup row value={slippage} onChange={handleSlippageChange}>
-						<FormControlLabel value="0.1" control={<Radio />} label="0.1" />
-						<FormControlLabel value="0.5" control={<Radio />} label="0.5" />
-						<FormControlLabel value="1.0" control={<Radio />} label="1.0" />
-						<FormControlLabel value="custom" control={<Radio />} label="Custom" />
-					</RadioGroup>
-					{slippage}
-				</Box>
+			<Box sx={{ marginTop: '10px' }}>
+        <Subtitle>Slippage Tolerance</Subtitle>
+        <RadioGroup row value={slippage} onChange={handleSlippageChange}>
+          <FormControlLabel value="0.1" control={<Radio />} label="0.1" />
+          <FormControlLabel value="0.5" control={<Radio />} label="0.5" />
+          <FormControlLabel value="1.0" control={<Radio />} label="1.0" />
+          {/* <FormControlLabel value="custom" control={<Radio />} label="Custom" /> */}
+        </RadioGroup>
 			</Box>
 		</Box>
 	)
@@ -44,6 +41,10 @@ const OrderSetting: React.FC<Props> = ({ onSetting }) => {
 const StyledStack = styled(Stack)`
 	font-size: 20px;
 	font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 	margin-bottom: 30px;
 `
 const Subtitle = styled(Box)`

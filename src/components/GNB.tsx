@@ -5,8 +5,8 @@ import Button from '@mui/material/Button'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Image from 'next/image'
-import logoIcon from '../../public/images/incept-logo.png'
-import walletIcon from '../../public/images/wallet-icon.png'
+import logoIcon from 'public/images/incept-logo.png'
+import walletIcon from 'public/images/wallet-icon.png'
 import { IconButton, styled, Theme, useMediaQuery } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { GNB_ROUTES } from '~/routes'
@@ -19,6 +19,7 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
+import MoreMenu from '~/components/Common/MoreMenu';
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -27,18 +28,11 @@ const GNB: React.FC = () => {
 	const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
-	const classes = useStyles()
 	const { scrolled } = useScroll()
 
 	const firstPathname = useMemo(() => {
 		return pathname.split('/').slice(0, 2).join('/')
 	}, [pathname])
-
-	// const handleChange = (_: React.SyntheticEvent, path: string) => {
-	// 	if (firstPathname === path) return
-	// 	setPath(path)
-	// 	push({ pathname: path })
-	// }
 
 	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 
@@ -56,23 +50,11 @@ const GNB: React.FC = () => {
 	return (
 		<>
 			<NavPlaceholder />
-			<StyledAppBar className={navClassName} position="static">
+			<StyledAppBar className={navClassName} position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 				<Container maxWidth="xl">
 					<Toolbar disableGutters sx={{ paddingLeft: '10px' }}>
 						<Image src={logoIcon} alt="incept" />
-						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
-							{/* {isDesktop && (
-								<StyledTabs
-									TabIndicatorProps={{ children: <div /> }}
-									classes={classes}
-									value={path}
-									onChange={handleChange}>
-									{GNB_ROUTES.map((route) => (
-										<Tab key={route.label} label={route.label} value={route.path} />
-									))}
-								</StyledTabs>
-							)} */}
-						</Box>
+						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
 						</Box>
@@ -96,10 +78,7 @@ const RightMenu = () => {
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
 	const [mintUsdi, setMintUsdi] = useState(false)
-
-	const inceptConstructor = () => {
-		const program = getInceptApp()
-	}
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 	useEffect(() => {
 		async function getAccount() {
@@ -158,9 +137,13 @@ const RightMenu = () => {
 		setMintUsdi(true)
 	}
 
+  const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  }
+
 	return (
 		<Box display="flex">
-			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px', marginRight: '16px' }}>
+			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px' }}>
 				Get USDi
 			</HeaderButton>
 
@@ -186,7 +169,8 @@ const RightMenu = () => {
 				)}
 			</HeaderButton>
 
-			{/* <Button variant="outlined">...</Button> */}
+			<HeaderButton sx={{ fontSize: '20px', fontWeight: 'bold', paddingBottom: '24px' }} variant="outlined" onClick={handleMoreClick}>...</HeaderButton>
+      <MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
 		</Box>
 	)
 }
@@ -200,9 +184,7 @@ const StyledAppBar = styled(AppBar)`
 	border-bottom: 1px solid #e4e9ed;
 	top: 0px;
 	left: 0px;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+	box-shadow: 0 0 7px 3px #ebedf2;
 	.MuiContainer-root,
 	.MuiTabs-flexContainer {
 		${(props) => props.theme.breakpoints.up('md')} {
@@ -241,6 +223,7 @@ const HeaderButton = styled(Button)`
 	font-size: 12px;
 	font-weight: 600;
 	height: 41px;
+  margin-left: 16px;
 `
 
 const useStyles = makeStyles(({ palette }: Theme) => ({

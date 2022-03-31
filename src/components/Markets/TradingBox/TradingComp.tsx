@@ -1,12 +1,12 @@
 import { styled, Tab, Tabs, Box, Stack, Button } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
-import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import reloadIcon from 'public/images/reload-icon.png'
 import settingsIcon from 'public/images/settings-icon.png'
 import { OrderForm } from './ReviewOrder'
+import { TabPanel, StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
 
 export enum ComponentEffect {
 	iAssetAmount,
@@ -89,10 +89,12 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 			sx={{
 				p: '20px',
 			}}>
-			<StyledTabs value={tradingData.tabIdx} onChange={handleChangeTab}>
-				<Tab label="Buy"></Tab>
-				<Tab label="Sell"></Tab>
-			</StyledTabs>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <StyledTabs value={tradingData.tabIdx} onChange={handleChangeTab}>
+          <StyledTab label="Buy"></StyledTab>
+          <StyledTab label="Sell"></StyledTab>
+        </StyledTabs>
+      </Box>
 			<Box sx={{ marginTop: '30px' }}>
 				<PairInput
 					title="How much?"
@@ -124,10 +126,10 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				justifyContent="flex-end"
 				alignItems="center"
 				sx={{ marginTop: '16px', marginBottom: '16px' }}>
-				<IconButton size="small">
+				<IconButton>
 					<Image src={reloadIcon} alt="reload" />
 				</IconButton>
-				<IconButton size="small" onClick={onShowOption}>
+				<IconButton onClick={onShowOption}>
 					<Image src={settingsIcon} alt="settings" />
 				</IconButton>
 			</Stack>
@@ -137,11 +139,16 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 	)
 }
 
-const StyledTabs = styled(Tabs)``
-
-const IconButton = styled(Button)`
+const IconButton = styled('div')`
 	background: #ebedf2;
 	color: #737373;
+  width: 29px;
+  height: 29px;
+  margin-left: 12px;
+  cursor: pointer;
+  align-content: center;
+  padding-top: 6px;
+  border-radius: 4px;
 `
 
 const ActionButton = styled(Button)`

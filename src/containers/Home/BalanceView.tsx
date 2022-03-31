@@ -1,35 +1,26 @@
 import BalanceViewComp from '~/components/Home/BalanceView'
-import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useEffect, useState } from 'react'
-import { Balance, fetchBalance } from '~/web3/Home/balance'
+import { useBalanceQuery } from '~/features/Home/Balance.query'
 import { Box } from '@mui/material'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 
 const BalanceView = () => {
 	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
-	const [balance, setBalance] = useState<Balance>()
 
-	useEffect(() => {
-		const program = getInceptApp()
+  const { data: balance } = useBalanceQuery({
+    userPubKey: publicKey,
+	  refetchOnMount: 'always',
+    enabled: publicKey != null
+	})
 
-		async function fetch() {
-			const data = await fetchBalance({
-				program,
-				userPubKey: publicKey,
-			})
-			if (data) {
-				setBalance(data)
-			}
-		}
-		fetch()
-	}, [publicKey])
-
-	return (
+	return balance ? (
 		<Box sx={{ maxWidth: '806px' }}>
 			<BalanceViewComp balance={balance} />
 		</Box>
-	)
+	) : (
+    <></>
+  )
 }
 
-export default BalanceView
+export default withSuspense(BalanceView, <LoadingProgress />)
