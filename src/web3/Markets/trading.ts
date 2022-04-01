@@ -47,7 +47,7 @@ export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
-
+console.log('fddd', index)
 	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
 	const balances = await program.getPoolBalances(index)

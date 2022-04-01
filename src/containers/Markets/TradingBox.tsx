@@ -28,7 +28,7 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 	const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
 	const [maxIassetRecieve, setMaxIassetRecieve] = useState(0.0)
 	const [maxUsdiRecieve, setMaxUsdiRecieve] = useState(0.0)
-	const [assetIndex, _] = useState(parseInt(assetId))
+  const assetIndex = parseInt(assetId)
 
 	const [usdiUserBalance, setusdiUserBalance] = useState(0.0)
 	const [slippage, setSlippage] = useState(0.5)
