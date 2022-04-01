@@ -12,7 +12,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
   const { data: asset } = useDetailQuery({
     userPubKey: publicKey,
-	  index: parseInt(assetId) - 1,
+	  index: parseInt(assetId),
 	  refetchOnMount: true,
     enabled: publicKey != null && !!assetId
 	})

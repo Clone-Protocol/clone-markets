@@ -2,99 +2,8 @@ import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
 import { useIncept } from '~/hooks/useIncept'
-
-enum Asset {
-	Euro,
-	Gold,
-	Solana,
-	Ethereum,
-	Bitcoin,
-	Luna,
-	Avalanche,
-	Tesla,
-	Apple,
-	Amazon,
-}
-
-enum AssetType {
-	Crypto,
-	Stocks,
-	Fx,
-	Commodities,
-}
-
-const assetMapping = (index: number) => {
-	let tickerName = ''
-	let tickerSymbol = ''
-	let tickerIcon = ''
-	let assetType: number
-	switch (index) {
-		case Asset.Euro:
-			tickerName = 'iEuro'
-			tickerSymbol = 'iEUR'
-			tickerIcon = '/images/assets/euro.png'
-			assetType = AssetType.Fx
-			break
-		case Asset.Gold:
-			tickerName = 'iSPTSGD (GOLD INDEX)'
-			tickerSymbol = 'iSPTSGD'
-			tickerIcon = '/images/assets/gold.png'
-			assetType = AssetType.Commodities
-			break
-		case Asset.Solana:
-			tickerName = 'iSolana'
-			tickerSymbol = 'iSOL'
-			tickerIcon = '/images/assets/solana.png'
-			assetType = AssetType.Crypto
-			break
-		case Asset.Ethereum:
-			tickerName = 'iEthereum'
-			tickerSymbol = 'iETH'
-			tickerIcon = '/images/assets/ethereum.png'
-			assetType = AssetType.Crypto
-			break
-		case Asset.Bitcoin:
-			tickerName = 'iBitcoin'
-			tickerSymbol = 'iBTC'
-			tickerIcon = '/images/assets/bitcoin.png'
-			assetType = AssetType.Crypto
-			break
-		case Asset.Luna:
-			tickerName = 'iLuna'
-			tickerSymbol = 'iLUNA'
-			tickerIcon = '/images/assets/terra.png'
-			assetType = AssetType.Crypto
-			break
-		case Asset.Avalanche:
-			tickerName = 'iAvalanche'
-			tickerSymbol = 'iAVAX'
-			tickerIcon = '/images/assets/avalanche.png'
-			assetType = AssetType.Crypto
-			break
-		case Asset.Tesla:
-			tickerName = 'iTesla'
-			tickerSymbol = 'iTLSA'
-			tickerIcon = '/images/assets/tesla.png'
-			assetType = AssetType.Stocks
-			break
-		case Asset.Apple:
-			tickerName = 'iApple'
-			tickerSymbol = 'iAAPL'
-			tickerIcon = '/images/assets/apple.png'
-			assetType = AssetType.Stocks
-			break
-		case Asset.Amazon:
-			tickerName = 'iAmazon'
-			tickerSymbol = 'iAMZN'
-			tickerIcon = '/images/assets/amazon.png'
-			assetType = AssetType.Stocks
-			break
-		default:
-			throw new Error('Not supported')
-	}
-
-	return { tickerName, tickerSymbol, tickerIcon, assetType }
-}
+import { assetMapping } from '~/data/assets'
+import { FilterType } from '~/data/filter'
 
 export const fetchBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
 	if (!userPubKey) return []
@@ -154,15 +63,6 @@ interface GetAssetsProps {
   refetchOnMount?: QueryObserverOptions['refetchOnMount']
   enabled?: boolean
 }
-
-export enum FilterTypeMap {
-	'all' = 'All',
-	'crypto' = 'Crypto',
-	'stocks' = 'Stocks',
-	'fx' = 'FX',
-	'commodities' = 'Commodities',
-}
-export type FilterType = keyof typeof FilterTypeMap
 
 export interface BalanceList {
 	id: number
