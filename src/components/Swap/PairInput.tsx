@@ -24,7 +24,7 @@ const PairInput: React.FC<Props> = ({ tickerIcon, tickerName, tickerSymbol, bala
 						<TickerName>{tickerName}</TickerName>
 					</Box>
 				</Box>
-				<InputAmount id="ip-amount" type="number" value={value} onChange={onChange} />
+				<InputAmount id="ip-amount" type="number" defaultValue={value} onChange={onChange} />
 			</FormStack>
 		</FormControl>
 	)
