@@ -8,7 +8,6 @@ import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { fetchAsset, onBuy, onSell } from '~/web3/Markets/trading'
-import BalanceView from '~/components/Home/BalanceView'
 
 enum Section {
 	TradingComp,
@@ -29,7 +28,7 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 	const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
 	const [maxIassetRecieve, setMaxIassetRecieve] = useState(0.0)
 	const [maxUsdiRecieve, setMaxUsdiRecieve] = useState(0.0)
-	const [assetIndex, _] = useState(parseInt(assetId) - 1)
+	const [assetIndex, _] = useState(parseInt(assetId))
 
 	const [usdiUserBalance, setusdiUserBalance] = useState(0.0)
 	const [slippage, setSlippage] = useState(0.5)

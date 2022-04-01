@@ -1,8 +1,47 @@
 import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
-import { fetchBalance } from '../Home/balance'
+import { fetchBalance } from '../Home/Balance.query'
+import { BN } from '@project-serum/anchor'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { assetMapping } from '~/data/assets'
+
+export const onBuy = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
+	if (!userPubKey) return null
+
+	await program.loadManager()
+
+	let assetInfo = await program.getAssetInfo(index)
+
+	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
+	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
+
+	await program.buySynth(
+		new BN(iassetAmount * 10 ** 8),
+		collateralAssociatedTokenAccount.address,
+		iassetAssociatedTokenAccount.address,
+		index,
+		[]
+	)
+}
+
+export const onSell = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
+	if (!userPubKey) return null
+
+	await program.loadManager()
+
+	let assetInfo = await program.getAssetInfo(index)
+
+	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
+	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
+
+	await program.sellSynth(
+		new BN(iassetAmount * 10 ** 8),
+		collateralAssociatedTokenAccount.address,
+		iassetAssociatedTokenAccount.address,
+		index,
+		[]
+	)
+}
 
 export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	if (!userPubKey) return null
@@ -17,7 +56,7 @@ export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	let liquidity = balances[1] * 2
 
 	const userBalances = await fetchBalance({ program, userPubKey })
-	let portfolioPercentage = (userIassetBalance * price * 100) / userBalances!.totalVal
+	let portfolioPercentage = userBalances!.totalVal - userBalances!.balanceVal
 
 	return {
 		tickerName: tickerName,

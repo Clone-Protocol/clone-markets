@@ -1,17 +1,19 @@
 import { Box, Stack, Button, Paper } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { styled } from '@mui/system'
 import Image from 'next/image'
 import PairInput from '~/components/Swap/PairInput'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import downArrowIcon from 'public/images/down-arrow-icon.png'
-import { useIncept } from '~/hooks/useIncept'
+import { useSwapMutation, PairData } from '~/features/Swap/Swap.query'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { callSwap } from '~/web3/Swap/swap'
+import { useSnackbar } from 'notistack'
 
 const SwapBox = () => {
-	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
+  const { publicKey } = useWallet()
+  const { mutateAsync } = useSwapMutation(publicKey)
+  const { enqueueSnackbar } = useSnackbar()
+
 	const [fromPair, setFromPair] = useState<PairData>({
 		tickerIcon: ethLogo,
 		tickerName: 'USD Coin',
@@ -27,7 +29,7 @@ const SwapBox = () => {
 		amount: 0.0,
 	})
 
-	const onChangeFrom = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const onChangeFrom = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		const newFromVal = e.currentTarget.value
 		if (newFromVal) {
 			setFromPair({ ...fromPair, amount: parseFloat(newFromVal) })
@@ -35,12 +37,31 @@ const SwapBox = () => {
 			// it reflects data with fromPair
 			setToPair({ ...toPair, amount: parseFloat(newFromVal) })
 		}
-	}
+	}, [fromPair, toPair])
 
 	const onConfirm = async () => {
 		// call contract
-		const program = getInceptApp()
-		await callSwap({ program, userPubKey: publicKey })
+		console.log('fromPair', fromPair)
+    console.log('toPair', toPair)
+
+    await mutateAsync(
+      {
+        fromPair,
+        toPair
+      },
+      {
+        onSuccess(data) {
+          if (data) {
+            console.log('data', data)
+            enqueueSnackbar('Success to swap')
+          }
+        },
+        onError(err) {
+          console.error(err)
+          enqueueSnackbar('Failed to swap')
+        }
+      }
+    )
 	}
 
 	return (
@@ -73,14 +94,6 @@ const SwapBox = () => {
 			<ActionButton onClick={onConfirm}>Confirm</ActionButton>
 		</StyledPaper>
 	)
-}
-
-export interface PairData {
-	tickerIcon: string
-	tickerName: string
-	tickerSymbol: string
-	balance: number
-	amount: number
 }
 
 const StyledPaper = styled(Paper)`

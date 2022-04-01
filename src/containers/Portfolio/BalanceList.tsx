@@ -3,7 +3,12 @@ import { styled } from '@mui/system'
 import Image from 'next/image'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
+<<<<<<< HEAD
+import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
+import { FilterType, FilterTypeMap } from '~/data/filter'
+=======
 import { FilterType, FilterTypeMap, useBalanceQuery } from '~/features/Portfolio/Balance.query'
+>>>>>>> main
 // import { FilterType, FilterTypeMap, BalanceList as BalList, fetchBalance } from '~/web3/Portfolio/balance'
 import Link from 'next/link'
 import { LoadingProgress } from '~/components/Common/Loading'
