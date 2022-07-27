@@ -1,5 +1,5 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
-import { Balance } from '~/web3/Home/balance'
+import { Balance } from '~/features/Home/Balance.query'
 
 interface Props {
 	balance: Balance

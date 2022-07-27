@@ -7,7 +7,7 @@ import withSuspense from '~/hocs/withSuspense'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { fetchAsset, onBuy, onSell } from '~/web3/Markets/trading'
+import { fetchAsset, onBuy, onSell } from '~/features/Markets/Trading.query'
 
 enum Section {
 	TradingComp,

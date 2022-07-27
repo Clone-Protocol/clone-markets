@@ -1,9 +1,8 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from 'sdk/src'
 import { useIncept } from '~/hooks/useIncept'
 
-export const fetchBalance = async ({ program, userPubKey }: { program: Incept, userPubKey: PublicKey | null}) => {
+export const fetchBalance = async ({ program, userPubKey }: { program: any, userPubKey: PublicKey | null}) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
@@ -17,15 +16,15 @@ export const fetchBalance = async ({ program, userPubKey }: { program: Incept, u
     console.error(e)
   }
 
-	try {
-		let iassetInfos = await program.getUseriAssetInfo()
+	// try {
+	// 	let iassetInfos = await program.getUseriAssetInfo()
 
-		iassetInfos.forEach((infos) => {
-			totalVal += infos[1] * infos[2]
-		})
-	} catch (e) {
-    console.error(e)
-  }
+	// 	iassetInfos.forEach((infos) => {
+	// 		totalVal += infos[1] * infos[2]
+	// 	})
+	// } catch (e) {
+  //   console.error(e)
+  // }
 
 	return {
 		totalVal: totalVal + balanceVal,

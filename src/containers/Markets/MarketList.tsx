@@ -5,8 +5,6 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType, FilterTypeMap } from '~/data/filter'
-
-// import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
 import Link from 'next/link'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
