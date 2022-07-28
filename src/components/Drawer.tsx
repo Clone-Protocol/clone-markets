@@ -1,11 +1,9 @@
 import MuiDrawer from '@mui/material/Drawer'
-import { styled, List, ListItemButton, ListItemIcon, ListItemText, Box, Stack } from '@mui/material'
+import { styled, List, ListItemButton, ListItemIcon, Box, Stack, Fade } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
-import menuHomeIcon from 'public/images/menu/home-icon.png'
-import menuPortfolioIcon from 'public/images/menu/portfolio-icon.png'
-import menuMarketIcon from 'public/images/menu/market-icon.png'
-import menuSwapIcon from 'public/images/menu/swap-icon.png'
+import menuPortfolioIcon from 'public/images/menu/portfolio-icon.svg'
+import menuMarketIcon from 'public/images/menu/markets-icon.svg'
 import { useRouter } from 'next/router'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 
@@ -13,47 +11,35 @@ const Drawer: React.FC = () => {
 	const router = useRouter()
 
 	return (
-		<StyledDrawer variant="permanent" open={true} anchor="left">
-			<List component="nav" sx={{ flexGrow: 1 }}>
-				<Link href="/">
-					<ListItemButton sx={router.asPath === '/' ? { background: '#ebedf2' } : {}}>
-						<ListItemIcon sx={{ marginLeft: '20px' }}>
-							<Image src={menuHomeIcon} alt="home" />
-						</ListItemIcon>
-						<StyledListItemText>Home</StyledListItemText>
-					</ListItemButton>
-				</Link>
-				<Link href="/iportfolio">
-					<ListItemButton sx={router.asPath === '/iportfolio' ? { background: '#ebedf2' } : {}}>
-						<ListItemIcon sx={{ marginLeft: '20px' }}>
-							<Image src={menuPortfolioIcon} alt="portfolio" />
-						</ListItemIcon>
-						<StyledListItemText>iPortfolio</StyledListItemText>
-					</ListItemButton>
-				</Link>
-				<Link href="/markets">
-					<ListItemButton sx={router.asPath === '/markets' ? { background: '#ebedf2' } : {}}>
-						<ListItemIcon sx={{ marginLeft: '20px' }}>
-							<Image src={menuMarketIcon} alt="markets" />
-						</ListItemIcon>
-						<StyledListItemText>Markets</StyledListItemText>
-					</ListItemButton>
-				</Link>
-				<Link href="/swap">
-					<ListItemButton sx={ router.asPath === '/swap' ? { background: '#ebedf2' } : {}}>
-						<ListItemIcon sx={{ marginLeft: '20px' }}>
-							<Image src={menuSwapIcon} alt="swap" />
-						</ListItemIcon>
-						<StyledListItemText>Swap</StyledListItemText>
-					</ListItemButton>
-				</Link>
-			</List>
+		<StyledDrawer variant="permanent" open={true}>
+      <Fade in timeout={1500}>
+        <List component="nav">
+          <Link href="/">
+            <StyledListItemButton className={router.asPath === '/' || router.asPath.startsWith('/markets') ? 'selected' : ''}>
+              <ListItemIcon sx={{ marginLeft: '20px' }}>
+                <Image src={menuMarketIcon} alt="markets" />
+              </ListItemIcon>
+              <StyledListItemText>Markets</StyledListItemText>
+            </StyledListItemButton>
+          </Link>
+          <Link href="/iportfolio">
+            <StyledListItemButton className={router.asPath.startsWith('/iportfolio') ? 'selected' : ''}>
+              <ListItemIcon sx={{ marginLeft: '20px' }}>
+                <Image src={menuPortfolioIcon} alt="portfolio" />
+              </ListItemIcon>
+              <StyledListItemText>iPortfolio</StyledListItemText>
+            </StyledListItemButton>
+          </Link>
+        </List>
+      </Fade>
 			<Stack
 				sx={{
+          position: 'absolute',
+					left: '35px',
+					bottom: '15px',
 					fontSize: '12px',
 					color: '#6c6c6c',
 					textAlign: 'center',
-          flexShrink: 0,
 				}}
 				spacing={2}>
 				<div>V1: Polaris Devnet</div>
@@ -67,9 +53,11 @@ export default withCsrOnly(Drawer)
 
 const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
 	'& .MuiDrawer-paper': {
-		position: 'relative',
+    position: 'relative',
+		background: 'rgba(20, 20, 20, 0.75)',
+		color: '#fff',
 		whiteSpace: 'nowrap',
-		width: 209,
+		width: 241,
 		marginTop: 60,
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,
@@ -90,9 +78,26 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
 	},
 }))
 
+const StyledListItemButton = styled(ListItemButton)`
+  border-radius: 10px;
+  height: 41px;
+  margin-left: 12px;
+  margin-right: 11px;
+  margin-bottom: 13px;
+  &.selected {
+    border: solid 1px #000;
+    background-color: #2e2e2e; 
+    transition: all 0.3s ease 0.2s;
+  }
+  &:hover {
+    background-color: rgba(38, 38, 38, 0.5);
+  }
+`
+
 const StyledListItemText = styled(Box)`
-	font-size: 14px;
-	font-weight: 600;
+	font-size: 12px;
+	font-weight: bold;
 	height: 44px;
 	line-height: 44px;
+  margin-left: -15px;
 `

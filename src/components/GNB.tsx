@@ -5,10 +5,10 @@ import Button from '@mui/material/Button'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Image from 'next/image'
-import logoIcon from 'public/images/incept-logo.png'
-import walletIcon from 'public/images/wallet-icon.png'
-import { IconButton, styled, Theme, useMediaQuery } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import logoIcon from 'public/images/incept-logo.svg'
+import walletIcon from 'public/images/wallet-icon.svg'
+import { useSnackbar } from 'notistack'
+import { IconButton, styled, Stack, Theme, useMediaQuery } from '@mui/material'
 import { GNB_ROUTES } from '~/routes'
 import { useRouter } from 'next/router'
 import CancelIcon from './Icons/CancelIcon'
@@ -19,7 +19,9 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
+import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -50,10 +52,11 @@ const GNB: React.FC = () => {
 	return (
 		<>
 			<NavPlaceholder />
-			<StyledAppBar className={navClassName} position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth="xl">
 					<Toolbar disableGutters sx={{ paddingLeft: '10px' }}>
 						<Image src={logoIcon} alt="incept" />
+            <MarketTitle>Markets</MarketTitle>
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
@@ -73,12 +76,14 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
+  const { enqueueSnackbar } = useSnackbar()
 	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
 	const [mintUsdi, setMintUsdi] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 
 	useEffect(() => {
 		async function getAccount() {
@@ -125,8 +130,10 @@ const RightMenu = () => {
 				} else {
 					connect()
 				}
+        setShowWalletSelectPopup(false)
 			} else {
-				disconnect()
+        setShowWalletSelectPopup(!showWalletSelectPopup)
+				// disconnect()
 			}
 		} catch (error) {
 			console.log('Error connecting to the wallet: ', (error as any).message)
@@ -141,50 +148,83 @@ const RightMenu = () => {
     setAnchorEl(event.currentTarget);
   }
 
+  const handleChangeWallet = () => {
+    disconnect()
+    setShowWalletSelectPopup(false)
+    setOpen(true) 
+  }
+
+  const handleDisconnect = () => {
+    disconnect()
+    setShowWalletSelectPopup(false)
+  }
+
 	return (
 		<Box display="flex">
+      <DataLoadingIndicator />
 			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px' }}>
 				Get USDi
 			</HeaderButton>
 
-			<HeaderButton
-				onClick={handleWalletClick}
-				variant="outlined"
-				sx={{ width: '163px' }}
-				disabled={connecting}
-				startIcon={<Image src={walletIcon} alt="wallet" />}>
-				{!connected ? (
-					<>Connect Wallet</>
-				) : (
-					<>
-						Disconnect Wallet{' '}
-						{publicKey ? (
-							<Box sx={{ marginLeft: '10px', color: '#6c6c6c' }}>
-								{shortenAddress(publicKey.toString())}
-							</Box>
-						) : (
-							<></>
-						)}
-					</>
-				)}
-			</HeaderButton>
+      <Box>
+        <ConnectButton
+          onClick={handleWalletClick}
+          variant="outlined"
+          sx={{ width: '163px' }}
+          disabled={connecting}
+          startIcon={!publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
+          {!connected ? (
+            <>Connect Wallet</>
+          ) : (
+            <>
+              <div style={{ width: '15px', height: '15px', backgroundImage: 'radial-gradient(circle at 0 0, #63ffda, #816cff)', borderRadius: '99px' }} />
+              {publicKey ? (
+                <Box sx={{ marginLeft: '10px', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
+                  {shortenAddress(publicKey.toString())}
+                </Box>
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+        </ConnectButton>
+        { showWalletSelectPopup && <WalletSelectBox spacing={2}>
+          <CopyToClipboard text={publicKey!!.toString()}
+            onCopy={() => enqueueSnackbar('Copied address')}>
+            <PopupButton>Copy Address</PopupButton>
+          </CopyToClipboard>
+          <PopupButton onClick={handleChangeWallet}>Change Wallet</PopupButton>
+          <PopupButton onClick={handleDisconnect}>Disconnect</PopupButton>
+        </WalletSelectBox> }
+      </Box>
 
-			<HeaderButton sx={{ fontSize: '20px', fontWeight: 'bold', paddingBottom: '24px' }} variant="outlined" onClick={handleMoreClick}>...</HeaderButton>
+			<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '18px' }} variant="outlined" onClick={handleMoreClick}>...</HeaderButton>
       <MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
 		</Box>
 	)
 }
 
+const MarketTitle = styled('div')`
+  font-family: Almarai;
+  font-size: 22px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #fff;
+  margin: 5px 0 0 7px;
+`
+
 const StyledAppBar = styled(AppBar)`
 	z-index: 200;
-	background-color: #fff;
+	background-color: #000;
 	height: 60px;
 	position: fixed;
 	z-index: 300;
-	border-bottom: 1px solid #e4e9ed;
 	top: 0px;
 	left: 0px;
-	box-shadow: 0 0 7px 3px #ebedf2;
 	.MuiContainer-root,
 	.MuiTabs-flexContainer {
 		${(props) => props.theme.breakpoints.up('md')} {
@@ -218,25 +258,61 @@ const NavPlaceholder = styled('div')`
 `
 
 const HeaderButton = styled(Button)`
-	padding: 14px 11px 12px 14px;
-	border-radius: 8px;
-	font-size: 12px;
-	font-weight: 600;
-	height: 41px;
-  margin-left: 16px;
+  border: 1px solid #404040;
+  padding: 12px 12px 10px 13px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 12px;
+  color: #fff;
+  min-width: 40px;
+  height: 35px;
+  &:hover {
+    border: 1px solid #404040;
+    background-color: rgba(38, 38, 38, 0.5);
+  }
 `
 
-const useStyles = makeStyles(({ palette }: Theme) => ({
-	indicator: {
-		display: 'flex',
-		justifyContent: 'center',
-		backgroundColor: 'transparent',
-		height: '3px',
-		'& > div': {
-			maxWidth: '20%',
-			width: '100%',
-			marginLeft: '-3px',
-			backgroundColor: palette.primary.main,
-		},
-	},
-}))
+const ConnectButton = styled(Button)`
+  border: solid 1px #fff;
+  background-color: #171717;
+	padding: 12px 12px 10px 13px;
+	border-radius: 10px;
+	font-size: 11px;
+	font-weight: 600;
+  margin-left: 16px;
+	color: #fff;
+	height: 35px;
+  &:hover {
+    background-color: #00165f;
+  }
+  &:active {
+    border: solid 1px #003bff;
+    background-color: #00165f;
+  }
+`
+
+const WalletSelectBox = styled(Stack)`
+  position: absolute;
+  top: 60px;
+  right: 59px;
+  width: 163px;
+  height: 139px;
+  padding: 14px 17px 16px;
+  border-radius: 10px;
+  border: solid 1px #253b88;
+  background-color: #181818;
+  z-index: 99;
+`
+
+const PopupButton = styled(Button)`
+  width: 129px;
+  height: 25px;
+  padding: 6px 27px 7px 26px;
+  border-radius: 10px;
+  border: solid 1px #253b88;
+  background-color: #1d243d;
+  font-size: 10px;
+  font-weight: 500;
+  color: #fff;
+`
