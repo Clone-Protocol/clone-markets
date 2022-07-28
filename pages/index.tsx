@@ -9,16 +9,13 @@ const Home: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Incept Protocol</title>
-				<meta name="description" content="Incept Protocol" />
+				<title>Incept Markets</title>
+				<meta name="description" content="Incept Markets" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
 			<main>
-				<StyledSection
-					sx={{
-						backgroundColor: '#FAFAFA',
-					}}>
+				<StyledSection>
 					<Container>
 						<WelcomeMsg />
 						<Box sx={{ marginTop: '40px' }}>

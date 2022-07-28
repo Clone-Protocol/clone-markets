@@ -1,6 +1,4 @@
-import { Provider } from '@project-serum/anchor'
 import { createContext, useContext } from 'react'
-import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
 
 export interface InceptContextState {
