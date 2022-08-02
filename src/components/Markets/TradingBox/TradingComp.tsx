@@ -1,12 +1,15 @@
 import { styled, Tab, Tabs, Box, Stack, Button } from '@mui/material'
-import React from 'react'
+import React, {useState} from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
 import reloadIcon from 'public/images/reload-icon.png'
 import settingsIcon from 'public/images/settings-icon.png'
+import { useForm, Controller } from 'react-hook-form'
 import { OrderForm } from './ReviewOrder'
-import { TabPanel, StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
+import { StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
+import OrderDetails from './OrderDetails'
+import RateLoadingIndicator from './RateLoadingIndicator'
 
 export enum ComponentEffect {
 	iAssetAmount,
@@ -28,16 +31,22 @@ interface Props {
 	totalAmount: number
 	onChangeData: (tradingData: TradingData, effect: ComponentEffect) => void
 	onShowOption: () => void
-	onReviewOrder: (tradingData: TradingData) => void
 }
 
-const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, onShowOption, onReviewOrder }) => {
+const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, onShowOption }) => {
+  const [tabIdx, setTabIdx] = useState(0)
+  const [usdiUserBalance, setusdiUserBalance] = useState(0.0)
+  const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
+  const [maxUSDi, setMAxUSDi] = useState(0.0)
+  const [openOrderDetails, setOpenOrderDetails] = useState(false)
+
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
-		const newData = {
-			...tradingData,
-			tabIdx: newTabIdx,
-		}
-		onChangeData(newData, ComponentEffect.TabIndex)
+    setTabIdx(newTabIdx)
+		// const newData = {
+		// 	...tradingData,
+		// 	tabIdx: newTabIdx,
+		// }
+		// onChangeData(newData, ComponentEffect.TabIndex)
 	}
 
 	const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +99,7 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				p: '20px',
 			}}>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <StyledTabs value={tradingData.tabIdx} onChange={handleChangeTab}>
+        <StyledTabs value={tabIdx} onChange={handleChangeTab}>
           <StyledTab label="Buy"></StyledTab>
           <StyledTab label="Sell"></StyledTab>
         </StyledTabs>
@@ -98,8 +107,8 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 			<Box sx={{ marginTop: '30px' }}>
 				<PairInput
 					title="How much?"
-					tickerIcon={orderForm.tickerIcon}
-					ticker={orderForm.tickerSymbol}
+          tickerIcon={'/images/assets/USDi.png'}
+					ticker="USDi"
 					onChange={handleChangeAmount}
 					value={orderForm.amountIasset}
 					balance={tradingData.fromBalance}
@@ -113,11 +122,12 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 			<Box>
 				<PairInput
 					title="Total"
-					tickerIcon={'/images/assets/USDi.png'}
-					ticker="USDi"
+					tickerIcon={orderForm.tickerIcon}
+					ticker={orderForm.tickerSymbol}
 					value={orderForm.amountUsdi}
 					onChange={handleChangeUsdi}
 					balance={orderForm.balanceFrom}
+          balanceDisabled={true}
 				/>
 			</Box>
 
@@ -134,13 +144,22 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				</IconButton>
 			</Stack>
 
-			<ActionButton onClick={() => onReviewOrder(tradingData)}>Review Order</ActionButton>
+			<ActionButton onClick={() => onReviewOrder(tradingData)}>Confirm market buy</ActionButton>
+
+      <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
+        Order details <ArrowIcon>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
+      </TitleOrderDetails>
+      { openOrderDetails && <OrderDetails /> }
+
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <RateLoadingIndicator />
+      </div>
 		</Box>
 	)
 }
 
 const IconButton = styled('div')`
-	background: #ebedf2;
+	background: #2f2f2f;
 	color: #737373;
   width: 29px;
   height: 29px;
@@ -153,10 +172,30 @@ const IconButton = styled('div')`
 
 const ActionButton = styled(Button)`
 	width: 100%;
-	background: #3461ff;
+  font-size: 12px;
+  font-weight: 600;
 	color: #fff;
 	border-radius: 8px;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
+  border-radius: 10px;
+  border: solid 1px #0f6;
+  background-color: rgba(51, 255, 0, 0);
+`
+
+const TitleOrderDetails = styled('div')`
+  cursor: pointer; 
+  text-align: left; 
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600; 
+  margin-left: 10px;
+`
+
+const ArrowIcon = styled('span')`
+  width: 9.4px;
+  height: 6px;
+  color: #0f6;
+  font-weight: 700;
 `
 
 export default TradingComp

@@ -1,4 +1,4 @@
-import { Box, Stack, Button, styled } from '@mui/material'
+import { Box, Stack, Divider, styled } from '@mui/material'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -19,25 +19,22 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	return (
 		<>
 			{asset ? (
-				<Stack mb={2} direction="column" padding={5}>
-					<Box display="flex">
-						<Image src={asset.tickerIcon} width="40px" height="40px" />
-						<Box sx={{ fontSize: '28px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
+				<Stack mb={2} direction="column" padding={4} paddingY={1}>
+					<Box display="flex" alignItems="center" sx={{ width: '209px', height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', paddingLeft: '8px' }}>
+						<Image src={asset.tickerIcon} width="45px" height="45px" />
+						<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
 							{asset.tickerName}
 						</Box>
-						<Box sx={{ color: '#757a7f', fontSize: '24px', fontWeight: '600', lineHeight: '42px' }}>
-							{asset.tickerSymbol}
+						<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
+							({asset.tickerSymbol})
 						</Box>
-					</Box>
-					<Box>
-						<PriceValue>${asset.price.toLocaleString()}</PriceValue>
 					</Box>
 
 					<Box>
 						<Chart />
 					</Box>
 
-					<Box sx={{ marginBottom: '40px' }}>
+					<Box sx={{ marginTop: '30px', marginBottom: '15px' }}>
 						<SubTitle>Market Overview</SubTitle>
 						<Stack direction="row" justifyContent="space-between">
 							<Box>
@@ -61,13 +58,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Stack>
 					</Box>
 
-					<Box sx={{ marginBottom: '40px' }}>
-						<SubTitle>About {asset.tickerSymbol}</SubTitle>
-						<DetailDesc>{asset.detailOverview}</DetailDesc>
-						<Box sx={{ fontSize: '14px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
-							Tell me more
-						</Box>
-					</Box>
+          <StyledDivider />
 
 					<Box>
 						<SubTitle>My {asset.tickerSymbol}</SubTitle>
@@ -88,6 +79,16 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							</Box>
 						</Stack>
 					</Box>
+
+          <StyledDivider />
+
+          <Box sx={{ marginBottom: '40px' }}>
+						<SubTitle>About {asset.tickerSymbol}</SubTitle>
+						<DetailDesc>{asset.detailOverview}</DetailDesc>
+						<Box sx={{ color: '#cacaca', fontSize: '12px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
+							Tell me more
+						</Box>
+					</Box>
 				</Stack>
 			) : (
 				<></>
@@ -96,20 +97,18 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	)
 }
 
-const PriceValue = styled(Box)`
-  font-size: 40px;
-  margin-top: 10px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
+const StyledDivider = styled(Divider)`
+	background-color: #535353;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	height: 1px;
 `
 
 const SubTitle = styled('div')`
-	font-size: 24px;
+	font-size: 16px;
 	font-weight: 600;
-	margin-top: 20px;
+  color: #fff;
+	margin-top: 15px;
 	margin-bottom: 20px;
   font-stretch: normal;
   font-style: normal;
@@ -118,24 +117,25 @@ const SubTitle = styled('div')`
 `
 
 const ContentHeader = styled('div')`
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: 600;
-	color: #5f5f5f;
+	color: #818181;
 `
 
 const ContentValue = styled('div')`
-	font-size: 23px;
+	font-size: 18px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-  margin-top: 10px;
+  margin-top: 5px;
+  color: #cacaca;
 `
 
 const DetailDesc = styled(Box)`
-  font-size: 14px;
-  font-weight: 300;
+  font-size: 12px;
+  color: #cacaca;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
@@ -144,7 +144,7 @@ const DetailDesc = styled(Box)`
 `
 
 const SubValue = styled('span')`
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
 `
 

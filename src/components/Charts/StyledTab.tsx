@@ -15,6 +15,8 @@ interface StyledTabsProps {
 
 interface StyledTabProps {
 	label: string
+  value: number
+  icon?: any
 }
 
 export const StyledTabs = styled((props: StyledTabsProps) => (
@@ -28,39 +30,32 @@ export const StyledTabs = styled((props: StyledTabsProps) => (
 	'& .MuiTabs-indicatorSpan': {
 		display: 'none'
 	},
+  backgroundColor: 'rgba(21, 22, 24, 0.75)',
+  borderRadius: '10px',
+  height: '29px',
 })
 
-export const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple {...props} />)(({ theme }) => ({
-	width: '87px',
-  height: '39px',
+export const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple iconPosition="start" {...props} />)(({ theme }) => ({
+  '&.MuiTab-root': {
+    height: '29px',
+    minHeight: '0px',
+    maxHeight: '29px',
+    display: 'flex',
+    gap: '5px'
+  },
   textTransform: 'none',
 	fontWeight: '600',
-	fontSize: '16px',
-	color: '#737373',
+	fontSize: '11px',
+  marginLeft: '6px',
+  backgroundColor: 'rgba(21, 22, 24, 0.75)',
+	color: '#989898',
 	'&.Mui-selected': {
-    background: '#000',
+    border: 'solid 1px #3f3f3f',
+    backgroundColor: '#000',
 		color: '#fff',
-    borderRadius: '10px',
-    boxShadow: '0px',
-    border: '1px solid #fff'
-	}
+    borderRadius: '10px'
+	},
+	'&.Mui-focusVisible': {
+		backgroundColor: '#3d3d3d',
+	},
 }))
-
-export const TabPanel = (props: TabPanelProps) => {
-	const { children, value, index, ...other } = props
-
-	return (
-		<div
-			role="tabpanel"
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}>
-			{value === index && (
-				<Box sx={{ p: 3 }}>
-					<div>{children}</div>
-				</Box>
-			)}
-		</div>
-	)
-}

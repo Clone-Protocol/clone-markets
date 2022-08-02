@@ -19,7 +19,7 @@ const AssetPage: NextPage = () => {
 			<main>
 				<StyledSection
 					sx={{
-						backgroundColor: '#FAFAFA',
+						backgroundColor: '#000',
 					}}>
 					<Grid container spacing={1}>
 						<Grid item xs={12} md={8} sx={{ padding: '30px' }}>
