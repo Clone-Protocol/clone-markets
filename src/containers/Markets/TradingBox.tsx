@@ -1,13 +1,13 @@
 import { Box, Paper, styled } from '@mui/material'
 import { useState, useEffect } from 'react'
 import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
-import ReviewOrder, { OrderForm } from '~/components/Markets/TradingBox/ReviewOrder'
+import { OrderForm } from '~/components/Markets/TradingBox/ReviewOrder'
 import TradingComp, { TradingData, ComponentEffect } from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { fetchAsset, onBuy, onSell } from '~/features/Markets/Trading.query'
+import { onBuy, onSell } from '~/features/Markets/Trading.query'
 
 enum Section {
 	TradingComp,
@@ -107,14 +107,15 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 	}
 
 	return (
-		<StyledPaper variant="outlined">
+		<StyledPaper>
 			{showTradingComp && (
-				<TradingComp
+        <TradingComp
           orderForm={orderForm}
           tradingData={tradingData}
           onChangeData={onChangeData}
           onShowOption={() => showSection(Section.OrderSetting)}
-          totalAmount={0}	/>
+          onConfirm={() => onConfirm()}
+        />
 			)}
 			{showOrderSetting && <OrderSetting onSetting={onSetting} />}
 		</StyledPaper>

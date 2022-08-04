@@ -10,6 +10,7 @@ import { OrderForm } from './ReviewOrder'
 import { StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
 import OrderDetails from './OrderDetails'
 import RateLoadingIndicator from './RateLoadingIndicator'
+import BackdropMsg from '~/components/Markets/TradingBox/BackdropMsg'
 
 export enum ComponentEffect {
 	iAssetAmount,
@@ -28,12 +29,12 @@ export interface TradingData {
 interface Props {
 	orderForm: OrderForm
 	tradingData: TradingData
-	totalAmount: number
 	onChangeData: (tradingData: TradingData, effect: ComponentEffect) => void
 	onShowOption: () => void
+  onConfirm: any
 }
 
-const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, onShowOption }) => {
+const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, onShowOption, onConfirm }) => {
   const [tabIdx, setTabIdx] = useState(0)
   const [usdiUserBalance, setusdiUserBalance] = useState(0.0)
   const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
@@ -94,67 +95,71 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 	}
 
 	return (
-		<Box
-			sx={{
-				p: '20px',
-			}}>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <StyledTabs value={tabIdx} onChange={handleChangeTab}>
-          <StyledTab label="Buy"></StyledTab>
-          <StyledTab label="Sell"></StyledTab>
-        </StyledTabs>
+    <>
+      <Box
+        sx={{
+          p: '20px',
+        }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <StyledTabs value={tabIdx} onChange={handleChangeTab}>
+            <StyledTab label="Buy"></StyledTab>
+            <StyledTab label="Sell"></StyledTab>
+          </StyledTabs>
+        </Box>
+        <Box sx={{ marginTop: '30px' }}>
+          <PairInput
+            title="How much?"
+            tickerIcon={'/images/assets/USDi.png'}
+            ticker="USDi"
+            onChange={handleChangeAmount}
+            value={orderForm.amountIasset}
+            balance={tradingData.fromBalance}
+          />
+        </Box>
+
+        <Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
+          <ConvertSlider value={tradingData.convertVal} onChange={handleChangeConvert} />
+        </Box>
+
+        <Box>
+          <PairInput
+            title="Total"
+            tickerIcon={orderForm.tickerIcon}
+            ticker={orderForm.tickerSymbol}
+            value={orderForm.amountUsdi}
+            onChange={handleChangeUsdi}
+            balance={orderForm.balanceFrom}
+            balanceDisabled={true}
+          />
+        </Box>
+
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+          sx={{ marginTop: '16px', marginBottom: '16px' }}>
+          <IconButton>
+            <Image src={reloadIcon} alt="reload" />
+          </IconButton>
+          <IconButton onClick={onShowOption}>
+            <Image src={settingsIcon} alt="settings" />
+          </IconButton>
+        </Stack>
+
+        <ActionButton onClick={() => onConfirm(tradingData)}>Confirm market buy</ActionButton>
+
+        <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
+          Order details <ArrowIcon>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
+        </TitleOrderDetails>
+        { openOrderDetails && <OrderDetails /> }
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <RateLoadingIndicator />
+        </div>
       </Box>
-			<Box sx={{ marginTop: '30px' }}>
-				<PairInput
-					title="How much?"
-          tickerIcon={'/images/assets/USDi.png'}
-					ticker="USDi"
-					onChange={handleChangeAmount}
-					value={orderForm.amountIasset}
-					balance={tradingData.fromBalance}
-				/>
-			</Box>
-
-			<Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
-				<ConvertSlider value={tradingData.convertVal} onChange={handleChangeConvert} />
-			</Box>
-
-			<Box>
-				<PairInput
-					title="Total"
-					tickerIcon={orderForm.tickerIcon}
-					ticker={orderForm.tickerSymbol}
-					value={orderForm.amountUsdi}
-					onChange={handleChangeUsdi}
-					balance={orderForm.balanceFrom}
-          balanceDisabled={true}
-				/>
-			</Box>
-
-			<Stack
-				direction="row"
-				justifyContent="flex-end"
-				alignItems="center"
-				sx={{ marginTop: '16px', marginBottom: '16px' }}>
-				<IconButton>
-					<Image src={reloadIcon} alt="reload" />
-				</IconButton>
-				<IconButton onClick={onShowOption}>
-					<Image src={settingsIcon} alt="settings" />
-				</IconButton>
-			</Stack>
-
-			<ActionButton onClick={() => onReviewOrder(tradingData)}>Confirm market buy</ActionButton>
-
-      <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
-        Order details <ArrowIcon>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
-      </TitleOrderDetails>
-      { openOrderDetails && <OrderDetails /> }
-
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <RateLoadingIndicator />
-      </div>
-		</Box>
+      
+      <BackdropMsg />
+    </>
 	)
 }
 
