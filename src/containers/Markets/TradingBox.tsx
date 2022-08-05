@@ -123,6 +123,7 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 }
 
 const StyledPaper = styled(Paper)`
+  position: relative;
 	width: 373px;
   background: #141414;
 	font-size: 14px;

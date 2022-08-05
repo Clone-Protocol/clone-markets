@@ -14,7 +14,7 @@ const Drawer: React.FC = () => {
 		<StyledDrawer variant="permanent" open={true}>
       <Fade in timeout={1500}>
         <List component="nav">
-          <Link href="/">
+          <Link href="/markets">
             <StyledListItemButton className={router.asPath === '/' || router.asPath.startsWith('/markets') ? 'selected' : ''}>
               <ListItemIcon sx={{ marginLeft: '20px' }}>
                 <Image src={menuMarketIcon} alt="markets" />

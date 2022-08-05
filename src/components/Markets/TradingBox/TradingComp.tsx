@@ -6,6 +6,7 @@ import Image from 'next/image'
 import reloadIcon from 'public/images/reload-icon.png'
 import settingsIcon from 'public/images/settings-icon.png'
 import { useForm, Controller } from 'react-hook-form'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { OrderForm } from './ReviewOrder'
 import { StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
 import OrderDetails from './OrderDetails'
@@ -35,10 +36,12 @@ interface Props {
 }
 
 const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, onShowOption, onConfirm }) => {
+  const { publicKey } = useWallet()
   const [tabIdx, setTabIdx] = useState(0)
   const [usdiUserBalance, setusdiUserBalance] = useState(0.0)
   const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
-  const [maxUSDi, setMAxUSDi] = useState(0.0)
+  const [maxUSDi, setMaxUSDi] = useState(0.0)
+  const [convertVal, setConvertVal] = useState(50)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
 
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
@@ -50,23 +53,6 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 		// onChangeData(newData, ComponentEffect.TabIndex)
 	}
 
-	const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let newData
-		if (e.currentTarget.value) {
-			const amount = parseFloat(e.currentTarget.value)
-			newData = {
-				...tradingData,
-				fromAmount: amount,
-			}
-		} else {
-			newData = {
-				...tradingData,
-				fromAmount: 0.0,
-			}
-		}
-		onChangeData(newData, ComponentEffect.iAssetAmount)
-	}
-
 	const handleChangeUsdi = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let newData
 		if (e.currentTarget.value) {
@@ -75,13 +61,34 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				...tradingData,
 				fromAmount: amount,
 			}
+      setusdiUserBalance(amount)
 		} else {
 			newData = {
 				...tradingData,
 				fromAmount: 0.0,
 			}
+      setusdiUserBalance(0.0)
 		}
-		onChangeData(newData, ComponentEffect.UsdiAmount)
+		// onChangeData(newData, ComponentEffect.UsdiAmount)
+	}
+
+  const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+		let newData
+		if (e.currentTarget.value) {
+			const amount = parseFloat(e.currentTarget.value)
+			newData = {
+				...tradingData,
+				fromAmount: amount,
+			}
+      setiAssetUserBalance(amount)
+		} else {
+			newData = {
+				...tradingData,
+				fromAmount: 0.0,
+			}
+      setiAssetUserBalance(0.0)
+		}
+		// onChangeData(newData, ComponentEffect.iAssetAmount)
 	}
 
 	const handleChangeConvert = (event: Event, newValue: number | number[]) => {
@@ -90,12 +97,13 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
 				...tradingData,
 				convertVal: newValue,
 			}
-			onChangeData(newData, ComponentEffect.BarValue)
+      setConvertVal(newValue)
+			// onChangeData(newData, ComponentEffect.BarValue)
 		}
 	}
 
 	return (
-    <>
+    <div style={{ width: '100%', height: '100%'}}>
       <Box
         sx={{
           p: '20px',
@@ -118,7 +126,7 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
         </Box>
 
         <Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
-          <ConvertSlider value={tradingData.convertVal} onChange={handleChangeConvert} />
+          <ConvertSlider isBuy={tabIdx===0} value={convertVal} onChange={handleChangeConvert} />
         </Box>
 
         <Box>
@@ -146,20 +154,20 @@ const TradingComp: React.FC<Props> = ({ orderForm, tradingData, onChangeData, on
           </IconButton>
         </Stack>
 
-        <ActionButton onClick={() => onConfirm(tradingData)}>Confirm market buy</ActionButton>
+        <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={() => onConfirm(tradingData)}>Confirm market buy</ActionButton>
 
         <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
-          Order details <ArrowIcon>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
+          Order details <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
         </TitleOrderDetails>
         { openOrderDetails && <OrderDetails /> }
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <RateLoadingIndicator />
         </div>
+
+        { !publicKey && <BackdropMsg /> }
       </Box>
-      
-      <BackdropMsg />
-    </>
+    </div>
 	)
 }
 

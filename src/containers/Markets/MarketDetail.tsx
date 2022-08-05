@@ -26,7 +26,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							{asset.tickerName}
 						</Box>
 						<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
-							({asset.tickerSymbol})
+							{asset.tickerSymbol}
 						</Box>
 					</Box>
 

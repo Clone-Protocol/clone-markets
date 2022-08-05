@@ -3,7 +3,7 @@ import { styled } from '@mui/material'
 const BackdropMsg: React.FC = () => {
 	return (
 		<Wrapper>
-			<Title>Please connect wallet to start trading.</Title>
+			<TitleMsg>Please connect wallet to start trading.</TitleMsg>
 		</Wrapper>
 	)
 }
@@ -11,22 +11,21 @@ const BackdropMsg: React.FC = () => {
 export default BackdropMsg
 
 const Wrapper = styled('div')`
-  position: relative;
-  display: flex;
-  top: 0;
-  width: 373px;
-  height: 501px;
-  margin: 20px 46px 19px 79px;
-  padding: 24px 24px 22px;
-  border-radius: 10px;
-  background-color: rgba(20, 20, 20, 0.95);
-`
-
-const Title = styled('div')`
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: rgba(20, 20, 20, 0.95);
+  z-index: 800;
+`
+
+const TitleMsg = styled('div')`
+  width: 186px;
   font-size: 12px;
-  font-weight: 500
-	color: #fff;
+  font-weight: 500;
+	color: #fff;  
 `

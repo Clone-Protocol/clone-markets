@@ -49,8 +49,7 @@ const Chart: React.FC = () => {
 }
 
 const SelectValue = styled(Box)`
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 35px;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;

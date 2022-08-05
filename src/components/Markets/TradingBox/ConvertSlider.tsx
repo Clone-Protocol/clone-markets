@@ -1,6 +1,7 @@
 import { Box, Slider, styled } from '@mui/material'
 
 interface Props {
+  isBuy: boolean
 	value: number
 	onChange?: (event: Event, newValue: number | number[]) => void
 }
@@ -32,7 +33,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     width: '51px',
     padding: '4px 8px 4px 8px',
     borderRadius: '10px',
-    border: 'solid 1px #809cff',
+    border: 'solid 1px #00ff66',
     backgroundColor: '#000',
     '&:before': { display: 'none' },
   },
@@ -43,7 +44,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 	},
 }))
 
-const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
+const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 	const valueLabelFormat = (value: number) => {
 		return `${value}%`
 	}
@@ -56,17 +57,22 @@ const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
 			<ValueBox>{valueLabelFormat(value)}</ValueBox>
 			<Box width="270px">
 				<StyledSlider
-          sx={{
-            '& .MuiSlider-valueLabel': {
-              border: `solid 1px #00ff66`,
-            },
-            '& .MuiSlider-thumb': {
-              border: `2px solid #00ff66`,
-            },
-            '& .MuiSlider-track': {
-              background: `#00ff66`
-            }
-          }}
+          sx={
+            isBuy ? {
+              '& .MuiSlider-thumb': {
+                border: `2px solid #00ff66`,
+              },
+              '& .MuiSlider-track': {
+                background: `#00ff66`
+              }
+            } : {
+              '& .MuiSlider-thumb': {
+                border: `2px solid #fb782e`,
+              },
+              '& .MuiSlider-track': {
+                background: `#fb782e`
+              }
+            }}
 					value={value}
 					min={0}
 					step={5}
