@@ -12,14 +12,16 @@ export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
     sx={{
       border: 0,
       color: '#fff',
-      minHeight: '280px',
+      minHeight: '450px',
+      height: '100%',
       '& .last--cell': {
         display: 'flex',
         justifyContent: 'flex-end'
       },
       '& .MuiDataGrid-columnHeaderTitle': {
-        color: '#9d9d9d', 
-        fontSize: '11px'
+        color: '#777', 
+        fontSize: '10px',
+        fontWeight: '500'
       },
       '& .last--header': {
         '& .MuiDataGrid-columnHeaderTitle': {
@@ -81,7 +83,7 @@ export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, ticke
     <Box sx={{ marginLeft: '32px', display: 'flex', alignItems: 'center' }}>
       <Box sx={{ display: 'block', fontSize: '14px', fontWeight: '500', maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>{tickerName}</Box>
       <Box sx={{ color: '#6c6c6c', fontSize: '12px', fontWeight: '500', marginLeft: '8px' }}>
-        {tickerSymbol}
+        ({tickerSymbol})
       </Box>
     </Box>
   </Box>

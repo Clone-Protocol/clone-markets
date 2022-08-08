@@ -9,13 +9,11 @@ const MarketsPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Markets</title>
+				<title>Incept Markets</title>
 			</Head>
+
 			<main>
-				<StyledSection
-					sx={{
-						backgroundColor: '#FAFAFA',
-					}}>
+				<StyledSection>
 					<Container>
 						<MarketList />
 					</Container>

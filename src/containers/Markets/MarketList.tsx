@@ -5,11 +5,14 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType, FilterTypeMap } from '~/data/filter'
+import Divider from '@mui/material/Divider';
 import Link from 'next/link'
+import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
+import SearchInput from '~/components/Markets/SearchInput'
 
 const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
@@ -26,57 +29,32 @@ const MarketList = () => {
 		setFilter(newValue)
 	}
 
+  const handleSearch = () => {
+
+  }
+
 	return (
-		<>
+		<Box
+			sx={{
+				background: '#000',
+				color: '#fff',
+        padding: '18px 36px',
+        borderRadius: '10px',
+        '& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
+			}}>
 			<Stack mb={2} direction="row" justifyContent="space-between">
 				<PageTabs value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
 						<PageTab key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
+        <SearchInput onChange={handleSearch} />
 			</Stack>
-			<DataGrid
-				sx={{
-					border: 0,
-          '& .MuiDataGrid-columnHeaderTitle': {
-            color: '#424242', fontSize: '12px', fontWeight: '600', margin: '0 auto'
-          },
-          '& .first--header': { 
-            '& .MuiDataGrid-columnHeaderTitle': {
-              margin: '1px'
-            },
-          },
-          '& .last--header': { 
-            '& .MuiDataGrid-columnHeaderTitle': {
-              display: 'none'
-            },
-          },
-          '& .MuiDataGrid-columnSeparator': {
-            display: 'none',
-          },
-          '& .MuiDataGrid-row': {
-            border: 0,
-          },
-          '& .MuiDataGrid-cell': {
-						border: 0,
-					},
-          '& .MuiDataGrid-withBorder': {
-            borderRight: 0,
-          }
-				}}
-				disableColumnFilter
-				disableSelectionOnClick
-				disableColumnSelector
-				disableColumnMenu
-				disableDensitySelector
-				disableExtendRowFullWidth
-				hideFooter
-				rowHeight={90}
-				autoHeight
-				columns={columns}
+			<Grid
+        headers={columns}
 				rows={assets || []}
 			/>
-		</>
+		</Box>
 	)
 }
 
@@ -88,15 +66,7 @@ let columns: GridColDef[] = [
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Box display="flex" justifyContent="flex-start">
-					<Image src={params.row.tickerIcon} width="40px" height="40px" />
-					<Stack sx={{ marginLeft: '32px' }}>
-						<Box sx={{ fontSize: '14px', fontWeight: '600' }}>{params.row.tickerName}</Box>
-						<Box sx={{ color: '#6c6c6c', fontSize: '12px', fontWeight: '500' }}>
-							{params.row.tickerSymbol}
-						</Box>
-					</Stack>
-				</Box>
+        <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
 			)
 		},
 	},
@@ -110,7 +80,7 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: '24hChange',
-		headerName: '24h Change',
+		headerName: '24hr Change',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			const val = parseFloat(params.row.change24h)
@@ -164,11 +134,13 @@ const ChangePriceMinus = styled(Box)`
 
 const TradeButton = styled(Button)`
 	border-radius: 8px;
-	background-color: rgba(235, 237, 242, 0.97);
-	font-size: 12px;
-	font-weight: 600;
-	width: 100px;
+	border: solid 1px #535353;
+  background-color: rgba(47, 47, 47, 0.97);
+	font-size: 11px;
+  font-weight: 500;
+	width: 82px;
 	height: 30px;
+  color: #fff;
   &:hover {
     color: #fff;
   }

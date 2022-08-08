@@ -7,38 +7,43 @@ export const PageTabs: React.FC<Pick<TabsProps, 'value' | 'onChange' | 'sx' | 'v
 	sx,
 	...props
 }) => (
-	<StyledTabs
-		TabIndicatorProps={{ style: { height: '0px', backgroundColor: '#ebedf2' } }}
-		sx={sx as SxProps}
-		{...props}>
+	<StyledTabs TabIndicatorProps={{ style: { height: '0px', backgroundColor: '#fff' } }} sx={sx as SxProps} {...props}>
 		{children}
 	</StyledTabs>
 )
 
 export const StyledTabs = styled(Tabs)`
-	height: 28px;
+	height: 36px;
+  background-color: #282828;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-top: 4px;
 	min-height: 28px;
 `
 export const PageTab = styled(Tab)`
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: 600;
 	text-transform: none;
 	height: 28px;
-	color: #9ba3b8;
+	color: #fff;
 	&.MuiTab-root {
-		padding: 3px 9px 4px 8px;
+		padding-left: 12px;
+    padding-right: 12px;
+    margin-right: 8px;
 		height: 28px;
+    min-width: 60px;
 		min-height: 28px;
-		margin-right: 10px;
-		border-radius: 4px;
-		border: solid 1px #cacfdc;
-		color: #9ba3b8;
+		border-radius: 10px;
+		color: #989898;
 		text-transform: none;
+    &:hover {
+      background-color: rgba(100, 100, 100, 0.5);
+    }
 	}
 	&.Mui-selected {
-		font-weight: bold;
-		background: #ebedf2;
-		color: #323232;
+    border: solid 1px #3f3f3f;
+    background-color: #000;
+		color: #fff;
 	}
 	&.Mui-focusVisible {
 		background-color: #fff;
