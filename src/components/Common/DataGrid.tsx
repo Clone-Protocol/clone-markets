@@ -29,7 +29,8 @@ export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
         }
       },
       '& .MuiDataGrid-columnHeaders': {
-        border: '0'
+        border: '0',
+        borderBottom: '1px solid #777'
       },
       '& .MuiDataGrid-columnSeparator': {
         display: 'none',
@@ -37,8 +38,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
       '& .MuiDataGrid-row': {
         marginBottom: '12px',
         marginRight: '10px',
-        borderRadius: '10px',
-        background: '#1b1b1b'
+        borderBottom: '1px solid #3e3e3e'
       },
       '& .MuiDataGrid-row:hover': {
         backgroundColor: 'rgba(38, 38, 38, 0.8)'
@@ -79,10 +79,10 @@ export interface TickerType {
 
 export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, tickerSymbol }) => (
   <Box display="flex" justifyContent="flex-start">
-    <Image src={tickerIcon} width="27px" height="27px" />
-    <Box sx={{ marginLeft: '32px', display: 'flex', alignItems: 'center' }}>
+    <Image src={tickerIcon} width="30px" height="30px" />
+    <Box sx={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
       <Box sx={{ display: 'block', fontSize: '14px', fontWeight: '500', maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>{tickerName}</Box>
-      <Box sx={{ color: '#6c6c6c', fontSize: '12px', fontWeight: '500', marginLeft: '8px' }}>
+      <Box sx={{ color: '#7b7b7b', fontSize: '14px', fontWeight: '500', marginLeft: '8px' }}>
         ({tickerSymbol})
       </Box>
     </Box>

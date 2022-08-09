@@ -1,11 +1,9 @@
 import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
-import Image from 'next/image'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { useCallback, useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType, FilterTypeMap } from '~/data/filter'
-import Divider from '@mui/material/Divider';
 import Link from 'next/link'
 import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
 import { LoadingProgress } from '~/components/Common/Loading'
@@ -13,14 +11,18 @@ import withSuspense from '~/hocs/withSuspense'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import SearchInput from '~/components/Markets/SearchInput'
+import useDebounce from '~/hooks/useDebounce'
 
 const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
+  const [searchTerm, setSearchTerm] = useState('')
+  const debounceSearchTerm = useDebounce(searchTerm, 500)
 	const { publicKey } = useWallet()
 
 	const { data: assets } = useAssetsQuery({
     userPubKey: publicKey,
 	  filter,
+    searchTerm: debounceSearchTerm ? debounceSearchTerm : '',
 	  refetchOnMount: true,
     enabled: publicKey != null
 	})
@@ -29,9 +31,12 @@ const MarketList = () => {
 		setFilter(newValue)
 	}
 
-  const handleSearch = () => {
-
-  }
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const newVal = e.currentTarget.value
+		if (newVal) {
+			setSearchTerm(newVal)
+		}
+	}, [searchTerm])
 
 	return (
 		<Box
@@ -42,7 +47,7 @@ const MarketList = () => {
         borderRadius: '10px',
         '& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
-			<Stack mb={2} direction="row" justifyContent="space-between">
+			<Stack mb={2} direction="row">
 				<PageTabs value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
 						<PageTab key={f} value={f} label={FilterTypeMap[f as FilterType]} />
@@ -63,7 +68,7 @@ let columns: GridColDef[] = [
 		field: 'iAssets',
     headerClassName: 'first--header',
 		headerName: 'iAssets',
-		flex: 2,
+		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
         <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -72,10 +77,10 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: 'price',
-		headerName: 'Price(USDi)',
-		flex: 1,
+		headerName: 'Price (USDi)',
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box sx={{ fontSize: '16px', fontWeight: '500', margin: '0 auto' }}>${params.value.toLocaleString()}</Box>
+			return <Box sx={{ fontSize: '14px', fontWeight: '500', marginLeft: '10px' }}>${params.value.toLocaleString()}</Box>
 		},
 	},
 	{
@@ -107,29 +112,30 @@ let columns: GridColDef[] = [
 	{
 		field: 'trade',
     headerClassName: 'last--header',
-		headerName: 'Trade',
+		headerName: '',
+    cellClassName: 'last--cell',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Link href={`/markets/${params.row.id}/asset`}>
-					<TradeButton>Trade</TradeButton>
-				</Link>
+        <Link href={`/markets/${params.row.id}/asset`}>
+          <TradeButton>Trade</TradeButton>
+        </Link>
 			)
 		},
 	},
 ]
 
 const ChangePricePlus = styled(Box)`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
-	color: #308c54;
-  margin: 0 auto;
+	color: #00ff66;
+  margin-left: 10px;
 `
 const ChangePriceMinus = styled(Box)`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
-	color: #c94738;
-  margin: 0 auto;
+	color: #fb782e;
+  margin-left: 10px;
 `
 
 const TradeButton = styled(Button)`

@@ -13,10 +13,7 @@ const IportfolioPage: NextPage = () => {
 				<title>iPortfolio - Incept Protocol</title>
 			</Head>
 			<main>
-				<StyledSection
-					sx={{
-						backgroundColor: '#FAFAFA',
-					}}>
+				<StyledSection>
 					<Container>
 						<BalanceView />
 						<Box sx={{ marginTop: '58px' }}>

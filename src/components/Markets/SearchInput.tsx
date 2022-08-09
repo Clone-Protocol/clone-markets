@@ -20,6 +20,7 @@ const StyledBox = styled(Box)`
   width: 270px;
   height: 36px;
   color: #fff;
+  margin-left: 32px;
   padding: 6px 20px 6px 24px;
   border-radius: 8px;
   border: solid 1px #444;

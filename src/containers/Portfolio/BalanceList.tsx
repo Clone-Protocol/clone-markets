@@ -1,10 +1,11 @@
 import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
 import Image from 'next/image'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 import { FilterType, FilterTypeMap } from '~/data/filter'
+import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
 import Link from 'next/link'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
@@ -28,28 +29,19 @@ const BalanceList = () => {
 
 	return (
 		<>
-			<Box sx={{ fontSize: '20px', fontWeight: '600', marginBottom: '30px' }}>Balance</Box>
-			<Stack mb={2} direction="row" justifyContent="space-between">
+			<Stack mb={2} direction="row" justifyContent="space-between" alignItems="center">
 				<PageTabs value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
 						<PageTab key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
+        <BalanceBox>
+          <div>USDi balance</div>
+          <div>$1350.83</div>
+        </BalanceBox>
 			</Stack>
-			<DataGrid
-				sx={{
-					border: 0,
-				}}
-				disableColumnFilter
-				disableSelectionOnClick
-				disableColumnSelector
-				disableColumnMenu
-				disableDensitySelector
-				disableExtendRowFullWidth
-				hideFooter
-				rowHeight={100}
-				autoHeight
-				columns={columns}
+      <Grid
+        headers={columns}
 				rows={assets || []}
 			/>
 		</>
@@ -63,15 +55,7 @@ let columns: GridColDef[] = [
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Box display="flex" justifyContent="flex-start">
-					<Image src={params.row.tickerIcon} width="40px" height="40px" />
-					<Stack sx={{ marginLeft: '32px' }}>
-						<Box sx={{ fontSize: '14px', fontWeight: '600' }}>{params.row.tickerName}</Box>
-						<Box sx={{ color: '#6c6c6c', fontSize: '12px', fontWeight: '500' }}>
-							{params.row.tickerSymbol}
-						</Box>
-					</Stack>
-				</Box>
+        <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
 			)
 		},
 	},
@@ -82,8 +66,8 @@ let columns: GridColDef[] = [
 		renderCell(params: GridRenderCellParams<string>) {
 			const percent = parseFloat(params.row.changePercent)
 			return (
-				<Stack sx={{ marginLeft: '32px' }}>
-					<Box sx={{ fontSize: '16px', fontWeight: '600' }}>${params.row.price}</Box>
+				<Stack sx={{ marginLeft: '10px' }}>
+					<Box sx={{ fontSize: '14px', fontWeight: '500' }}>${params.row.price.toLocaleString()}</Box>
 					{percent >= 0 ? (
 						<ChangePricePlus>+${percent}</ChangePricePlus>
 					) : (
@@ -100,20 +84,32 @@ let columns: GridColDef[] = [
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
+				<Stack sx={{ marginLeft: '10px' }}>
+					<Box sx={{ fontSize: '14px', fontWeight: '500' }}>
+						{params.row.assetBalance.toLocaleString()} {params.row.tickerSymbol}
+					</Box>
+					<Box sx={{ color: '#a6a6a6', fontSize: '12px', fontWeight: '500' }}>
+						${params.row.usdiBalance.toLocaleString()}
+					</Box>
+				</Stack>
+			)
+		},
+	},
+  {
+		field: 'iPortfolio',
+		headerName: 'iPortfolio %',
+		flex: 2,
+		renderCell(params: GridRenderCellParams<string>) {
+			return (
 				<Stack sx={{ marginLeft: '32px' }}>
-					<Box sx={{ fontSize: '16px', fontWeight: '500' }}>
-						{params.row.assetBalance} {params.row.tickerSymbol}
-					</Box>
-					<Box sx={{ color: '#6c6c6c', fontSize: '12px', fontWeight: '600' }}>
-						{params.row.usdiBalance} USDi
-					</Box>
 				</Stack>
 			)
 		},
 	},
 	{
 		field: 'trade',
-		headerName: 'Trade',
+		headerName: '',
+    cellClassName: 'last--cell',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
@@ -125,24 +121,44 @@ let columns: GridColDef[] = [
 	},
 ]
 
+const BalanceBox = styled(Box)`
+  width: 226px;
+  height: 59px;
+  padding: 3px 29px 2px 27px;
+  border-radius: 15px;
+  box-shadow: inset 0 4px 4px 0 rgba(255, 255, 255, 0.07);
+  background-color: #1a1a1a;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #a6a6a6;
+`
+
 const ChangePricePlus = styled(Box)`
 	font-size: 12px;
 	font-weight: 500;
-	color: #308c54;
+	color: #00ff66;
 `
 const ChangePriceMinus = styled(Box)`
 	font-size: 12px;
 	font-weight: 500;
-	color: #c94738;
+	color: #fb782e;
 `
 
 const TradeButton = styled(Button)`
 	border-radius: 8px;
-	background-color: rgba(235, 237, 242, 0.97);
-	font-size: 12px;
-	font-weight: 600;
-	width: 100px;
+	border: solid 1px #535353;
+  background-color: rgba(47, 47, 47, 0.97);
+	font-size: 11px;
+  font-weight: 500;
+	width: 82px;
 	height: 30px;
+  color: #fff;
+  &:hover {
+    color: #fff;
+  }
 `
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))

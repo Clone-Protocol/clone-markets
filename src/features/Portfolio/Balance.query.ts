@@ -8,52 +8,52 @@ import { FilterType } from '~/data/filter'
 export const fetchBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
 	if (!userPubKey) return []
 
-  await program.loadManager()
+  // await program.loadManager()
 
-	const iassetInfos = await program.getUseriAssetInfo()
-	let usdiBalance = await program.getUsdiBalance()
+	// const iassetInfos = await program.getUseriAssetInfo()
+	// let usdiBalance = await program.getUsdiBalance()
 
-	const result: BalanceList[] = []
+	// const result: BalanceList[] = []
 
-	let i = 1
-	for (var info of iassetInfos) {
-		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info[0])
-		result.push({
-			id: i,
-			tickerName: tickerName,
-			tickerSymbol: tickerSymbol,
-			tickerIcon: tickerIcon,
-			price: info[1]!,
-			//changePercent: 1.58,
-			assetType: assetType,
-			assetBalance: info[2]!,
-			usdiBalance: usdiBalance!,
-		})
-		i++
-	}
+	// let i = 1
+	// for (var info of iassetInfos) {
+	// 	let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info[0])
+	// 	result.push({
+	// 		id: i,
+	// 		tickerName: tickerName,
+	// 		tickerSymbol: tickerSymbol,
+	// 		tickerIcon: tickerIcon,
+	// 		price: info[1]!,
+	// 		//changePercent: 1.58,
+	// 		assetType: assetType,
+	// 		assetBalance: info[2]!,
+	// 		usdiBalance: usdiBalance!,
+	// 	})
+	// 	i++
+	// }
 
-	// const result: BalanceList[] = [
-	//   {
-	//     id: 1,
-	//     tickerName: 'iSolana',
-	//     tickerSymbol: 'iSOL',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 160.51,
-	//     changePercent: 1.58,
-	//     assetBalance: 0.01,
-	//     usdiBalance: 0.04
-	//   },
-	//   {
-	//     id: 2,
-	//     tickerName: 'iEthereum',
-	//     tickerSymbol: 'iETH',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 2300.53,
-	//     changePercent: -2.04,
-	//     assetBalance: 0.01,
-	//     usdiBalance: 0.04
-	//   }
-	// ]
+	const result: BalanceList[] = [
+	  {
+	    id: 1,
+	    tickerName: 'iSolana',
+	    tickerSymbol: 'iSOL',
+	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	    price: 160.51,
+	    changePercent: 1.58,
+	    assetBalance: 0.01,
+	    usdiBalance: 0.04
+	  },
+	  {
+	    id: 2,
+	    tickerName: 'iEthereum',
+	    tickerSymbol: 'iETH',
+	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	    price: 2300.53,
+	    changePercent: -2.04,
+	    assetBalance: 0.01,
+	    usdiBalance: 0.04
+	  }
+	]
 	return result
 }
 
@@ -70,7 +70,7 @@ export interface BalanceList {
 	tickerSymbol: string
 	tickerIcon: string
 	price: number
-	//changePercent: number
+	changePercent: number
 	assetType: number
 	assetBalance: number
 	usdiBalance: number
