@@ -11,6 +11,7 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
+import PercentSlider from '~/components/Portfolio/PercentSlider'
 
 const BalanceList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
@@ -37,7 +38,7 @@ const BalanceList = () => {
 				</PageTabs>
         <BalanceBox>
           <div>USDi balance</div>
-          <div>$1350.83</div>
+          <div style={{ color: '#fff', fontSize: '14px' }}>$1350.83</div>
         </BalanceBox>
 			</Stack>
       <Grid
@@ -101,7 +102,8 @@ let columns: GridColDef[] = [
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Stack sx={{ marginLeft: '32px' }}>
+				<Stack sx={{ marginLeft: '10px' }}>
+          <PercentSlider percent={50} />
 				</Stack>
 			)
 		},

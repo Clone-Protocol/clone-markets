@@ -1,5 +1,6 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
 import { Balance } from '~/features/Home/Balance.query'
+import PieChartAlt from '../Charts/PieChartAlt'
 
 interface Props {
 	balance: Balance
@@ -7,18 +8,22 @@ interface Props {
 
 const BalanceView: React.FC<Props> = ({ balance }) => {
 	return balance.totalVal ? (
-		<StyledPaper variant="outlined">
-			<Box sx={{ marginBottom: '160px' }}>
-				<Title>Total Value</Title>
+		<StyledPaper>
+			<Box sx={{ width: '200px', marginBottom: '40px' }}>
+				<Title>iPortfolio</Title>
 				<BalanceValue>
-					<NumValue>{balance.totalVal.toLocaleString()}</NumValue> USDi
+					${balance.totalVal.toLocaleString()}
 				</BalanceValue>
 			</Box>
-			<Divider />
-			<BottomContent>
-				<div>USDi Balance</div>
-				<div>{balance.balanceVal.toLocaleString()} USDi</div>
-			</BottomContent>
+			<Box display="flex" alignItems="center">
+				<PieChartAlt />
+				<Box sx={{ width: '180px'}}>
+          <CategoryText>iStocks - 45%</CategoryText>
+          <CategoryText>iCommodities - 23%</CategoryText>
+          <CategoryText>iFX - 12%</CategoryText>
+          <CategoryText>iCrypto - 10%</CategoryText>
+        </Box>
+			</Box>
 		</StyledPaper>
 	) : (
 		<></>
@@ -28,36 +33,31 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
 export default BalanceView
 
 const StyledPaper = styled(Paper)`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 	font-size: 14px;
 	font-weight: 500;
-	color: #606060;
-	padding: 49px 48px 49px 51px;
+	color: #FFF;
+  padding-top: 10px;
 	border-radius: 8px;
-	box-shadow: 0 0 7px 3px #ebedf2;
-	border: solid 1px #e4e9ed;
+  background: #000;
 `
 const Title = styled('div')`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
-	color: #323232;
-	margin-bottom: 10px;
+	color: #fff;
+	margin-bottom: 4px;
 `
 
 const BalanceValue = styled('div')`
-	font-size: 20px;
-	font-weight: 600;
-`
-
-const NumValue = styled('span')`
 	font-size: 32px;
+	font-weight: 500;
 `
 
-const BottomContent = styled(Box)`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 12px;
-	font-weight: 500;
-	color: #323232;
-	padding-top: 21px;
+const CategoryText = styled('div')`
+  font-size: 12px;
+  font-weight: 500;
+  color: #a3a3a3;
+  margin-bottom: 11px;
 `

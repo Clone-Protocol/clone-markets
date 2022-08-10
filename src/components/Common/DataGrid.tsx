@@ -40,9 +40,6 @@ export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
         marginRight: '10px',
         borderBottom: '1px solid #3e3e3e'
       },
-      '& .MuiDataGrid-row:hover': {
-        backgroundColor: 'rgba(38, 38, 38, 0.8)'
-      },
       '& .MuiDataGrid-cell': {
         borderBottom: '0',
       },

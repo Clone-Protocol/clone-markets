@@ -15,7 +15,7 @@ const BalanceView = () => {
 	})
 
 	return balance ? (
-		<Box sx={{ maxWidth: '806px' }}>
+		<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 			<BalanceViewComp balance={balance} />
 		</Box>
 	) : (
