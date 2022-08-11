@@ -4,12 +4,6 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { styled } from '@mui/system'
 import { Box } from '@mui/material'
 
-const defaultData = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-];
 const COLORS = ['#FFF', '#adadad', '#767474', '#595959'];
 
 export type ChartProps = {
@@ -21,8 +15,6 @@ const PieChartAlt : React.FC<ChartProps> = ({
   data
 }) => {
   const demoUrl = 'https://codesandbox.io/s/pie-chart-with-padding-angle-7ux0o';
-
-  data = defaultData;
 
   const onPieEnter = () => {
 

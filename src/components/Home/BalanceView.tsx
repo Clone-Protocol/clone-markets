@@ -7,6 +7,14 @@ interface Props {
 }
 
 const BalanceView: React.FC<Props> = ({ balance }) => {
+
+  const data = [
+    { name: 'iStocks', value: 45 },
+    { name: 'iCommodities', value: 23 },
+    { name: 'iFX', value: 12 },
+    { name: 'iCrypto', value: 10 },
+  ];
+
 	return balance.totalVal ? (
 		<StyledPaper>
 			<Box sx={{ width: '200px', marginBottom: '40px' }}>
@@ -16,12 +24,11 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
 				</BalanceValue>
 			</Box>
 			<Box display="flex" alignItems="center">
-				<PieChartAlt />
+				<PieChartAlt data={data} />
 				<Box sx={{ width: '180px'}}>
-          <CategoryText>iStocks - 45%</CategoryText>
-          <CategoryText>iCommodities - 23%</CategoryText>
-          <CategoryText>iFX - 12%</CategoryText>
-          <CategoryText>iCrypto - 10%</CategoryText>
+          { data.map(item => (
+            <CategoryText>{item.name} - {item.value}%</CategoryText>
+          ))}
         </Box>
 			</Box>
 		</StyledPaper>
