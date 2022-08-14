@@ -1,24 +1,29 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
 import { Balance } from '~/features/Home/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
+import { useRecoilValue } from 'recoil'
+import { filterState } from '~/features/Portfolio/filterAtom'
+import { FilterTypeMap } from '~/data/filter'
 
 interface Props {
 	balance: Balance
 }
 
 const BalanceView: React.FC<Props> = ({ balance }) => {
+  const selectedFilter = useRecoilValue(filterState)
 
   const data = [
-    { name: 'iStocks', value: 45 },
-    { name: 'iCommodities', value: 23 },
-    { name: 'iFX', value: 12 },
-    { name: 'iCrypto', value: 10 },
+    { key: 'istocks', name: FilterTypeMap.istocks, value: 45 },
+    { key: 'icommodities', name: FilterTypeMap.icommodities, value: 23 },
+    { key: 'ifx', name: FilterTypeMap.ifx, value: 12 },
+    { key: 'icrypto', name: FilterTypeMap.icrypto, value: 10 },
   ];
 
 	return balance.totalVal ? (
 		<StyledPaper>
 			<Box sx={{ width: '200px', marginBottom: '40px' }}>
 				<Title>iPortfolio</Title>
+        <div>{selectedFilter}</div>
 				<BalanceValue>
 					${balance.totalVal.toLocaleString()}
 				</BalanceValue>
@@ -27,7 +32,7 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
 				<PieChartAlt data={data} />
 				<Box sx={{ width: '180px'}}>
           { data.map(item => (
-            <CategoryText>{item.name} - {item.value}%</CategoryText>
+            <CategoryText style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px'} : {}}>{item.name} - {item.value}%</CategoryText>
           ))}
         </Box>
 			</Box>

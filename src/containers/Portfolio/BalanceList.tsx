@@ -1,6 +1,5 @@
 import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
-import Image from 'next/image'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
@@ -12,10 +11,13 @@ import withSuspense from '~/hocs/withSuspense'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
+import { filterState } from '~/features/Portfolio/filterAtom'
+import { useSetRecoilState } from 'recoil'
 
 const BalanceList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
 	const { publicKey } = useWallet()
+  const setFilterState = useSetRecoilState(filterState)
 
   const { data: assets } = useBalanceQuery({
     userPubKey: publicKey,
@@ -26,6 +28,7 @@ const BalanceList = () => {
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
 		setFilter(newValue)
+    setFilterState(newValue)
 	}
 
 	return (
