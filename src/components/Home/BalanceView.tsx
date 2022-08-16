@@ -4,6 +4,7 @@ import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilValue } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import { FilterTypeMap } from '~/data/filter'
+import { useEffect, useState } from 'react'
 
 interface Props {
 	balance: Balance
@@ -11,6 +12,8 @@ interface Props {
 
 const BalanceView: React.FC<Props> = ({ balance }) => {
   const selectedFilter = useRecoilValue(filterState)
+	const [selectedTitle, setSelectedTitle] = useState('iPortfolio')
+	const [selectedIdx, setSelectedIdx] = useState(0)
 
   const data = [
     { key: 'istocks', name: FilterTypeMap.istocks, value: 45 },
@@ -19,20 +22,34 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
     { key: 'icrypto', name: FilterTypeMap.icrypto, value: 10 },
   ];
 
+	useEffect(() => {
+		if (selectedFilter === 'all') {
+			setSelectedTitle('iPortfolio')
+			setSelectedIdx(0)
+		} else {
+			data.forEach((item, index) => {
+				if (item.key === selectedFilter) {
+					setSelectedTitle(item.name)
+					setSelectedIdx(index)
+					return;
+				}
+			})
+		}
+	}, [selectedFilter])
+
 	return balance.totalVal ? (
 		<StyledPaper>
 			<Box sx={{ width: '200px', marginBottom: '40px' }}>
-				<Title>iPortfolio</Title>
-        <div>{selectedFilter}</div>
+				<Title>{ selectedTitle }</Title>
 				<BalanceValue>
 					${balance.totalVal.toLocaleString()}
 				</BalanceValue>
 			</Box>
 			<Box display="flex" alignItems="center">
-				<PieChartAlt data={data} />
+				<PieChartAlt data={data} selectedIdx={selectedIdx} />
 				<Box sx={{ width: '180px'}}>
           { data.map(item => (
-            <CategoryText style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px'} : {}}>{item.name} - {item.value}%</CategoryText>
+            <CategoryText style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px'} : { marginLeft: '12px' }}>{item.name} - {item.value}%</CategoryText>
           ))}
         </Box>
 			</Box>

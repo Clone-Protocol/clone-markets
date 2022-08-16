@@ -2,8 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
 import { Container, Box } from '@mui/material'
-import WelcomeMsg from '~/components/Home/WelcomeMsg'
-import BalanceView from '~/containers/Home/BalanceView'
+// import WelcomeMsg from '~/components/Home/WelcomeMsg'
+// import BalanceView from '~/containers/Home/BalanceView'
 
 const Home: NextPage = () => {
 	return (
@@ -17,10 +17,10 @@ const Home: NextPage = () => {
 			<main>
 				<StyledSection>
 					<Container>
-						<WelcomeMsg />
+						{/* <WelcomeMsg />
 						<Box sx={{ marginTop: '40px' }}>
 							<BalanceView />
-						</Box>
+						</Box> */}
 					</Container>
 				</StyledSection>
 			</main>

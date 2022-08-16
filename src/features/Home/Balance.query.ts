@@ -5,16 +5,16 @@ import { useIncept } from '~/hooks/useIncept'
 export const fetchBalance = async ({ program, userPubKey }: { program: any, userPubKey: PublicKey | null}) => {
 	if (!userPubKey) return null
 
-	await program.loadManager()
+	// await program.loadManager()
 
 	let totalVal = 0.0
-	let balanceVal = 0.0
+	let balanceVal = 1.0
 
-	try {
-		balanceVal = await program.getUsdiBalance()
-	} catch (e) {
-    console.error(e)
-  }
+	// try {
+	// 	balanceVal = await program.getUsdiBalance()
+	// } catch (e) {
+  //   console.error(e)
+  // }
 
 	// try {
 	// 	let iassetInfos = await program.getUseriAssetInfo()

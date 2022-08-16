@@ -20,7 +20,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
     sx={{
       border: 0,
       color: '#fff',
-      minHeight: '450px',
+      minHeight: `${window.innerHeight - 80}px`,
       height: '100%',
       '& .last--cell': {
         display: 'flex',
