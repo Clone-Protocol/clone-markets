@@ -4,8 +4,7 @@ import { styled } from '@mui/system'
 import Head from 'next/head'
 import { Container, Box } from '@mui/material'
 import { useWallet } from '@solana/wallet-adapter-react'
-import BalanceView from '~/containers/Home/BalanceView'
-import BalanceList from '~/containers/Portfolio/BalanceList'
+import PortfolioView from '~/containers/Portfolio/PortfolioView'
 import BackdropMsg from '~/components/Portfolio/BackdropMsg'
 
 const IportfolioPage: NextPage = () => {
@@ -19,10 +18,8 @@ const IportfolioPage: NextPage = () => {
 			<main>
 				<StyledSection>
 					<Container>
-						<BalanceView />
-						<Box sx={{ marginTop: '58px' }}>
-							<BalanceList />
-						</Box>
+						<PortfolioView />
+
             { !publicKey && <BackdropMsg /> }
 					</Container>
 				</StyledSection>

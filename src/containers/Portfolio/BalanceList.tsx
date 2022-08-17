@@ -3,7 +3,7 @@ import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
-import { FilterType, FilterTypeMap } from '~/data/filter'
+import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
 import Link from 'next/link'
 import { LoadingProgress } from '~/components/Common/Loading'
@@ -14,10 +14,16 @@ import PercentSlider from '~/components/Portfolio/PercentSlider'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import { useSetRecoilState } from 'recoil'
 
-const BalanceList = () => {
+interface Props {
+	pieitems: PieItem[]
+}
+
+const BalanceList: React.FC<Props> = ({ pieitems }) => {
 	const [filter, setFilter] = useState<FilterType>('all')
 	const { publicKey } = useWallet()
   const setFilterState = useSetRecoilState(filterState)
+
+	const pieitemsKeys = pieitems.map((item) => item.key)
 
   const { data: assets } = useBalanceQuery({
     userPubKey: publicKey,
@@ -36,7 +42,7 @@ const BalanceList = () => {
 			<Stack mb={2} direction="row" justifyContent="space-between" alignItems="center">
 				<PageTabs value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
-						<PageTab key={f} value={f} label={FilterTypeMap[f as FilterType]} />
+						<PageTab disabled={pieitemsKeys.indexOf(f as FilterType) === -1 && f !== 'all'} key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
         <BalanceBox>
@@ -118,7 +124,7 @@ let columns: GridColDef[] = [
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Link href={`/markets/`}>
+				<Link href={`/markets/${params.row.id}/asset`}>
 					<TradeButton>Trade</TradeButton>
 				</Link>
 			)

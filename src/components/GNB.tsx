@@ -177,7 +177,7 @@ const RightMenu = () => {
             <>Connect Wallet</>
           ) : (
             <>
-              <div style={{ width: '15px', height: '15px', backgroundImage: 'radial-gradient(circle at 0 0, #63ffda, #816cff)', borderRadius: '99px' }} />
+              <div style={{ width: '15px', height: '15px', backgroundImage: 'radial-gradient(circle at 0 0, #0f6, #fff)', borderRadius: '99px' }} />
               {publicKey ? (
                 <Box sx={{ marginLeft: '10px', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
                   {shortenAddress(publicKey.toString())}
@@ -274,7 +274,7 @@ const HeaderButton = styled(Button)`
 `
 
 const ConnectButton = styled(Button)`
-  border: solid 1px #fff;
+  border: solid 1px #aaa;
   background-color: #171717;
 	padding: 12px 12px 10px 13px;
 	border-radius: 10px;

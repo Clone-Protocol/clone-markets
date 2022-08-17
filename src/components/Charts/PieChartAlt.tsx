@@ -14,23 +14,15 @@ export type ChartProps = {
 
 const PieChartAlt : React.FC<ChartProps> = ({
   data,
-  selectedIdx
+  selectedIdx,
+  onSelect
 }) => {
-  const onPieEnter = () => {
-    
+  const onPieEnter = (_, index) => {
+    onSelect(index)
   }
 
   const renderActiveShape = (props) => {
-    const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, payload, percent, value } = props;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle } = props;
     const fill = '#60d9ff';
   
     return (
@@ -41,15 +33,15 @@ const PieChartAlt : React.FC<ChartProps> = ({
           }}
           cx={cx}
           cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius + 8}
+          innerRadius={innerRadius - 8}
+          outerRadius={outerRadius}
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
           stroke="#595959"
           strokeLinejoin='round'
           strokeOpacity="0.8"
-          strokeWidth="3px"
+          strokeWidth="2.5px"
           strokeDashoffset="-3px"
         />
       </g>
@@ -58,23 +50,39 @@ const PieChartAlt : React.FC<ChartProps> = ({
   
   return (
     <Wrapper>
-      <PieChart width={250} height={250} onMouseEnter={onPieEnter}>
-        <Pie
-          data={data}
-          cx={110}
-          cy={100}
-          innerRadius={65}
-          outerRadius={80}
-          fill="#8884d8"
-          paddingAngle={0}
-          dataKey="value"
-          activeIndex={selectedIdx}
-          activeShape={renderActiveShape}
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
-          ))}
-        </Pie>
+      <PieChart width={250} height={250}>
+        { data.length > 0 ? (
+          <Pie
+            data={data}
+            cx={110}
+            cy={100}
+            innerRadius={65}
+            outerRadius={80}
+            fill="#8884d8"
+            paddingAngle={0}
+            dataKey="value"
+            activeIndex={selectedIdx}
+            activeShape={renderActiveShape}
+            onMouseDown={onPieEnter}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
+            ))}
+          </Pie>
+        ) : (
+          <Pie
+            data={[{ key: 'all', name: 'all', value: 100 }]}
+            cx={110}
+            cy={100}
+            innerRadius={65}
+            outerRadius={80}
+            fill="#363636"
+            paddingAngle={0}
+            dataKey="value"
+          >
+            <Cell fill="#363636" strokeWidth={0} />
+          </Pie>
+        )}
       </PieChart>
     </Wrapper>
   );

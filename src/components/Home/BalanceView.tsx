@@ -1,31 +1,25 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
 import { Balance } from '~/features/Home/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
-import { FilterTypeMap } from '~/data/filter'
 import { useEffect, useState } from 'react'
+import { PieItem } from '~/data/filter'
 
 interface Props {
 	balance: Balance
+	data: PieItem[]
 }
 
-const BalanceView: React.FC<Props> = ({ balance }) => {
-  const selectedFilter = useRecoilValue(filterState)
+const BalanceView: React.FC<Props> = ({ balance, data }) => {
+  const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('iPortfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
-
-  const data = [
-    { key: 'istocks', name: FilterTypeMap.istocks, value: 45 },
-    { key: 'icommodities', name: FilterTypeMap.icommodities, value: 23 },
-    { key: 'ifx', name: FilterTypeMap.ifx, value: 12 },
-    { key: 'icrypto', name: FilterTypeMap.icrypto, value: 10 },
-  ];
 
 	useEffect(() => {
 		if (selectedFilter === 'all') {
 			setSelectedTitle('iPortfolio')
-			setSelectedIdx(0)
+			setSelectedIdx(-1)
 		} else {
 			data.forEach((item, index) => {
 				if (item.key === selectedFilter) {
@@ -46,11 +40,20 @@ const BalanceView: React.FC<Props> = ({ balance }) => {
 				</BalanceValue>
 			</Box>
 			<Box display="flex" alignItems="center">
-				<PieChartAlt data={data} selectedIdx={selectedIdx} />
+				<PieChartAlt data={data} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(data[index].key)} />
 				<Box sx={{ width: '180px'}}>
-          { data.map(item => (
-            <CategoryText style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px'} : { marginLeft: '12px' }}>{item.name} - {item.value}%</CategoryText>
-          ))}
+					{ data.length > 0 ? 
+							data.map(item => (
+								<CategoryText style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px'} : { marginLeft: '12px' }}>{item.name} - {item.value}%</CategoryText>
+							))
+						:
+						<div>
+							<CategoryText>iStocks - _%</CategoryText>
+							<CategoryText>iCommodity - _%</CategoryText>
+							<CategoryText>iFX - _%</CategoryText>
+							<CategoryText>iCrypto - _%</CategoryText>
+						</div>
+					}
         </Box>
 			</Box>
 		</StyledPaper>

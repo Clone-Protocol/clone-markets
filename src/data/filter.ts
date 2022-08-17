@@ -6,3 +6,9 @@ export enum FilterTypeMap {
   'istocks' = 'iStocks'
 }
 export type FilterType = keyof typeof FilterTypeMap
+
+export interface PieItem {
+	key: FilterType
+	name: string
+	value: number
+}

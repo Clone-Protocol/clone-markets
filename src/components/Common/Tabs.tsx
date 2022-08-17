@@ -52,4 +52,7 @@ export const PageTab = styled(Tab)`
 	.highlight {
 		color: #fff;
 	}
+	&:disabled {
+		color: #545454;
+	}
 `
