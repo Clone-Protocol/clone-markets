@@ -63,6 +63,7 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.enteringScreen,
 		}),
+		borderRadius: '10px',
 		boxSizing: 'border-box',
 		...(!open && {
 			overflowX: 'hidden',
