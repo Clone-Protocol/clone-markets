@@ -1,16 +1,18 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
-// import { fetchBalance } from '../Home/Balance.query'
+import { assetMapping } from 'src/data/assets'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
 
-export const fetchAsset = async ({ program, userPubKey, index }: { program: Incept, userPubKey: PublicKey | null, index: number }) => {
-	if (!userPubKey) return null
+export const fetchMarketDetail = async ({ program, userPubKey, index }: { program: Incept, userPubKey: PublicKey | null, index: number }) => {
+	if (!userPubKey) return
 
-	// await program.loadManager()
+	console.log('fetchMarketDetail', index)
 
-	// const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
+	await program.loadManager()
+
+	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
 	// const balances = await program.getPoolBalances(index)
 	// let price = balances[1] / balances[0]
@@ -21,7 +23,10 @@ export const fetchAsset = async ({ program, userPubKey, index }: { program: Ince
 	// let portfolioPercentage = (userIassetBalance * price * 100) / userBalances!.totalVal
 
 	return {
-    ...fetchAssetDefault(),
+		tickerName,
+		tickerSymbol,
+		tickerIcon
+    // ...fetchAssetDefault(),
 		// tickerIcon: tickerIcon,
     // tickerSymbol: tickerSymbol,
     // tickerName: tickerName,
@@ -34,7 +39,7 @@ export const fetchAsset = async ({ program, userPubKey, index }: { program: Ince
 	}
 }
 
-export const fetchAssetDefault = () => {
+export const fetchMarketDetailDefault = () => {
 	return {
 		id: 1,
 		tickerName: 'iSolana',
@@ -60,6 +65,12 @@ interface GetProps {
   enabled?: boolean
 }
 
+export interface PairData {
+	tickerIcon: string
+	tickerName: string
+	tickerSymbol: string
+}
+
 export interface Asset {
 	id: number
 	tickerName: string
@@ -76,9 +87,9 @@ export interface Asset {
 	myPortfolioPercentage: number
 }
 
-export function useDetailQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
+export function useMarketDetailQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['marketDetail', userPubKey, index], () => fetchAsset({ program: getInceptApp(), userPubKey, index }), {
+  return useQuery(['marketDetail', userPubKey, index], () => fetchMarketDetail({ program: getInceptApp(), userPubKey, index }), {
     refetchOnMount,
     enabled
   })

@@ -2,19 +2,21 @@ import { Box, Stack, Divider, styled } from '@mui/material'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useDetailQuery } from '~/features/Markets/Detail.query'
+import { fetchMarketDetailDefault, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
 
-  const { data: asset } = useDetailQuery({
-    userPubKey: publicKey,
-	  index: parseInt(assetId),
-	  refetchOnMount: true,
-    enabled: publicKey != null && !!assetId
-	})
+  // const { data: asset } = useMarketDetailQuery({
+  //   userPubKey: publicKey,
+	//   index: parseInt(assetId),
+	//   refetchOnMount: true,
+  //   enabled: publicKey != null && !!assetId
+	// })
+
+	const asset = fetchMarketDetailDefault()
 
 	return (
 		<>

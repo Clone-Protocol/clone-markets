@@ -1,50 +1,70 @@
 import { Box, Button, Stack, Input, styled, FormControl } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyledTabs, StyledTab } from './OrderSettingSlippage'
+import useLocalStorage from '~/hooks/useLocalStorage'
 
 interface Props {
-	onSetting: (slippage: number) => void
+  onBack: () => void
 }
 
-const OrderSetting: React.FC<Props> = ({ onSetting }) => {
-	const [slippage, setSlippage] = useState(0.5)
+const OrderSetting: React.FC<Props> = ({ onBack }) => {
+  const [customSlippage, setCustomSlippage] = useState(0.0)
+  const [slippage, setSlippage] = useState(0.5)
+  const [localSlippage, setLocalSlippage] = useLocalStorage("slippage", 0.5)
+
+  useEffect(() => {
+    if (localSlippage === 0.1 || localSlippage === 0.5 || localSlippage === 1) {
+      setSlippage(localSlippage)
+    } else {
+      setCustomSlippage(localSlippage)
+    }
+  }, [localSlippage])
 
 	const handleSlippageChange = (event: React.SyntheticEvent, newValue: number) => {
-		const selValue = newValue
-		
 		setSlippage(newValue)
+    setCustomSlippage(0)
 	}
 
-  const onChangeCustom = () => {
-
+  const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value) {
+			const newData = parseFloat(e.currentTarget.value)
+      if (newData > 0) {
+        setCustomSlippage(newData)
+      }
+    }
   }
 
   const onSave = () => {
-
+    if (customSlippage > 0) {
+      setLocalSlippage(customSlippage)
+    } else {
+      setLocalSlippage(slippage)
+    }
+    onBack()
   }
 
 	return (
 		<Box sx={{ padding: '15px 20px' }}>
 			<StyledStack direction="row" justifyContent="space-between" alignItems="center">
-				<div style={{ cursor: 'pointer', color: '#fff', fontSize: '21px' }} onClick={() => onSetting(slippage)}>{'<'}</div>
+				<div style={{ cursor: 'pointer', color: '#fff', fontSize: '21px' }} onClick={() => {onBack()}}>{'<'}</div>
 				<div style={{ fontSize: '16px', fontWeight: '600', color: '#fff' }}>Order Setting</div>
 				<div></div>
 			</StyledStack>
 
 			<Box sx={{ marginTop: '10px' }}>
         <Subtitle>Slippage Tolerance</Subtitle>
-        <StyledTabs value={slippage} onChange={handleSlippageChange} sx={{ maxWidth: '832px' }}>
+        <StyledTabs value={customSlippage > 0 ? 0 : slippage} onChange={handleSlippageChange} sx={{ maxWidth: '832px' }}>
           <StyledTab value={0.1} label="0.1%" />
           <StyledTab value={0.5} label="0.5%" sx={{ marginLeft: '20px', marginRight: '20px' }} />
           <StyledTab value={1.0} label="1.0%" />
         </StyledTabs>
 
         <FormControl variant="standard" sx={{ width: '100%' }}>
-          <FormStack direction="row" justifyContent="space-between" alignItems="center">
+          <FormStack sx={ customSlippage && customSlippage > 0 ? { border: '1px solid #00f0ff' } : {}} direction="row" justifyContent="space-between" alignItems="center">
             <Box sx={{ width: '110px', fontSize: '10px', fontWeight: '500'}}>
               Custom Slippage
             </Box>
-            <InputAmount id="ip-amount" type="number" sx={ slippage && slippage > 0 ? { color: '#fff' } : { color: '#adadad' }} min={0} value={slippage} onChange={onChangeCustom}  />
+            <InputAmount id="ip-amount" type="number" min={0} max={1} step=".1" sx={ customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} min={0} value={customSlippage} onChange={onChangeCustom}  />
           </FormStack>
         </FormControl>
 			</Box>
@@ -85,7 +105,7 @@ const InputAmount = styled(`input`)`
 	margin-left: 30px;
 	text-align: right;
 	border: 0px;
-	background-color: #000;
+	background-color: #141414;
 	font-size: 12px;
 	font-weight: 600;
 	color: #777777;
@@ -103,7 +123,7 @@ const ActionButton = styled(Button)`
   font-weight: 600;
   color: #fff;
   &:hover {
-    background-color: #7A86B6;
+    background-color: #2e2e2e;
   }
 `
 

@@ -1,6 +1,7 @@
+//Deprecated
 import { Box, Stack, Button, styled, Divider } from '@mui/material'
 
-export interface OrderForm {
+interface OrderForm {
 	tabIdx: number
 	tickerIcon: string
 	tickerName: string | null

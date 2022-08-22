@@ -1,46 +1,74 @@
 import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'sdk/src'
 import { fetchBalance } from '../Home/Balance.query'
+import { useMutation } from 'react-query'
+import { useIncept } from '~/hooks/useIncept'
 import { BN } from '@project-serum/anchor'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { assetMapping } from '~/data/assets'
 
-export const onBuy = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
-	if (!userPubKey) return null
+
+export const callTrading = async ({
+	program,
+	userPubKey,
+  data,
+}: CallTradingProps) => {
+	if (!userPubKey) throw new Error('no user public key')
+
+	const {
+		isBuy,
+		amountUsdi,
+		amountIasset,
+		iassetIndex
+	} = data
+
+	console.log('nput data', data)
 
 	await program.loadManager()
 
-	let assetInfo = await program.getAssetInfo(index)
+	let assetInfo = await program.getAssetInfo(iassetIndex)
 
 	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
 	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
 
-	await program.buySynth(
-		new BN(iassetAmount * 10 ** 8),
-		collateralAssociatedTokenAccount.address,
-		iassetAssociatedTokenAccount.address,
-		index,
-		[]
-	)
+
+	if (isBuy) {
+		await program.buySynth(
+			new BN(amountIasset * 10 ** 8),
+			collateralAssociatedTokenAccount.address,
+			iassetAssociatedTokenAccount.address,
+			iassetIndex,
+			[]
+		)
+	} else {
+		await program.sellSynth(
+			new BN(amountIasset * 10 ** 8),
+			collateralAssociatedTokenAccount.address,
+			iassetAssociatedTokenAccount.address,
+			iassetIndex,
+			[]
+		)
+	}
+  
+  return {
+    result: true
+  }
 }
 
-export const onSell = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
-	if (!userPubKey) return null
-
-	await program.loadManager()
-
-	let assetInfo = await program.getAssetInfo(index)
-
-	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
-
-	await program.sellSynth(
-		new BN(iassetAmount * 10 ** 8),
-		collateralAssociatedTokenAccount.address,
-		iassetAssociatedTokenAccount.address,
-		index,
-		[]
-	)
+type FormData = {
+  amountUsdi: number
+  amountIasset: number
+	iassetIndex: number
+	isBuy: boolean
+}
+interface CallTradingProps {
+	program: Incept
+	userPubKey: PublicKey | null
+  data: FormData
+}
+export function useTradingMutation(userPubKey : PublicKey | null ) {
+  const { getInceptApp } = useIncept()
+  return useMutation((data: FormData) => callTrading({ program: getInceptApp(), userPubKey, data }))
 }
 
 export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {

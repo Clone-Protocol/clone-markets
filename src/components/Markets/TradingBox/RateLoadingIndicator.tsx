@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { CircularProgress, styled, Box } from '@mui/material'
 import { useDataLoading } from '~/hooks/useDataLoading'
 
-export const REFETCH_CYCLE = 30000
+export const REFETCH_CYCLE = 15000
 
 const RateLoadingIndicator = () => {
   const { startTimer } = useDataLoading()
@@ -28,7 +28,7 @@ const RateLoadingIndicator = () => {
 	return (
     <Wrapper>
       <div style={{ marginRight: '8px'}}>Rate refresh in</div>
-      <CircularProgress variant="determinate" sx={{ color: '#809cff' }} size={23}
+      <CircularProgress variant="determinate" sx={{ color: '#fff' }} size={23}
         thickness={8} value={progress} />
     </Wrapper>
 	)

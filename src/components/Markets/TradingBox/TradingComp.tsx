@@ -8,14 +8,16 @@ import settingsIcon from 'public/images/settings-icon.png'
 import { useSnackbar } from 'notistack'
 import { useForm, Controller } from 'react-hook-form'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { OrderForm } from './ReviewOrder'
 import { StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
 import OrderDetails from './OrderDetails'
 import RateLoadingIndicator from './RateLoadingIndicator'
 import BackdropMsg from '~/components/Markets/TradingBox/BackdropMsg'
-import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
-import { useTradingMutation } from '~/features/Home/Trading.query'
+import { useTradingMutation } from '~/features/Markets/Trading.query'
+import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import LoadingIndicator, { LoadingWrapper } from '~/components/Common/LoadingIndicator'
+import BackdropPartMsg from './BackdropPartMsg'
+import useLocalStorage from '~/hooks/useLocalStorage'
+import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 
 export enum ComponentEffect {
 	iAssetAmount,
@@ -32,33 +34,39 @@ export interface TradingData {
 }
 
 interface Props {
-	onChangeData: (tradingData: TradingData, effect: ComponentEffect) => void
+  assetIndex: number
 	onShowOption: () => void
 }
 
-const TradingComp: React.FC<Props> = ({ onChangeData, onShowOption }) => {
+const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   const [tabIdx, setTabIdx] = useState(0)
-  // const [usdiUserBalance, setusdiUserBalance] = useState(0.0)
-  // const [iAssetUserBalance, setiAssetUserBalance] = useState(0.0)
-  // const [maxUSDi, setMaxUSDi] = useState(0.0)
   const [convertVal, setConvertVal] = useState(50)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
+  const [slippage, _] = useLocalStorage("slippage", 0.5)
 
-  const [orderForm, setOrderForm] = useState<OrderForm>({
-		tabIdx: 0,
-		tickerIcon: ethLogo,
-		tickerName: 'iSolana',
-		tickerSymbol: 'iSOL',
-		amountIasset: 0.0,
-		balanceFrom: 0.0,
-		amountUsdi: 0.0,
-		amountTotal: 0.0,
-		convertVal: 50,
-		tradingFee: 0.0,
-	})
+  const fromPair: PairData = {
+    tickerIcon: '/images/assets/USDi.png',
+		tickerName: 'USDi Coin',
+		tickerSymbol: 'USDi',	
+  }
+
+  const { data: marketDetail } = useMarketDetailQuery({
+    userPubKey: publicKey,
+    index: assetIndex,
+    refetchOnMount: true,
+    enabled: publicKey != null
+  })
+
+  const { data: balance, refetch } = useBalanceQuery({ 
+    userPubKey: publicKey, 
+    refetchOnMount: true,
+    enabled: publicKey != null
+  });
+
+  const [amountTotal, setAmountTotal] = useState(0.0)
 
   const {
 		handleSubmit,
@@ -82,58 +90,15 @@ const TradingComp: React.FC<Props> = ({ onChangeData, onShowOption }) => {
   const initData = () => {
     setValue('amountUsdi', 0.0)
     setValue('amountIasset', 0.0)
-    // refetch()
+    setAmountTotal(0.0)
+    refetch()
   }
-
-  // const { data: usdiBalance, refetch } = useBalanceQuery({ 
-  //   userPubKey: publicKey, 
-  //   refetchOnMount: true,
-  //   enabled: publicKey != null
-  // });
 
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
     setTabIdx(newTabIdx)
 	}
 
   const { mutateAsync } = useTradingMutation(publicKey)
-
-	// const handleChangeUsdi = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	let newData
-	// 	if (e.currentTarget.value) {
-	// 		const amount = parseFloat(e.currentTarget.value)
-	// 		newData = {
-	// 			...tradingData,
-	// 			fromAmount: amount,
-	// 		}
-  //     setusdiUserBalance(amount)
-	// 	} else {
-	// 		newData = {
-	// 			...tradingData,
-	// 			fromAmount: 0.0,
-	// 		}
-  //     setusdiUserBalance(0.0)
-	// 	}
-	// 	// onChangeData(newData, ComponentEffect.UsdiAmount)
-	// }
-
-  // const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	let newData
-	// 	if (e.currentTarget.value) {
-	// 		const amount = parseFloat(e.currentTarget.value)
-	// 		newData = {
-	// 			...tradingData,
-	// 			fromAmount: amount,
-	// 		}
-  //     setiAssetUserBalance(amount)
-	// 	} else {
-	// 		newData = {
-	// 			...tradingData,
-	// 			fromAmount: 0.0,
-	// 		}
-  //     setiAssetUserBalance(0.0)
-	// 	}
-	// 	// onChangeData(newData, ComponentEffect.iAssetAmount)
-	// }
 
 	const handleChangeConvert = useCallback((event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
@@ -143,16 +108,20 @@ const TradingComp: React.FC<Props> = ({ onChangeData, onShowOption }) => {
 	}, [amountUsdi, convertVal])
 
   const calculateTotalAmount = (inputAmount: number, convertRatio: number) => {
-    const amountIasset = inputAmount * convertRatio
-    setValue('amountIasset', amountIasset)
+    const amountTotal = inputAmount * convertRatio
+    // FIXME : buy or sell
+    setAmountTotal(amountTotal)
   }
 
   const onConfirm = async () => {
     setLoading(true)
+    console.log('slippage', slippage)
     await mutateAsync(
       {
         amountUsdi,
-        amountIasset
+        amountIasset,
+        iassetIndex: assetIndex,
+        isBuy: tabIdx === 0
       },
       {
         onSuccess(data) {
@@ -174,7 +143,7 @@ const TradingComp: React.FC<Props> = ({ onChangeData, onShowOption }) => {
 
   const isValid = Object.keys(errors).length === 0
 
-	return (
+	return  (
     <>
       {loading && (
 				<LoadingWrapper>
@@ -194,92 +163,121 @@ const TradingComp: React.FC<Props> = ({ onChangeData, onShowOption }) => {
             </StyledTabs>
           </Box>
           <Box sx={{ marginTop: '30px' }}>
-            <Controller
-              name="amountUsdi"
-              control={control}
-              rules={{
-                validate(value) {
-                  if (!value || value <= 0) {
-                    return 'the amount should be above zero.'
-                  } else if (value > orderForm.balanceFrom){ // usdiBalance?.balanceVal) {
-                    return 'The amount cannot exceed the balance.'
-                  }
-                }
-              }}
-              render={({ field }) => (          
-                <PairInput
-                  title="How much?"
-                  tickerIcon={'/images/assets/USDi.png'}
-                  ticker="USDi"
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    const usdiAmt = parseFloat(event.currentTarget.value)
-                    field.onChange(usdiAmt)
-                    calculateTotalAmount(usdiAmt, convertVal)
-                  }}
-                  onMax={(balance: number) => {
-                    field.onChange(balance)
-                  }}
-                  value={parseFloat(field.value.toFixed(3))}
-                  balance={orderForm.balanceFrom}
-                />
-              )}
-            />
-            <FormHelperText error={!!errors.amountUsdi?.message}>{errors.amountUsdi?.message}</FormHelperText>
-          </Box>
-
-          <Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
-            <ConvertSlider isBuy={tabIdx===0} value={convertVal} onChange={handleChangeConvert} />
+            { 
+              // ::Buy
+              tabIdx === 0 ?
+                <Box>
+                  <Controller
+                    name="amountUsdi"
+                    control={control}
+                    rules={{
+                      validate(value) {
+                        if (!value || value <= 0) {
+                          return 'the amount should be above zero.'
+                        } else if (value > balance?.usdiVal) {
+                          return 'The amount cannot exceed the balance.'
+                        }
+                      }
+                    }}
+                    render={({ field }) => (          
+                      <PairInput
+                        title="How much?"
+                        tickerIcon={fromPair.tickerIcon}
+                        ticker={fromPair.tickerSymbol}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          const usdiAmt = parseFloat(event.currentTarget.value)
+                          field.onChange(usdiAmt)
+                          calculateTotalAmount(usdiAmt, convertVal)
+                        }}
+                        onMax={(balance: number) => {
+                          field.onChange(balance)
+                        }}
+                        value={parseFloat(field.value.toFixed(3))}
+                        balance={balance?.usdiVal}
+                      />
+                    )}
+                  />
+                  <FormHelperText error={!!errors.amountUsdi?.message}>{errors.amountUsdi?.message}</FormHelperText>
+                </Box>
+              :
+                <Box>
+                  <Controller
+                    name="amountIasset"
+                    control={control}
+                    rules={{
+                      validate(value) {
+                        if (!value || value <= 0) {
+                          return 'the amount should be above zero.'
+                        } else if (value > balance?.iassetVal) {
+                          return 'The amount cannot exceed the balance.'
+                        }
+                      }
+                    }}
+                    render={({ field }) => (          
+                      <PairInput
+                        title="How much?"
+                        tickerIcon={marketDetail?.tickerIcon!}
+                        ticker={marketDetail?.tickerSymbol!}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          const iassetAmt = parseFloat(event.currentTarget.value)
+                          field.onChange(iassetAmt)
+                          calculateTotalAmount(iassetAmt, convertVal)
+                        }}
+                        onMax={(balance: number) => {
+                          field.onChange(balance)
+                        }}
+                        value={parseFloat(field.value.toFixed(3))}
+                        balance={balance?.iassetVal}
+                      />
+                    )}
+                  />
+                  <FormHelperText error={!!errors.amountIasset?.message}>{errors.amountIasset?.message}</FormHelperText>
+                </Box>
+            }
           </Box>
 
           <Box>
-            <Controller
-              name="amountIasset"
-              control={control}
-              rules={{
-                validate(value) {
-                  if (!value || value <= 0) {
-                    return 'the amount should be above zero.'
-                  }
-                }
-              }}
-              render={({ field }) => (
-                <PairInput
-                  title="Total"
-                  tickerIcon={orderForm.tickerIcon}
-                  ticker={orderForm.tickerSymbol}
-                  value={parseFloat(field.value.toFixed(3))}
-                  onChange={() => {/*handleChangeUsdi*/}}
-                  balance={orderForm.balanceFrom}
-                  balanceDisabled={true}
-                />
-              )}
-            />
-            <FormHelperText error={!!errors.amountIasset?.message}>{errors.amountIasset?.message}</FormHelperText>
+            <Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
+              <ConvertSlider isBuy={tabIdx===0} value={convertVal} onChange={handleChangeConvert} />
+            </Box>
+
+            <Box>
+              <PairInput
+                title="Total"
+                tickerIcon={tabIdx===0 ? fromPair.tickerIcon : marketDetail?.tickerIcon!}
+                ticker={tabIdx===0 ? fromPair.tickerSymbol : marketDetail?.tickerSymbol!}
+                value={parseFloat(amountTotal.toFixed(3))}
+                balanceDisabled={true}
+              />      
+            </Box>
+
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+              sx={{ marginTop: '16px', marginBottom: '16px' }}>
+              <IconButton>
+                <Image src={reloadIcon} alt="reload" />
+              </IconButton>
+              <IconButton onClick={onShowOption}>
+                <Image src={settingsIcon} alt="settings" />
+              </IconButton>
+            </Stack>
+
+            <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!isDirty || !isValid}>Confirm market buy</ActionButton>
+
+            <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
+              Order details <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
+            </TitleOrderDetails>
+            { openOrderDetails && <OrderDetails /> }
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <RateLoadingIndicator />
+            </div>
+
+            { (tabIdx===0 && balance?.usdiVal===0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} /> }
+            { (tabIdx===1 && balance?.iassetVal===0) && <BackdropPartMsg isUsdi={false} tickerSymbol={marketDetail?.tickerSymbol} /> }
           </Box>
-
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-            sx={{ marginTop: '16px', marginBottom: '16px' }}>
-            <IconButton>
-              <Image src={reloadIcon} alt="reload" />
-            </IconButton>
-            <IconButton onClick={onShowOption}>
-              <Image src={settingsIcon} alt="settings" />
-            </IconButton>
-          </Stack>
-
-          <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={() => handleSubmit(onConfirm)} disabled={!isDirty || !isValid}>Confirm market buy</ActionButton>
-
-          <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
-            Order details <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
-          </TitleOrderDetails>
-          { openOrderDetails && <OrderDetails /> }
-
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <RateLoadingIndicator />
-          </div>
 
           { !publicKey && <BackdropMsg /> }
         </Box>
@@ -311,10 +309,11 @@ const ActionButton = styled(Button)`
   border: solid 1px #0f6;
   background-color: rgba(51, 255, 0, 0);
   &:hover {
-    background-color: #7A86B6;
+    background-color: #2e2e2e;
   }
   &:disabled {
-    background-color: #444;
+    border: solid 1px #444;
+    background-color: rgba(51, 255, 0, 0);
     color: #adadad;
   } 
 `

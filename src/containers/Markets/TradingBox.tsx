@@ -1,12 +1,8 @@
-import { Box, Paper, styled } from '@mui/material'
-import { useState, useEffect } from 'react'
+import { Paper, styled } from '@mui/material'
+import { useState } from 'react'
 import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
-import { OrderForm } from '~/components/Markets/TradingBox/ReviewOrder'
-import TradingComp, { TradingData, ComponentEffect } from '~/components/Markets/TradingBox/TradingComp'
+import TradingComp from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
-import { useIncept } from '~/hooks/useIncept'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { onBuy, onSell } from '~/features/Markets/Trading.query'
 
 enum Section {
 	TradingComp,
@@ -19,13 +15,9 @@ interface Props {
 }
 
 const TradingBox: React.FC<Props> = ({ assetId }) => {
-	const { publicKey } = useWallet()
-	const { getInceptApp } = useIncept()
 	const [showTradingComp, setShowTradingComp] = useState(true)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
   const assetIndex = parseInt(assetId)
-	
-	const [slippage, setSlippage] = useState(0.5)
 
 	const showSection = (section: Section) => {
 		switch (section) {
@@ -40,41 +32,20 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 		}
 	}
 
-	const onChangeData = async (tradingData: TradingData, effect: ComponentEffect) => {
-		const program = getInceptApp()
-		await program.loadManager()
-
-		let isBuy = tradingData.tabIdx === 0
-
-
-		// setTradingData(newData)
-		// setSlippage(slippage)
-	}
-
-	const onSetting = (slippage: number) => {
-		setSlippage(slippage)
+	const goTradingComp = () => {
 		showSection(Section.TradingComp)
 	}
-
-	// const onConfirm = async () => {
-	// 	const program = getInceptApp()
-	// 	if (orderForm.tabIdx === 0) {
-	// 		await onBuy(program, publicKey!, assetIndex, orderForm.amountIasset)
-	// 	} else {
-	// 		await onSell(program, publicKey!, assetIndex, orderForm.amountIasset)
-	// 	}
-	// }
 
 	return (
 		<StyledPaper>
 			{showTradingComp && (
         <TradingComp
-          onChangeData={onChangeData}
+					assetIndex={assetIndex}
           onShowOption={() => showSection(Section.OrderSetting)}
           // onConfirm={() => onConfirm()}
         />
 			)}
-			{showOrderSetting && <OrderSetting onSetting={onSetting} />}
+			{showOrderSetting && <OrderSetting onBack={goTradingComp} />}
 		</StyledPaper>
 	)
 }

@@ -35,7 +35,7 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 const FormStack = styled(Stack)`
 	display: flex;
 	width: 100%;
-	height: 55px;
+	height: 54px;
 	padding: 15px 15px 14px 14px;
 	border-radius: 8px;
 	background-color: #282828;
