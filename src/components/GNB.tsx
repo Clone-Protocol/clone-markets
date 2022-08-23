@@ -269,7 +269,7 @@ const HeaderButton = styled(Button)`
   height: 35px;
   &:hover {
     border: 1px solid #404040;
-    background-color: rgba(38, 38, 38, 0.5);
+    background-color: #2e2e2e;
   }
 `
 
@@ -284,11 +284,8 @@ const ConnectButton = styled(Button)`
 	color: #fff;
 	height: 35px;
   &:hover {
-    background-color: #00165f;
-  }
-  &:active {
-    border: solid 1px #003bff;
-    background-color: #00165f;
+    background-color: #2e2e2e;
+		border: solid 1px #aaa;
   }
 `
 
@@ -300,7 +297,7 @@ const WalletSelectBox = styled(Stack)`
   height: 139px;
   padding: 14px 17px 16px;
   border-radius: 10px;
-  border: solid 1px #253b88;
+  border: solid 1px #fff;
   background-color: #181818;
   z-index: 99;
 `
@@ -310,8 +307,8 @@ const PopupButton = styled(Button)`
   height: 25px;
   padding: 6px 27px 7px 26px;
   border-radius: 10px;
-  border: solid 1px #253b88;
-  background-color: #1d243d;
+  border: solid 1px #fff;
+  background-color: #282828;
   font-size: 10px;
   font-weight: 500;
   color: #fff;

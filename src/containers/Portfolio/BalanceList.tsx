@@ -12,16 +12,22 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
 import { filterState } from '~/features/Portfolio/filterAtom'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 
 interface Props {
 	pieitems: PieItem[]
 }
 
 const BalanceList: React.FC<Props> = ({ pieitems }) => {
-	const [filter, setFilter] = useState<FilterType>('all')
 	const { publicKey } = useWallet()
-  const setFilterState = useSetRecoilState(filterState)
+	const [filter, setFilter] = useState<FilterType>('all')
+	const [selectedFilter, setFilterState] = useRecoilState(filterState)
+
+	useEffect(() => {
+		if (selectedFilter) {
+			setFilter(selectedFilter as FilterType);
+		}
+	}, [selectedFilter])
 
 	const pieitemsKeys = pieitems.map((item) => item.key)
 

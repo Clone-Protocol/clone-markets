@@ -21,7 +21,7 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display="flex">
-					<Image src={tickerIcon} width="26px" height="26px" />
+					{ tickerIcon && <Image src={tickerIcon} width="26px" height="26px" /> }
 					<Box sx={{ width: '100px', marginLeft: '8px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#fff' }}>
 						<div>{ticker}</div>
 					</Box>

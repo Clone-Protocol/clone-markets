@@ -108,9 +108,18 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	}, [amountUsdi, convertVal])
 
   const calculateTotalAmount = (inputAmount: number, convertRatio: number) => {
-    const amountTotal = inputAmount * convertRatio
-    // FIXME : buy or sell
-    setAmountTotal(amountTotal)
+    const iassetPrice = marketDetail?.price!
+    if (tabIdx === 0) {
+      const amountTotal = (inputAmount * convertRatio) / (100 * iassetPrice)
+      setAmountTotal(amountTotal)
+    } else {
+      const amountTotal = iassetPrice * inputAmount * convertRatio / 100
+      setAmountTotal(amountTotal)
+    }
+  }
+
+  const reloadData = () => {
+    refetch()
   }
 
   const onConfirm = async () => {
@@ -244,8 +253,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             <Box>
               <PairInput
                 title="Total"
-                tickerIcon={tabIdx===0 ? fromPair.tickerIcon : marketDetail?.tickerIcon!}
-                ticker={tabIdx===0 ? fromPair.tickerSymbol : marketDetail?.tickerSymbol!}
+                tickerIcon={tabIdx===0 ? marketDetail?.tickerIcon! : fromPair.tickerIcon}
+                ticker={tabIdx===0 ? marketDetail?.tickerSymbol! : fromPair.tickerSymbol}
                 value={parseFloat(amountTotal.toFixed(3))}
                 balanceDisabled={true}
               />      
@@ -256,7 +265,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               justifyContent="flex-end"
               alignItems="center"
               sx={{ marginTop: '16px', marginBottom: '16px' }}>
-              <IconButton>
+              <IconButton onClick={reloadData}>
                 <Image src={reloadIcon} alt="reload" />
               </IconButton>
               <IconButton onClick={onShowOption}>

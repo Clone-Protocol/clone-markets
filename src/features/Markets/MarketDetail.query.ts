@@ -14,8 +14,9 @@ export const fetchMarketDetail = async ({ program, userPubKey, index }: { progra
 
 	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
-	// const balances = await program.getPoolBalances(index)
-	// let price = balances[1] / balances[0]
+	const balances = await program.getPoolBalances(index)
+	const price = balances[1] / balances[0]
+	
 	// let userIassetBalance = await program.getUserIAssetBalance(index)
 	// let liquidity = balances[1] * 2
 
@@ -25,14 +26,11 @@ export const fetchMarketDetail = async ({ program, userPubKey, index }: { progra
 	return {
 		tickerName,
 		tickerSymbol,
-		tickerIcon
+		tickerIcon,
+		price,
     // ...fetchAssetDefault(),
-		// tickerIcon: tickerIcon,
-    // tickerSymbol: tickerSymbol,
-    // tickerName: tickerName,
     // detailOverview: tickerName,
     // avgLiquidity,
-		// price,
     // myHolding: userIassetBalance,
 		// myPortfolioPercentage: portfolioPercentage,
     // myNotionalVal: userIassetBalance * price

@@ -28,9 +28,6 @@ const PieChartAlt : React.FC<ChartProps> = ({
     return (
       <g>
         <Sector
-          style={{
-            // filter: `drop-shadow(0px 0px 2px ${fill})`
-          }}
           cx={cx}
           cy={cy}
           innerRadius={innerRadius - 8}
@@ -38,11 +35,6 @@ const PieChartAlt : React.FC<ChartProps> = ({
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
-          stroke="#595959"
-          strokeLinejoin='round'
-          strokeOpacity="0.8"
-          strokeWidth="2.5px"
-          strokeDashoffset="-3px"
         />
       </g>
     );
