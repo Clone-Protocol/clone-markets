@@ -4,6 +4,16 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    externalDir: true,
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
   async redirects() {
     return [
       {
@@ -12,6 +22,23 @@ const nextConfig = {
         permanent: true,
       },
     ]
+  },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.(ts)x?$/,
+      use: [
+        {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+            onlyCompileBundledFiles: true,
+          },
+        },
+      ],
+    })
+
+    return config
   },
 }
 

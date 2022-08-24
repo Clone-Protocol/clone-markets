@@ -2,7 +2,8 @@ import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
-import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
+import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
+import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
 import Link from 'next/link'
@@ -31,7 +32,13 @@ const BalanceList: React.FC<Props> = ({ pieitems }) => {
 
 	const pieitemsKeys = pieitems.map((item) => item.key)
 
-  const { data: assets } = useBalanceQuery({
+	const { data: balance } = useBalanceQuery({
+		userPubKey: publicKey,
+	  refetchOnMount: true,
+    enabled: publicKey != null
+	})
+
+  const { data: assets } = useUserBalanceQuery({
     userPubKey: publicKey,
     filter,
 	  refetchOnMount: true,
@@ -53,7 +60,7 @@ const BalanceList: React.FC<Props> = ({ pieitems }) => {
 				</PageTabs>
         <BalanceBox>
           <div>USDi balance</div>
-          <div style={{ color: '#fff', fontSize: '14px' }}>$1350.83</div>
+          <div style={{ color: '#fff', fontSize: '14px' }}>${balance?.usdiVal.toLocaleString()}</div>
         </BalanceBox>
 			</Stack>
       <Grid

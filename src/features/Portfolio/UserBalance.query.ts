@@ -1,11 +1,11 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from 'sdk/src'
+import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 
-export const fetchBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
+export const fetchUserBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
 	if (!userPubKey) return []
 
   // await program.loadManager()
@@ -76,9 +76,9 @@ export interface BalanceList {
 	usdiBalance: number
 }
 
-export function useBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['balance', userPubKey, filter], () => fetchBalance({ program: getInceptApp(), userPubKey, filter }), {
+  return useQuery(['userBalance', userPubKey, filter], () => fetchUserBalance({ program: getInceptApp(), userPubKey, filter }), {
     refetchOnMount,
     enabled
   })

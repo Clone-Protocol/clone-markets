@@ -96,13 +96,13 @@ const RightMenu = () => {
 				}
 
 				try {
-					const userAccount = await program.getUserAccount(publicKey)
+					const userAccount = await program.getUserAccount()
 				} catch (error) {
-					const response = await program.initializeUser(publicKey)
+					const response = await program.initializeUser()
 				}
 			}
 		}
-		getAccount()
+		// getAccount()
 	}, [connected, publicKey])
 
 	useEffect(() => {

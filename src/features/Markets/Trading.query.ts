@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from 'sdk/src'
+import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { fetchBalance } from '../Home/Balance.query'
 import { useMutation } from 'react-query'
 import { useIncept } from '~/hooks/useIncept'
@@ -80,7 +80,7 @@ export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 
 	const balances = await program.getPoolBalances(index)
 	let price = balances[1] / balances[0]
-	let userIassetBalance = await program.getUserIAssetBalance(index)
+	// let userIassetBalance = await program.getUserIAssetBalance(index)
 	let liquidity = balances[1] * 2
 
 	const userBalances = await fetchBalance({ program, userPubKey })
@@ -91,7 +91,7 @@ export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 		tickerSymbol: tickerSymbol,
 		tickerIcon: tickerIcon,
 		price: price,
-		balance: userIassetBalance,
+		// balance: userIassetBalance,
 		portfolioPercentage: portfolioPercentage,
 		liquidity: liquidity,
 	}
