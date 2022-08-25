@@ -4,7 +4,7 @@ import { useIncept } from '~/hooks/useIncept'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 
-export const fetchBalance = async ({ program, userPubKey, setStartTimer }: { program: any, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void}) => {
+export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: any, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return null
 
   await program.loadManager()
@@ -18,13 +18,20 @@ export const fetchBalance = async ({ program, userPubKey, setStartTimer }: { pro
   let iassetVal = 0.0
 
   try {
-		usdiVal = await program.getUsdiBalance()
+		const associatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
+    usdiVal = Number(associatedTokenAccount.amount) / 100000000;
 	} catch (e) {
     console.error(e)
   }
 
   try {
-		iassetVal = await program.getUserIAssetBalance()
+		const associatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(
+      (
+        await program.getPool(index)
+      ).assetInfo.iassetMint
+    );
+
+    iassetVal =  Number(associatedTokenAccount.amount) / 100000000;
 	} catch (e) {
     console.error(e)
   }
@@ -37,20 +44,21 @@ export const fetchBalance = async ({ program, userPubKey, setStartTimer }: { pro
 
 interface GetProps {
 	userPubKey: PublicKey | null
+  index: number
   refetchOnMount?: QueryObserverOptions['refetchOnMount']
   enabled?: boolean
 }
 
 export interface Balance {
-	totalVal: number
-	balanceVal: number
+	usdiVal: number
+	iassetVal: number
 }
 
-export function useBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: GetProps) {
+export function useBalanceQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
   const { getInceptApp } = useIncept()
   const { setStartTimer } = useDataLoading()
 
-  return useQuery(['balance', userPubKey], () => fetchBalance({ program: getInceptApp(), userPubKey, setStartTimer }), {
+  return useQuery(['balance', userPubKey, index], () => fetchBalance({ program: getInceptApp(), userPubKey, index, setStartTimer }), {
     refetchOnMount,
     refetchInterval: REFETCH_CYCLE,
     refetchIntervalInBackground: true,

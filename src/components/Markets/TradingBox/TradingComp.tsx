@@ -12,7 +12,7 @@ import { StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTab
 import OrderDetails from './OrderDetails'
 import RateLoadingIndicator from './RateLoadingIndicator'
 import BackdropMsg from '~/components/Markets/TradingBox/BackdropMsg'
-import { useTradingMutation } from '~/features/Markets/Trading.query'
+import { useTradingMutation } from '~/features/Markets/Trading.mutation'
 import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import LoadingIndicator, { LoadingWrapper } from '~/components/Common/LoadingIndicator'
 import BackdropPartMsg from './BackdropPartMsg'
@@ -53,18 +53,19 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 		tickerSymbol: 'USDi',	
   }
 
-  const { data: marketDetail } = useMarketDetailQuery({
+  const { data: balance, refetch } = useBalanceQuery({ 
+    userPubKey: publicKey, 
+    index: assetIndex,
+	  refetchOnMount: "always",
+    enabled: publicKey != null
+  });
+
+  const { data: assetData } = useMarketDetailQuery({
     userPubKey: publicKey,
     index: assetIndex,
     refetchOnMount: true,
     enabled: publicKey != null
   })
-
-  const { data: balance, refetch } = useBalanceQuery({ 
-    userPubKey: publicKey, 
-    refetchOnMount: true,
-    enabled: publicKey != null
-  });
 
   const [amountTotal, setAmountTotal] = useState(0.0)
 
@@ -108,7 +109,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	}, [amountUsdi, convertVal])
 
   const calculateTotalAmount = (inputAmount: number, convertRatio: number) => {
-    const iassetPrice = marketDetail?.price!
+    const iassetPrice = assetData?.price!
     if (tabIdx === 0) {
       const amountTotal = (inputAmount * convertRatio) / (100 * iassetPrice)
       setAmountTotal(amountTotal)
@@ -225,8 +226,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     render={({ field }) => (          
                       <PairInput
                         title="How much?"
-                        tickerIcon={marketDetail?.tickerIcon!}
-                        ticker={marketDetail?.tickerSymbol!}
+                        tickerIcon={assetData?.tickerIcon!}
+                        ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const iassetAmt = parseFloat(event.currentTarget.value)
                           field.onChange(iassetAmt)
@@ -253,8 +254,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             <Box>
               <PairInput
                 title="Total"
-                tickerIcon={tabIdx===0 ? marketDetail?.tickerIcon! : fromPair.tickerIcon}
-                ticker={tabIdx===0 ? marketDetail?.tickerSymbol! : fromPair.tickerSymbol}
+                tickerIcon={tabIdx===0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
+                ticker={tabIdx===0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
                 value={parseFloat(amountTotal.toFixed(3))}
                 balanceDisabled={true}
               />      
@@ -285,7 +286,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             </div>
 
             { (tabIdx===0 && balance?.usdiVal===0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} /> }
-            { (tabIdx===1 && balance?.iassetVal===0) && <BackdropPartMsg isUsdi={false} tickerSymbol={marketDetail?.tickerSymbol} /> }
+            { (tabIdx===1 && balance?.iassetVal===0) && <BackdropPartMsg isUsdi={false} tickerSymbol={assetData?.tickerSymbol} /> }
           </Box>
 
           { !publicKey && <BackdropMsg /> }

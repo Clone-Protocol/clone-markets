@@ -28,12 +28,11 @@ export const fetchMarketDetail = async ({ program, userPubKey, index }: { progra
 		tickerSymbol,
 		tickerIcon,
 		price,
-    // ...fetchAssetDefault(),
     // detailOverview: tickerName,
     // avgLiquidity,
     // myHolding: userIassetBalance,
+    // myNotionalVal: userIassetBalance * price,
 		// myPortfolioPercentage: portfolioPercentage,
-    // myNotionalVal: userIassetBalance * price
 	}
 }
 
@@ -67,22 +66,6 @@ export interface PairData {
 	tickerIcon: string
 	tickerName: string
 	tickerSymbol: string
-}
-
-export interface Asset {
-	id: number
-	tickerName: string
-	tickerSymbol: string
-	tickerIcon: string
-	price: number
-	volume: number
-	avgLiquidity: number
-	maxOrderSize: number
-	avgPremium: number
-	detailOverview: string
-	myHolding: number
-	myNotionalVal: number
-	myPortfolioPercentage: number
 }
 
 export function useMarketDetailQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
