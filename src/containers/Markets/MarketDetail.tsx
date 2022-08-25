@@ -9,14 +9,13 @@ import withSuspense from '~/hocs/withSuspense'
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
 
-  // const { data: asset } = useMarketDetailQuery({
-  //   userPubKey: publicKey,
-	//   index: parseInt(assetId),
-	//   refetchOnMount: true,
-  //   enabled: publicKey != null && !!assetId
-	// })
-
-	const asset = fetchMarketDetailDefault()
+  const { data: asset } = useMarketDetailQuery({
+    userPubKey: publicKey,
+	  index: parseInt(assetId),
+	  refetchOnMount: true,
+    enabled: publicKey != null && !!assetId
+	})
+	// const asset = fetchMarketDetailDefault()
 
 	return (
 		<>

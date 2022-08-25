@@ -28,7 +28,6 @@ export const callTrading = async ({
 	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
 	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
 
-
 	if (isBuy) {
 		await program.buySynth(
 			new BN(amountIasset * 10 ** 8),

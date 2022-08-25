@@ -104,16 +104,23 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	const handleChangeConvert = useCallback((event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
       setConvertVal(newValue)
-      calculateTotalAmount(amountUsdi, newValue)
+      if (tabIdx === 0) {
+        calculateTotalAmount(amountUsdi, newValue)
+      } else {
+        calculateTotalAmount(amountIasset, newValue)
+      }      
 		}
 	}, [amountUsdi, convertVal])
 
   const calculateTotalAmount = (inputAmount: number, convertRatio: number) => {
     const iassetPrice = assetData?.price!
+    // buy
     if (tabIdx === 0) {
       const amountTotal = (inputAmount * convertRatio) / (100 * iassetPrice)
       setAmountTotal(amountTotal)
+      // setValue('amountIasset', amountTotal)
     } else {
+    // sell
       const amountTotal = iassetPrice * inputAmount * convertRatio / 100
       setAmountTotal(amountTotal)
     }
@@ -129,7 +136,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     await mutateAsync(
       {
         amountUsdi,
-        amountIasset,
+        amountIasset: amountTotal,
         iassetIndex: assetIndex,
         isBuy: tabIdx === 0
       },
@@ -137,14 +144,14 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
         onSuccess(data) {
           if (data) {
             console.log('data', data)
-            enqueueSnackbar('Success to borrow')
+            enqueueSnackbar('Success transaction...!')
             setLoading(false)
             initData()
           }
         },
         onError(err) {
           console.error(err)
-          enqueueSnackbar('Failed to borrow')
+          enqueueSnackbar('Failed transaction...')
           setLoading(false)
         }
       }
@@ -274,12 +281,12 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               </IconButton>
             </Stack>
 
-            <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!isDirty || !isValid}>Confirm market buy</ActionButton>
+            <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!isDirty || !isValid}>Confirm market { tabIdx === 0 ? 'buy' : 'sell' }</ActionButton>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
               Order details <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
             </TitleOrderDetails>
-            { openOrderDetails && <OrderDetails /> }
+            { openOrderDetails && <OrderDetails iassetPrice={assetData?.price!} iassetAmount={amountTotal} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={0.1} tradeFee={0.15} /> }
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <RateLoadingIndicator />

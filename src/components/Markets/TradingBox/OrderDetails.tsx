@@ -2,36 +2,42 @@ import { Box, Stack, Button, Divider } from '@mui/material'
 import { styled } from '@mui/system'
 
 interface Props {
-	rate?: number
-	priceImpact?: number
-	minReceived?: number
-  tradeFees?: number
+	iassetPrice: number
+  iassetAmount: number
+  tickerSymbol: string
+	priceImpact: number
+  slippage: number
+  tradeFee: number
 }
 
-const OrderDetails: React.FC<Props> = () => {
+const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol, priceImpact, slippage, tradeFee }) => {
+
+  const minReceived = (1-(slippage/100)) * iassetAmount
+  const iassetTradeFee = (tradeFee / 100) * iassetAmount
+  const iassetTradeFeeDollar = (tradeFee / 100) * iassetPrice * iassetAmount
 
   return (
     <Wrapper>
       <Stack direction="row" justifyContent="space-between">
         <DetailHeader>Rate</DetailHeader>
-        <DetailValue>160.52 USDi / iSOL</DetailValue>
+        <DetailValue>{iassetPrice?.toLocaleString()} USDi / {tickerSymbol}</DetailValue>
       </Stack>
       <Stack sx={{ marginTop: '12px' }} direction="row" justifyContent="space-between">
         <DetailHeader>Price Impact</DetailHeader>
-        <div style={{ color: '#0f6', fontSize: '11px', fontWeight: '600' }}>&lt;0.1%</div>
+        <div style={{ color: '#0f6', fontSize: '11px', fontWeight: '600' }}>&lt; {priceImpact}%</div>
       </Stack>
       <Stack sx={{ marginTop: '11px' }} direction="row" justifyContent="space-between">
         <DetailHeader>Minimum received</DetailHeader>
         <div style={{ lineHeight: '12px' }}>
-          <DetailValue>10.445 iSOL</DetailValue>
-          <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>Slippage tolerance: 1.0%</div>
+          <DetailValue>{minReceived?.toLocaleString()} {tickerSymbol}</DetailValue>
+          <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>Slippage tolerance: {slippage?.toFixed(1)}%</div>
         </div>
       </Stack>
       <Stack sx={{ marginTop: '12px' }} direction="row" justifyContent="space-between">
         <DetailHeader>Trade fees</DetailHeader>
         <div style={{ lineHeight: '12px' }}>
-          <DetailValue>0.035656 iSOL</DetailValue>
-          <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>0.15% ($1.56)</div>
+          <DetailValue>{iassetTradeFee?.toFixed(6)} {tickerSymbol}</DetailValue>
+          <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</div>
         </div>
       </Stack>
     </Wrapper>

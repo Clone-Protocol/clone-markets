@@ -24,6 +24,7 @@ export const fetchMarketDetail = async ({ program, userPubKey, index }: { progra
 	// let portfolioPercentage = (userIassetBalance * price * 100) / userBalances!.totalVal
 
 	return {
+		...(fetchMarketDetailDefault()),
 		tickerName,
 		tickerSymbol,
 		tickerIcon,
