@@ -2,7 +2,7 @@ import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
-import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
+import { BalanceList, useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
 import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
@@ -14,53 +14,50 @@ import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import { useRecoilState } from 'recoil'
+import { Balance } from '~/features/Portfolio/Balance.query'
 
 interface Props {
+	assets: BalanceList[]
 	pieitems: PieItem[]
+	balance: Balance
 }
 
-const BalanceList: React.FC<Props> = ({ pieitems }) => {
+const BalanceList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 	const { publicKey } = useWallet()
-	const [filter, setFilter] = useState<FilterType>('all')
+	// const [filter, setFilter] = useState<FilterType>('all')
 	const [selectedFilter, setFilterState] = useRecoilState(filterState)
 
-	useEffect(() => {
-		if (selectedFilter) {
-			setFilter(selectedFilter as FilterType);
-		}
-	}, [selectedFilter])
+	// useEffect(() => {
+	// 	if (selectedFilter) {
+	// 		setFilter(selectedFilter as FilterType);
+	// 	}
+	// }, [selectedFilter])
 
 	const pieitemsKeys = pieitems.map((item) => item.key)
 
-	const { data: balance } = useBalanceQuery({
-		userPubKey: publicKey,
-	  refetchOnMount: true,
-    enabled: publicKey != null
-	})
-
-  const { data: assets } = useUserBalanceQuery({
-    userPubKey: publicKey,
-    filter,
-	  refetchOnMount: true,
-    enabled: publicKey != null
-	})
+  // const { data: assets } = useUserBalanceQuery({
+  //   userPubKey: publicKey,
+  //   filter,
+	//   refetchOnMount: true,
+  //   enabled: publicKey != null
+	// })
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
-		setFilter(newValue)
+		// setFilter(newValue)
     setFilterState(newValue)
 	}
 
 	return (
 		<>
 			<Stack mb={2} direction="row" justifyContent="space-between" alignItems="center">
-				<PageTabs value={filter} onChange={handleFilterChange}>
+				<PageTabs value={selectedFilter as FilterType} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
 						<PageTab disabled={pieitemsKeys.indexOf(f as FilterType) === -1 && f !== 'all'} key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
         <BalanceBox>
           <div>USDi balance</div>
-          <div style={{ color: '#fff', fontSize: '14px' }}>${balance?.usdiVal.toLocaleString()}</div>
+          <div style={{ color: '#fff', fontSize: '14px' }}>${balance?.balanceVal.toFixed(2)}</div>
         </BalanceBox>
 			</Stack>
       <Grid

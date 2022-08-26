@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import type { NextPage } from 'next'
 import { styled } from '@mui/system'
 import Head from 'next/head'
