@@ -9,10 +9,13 @@ import BalanceList from '~/containers/Portfolio/BalanceList'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
+import { useRecoilValue } from 'recoil'
+import { filterState } from '~/features/Portfolio/filterAtom'
 
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
-	const [filter, setFilter] = useState<FilterType>('all')
+	// const [filter, setFilter] = useState<FilterType>('all')
+	const selectedFilter = useRecoilValue(filterState)
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 
   const { data: balance } = useBalanceQuery({
@@ -23,14 +26,16 @@ const PortfolioView = () => {
 
 	const { data: assets } = useUserBalanceQuery({
     userPubKey: publicKey,
-    filter,
+    filter: selectedFilter as FilterType,
 	  refetchOnMount: true,
     enabled: publicKey != null
 	})
 
 	useEffect(() => {
-		if (assets && assets.length > 0) {
+		// only called when filter is all
+		if (assets && assets.length > 0 && selectedFilter === 'all') {
 			const result: any = []
+			let totalBalance = 0
 			assets.forEach((asset) => {
 				if (result[asset.assetType]) {
 					result[asset.assetType].val += asset.usdiBalance
@@ -39,22 +44,22 @@ const PortfolioView = () => {
 						id: asset.assetType,
 						val: asset.usdiBalance
 					}
-				}
+			  }
+				totalBalance += asset.usdiBalance
 			})
 
-			console.log('re', result)
 			const ordered = result.sort((a: any, b: any) => a.val < b.val ? 1 : -1)
-			console.log('re2', ordered)
 
 			const finalPie = ordered.map((item: any) => {
+				const percentVal = item.val * 100 / totalBalance
 				if (item.id === AssetType.Crypto) {
-					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: item.val }
+					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal }
 				} else if (item.id === AssetType.Stocks) {
-					return { key: 'istocks', name: FilterTypeMap.istocks, value: item.val }
+					return { key: 'istocks', name: FilterTypeMap.istocks, value: percentVal }
 				} else if (item.id === AssetType.Fx) {
-					return { key: 'ifx', name: FilterTypeMap.ifx, value: item.val }
+					return { key: 'ifx', name: FilterTypeMap.ifx, value: percentVal }
 				} else if (item.id === AssetType.Commodities) {
-					return { key: 'icommodities', name: FilterTypeMap.icommodities, value: item.val }
+					return { key: 'icommodities', name: FilterTypeMap.icommodities, value: percentVal }
 				}
 			})
 			console.log('f', finalPie)

@@ -1,15 +1,12 @@
 import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
-import { BalanceList, useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
-import { useBalanceQuery } from '~/features/Markets/Balance.query'
+import { BalanceList } from '~/features/Portfolio/UserBalance.query'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
-import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
+import { Grid, CellTicker } from '~/components/Common/DataGrid'
 import Link from 'next/link'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
-import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
 import { filterState } from '~/features/Portfolio/filterAtom'
@@ -23,27 +20,11 @@ interface Props {
 }
 
 const BalanceList: React.FC<Props> = ({ assets, pieitems, balance }) => {
-	const { publicKey } = useWallet()
-	// const [filter, setFilter] = useState<FilterType>('all')
 	const [selectedFilter, setFilterState] = useRecoilState(filterState)
-
-	// useEffect(() => {
-	// 	if (selectedFilter) {
-	// 		setFilter(selectedFilter as FilterType);
-	// 	}
-	// }, [selectedFilter])
 
 	const pieitemsKeys = pieitems.map((item) => item.key)
 
-  // const { data: assets } = useUserBalanceQuery({
-  //   userPubKey: publicKey,
-  //   filter,
-	//   refetchOnMount: true,
-  //   enabled: publicKey != null
-	// })
-
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
-		// setFilter(newValue)
     setFilterState(newValue)
 	}
 
@@ -88,11 +69,11 @@ let columns: GridColDef[] = [
 			return (
 				<Stack sx={{ marginLeft: '10px' }}>
 					<Box sx={{ fontSize: '14px', fontWeight: '500' }}>${params.row.price.toLocaleString()}</Box>
-					{percent >= 0 ? (
+					{/* {percent >= 0 ? (
 						<ChangePricePlus>+${percent}</ChangePricePlus>
 					) : (
 						<ChangePriceMinus>-${Math.abs(percent)}</ChangePriceMinus>
-					)}
+					)} */}
 				</Stack>
 			)
 		},
@@ -122,7 +103,7 @@ let columns: GridColDef[] = [
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Stack sx={{ marginLeft: '10px' }}>
-          <PercentSlider percent={50} />
+          <PercentSlider percent={params.row.percentVal} />
 				</Stack>
 			)
 		},

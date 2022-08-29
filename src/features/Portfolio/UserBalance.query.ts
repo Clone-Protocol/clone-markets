@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
-import { FilterType } from '~/data/filter'
+import { FilterType, FilterTypeMap } from '~/data/filter'
 
 export const fetchUserBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
 	if (!userPubKey) return []
@@ -89,6 +89,18 @@ export const fetchUserBalance = async ({ program, userPubKey, filter }: { progra
 	    usdiBalance: 0.04
 	  }
 	]
+
+	//set percent val for each asset
+	const totalBalance = result.reduce((prev, curr) => {
+		return prev + curr.usdiBalance
+	}, 0)
+	result.forEach((asset) => {
+		asset.percentVal = asset.usdiBalance * 100 / totalBalance
+	})
+	result.sort((a, b) => {
+		return a.percentVal! < b.percentVal! ? 1 : -1
+	})
+
 	return result
 }
 
@@ -109,6 +121,7 @@ export interface BalanceList {
 	assetType: number
 	assetBalance: number
 	usdiBalance: number
+	percentVal?: number
 }
 
 export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
@@ -116,5 +129,17 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
   return useQuery(['userBalance', userPubKey, filter], () => fetchUserBalance({ program: getInceptApp(), userPubKey, filter }), {
     refetchOnMount,
     enabled,
+		select: (assets) => assets.filter((asset) => {
+			if (filter === 'icrypto') {
+				return asset.assetType === AssetType.Crypto
+			} else if (filter === 'ifx') {
+				return asset.assetType === AssetType.Fx
+			} else if (filter === 'icommodities') {
+				return asset.assetType === AssetType.Commodities
+			} else if (filter === 'istocks') {
+				return asset.assetType === AssetType.Stocks
+			}
+			return true;
+		})
   })
 }

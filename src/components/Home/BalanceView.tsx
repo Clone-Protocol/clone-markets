@@ -1,5 +1,5 @@
 import { styled, Box, Divider, Paper } from '@mui/material'
-import { Balance } from '~/features/Home/Balance.query'
+import { Balance } from '~/features/Portfolio/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
@@ -44,7 +44,7 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 				<Box sx={{ width: '180px'}}>
 					{ data.length > 0 ? 
 							data.map(item => (
-								<CategoryText style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px'} : { marginLeft: '12px' }}>{item.name} - {item.value}%</CategoryText>
+								<CategoryText key={item.key} style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px'} : { marginLeft: '12px' }}>{item.name} - {item.value.toFixed(1)}%</CategoryText>
 							))
 						:
 						<div>
