@@ -8,87 +8,87 @@ import { FilterType, FilterTypeMap } from '~/data/filter'
 export const fetchUserBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
 	if (!userPubKey) return []
 
-  // await program.loadManager()
+  await program.loadManager()
 
-	// const iassetInfos = await program.getUseriAssetInfo()
-	// let usdiBalance = await program.getUsdiBalance()
+	const iassetInfos = await program.getUseriAssetInfo()
 
-	// const result: BalanceList[] = []
+	const result: BalanceList[] = []
 
-	// let i = 1
-	// for (var info of iassetInfos) {
-	// 	let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info[0])
-	// 	result.push({
-	// 		id: i,
-	// 		tickerName: tickerName,
-	// 		tickerSymbol: tickerSymbol,
-	// 		tickerIcon: tickerIcon,
-	// 		price: info[1]!,
-	// 		//changePercent: 1.58,
-	// 		assetType: assetType,
-	// 		assetBalance: info[2]!,
-	// 		usdiBalance: usdiBalance!,
-	// 	})
-	// 	i++
-	// }
+	let i = 1
+	for (let info of iassetInfos) {
+		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info[0])
+		result.push({
+			id: i,
+			tickerName: tickerName,
+			tickerSymbol: tickerSymbol,
+			tickerIcon: tickerIcon,
+			price: info[1]!,
+			changePercent: 0,
+			assetType: assetType,
+			assetBalance: info[2]!,
+			usdiBalance: info[1]! * info[2]!,
+		})
+		i++
+	}
 
-	const result: BalanceList[] = [
-	  {
-	    id: 1,
-	    tickerName: 'iSolana',
-	    tickerSymbol: 'iSOL',
-	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	    price: 160.51,
-	    changePercent: 1.58,
-	    assetBalance: 0.01,
-			assetType: AssetType.Crypto,
-	    usdiBalance: 0.04
-	  },
-	  {
-	    id: 2,
-	    tickerName: 'iEthereum',
-	    tickerSymbol: 'iETH',
-	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	    price: 2300.53,
-	    changePercent: -2.04,
-	    assetBalance: 0.01,
-			assetType: AssetType.Crypto,
-	    usdiBalance: 0.04
-	  },
-		{
-	    id: 3,
-	    tickerName: 'iEthereum',
-	    tickerSymbol: 'iETH',
-	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	    price: 2300.53,
-	    changePercent: -2.04,
-	    assetBalance: 0.01,
-			assetType: AssetType.Commodities,
-	    usdiBalance: 0.04
-	  },
-		{
-	    id: 4,
-	    tickerName: 'iEthereum',
-	    tickerSymbol: 'iETH',
-	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	    price: 2300.53,
-	    changePercent: -2.04,
-	    assetBalance: 0.01,
-			assetType: AssetType.Stocks,
-	    usdiBalance: 0.44
-	  },
-		{
-	    id: 5,
-	    tickerName: 'iEthereum',
-	    tickerSymbol: 'iETH',
-	    tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	    price: 2300.53,
-	    changePercent: -2.04,
-	    assetBalance: 0.01,
-			assetType: AssetType.Fx,
-	    usdiBalance: 0.04
-	  }
-	]
+	// TEST LIST
+	// const result: BalanceList[] = [
+	//   {
+	//     id: 1,
+	//     tickerName: 'iSolana',
+	//     tickerSymbol: 'iSOL',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 160.51,
+	//     changePercent: 1.58,
+	//     assetBalance: 0.01,
+	// 		assetType: AssetType.Crypto,
+	//     usdiBalance: 0.04
+	//   },
+	//   {
+	//     id: 2,
+	//     tickerName: 'iEthereum',
+	//     tickerSymbol: 'iETH',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 2300.53,
+	//     changePercent: -2.04,
+	//     assetBalance: 0.01,
+	// 		assetType: AssetType.Crypto,
+	//     usdiBalance: 0.04
+	//   },
+	// 	{
+	//     id: 3,
+	//     tickerName: 'iEthereum',
+	//     tickerSymbol: 'iETH',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 2300.53,
+	//     changePercent: -2.04,
+	//     assetBalance: 0.01,
+	// 		assetType: AssetType.Commodities,
+	//     usdiBalance: 0.04
+	//   },
+	// 	{
+	//     id: 4,
+	//     tickerName: 'iEthereum',
+	//     tickerSymbol: 'iETH',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 2300.53,
+	//     changePercent: -2.04,
+	//     assetBalance: 0.01,
+	// 		assetType: AssetType.Stocks,
+	//     usdiBalance: 0.44
+	//   },
+	// 	{
+	//     id: 5,
+	//     tickerName: 'iEthereum',
+	//     tickerSymbol: 'iETH',
+	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
+	//     price: 2300.53,
+	//     changePercent: -2.04,
+	//     assetBalance: 0.01,
+	// 		assetType: AssetType.Fx,
+	//     usdiBalance: 0.04
+	//   }
+	// ]
 
 	//set percent val for each asset
 	const totalBalance = result.reduce((prev, curr) => {
