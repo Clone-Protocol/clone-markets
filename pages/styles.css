@@ -5,6 +5,7 @@ body {
 	font-family: 'Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 	background-color: #000;
 	overflow-y: hidden;
+	overflow-x: hidden;
 }
 input:focus {
   outline:none;

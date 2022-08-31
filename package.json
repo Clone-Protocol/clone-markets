@@ -29,7 +29,7 @@
     "@types/react-copy-to-clipboard": "^5.0.2",
     "animate.css": "^4.1.1",
     "dayjs": "^1.11.0",
-    "incept-protocol-sdk": "git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#private-beta",
+    "incept-protocol-sdk": "~/Desktop/incept/incept-protocol",
     "next": "12.1.0",
     "notistack": "^2.0.3",
     "polished": "^4.2.2",
