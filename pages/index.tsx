@@ -1,26 +1,21 @@
+import * as React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { styled } from '@mui/system'
-import { Container, Box } from '@mui/material'
-// import WelcomeMsg from '~/components/Home/WelcomeMsg'
-// import BalanceView from '~/containers/Home/BalanceView'
+import Container from '@mui/material/Container'
+import MarketList from '~/containers/Markets/MarketList'
 
 const Home: NextPage = () => {
 	return (
 		<div>
 			<Head>
 				<title>Incept Markets</title>
-				<meta name="description" content="Incept Markets" />
-				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
 			<main>
 				<StyledSection>
 					<Container>
-						{/* <WelcomeMsg />
-						<Box sx={{ marginTop: '40px' }}>
-							<BalanceView />
-						</Box> */}
+						<MarketList />
 					</Container>
 				</StyledSection>
 			</main>
