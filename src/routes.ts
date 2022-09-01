@@ -6,7 +6,7 @@ export const GNB_ROUTES = [
 ]
 
 const ROUTES = {
-	Home: '/',
+	Home: '/markets',
 }
 
 export default ROUTES
