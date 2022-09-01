@@ -219,6 +219,11 @@
     "@ethersproject/logger" "^5.5.0"
     hash.js "1.1.7"
 
+"@fontsource/almarai@^4.5.8":
+  version "4.5.8"
+  resolved "https://registry.yarnpkg.com/@fontsource/almarai/-/almarai-4.5.8.tgz#de4938473d6162f853667144e154d9c6b1ba3236"
+  integrity sha512-x6USOEoR68ytd49yPCXEjg3x9QONgkp+tFcJ6DmePlc6VW/4UshpFafL5sOEsb9oE6CwtucuERWmLleyYe6pug==
+
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.2.1.tgz"

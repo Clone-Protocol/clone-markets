@@ -22,6 +22,7 @@ import { useIncept } from '~/hooks/useIncept'
 // import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import "@fontsource/almarai";
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -205,7 +206,7 @@ const RightMenu = () => {
 }
 
 const MarketTitle = styled('div')`
-  font-family: Almarai;
+	font-family: 'Almarai';
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
@@ -214,7 +215,7 @@ const MarketTitle = styled('div')`
   letter-spacing: normal;
   text-align: left;
   color: #fff;
-  margin: 5px 0 0 7px;
+  margin: 3px 0 0 7px;
 `
 
 const StyledAppBar = styled(AppBar)`
