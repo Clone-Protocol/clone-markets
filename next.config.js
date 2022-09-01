@@ -14,15 +14,15 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/markets',
-        permanent: true,
-      },
-    ]
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/markets',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
   webpack: (config, options) => {
     config.module.rules.push({
       test: /\.(ts)x?$/,
