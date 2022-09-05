@@ -13,6 +13,8 @@ const IportfolioPage: NextPage = () => {
 		<div>
 			<Head>
 				<title>iPortfolio - Incept Protocol</title>
+				<meta name="description" content="iPortfolio - Incept Markets" />
+				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>
 				<StyledSection>

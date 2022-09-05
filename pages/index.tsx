@@ -10,6 +10,8 @@ const Home: NextPage = () => {
 		<div>
 			<Head>
 				<title>Incept Markets</title>
+				<meta name="description" content="Incept Markets" />
+				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
 			<main>

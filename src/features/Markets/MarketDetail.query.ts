@@ -16,6 +16,7 @@ export const fetchMarketDetail = async ({ program, userPubKey, index }: { progra
 
 	const balances = await program.getPoolBalances(index)
 	const price = balances[1] / balances[0]
+	console.log('p', price);
 	
 	// let userIassetBalance = await program.getUserIAssetBalance(index)
 	// let liquidity = balances[1] * 2

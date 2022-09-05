@@ -15,6 +15,8 @@ const AssetPage: NextPage = () => {
 		<div>
 			<Head>
 				<title>Asset</title>
+				<meta name="description" content="Asset - Incept Markets" />
+				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>
 				<StyledSection

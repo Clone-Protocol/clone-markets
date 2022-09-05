@@ -3,15 +3,16 @@ import { Box } from '@mui/material'
 import { styled } from '@mui/system'
 import { TimeTabs, TimeTab, FilterTimeMap, FilterTime } from '~/components/Charts/TimeTabs'
 import LineChartAlt from '~/components/Charts/LineChartAlt'
-import { useTotalLiquidityQuery } from '~/features/Chart/Liquidity.query'
+import { useTotalPriceQuery } from '~/features/Chart/Prices.query'
 import { formatDollarAmount } from '~/utils/numbers'
 
-const Chart: React.FC = () => {
+const Chart = ({ price }: { price: number }) => {
 	const [filterTime, setFilterTime] = useState<FilterTime>('24h')
   const [chartHover, setChartHover] = useState<number | undefined>()
-  const { data: totalLiquidity } = useTotalLiquidityQuery({
+  const { data: totalPrices } = useTotalPriceQuery({
     timeframe: filterTime,
-    refetchOnMount: false,
+    currentPrice: price,
+    refetchOnMount: "always",
     enabled: true
   })
   const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterTime) => {
@@ -19,16 +20,23 @@ const Chart: React.FC = () => {
 	}
 
   useEffect(() => {
-    if (chartHover === undefined && totalLiquidity) {
-      setChartHover(totalLiquidity?.chartData[totalLiquidity?.chartData.length-1].value)
+    if (totalPrices) {
+      setChartHover(totalPrices?.chartData[totalPrices?.chartData.length-1].value)
     }
-  }, [chartHover, totalLiquidity])
+  }, [totalPrices])
+
+
+  useEffect(() => {
+    if (chartHover === undefined && totalPrices) {
+      setChartHover(totalPrices?.chartData[totalPrices?.chartData.length-1].value)
+    }
+  }, [chartHover, totalPrices])
 
 
 	return (
 		<>
       <LineChartAlt
-        data={totalLiquidity?.chartData}
+        data={totalPrices?.chartData}
         value={chartHover}
         setValue={setChartHover}
         topLeft={

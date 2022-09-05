@@ -32,7 +32,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 					</Box>
 
 					<Box>
-						<Chart />
+						<Chart price={asset.price} />
 					</Box>
 
 					<Box sx={{ marginTop: '30px', marginBottom: '15px' }}>
