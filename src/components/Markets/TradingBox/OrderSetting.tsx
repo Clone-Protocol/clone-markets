@@ -2,6 +2,7 @@ import { Box, Button, Stack, Input, styled, FormControl } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { StyledTabs, StyledTab } from './OrderSettingSlippage'
 import useLocalStorage from '~/hooks/useLocalStorage'
+import InfoTooltip from '~/components/Common/InfoTooltip'
 
 interface Props {
   onBack: () => void
@@ -52,7 +53,7 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
 			</StyledStack>
 
 			<Box sx={{ marginTop: '10px' }}>
-        <Subtitle>Slippage Tolerance</Subtitle>
+        <Subtitle>Slippage Tolerance <InfoTooltip title="Slippage Tolerance is the pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when swapping on AMMs." /></Subtitle>
         <StyledTabs value={customSlippage > 0 ? 0 : slippage} onChange={handleSlippageChange} sx={{ maxWidth: '832px' }}>
           <StyledTab value={0.1} label="0.1%" />
           <StyledTab value={0.5} label="0.5%" sx={{ marginLeft: '20px', marginRight: '20px' }} />
