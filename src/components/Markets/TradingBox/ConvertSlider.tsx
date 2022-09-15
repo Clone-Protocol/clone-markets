@@ -91,7 +91,7 @@ const ValueBox = styled(Box)`
 	width: 55px;
 	height: 30px;
   border-radius: 10px;
-	line-height: 33px;
+	line-height: 29px;
 	font-size: 12px;
 	font-weight: 500;
   color: #fff;

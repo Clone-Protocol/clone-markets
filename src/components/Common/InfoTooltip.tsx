@@ -15,10 +15,10 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-const InfoTooltip = ({ title }: {title: string}) => (
+const InfoTooltip = ({ title, color = 'inherit' }: {title: string, color?: string}) => (
   <LightTooltip title={title} placement="top" arrow>
-    <IconButton>
-      <HelpOutlineRounded sx={{ color: '#a9a9a9', width: '12px', height: '12px' }} />
+    <IconButton sx={{ color: color }}>
+      <HelpOutlineRounded sx={{ width: '13px', height: '13px' }} />
     </IconButton>
   </LightTooltip>
 )

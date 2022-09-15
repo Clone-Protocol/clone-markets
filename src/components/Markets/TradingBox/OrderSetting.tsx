@@ -48,7 +48,7 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
 		<Box sx={{ padding: '15px 20px' }}>
 			<StyledStack direction="row" justifyContent="space-between" alignItems="center">
 				<div style={{ cursor: 'pointer', color: '#fff', fontSize: '21px' }} onClick={() => {onBack()}}>{'<'}</div>
-				<div style={{ fontSize: '16px', fontWeight: '600', color: '#fff' }}>Order Setting</div>
+				<div style={{ fontSize: '16px', fontWeight: '600', color: '#fff', marginTop: '5px' }}>Order Setting</div>
 				<div></div>
 			</StyledStack>
 

@@ -215,7 +215,7 @@ const MarketTitle = styled('div')`
   letter-spacing: normal;
   text-align: left;
   color: #fff;
-  margin: 3px 0 0 7px;
+  margin-left: 7px;
 `
 
 const StyledAppBar = styled(AppBar)`
@@ -277,13 +277,13 @@ const HeaderButton = styled(Button)`
 const ConnectButton = styled(Button)`
   border: solid 1px #aaa;
   background-color: #171717;
-	padding: 12px 12px 10px 13px;
+	padding: 12px;
 	border-radius: 10px;
 	font-size: 11px;
 	font-weight: 600;
   margin-left: 16px;
 	color: #fff;
-	height: 35px;
+	height: 33px;
   &:hover {
     background-color: #2e2e2e;
 		border: solid 1px #aaa;

@@ -45,11 +45,13 @@ const Chart = ({ price }: { price: number }) => {
           </Box>
         }
         topRight={
-          <TimeTabs value={filterTime} onChange={handleFilterChange}>
-            {Object.keys(FilterTimeMap).map((f) => (
-              <TimeTab key={f} value={f} label={FilterTimeMap[f as FilterTime]} />
-            ))}
-          </TimeTabs>
+          <div style={{ marginTop: '16px' }}>
+            <TimeTabs value={filterTime} onChange={handleFilterChange}>
+              {Object.keys(FilterTimeMap).map((f) => (
+                <TimeTab key={f} value={f} label={FilterTimeMap[f as FilterTime]} />
+              ))}
+            </TimeTabs>
+          </div>
         }
       />
 		</>
@@ -65,7 +67,6 @@ const SelectValue = styled(Box)`
   text-align: left;
   color: #fff;
   margin-left: 20px;
-  margin-top: 17px;
 `
 
 export default Chart

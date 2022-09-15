@@ -98,7 +98,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
 const Wrapper = styled(Card)`
   width: 100%;
   max-width: 709px;
-  height: 307px;
+  height: 287px;
   padding: 1rem;
   padding-right: 2rem;
   display: flex;

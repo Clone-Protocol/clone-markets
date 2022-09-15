@@ -20,14 +20,16 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	return (
 		<>
 			{asset ? (
-				<Stack mb={2} direction="column" padding={4} paddingY={1}>
-					<Box display="flex" alignItems="center" sx={{ width: '209px', height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', paddingLeft: '8px' }}>
-						<Image src={asset.tickerIcon} width="45px" height="45px" />
-						<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
-							{asset.tickerName}
-						</Box>
-						<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
-							{asset.tickerSymbol}
+				<Stack mb={2} direction="column" padding={5} paddingY={1}>
+					<Box>
+						<Box display="inline-flex" alignItems="center" sx={{ height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', padding: '6px 12px' }}>
+							<Image src={asset.tickerIcon} width="45px" height="45px" />
+							<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
+								{asset.tickerName}
+							</Box>
+							<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
+								({asset.tickerSymbol})
+							</Box>
 						</Box>
 					</Box>
 

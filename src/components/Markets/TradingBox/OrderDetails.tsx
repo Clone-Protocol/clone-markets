@@ -1,5 +1,6 @@
 import { Box, Stack, Button, Divider } from '@mui/material'
 import { styled } from '@mui/system'
+import InfoTooltip from '~/components/Common/InfoTooltip'
 
 interface Props {
 	iassetPrice: number
@@ -45,7 +46,7 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
 }
 
 const Wrapper = styled(Box)`
-  width: 325px;
+  width: 100%;
   height: 143px;
   margin: 13px 0 16px;
   padding: 14px 23px 13px 15px;

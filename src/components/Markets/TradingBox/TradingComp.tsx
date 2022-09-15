@@ -254,25 +254,23 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
           </Box>
 
           <Box>
-            <Box sx={{ marginTop: '30px', marginBottom: '30px' }}>
+            <Box sx={{ marginTop: '23px', marginBottom: '23px' }}>
               <ConvertSlider isBuy={tabIdx===0} value={convertVal} onChange={handleChangeConvert} />
             </Box>
 
-            <Box>
-              <PairInput
-                title="Total"
-                tickerIcon={tabIdx===0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
-                ticker={tabIdx===0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
-                value={parseFloat(amountTotal.toFixed(3))}
-                balanceDisabled={true}
-              />      
-            </Box>
+            <PairInput
+              title="Total"
+              tickerIcon={tabIdx===0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
+              ticker={tabIdx===0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
+              value={parseFloat(amountTotal.toFixed(3))}
+              balanceDisabled={true}
+            />
 
             <Stack
               direction="row"
               justifyContent="flex-end"
               alignItems="center"
-              sx={{ marginTop: '16px', marginBottom: '16px' }}>
+              sx={{ marginTop: '16px', marginBottom: '23px' }}>
               <IconButton onClick={reloadData}>
                 <Image src={reloadIcon} alt="reload" />
               </IconButton>
