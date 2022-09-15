@@ -199,7 +199,7 @@ const RightMenu = () => {
         </WalletSelectBox> }
       </Box>
 
-			<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '18px' }} variant="outlined" onClick={handleMoreClick}>...</HeaderButton>
+			<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '20px' }} variant="outlined" onClick={handleMoreClick}>...</HeaderButton>
       <MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
 		</Box>
 	)
@@ -260,7 +260,7 @@ const NavPlaceholder = styled('div')`
 
 const HeaderButton = styled(Button)`
   border: 1px solid #404040;
-  padding: 12px 12px 10px 13px;
+  padding: 12px;
   border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
