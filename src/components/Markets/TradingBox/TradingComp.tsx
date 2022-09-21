@@ -171,7 +171,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
       <div style={{ width: '100%', height: '100%'}}>
         <Box
           sx={{
-            p: '20px',
+            p: '18px',
           }}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <StyledTabs value={tabIdx} onChange={handleChangeTab}>

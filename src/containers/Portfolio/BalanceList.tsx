@@ -102,7 +102,7 @@ let columns: GridColDef[] = [
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Stack sx={{ marginLeft: '10px' }}>
+				<Stack sx={{ marginTop: '-5px', marginLeft: '10px' }}>
           <PercentSlider percent={params.row.percentVal} />
 				</Stack>
 			)

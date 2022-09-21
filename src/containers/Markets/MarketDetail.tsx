@@ -21,14 +21,14 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 		<>
 			{asset ? (
 				<Stack mb={2} direction="column" padding={5} paddingY={1}>
-					<Box>
+					<Box sx={{ padding: '10px' }}>
 						<Box display="inline-flex" alignItems="center" sx={{ height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', padding: '6px 12px' }}>
 							<Image src={asset.tickerIcon} width="45px" height="45px" />
 							<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
 								{asset.tickerName}
 							</Box>
 							<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
-								({asset.tickerSymbol})
+								{asset.tickerSymbol}
 							</Box>
 						</Box>
 					</Box>
@@ -37,7 +37,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						<Chart price={asset.price} />
 					</Box>
 
-					<Box sx={{ marginTop: '30px', marginBottom: '15px' }}>
+					<Box sx={{ marginTop: '15px', marginBottom: '15px', padding: '10px' }}>
 						<SubTitle>Market Overview</SubTitle>
 						<Stack direction="row" justifyContent="space-between">
 							<Box>
@@ -63,7 +63,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
           <StyledDivider />
 
-					<Box>
+					<Box sx={{ padding: '10px' }}>
 						<SubTitle>My {asset.tickerSymbol}</SubTitle>
 						<Stack direction="row" justifyContent="flex-start" spacing={7}>
 							<Box>
@@ -85,7 +85,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
           <StyledDivider />
 
-          <Box sx={{ marginBottom: '40px' }}>
+          <Box sx={{ marginBottom: '40px', padding: '10px' }}>
 						<SubTitle>About {asset.tickerSymbol}</SubTitle>
 						<DetailDesc>{asset.detailOverview}</DetailDesc>
 						<Box sx={{ color: '#cacaca', fontSize: '12px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
@@ -102,8 +102,8 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
 const StyledDivider = styled(Divider)`
 	background-color: #535353;
-	margin-bottom: 15px;
-	margin-top: 15px;
+	margin-bottom: 6px;
+	margin-top: 6px;
 	height: 1px;
 `
 

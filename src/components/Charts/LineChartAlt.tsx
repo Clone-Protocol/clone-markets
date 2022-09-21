@@ -48,7 +48,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
       </Box>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          width={600}
+          width={700}
           height={300}
           data={data}
           margin={{
@@ -97,7 +97,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
 
 const Wrapper = styled(Card)`
   width: 100%;
-  max-width: 709px;
+  max-width: 729px;
   height: 287px;
   padding: 1rem;
   padding-right: 2rem;
