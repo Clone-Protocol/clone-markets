@@ -6,10 +6,13 @@ import { styled } from '@mui/system'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
 import { Grid } from '@mui/material'
+import useInitialized from '~/hooks/useInitialized'
 
 const AssetPage: NextPage = () => {
 	const router = useRouter()
 	const { marketId } = router.query
+
+	useInitialized()
 
 	return (
 		<div>

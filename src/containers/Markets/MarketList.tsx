@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
-import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import SearchInput from '~/components/Markets/SearchInput'
 import useDebounce from '~/hooks/useDebounce'
@@ -17,14 +16,12 @@ const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
   const [searchTerm, setSearchTerm] = useState('')
   const debounceSearchTerm = useDebounce(searchTerm, 500)
-	const { publicKey } = useWallet()
 
 	const { data: assets } = useAssetsQuery({
-    userPubKey: publicKey,
 	  filter,
     searchTerm: debounceSearchTerm ? debounceSearchTerm : '',
 	  refetchOnMount: true,
-    enabled: publicKey != null
+    enabled: true
 	})
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {

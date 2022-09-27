@@ -87,26 +87,6 @@ const RightMenu = () => {
   const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 
 	useEffect(() => {
-		async function getAccount() {
-			if (connected && publicKey && wallet) {
-				const program = getInceptApp()
-				await program.loadManager()
-
-				if (!program.provider.wallet) {
-					return
-				}
-
-				try {
-					const userAccount = await program.getUserAccount()
-				} catch (error) {
-					const response = await program.initializeUser()
-				}
-			}
-		}
-		// getAccount()
-	}, [connected, publicKey])
-
-	useEffect(() => {
 		async function userMintUsdi() {
 			if (connected && publicKey && mintUsdi) {
 				const program = getInceptApp()
@@ -134,7 +114,6 @@ const RightMenu = () => {
         setShowWalletSelectPopup(false)
 			} else {
         setShowWalletSelectPopup(!showWalletSelectPopup)
-				// disconnect()
 			}
 		} catch (error) {
 			console.log('Error connecting to the wallet: ', (error as any).message)
