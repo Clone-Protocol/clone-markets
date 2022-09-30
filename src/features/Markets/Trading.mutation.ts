@@ -14,7 +14,6 @@ export const callTrading = async ({
 
 	const {
 		isBuy,
-		amountUsdi,
 		amountIasset,
 		iassetIndex
 	} = data

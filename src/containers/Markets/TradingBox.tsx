@@ -42,7 +42,6 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
         <TradingComp
 					assetIndex={assetIndex}
           onShowOption={() => showSection(Section.OrderSetting)}
-          // onConfirm={() => onConfirm()}
         />
 			)}
 			{showOrderSetting && <OrderSetting onBack={goTradingComp} />}

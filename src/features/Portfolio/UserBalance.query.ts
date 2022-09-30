@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
-import { FilterType, FilterTypeMap } from '~/data/filter'
+import { FilterType } from '~/data/filter'
 
 export const fetchUserBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
 	if (!userPubKey) return []
@@ -30,65 +30,6 @@ export const fetchUserBalance = async ({ program, userPubKey, filter }: { progra
 		})
 		i++
 	}
-
-	// TEST LIST
-	// const result: BalanceList[] = [
-	//   {
-	//     id: 1,
-	//     tickerName: 'iSolana',
-	//     tickerSymbol: 'iSOL',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 160.51,
-	//     changePercent: 1.58,
-	//     assetBalance: 0.01,
-	// 		assetType: AssetType.Crypto,
-	//     usdiBalance: 0.04
-	//   },
-	//   {
-	//     id: 2,
-	//     tickerName: 'iEthereum',
-	//     tickerSymbol: 'iETH',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 2300.53,
-	//     changePercent: -2.04,
-	//     assetBalance: 0.01,
-	// 		assetType: AssetType.Crypto,
-	//     usdiBalance: 0.04
-	//   },
-	// 	{
-	//     id: 3,
-	//     tickerName: 'iEthereum',
-	//     tickerSymbol: 'iETH',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 2300.53,
-	//     changePercent: -2.04,
-	//     assetBalance: 0.01,
-	// 		assetType: AssetType.Commodities,
-	//     usdiBalance: 0.04
-	//   },
-	// 	{
-	//     id: 4,
-	//     tickerName: 'iEthereum',
-	//     tickerSymbol: 'iETH',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 2300.53,
-	//     changePercent: -2.04,
-	//     assetBalance: 0.01,
-	// 		assetType: AssetType.Stocks,
-	//     usdiBalance: 0.44
-	//   },
-	// 	{
-	//     id: 5,
-	//     tickerName: 'iEthereum',
-	//     tickerSymbol: 'iETH',
-	//     tickerIcon: '/images/assets/ethereum-eth-logo.svg',
-	//     price: 2300.53,
-	//     changePercent: -2.04,
-	//     assetBalance: 0.01,
-	// 		assetType: AssetType.Fx,
-	//     usdiBalance: 0.04
-	//   }
-	// ]
 
 	//set percent val for each asset
 	const totalBalance = result.reduce((prev, curr) => {

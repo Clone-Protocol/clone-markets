@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import BalanceView from '~/components/Home/BalanceView'
+import BalanceView from '~/components/Portfolio/BalanceView'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 import { Box } from '@mui/material'
@@ -14,7 +14,6 @@ import { filterState } from '~/features/Portfolio/filterAtom'
 
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
-	// const [filter, setFilter] = useState<FilterType>('all')
 	const selectedFilter = useRecoilValue(filterState)
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 

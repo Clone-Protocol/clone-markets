@@ -65,7 +65,7 @@ let columns: GridColDef[] = [
 		headerName: 'Price(USDi)',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			const percent = parseFloat(params.row.changePercent)
+			// const percent = parseFloat(params.row.changePercent)
 			return (
 				<Stack sx={{ marginLeft: '10px' }}>
 					<Box sx={{ fontSize: '14px', fontWeight: '500' }}>${params.row.price.toLocaleString()}</Box>

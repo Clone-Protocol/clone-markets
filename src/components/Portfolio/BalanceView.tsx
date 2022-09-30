@@ -1,4 +1,4 @@
-import { styled, Box, Divider, Paper } from '@mui/material'
+import { styled, Box, Paper } from '@mui/material'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilState } from 'recoil'

@@ -191,7 +191,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                       validate(value) {
                         if (!value || value <= 0) {
                           return 'the amount should be above zero.'
-                        } else if (value > balance?.usdiVal) {
+                        } else if (value > balance?.usdiVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
                       }
@@ -225,7 +225,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                       validate(value) {
                         if (!value || value <= 0) {
                           return 'the amount should be above zero.'
-                        } else if (value > balance?.iassetVal) {
+                        } else if (value > balance?.iassetVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
                       }

@@ -1,4 +1,4 @@
-import { Box, Stack, Button, Divider } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { styled } from '@mui/system'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 
@@ -19,23 +19,23 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
 
   return (
     <Wrapper>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
         <DetailHeader>Rate</DetailHeader>
         <DetailValue>{iassetPrice?.toLocaleString()} USDi / {tickerSymbol}</DetailValue>
       </Stack>
-      <Stack sx={{ marginTop: '12px' }} direction="row" justifyContent="space-between">
-        <DetailHeader>Price Impact</DetailHeader>
+      <Stack sx={{ marginTop: '8px' }} direction="row" justifyContent="space-between" alignItems="center">
+        <DetailHeader>Price Impact <InfoTooltip title="Price Impact" /></DetailHeader>
         <div style={{ color: '#0f6', fontSize: '11px', fontWeight: '600' }}>&lt; {priceImpact}%</div>
       </Stack>
-      <Stack sx={{ marginTop: '11px' }} direction="row" justifyContent="space-between">
-        <DetailHeader>Minimum received</DetailHeader>
+      <Stack sx={{ marginTop: '8px' }} direction="row" justifyContent="space-between" alignItems="center">
+        <DetailHeader>Minimum received <InfoTooltip title="Minimum received" /></DetailHeader>
         <div style={{ lineHeight: '12px' }}>
           <DetailValue>{minReceived?.toLocaleString()} {tickerSymbol}</DetailValue>
           <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>Slippage tolerance: {slippage?.toFixed(1)}%</div>
         </div>
       </Stack>
-      <Stack sx={{ marginTop: '12px' }} direction="row" justifyContent="space-between">
-        <DetailHeader>Trade fees</DetailHeader>
+      <Stack sx={{ marginTop: '9px' }} direction="row" justifyContent="space-between" alignItems="center">
+        <DetailHeader>Trade fees <InfoTooltip title="Trade fees" /></DetailHeader>
         <div style={{ lineHeight: '12px' }}>
           <DetailValue>{iassetTradeFee?.toFixed(6)} {tickerSymbol}</DetailValue>
           <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</div>
@@ -47,7 +47,7 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
 
 const Wrapper = styled(Box)`
   width: 100%;
-  height: 143px;
+  height: 153px;
   margin: 13px 0 16px;
   padding: 14px 23px 13px 15px;
   border-radius: 10px;

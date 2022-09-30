@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Input, styled, FormControl } from '@mui/material'
+import { Box, Button, Stack, styled, FormControl } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { StyledTabs, StyledTab } from './OrderSettingSlippage'
 import useLocalStorage from '~/hooks/useLocalStorage'
