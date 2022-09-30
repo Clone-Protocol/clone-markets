@@ -6,25 +6,27 @@ interface Props {
 	tickerIcon: string
 	ticker: string | null
 	balance?: number
+  balanceDisabled?: boolean
 	value?: number
 	onChange?: any
+  onMax?: any
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, value, onChange }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, onChange, onMax }) => {
 	return (
-		<FormControl variant="standard">
-			<Stack direction="row" justifyContent="space-between" sx={{ fontSize: '12px', fontWeight: '500' }}>
-				<Box>{title}</Box>
-				<Box>Balance: {balance?.toLocaleString()}</Box>
+		<FormControl variant="standard" sx={{ width: '100%' }}>
+			<Stack direction="row" justifyContent="space-between" sx={{ fontSize: '11px', fontWeight: '500', marginBottom: '3px' }}>
+				<Box sx={{ marginLeft: '10px' }}>{title}</Box>
+				{!balanceDisabled ? <Box sx={{ marginRight: '10px' }}>Balance: <span style={{ color:'#fff', cursor: 'pointer' }} onClick={() => onMax(balance)}>{balance?.toLocaleString()}</span></Box> : <></>}
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
-				<Box display="flex">
-					<Image src={tickerIcon} width="28px" height="28px" />
-					<Box sx={{ width: '100px', marginLeft: '8px', textAlign: 'left' }}>
+				<Box display="flex" alignItems="center">
+					{ tickerIcon && <Image src={tickerIcon} width="26px" height="26px" /> }
+					<Box sx={{ width: '100px', marginLeft: '8px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#fff' }}>
 						<div>{ticker}</div>
 					</Box>
 				</Box>
-				<InputAmount id="ip-amount" type="number" value={value} onChange={onChange} />
+				<InputAmount id="ip-amount" type="number" sx={ value && value > 0 ? { color: '#fff' } : { color: '#adadad' }} value={value} onChange={onChange} />
 			</FormStack>
 		</FormControl>
 	)
@@ -33,21 +35,22 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, value,
 const FormStack = styled(Stack)`
 	display: flex;
 	width: 100%;
-	height: 55px;
-	padding: 15px 15px 14px 14px;
+	height: 54px;
+	padding: 12px;
 	border-radius: 8px;
-	background-color: #ebedf2;
+	background-color: #282828;
+  border: solid 1px #444;
 `
 
 const InputAmount = styled(`input`)`
 	width: 150px;
-	margin-left: 30px;
 	text-align: right;
 	border: 0px;
-	background-color: #ebedf2;
-	font-size: 20px;
+	background-color: #282828;
+	font-size: 16px;
 	font-weight: 500;
 	color: #757a7f;
+	padding: 0;
 `
 
 export default PairInput

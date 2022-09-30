@@ -1,49 +1,11 @@
+import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from 'sdk/src'
-import { fetchBalance } from '../Home/Balance.query'
-import { BN } from '@project-serum/anchor'
+import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { assetMapping } from '~/data/assets'
+import { useIncept } from '~/hooks/useIncept'
 
-export const onBuy = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
-	if (!userPubKey) return null
-
-	await program.loadManager()
-
-	let assetInfo = await program.getAssetInfo(index)
-
-	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
-
-	await program.buySynth(
-		new BN(iassetAmount * 10 ** 8),
-		collateralAssociatedTokenAccount.address,
-		iassetAssociatedTokenAccount.address,
-		index,
-		[]
-	)
-}
-
-export const onSell = async (program: Incept, userPubKey: PublicKey, index: number, iassetAmount: number) => {
-	if (!userPubKey) return null
-
-	await program.loadManager()
-
-	let assetInfo = await program.getAssetInfo(index)
-
-	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
-
-	await program.sellSynth(
-		new BN(iassetAmount * 10 ** 8),
-		collateralAssociatedTokenAccount.address,
-		iassetAssociatedTokenAccount.address,
-		index,
-		[]
-	)
-}
-
-export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
+export const fetchAsset = async ({ program, userPubKey, index }: { program: Incept, userPubKey: PublicKey | null, index: number }) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
@@ -51,21 +13,13 @@ export const fetchAsset = async ({ program, userPubKey, index }: GetProps) => {
 	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
 	const balances = await program.getPoolBalances(index)
-	let price = balances[1] / balances[0]
-	let userIassetBalance = await program.getUserIAssetBalance(index)
-	let liquidity = balances[1] * 2
-
-	const userBalances = await fetchBalance({ program, userPubKey })
-	let portfolioPercentage = userBalances!.totalVal - userBalances!.balanceVal
+	const price = balances[1] / balances[0]
 
 	return {
 		tickerName: tickerName,
 		tickerSymbol: tickerSymbol,
 		tickerIcon: tickerIcon,
 		price: price,
-		balance: userIassetBalance,
-		portfolioPercentage: portfolioPercentage,
-		liquidity: liquidity,
 	}
 }
 
@@ -89,9 +43,10 @@ export const fetchAssetDefault = () => {
 }
 
 interface GetProps {
-	program: Incept
 	userPubKey: PublicKey | null
 	index: number
+	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+  enabled?: boolean
 }
 
 export interface Asset {
@@ -108,4 +63,12 @@ export interface Asset {
 	myHolding: number
 	myNotionalVal: number
 	myPortfolioPercentage: number
+}
+
+export function useTradingQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
+  const { getInceptApp } = useIncept()
+  return useQuery(['tradeDetail', userPubKey, index], () => fetchAsset({ program: getInceptApp(), userPubKey, index }), {
+    refetchOnMount,
+    enabled
+  })
 }

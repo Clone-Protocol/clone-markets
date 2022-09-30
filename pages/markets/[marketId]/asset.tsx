@@ -6,23 +6,28 @@ import { styled } from '@mui/system'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
 import { Grid } from '@mui/material'
+import useInitialized from '~/hooks/useInitialized'
 
 const AssetPage: NextPage = () => {
 	const router = useRouter()
 	const { marketId } = router.query
 
+	useInitialized()
+
 	return (
 		<div>
 			<Head>
 				<title>Asset</title>
+				<meta name="description" content="Asset - Incept Markets" />
+				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>
 				<StyledSection
 					sx={{
-						backgroundColor: '#FAFAFA',
+						backgroundColor: '#000',
 					}}>
 					<Grid container spacing={1}>
-						<Grid item xs={12} md={8} sx={{ padding: '30px' }}>
+						<Grid item xs={12} md={7} sx={{ padding: '30px' }}>
 							<MarketDetail assetId={marketId} />
 						</Grid>
 						<Grid item xs={12} md={4} sx={{ padding: '30px' }}>

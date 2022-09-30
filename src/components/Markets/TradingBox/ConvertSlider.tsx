@@ -1,11 +1,50 @@
 import { Box, Slider, styled } from '@mui/material'
 
 interface Props {
+  isBuy: boolean
 	value: number
 	onChange?: (event: Event, newValue: number | number[]) => void
 }
 
-const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
+const StyledSlider = styled(Slider)(({ theme }) => ({
+	color: '#FFF',
+	height: 4,
+	padding: '13px 0',
+	marginTop: '13px',
+	'& .MuiSlider-thumb': {
+    zIndex: 30,
+		height: 20,
+		width: 20,
+		backgroundColor: '#fff',
+		border: '3px solid #809cff',
+		'&:hover': {
+			boxShadow: '0 0 0 8px rgba(58, 133, 137, 0.16)',
+		},
+	},
+	'& .MuiSlider-track': {
+    zIndex: 10,
+		height: 3,
+    border: 'none',
+    background: 'linear-gradient(to left, #f00 -12%, #809cff 66%)'
+	},
+  '& .MuiSlider-valueLabel': {
+    fontSize: '11px',
+    fontWeight: '600',
+    width: '51px',
+    padding: '4px 8px 4px 8px',
+    borderRadius: '10px',
+    border: 'solid 1px #00ff66',
+    backgroundColor: '#000',
+    '&:before': { display: 'none' },
+  },
+	'& .MuiSlider-rail': {
+    zIndex: 10,
+		color: '#444444',
+		height: 3,
+	},
+}))
+
+const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 	const valueLabelFormat = (value: number) => {
 		return `${value}%`
 	}
@@ -17,14 +56,30 @@ const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
 			}}>
 			<ValueBox>{valueLabelFormat(value)}</ValueBox>
 			<Box width="270px">
-				<Slider
+				<StyledSlider
+          sx={
+            isBuy ? {
+              '& .MuiSlider-thumb': {
+                border: `2px solid #00ff66`,
+              },
+              '& .MuiSlider-track': {
+                background: `#00ff66`
+              }
+            } : {
+              '& .MuiSlider-thumb': {
+                border: `2px solid #fb782e`,
+              },
+              '& .MuiSlider-track': {
+                background: `#fb782e`
+              }
+            }}
 					value={value}
 					min={0}
 					step={5}
 					max={100}
 					valueLabelFormat={valueLabelFormat}
 					onChange={onChange}
-					valueLabelDisplay="auto"
+					valueLabelDisplay="off"
 				/>
 			</Box>
 		</Box>
@@ -32,12 +87,15 @@ const ConvertSlider: React.FC<Props> = ({ value, onChange }) => {
 }
 
 const ValueBox = styled(Box)`
-	background: #ebedf2;
+	background: #282828;
 	width: 55px;
-	height: 33px;
-	line-height: 33px;
-	font-size: 14px;
-	font-weight: 600;
+	height: 30px;
+  border-radius: 10px;
+	line-height: 29px;
+	font-size: 12px;
+	font-weight: 500;
+  color: #fff;
+  margin-top: 12px;
 `
 
 export default ConvertSlider

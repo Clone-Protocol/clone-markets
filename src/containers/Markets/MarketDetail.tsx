@@ -1,16 +1,15 @@
-import { Box, Stack, Button, styled } from '@mui/material'
+import { Box, Stack, Divider, styled } from '@mui/material'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
 import { useWallet } from '@solana/wallet-adapter-react'
-// import { Asset, fetchAsset, fetchAssetDefault } from '~/web3/Markets/detail'
-import { useDetailQuery } from '~/features/Markets/Detail.query'
+import { useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
 
-  const { data: asset } = useDetailQuery({
+  const { data: asset } = useMarketDetailQuery({
     userPubKey: publicKey,
 	  index: parseInt(assetId),
 	  refetchOnMount: true,
@@ -20,25 +19,24 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	return (
 		<>
 			{asset ? (
-				<Stack mb={2} direction="column" padding={5}>
-					<Box display="flex">
-						<Image src={asset.tickerIcon} width="40px" height="40px" />
-						<Box sx={{ fontSize: '28px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
-							{asset.tickerName}
+				<Stack mb={2} direction="column" padding={5} paddingY={1}>
+					<Box sx={{ padding: '10px' }}>
+						<Box display="inline-flex" alignItems="center" sx={{ height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', padding: '6px 12px' }}>
+							<Image src={asset.tickerIcon} width="45px" height="45px" />
+							<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
+								{asset.tickerName}
+							</Box>
+							<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
+								{asset.tickerSymbol}
+							</Box>
 						</Box>
-						<Box sx={{ color: '#757a7f', fontSize: '24px', fontWeight: '600', lineHeight: '42px' }}>
-							{asset.tickerSymbol}
-						</Box>
-					</Box>
-					<Box>
-						<PriceValue>${asset.price.toLocaleString()}</PriceValue>
 					</Box>
 
 					<Box>
-						<Chart />
+						<Chart price={asset.price} />
 					</Box>
 
-					<Box sx={{ marginBottom: '40px' }}>
+					<Box sx={{ marginTop: '15px', marginBottom: '15px', padding: '10px' }}>
 						<SubTitle>Market Overview</SubTitle>
 						<Stack direction="row" justifyContent="space-between">
 							<Box>
@@ -62,15 +60,9 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Stack>
 					</Box>
 
-					<Box sx={{ marginBottom: '40px' }}>
-						<SubTitle>About {asset.tickerSymbol}</SubTitle>
-						<DetailDesc>{asset.detailOverview}</DetailDesc>
-						<Box sx={{ fontSize: '14px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
-							Tell me more
-						</Box>
-					</Box>
+          <StyledDivider />
 
-					<Box>
+					<Box sx={{ padding: '10px' }}>
 						<SubTitle>My {asset.tickerSymbol}</SubTitle>
 						<Stack direction="row" justifyContent="flex-start" spacing={7}>
 							<Box>
@@ -89,6 +81,16 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							</Box>
 						</Stack>
 					</Box>
+
+          <StyledDivider />
+
+          <Box sx={{ marginBottom: '40px', padding: '10px' }}>
+						<SubTitle>About {asset.tickerSymbol}</SubTitle>
+						<DetailDesc>{asset.detailOverview}</DetailDesc>
+						<Box sx={{ color: '#cacaca', fontSize: '12px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
+							Tell me more
+						</Box>
+					</Box>
 				</Stack>
 			) : (
 				<></>
@@ -97,20 +99,18 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	)
 }
 
-const PriceValue = styled(Box)`
-  font-size: 40px;
-  margin-top: 10px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
+const StyledDivider = styled(Divider)`
+	background-color: #535353;
+	margin-bottom: 6px;
+	margin-top: 6px;
+	height: 1px;
 `
 
 const SubTitle = styled('div')`
-	font-size: 24px;
+	font-size: 16px;
 	font-weight: 600;
-	margin-top: 20px;
+  color: #fff;
+	margin-top: 15px;
 	margin-bottom: 20px;
   font-stretch: normal;
   font-style: normal;
@@ -119,24 +119,25 @@ const SubTitle = styled('div')`
 `
 
 const ContentHeader = styled('div')`
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: 600;
-	color: #5f5f5f;
+	color: #818181;
 `
 
 const ContentValue = styled('div')`
-	font-size: 23px;
+	font-size: 18px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-  margin-top: 10px;
+  margin-top: 5px;
+  color: #cacaca;
 `
 
 const DetailDesc = styled(Box)`
-  font-size: 14px;
-  font-weight: 300;
+  font-size: 12px;
+  color: #cacaca;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
@@ -145,7 +146,7 @@ const DetailDesc = styled(Box)`
 `
 
 const SubValue = styled('span')`
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
 `
 

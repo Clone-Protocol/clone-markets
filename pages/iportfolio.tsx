@@ -1,27 +1,30 @@
-import * as React from 'react'
 import type { NextPage } from 'next'
 import { styled } from '@mui/system'
 import Head from 'next/head'
-import { Container, Box } from '@mui/material'
-import BalanceView from '~/containers/Home/BalanceView'
-import BalanceList from '~/containers/Portfolio/BalanceList'
+import { Container } from '@mui/material'
+import { useWallet } from '@solana/wallet-adapter-react'
+import PortfolioView from '~/containers/Portfolio/PortfolioView'
+import BackdropMsg from '~/components/Portfolio/BackdropMsg'
+import useInitialized from '~/hooks/useInitialized'
 
 const IportfolioPage: NextPage = () => {
+  const { publicKey } = useWallet()
+
+	useInitialized()
+
 	return (
 		<div>
 			<Head>
 				<title>iPortfolio - Incept Protocol</title>
+				<meta name="description" content="iPortfolio - Incept Markets" />
+				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>
-				<StyledSection
-					sx={{
-						backgroundColor: '#FAFAFA',
-					}}>
+				<StyledSection>
 					<Container>
-						<BalanceView />
-						<Box sx={{ marginTop: '58px' }}>
-							<BalanceList />
-						</Box>
+						<PortfolioView />
+
+            { !publicKey && <BackdropMsg /> }
 					</Container>
 				</StyledSection>
 			</main>

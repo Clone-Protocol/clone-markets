@@ -1,84 +1,62 @@
 import { Box, Stack, Button } from '@mui/material'
 import { styled } from '@mui/system'
-import Image from 'next/image'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { useCallback, useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType, FilterTypeMap } from '~/data/filter'
-
-// import { AssetList, FilterType, FilterTypeMap, fetchAssets } from '~/web3/Markets/assets'
 import Link from 'next/link'
+import { Grid, CellTicker } from '~/components/Common/DataGrid'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
-import { useWallet } from '@solana/wallet-adapter-react'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
+import SearchInput from '~/components/Markets/SearchInput'
+import useDebounce from '~/hooks/useDebounce'
 
 const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
-	const { publicKey } = useWallet()
+  const [searchTerm, setSearchTerm] = useState('')
+  const debounceSearchTerm = useDebounce(searchTerm, 500)
 
 	const { data: assets } = useAssetsQuery({
-    userPubKey: publicKey,
 	  filter,
+    searchTerm: debounceSearchTerm ? debounceSearchTerm : '',
 	  refetchOnMount: true,
-    enabled: publicKey != null
+    enabled: true
 	})
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
 		setFilter(newValue)
 	}
 
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const newVal = e.currentTarget.value
+		if (newVal) {
+			setSearchTerm(newVal)
+		}
+	}, [searchTerm])
+
 	return (
-		<>
-			<Stack mb={2} direction="row" justifyContent="space-between">
+		<Box
+			sx={{
+				background: '#000',
+				color: '#fff',
+        padding: '18px 36px',
+        borderRadius: '10px',
+        '& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
+			}}>
+			<Stack mb={2} direction="row">
 				<PageTabs value={filter} onChange={handleFilterChange}>
 					{Object.keys(FilterTypeMap).map((f) => (
 						<PageTab key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
+        <SearchInput onChange={handleSearch} />
 			</Stack>
-			<DataGrid
-				sx={{
-					border: 0,
-          '& .MuiDataGrid-columnHeaderTitle': {
-            color: '#424242', fontSize: '12px', fontWeight: '600', margin: '0 auto'
-          },
-          '& .first--header': { 
-            '& .MuiDataGrid-columnHeaderTitle': {
-              margin: '1px'
-            },
-          },
-          '& .last--header': { 
-            '& .MuiDataGrid-columnHeaderTitle': {
-              display: 'none'
-            },
-          },
-          '& .MuiDataGrid-columnSeparator': {
-            display: 'none',
-          },
-          '& .MuiDataGrid-row': {
-            border: 0,
-          },
-          '& .MuiDataGrid-cell': {
-						border: 0,
-					},
-          '& .MuiDataGrid-withBorder': {
-            borderRight: 0,
-          }
-				}}
-				disableColumnFilter
-				disableSelectionOnClick
-				disableColumnSelector
-				disableColumnMenu
-				disableDensitySelector
-				disableExtendRowFullWidth
-				hideFooter
-				rowHeight={90}
-				autoHeight
-				columns={columns}
+			<Grid
+        headers={columns}
 				rows={assets || []}
 			/>
-		</>
+		</Box>
 	)
 }
 
@@ -87,32 +65,24 @@ let columns: GridColDef[] = [
 		field: 'iAssets',
     headerClassName: 'first--header',
 		headerName: 'iAssets',
-		flex: 2,
+		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Box display="flex" justifyContent="flex-start">
-					<Image src={params.row.tickerIcon} width="40px" height="40px" />
-					<Stack sx={{ marginLeft: '32px' }}>
-						<Box sx={{ fontSize: '14px', fontWeight: '600' }}>{params.row.tickerName}</Box>
-						<Box sx={{ color: '#6c6c6c', fontSize: '12px', fontWeight: '500' }}>
-							{params.row.tickerSymbol}
-						</Box>
-					</Stack>
-				</Box>
+        <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
 			)
 		},
 	},
 	{
 		field: 'price',
-		headerName: 'Price(USDi)',
-		flex: 1,
+		headerName: 'Price (USDi)',
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box sx={{ fontSize: '16px', fontWeight: '500', margin: '0 auto' }}>${params.value.toLocaleString()}</Box>
+			return <Box sx={{ fontSize: '14px', fontWeight: '500', marginLeft: '10px' }}>${params.value.toLocaleString()}</Box>
 		},
 	},
 	{
 		field: '24hChange',
-		headerName: '24h Change',
+		headerName: '24hr Change',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			const val = parseFloat(params.row.change24h)
@@ -139,38 +109,41 @@ let columns: GridColDef[] = [
 	{
 		field: 'trade',
     headerClassName: 'last--header',
-		headerName: 'Trade',
+		headerName: '',
+    cellClassName: 'last--cell',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Link href={`/markets/${params.row.id}/asset`}>
-					<TradeButton>Trade</TradeButton>
-				</Link>
+        <Link href={`/markets/${params.row.id}/asset`}>
+          <TradeButton>Trade</TradeButton>
+        </Link>
 			)
 		},
 	},
 ]
 
 const ChangePricePlus = styled(Box)`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
-	color: #308c54;
-  margin: 0 auto;
+	color: #00ff66;
+  margin-left: 10px;
 `
 const ChangePriceMinus = styled(Box)`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
-	color: #c94738;
-  margin: 0 auto;
+	color: #fb782e;
+  margin-left: 10px;
 `
 
 const TradeButton = styled(Button)`
 	border-radius: 8px;
-	background-color: rgba(235, 237, 242, 0.97);
-	font-size: 12px;
-	font-weight: 600;
-	width: 100px;
+	border: solid 1px #535353;
+  background-color: rgba(47, 47, 47, 0.97);
+	font-size: 11px;
+  font-weight: 500;
+	width: 82px;
 	height: 30px;
+  color: #fff;
   &:hover {
     color: #fff;
   }
