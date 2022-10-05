@@ -1,8 +1,10 @@
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useMutation } from 'react-query'
 import { useIncept } from '~/hooks/useIncept'
 import { BN } from '@project-serum/anchor'
+import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
+import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token"
 
 
 export const callTrading = async ({
@@ -24,26 +26,58 @@ export const callTrading = async ({
 
 	let assetInfo = await program.getAssetInfo(iassetIndex)
 
-	let collateralAssociatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-	let iassetAssociatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(assetInfo.iassetMint)
+	let collateralAssociatedTokenAccount = await getUSDiAccount(program);
+	let iassetAssociatedTokenAccount = await getTokenAccount(assetInfo.iassetMint, userPubKey, program.provider.connection);
+	let tx = new Transaction();
+
+	if (!collateralAssociatedTokenAccount) {
+		const usdiAssociatedToken = await getAssociatedTokenAddress(
+			program.manager!.usdiMint,
+			userPubKey,
+		);
+		collateralAssociatedTokenAccount = usdiAssociatedToken;
+		tx.add(
+			await createAssociatedTokenAccountInstruction(
+			  userPubKey,
+			  usdiAssociatedToken,
+			  userPubKey,
+			  program.manager!.usdiMint,
+			)
+		);
+	}
+
+	if (!iassetAssociatedTokenAccount) {
+		const iAssetAssociatedToken = await getAssociatedTokenAddress(
+			assetInfo.iassetMint,
+			userPubKey,
+		);
+		iassetAssociatedTokenAccount = iAssetAssociatedToken;
+		tx.add(
+			await createAssociatedTokenAccountInstruction(
+			  userPubKey,
+			  iAssetAssociatedToken,
+			  userPubKey,
+			  assetInfo.iassetMint,
+			)
+		  );
+	}
 
 	if (isBuy) {
-		await program.buySynth(
+		tx.add(await program.buySynthInstruction(
+			collateralAssociatedTokenAccount,
+			iassetAssociatedTokenAccount,
 			new BN(amountIasset * 10 ** 8),
-			collateralAssociatedTokenAccount.address,
-			iassetAssociatedTokenAccount.address,
-			iassetIndex,
-			[]
-		)
+			iassetIndex
+		))
 	} else {
-		await program.sellSynth(
+		tx.add(await program.sellSynthInstruction(
+			collateralAssociatedTokenAccount,
+			iassetAssociatedTokenAccount,
 			new BN(amountIasset * 10 ** 8),
-			collateralAssociatedTokenAccount.address,
-			iassetAssociatedTokenAccount.address,
-			iassetIndex,
-			[]
-		)
+			iassetIndex
+		))
 	}
+	await program.provider.send!(tx);
   
   return {
     result: true

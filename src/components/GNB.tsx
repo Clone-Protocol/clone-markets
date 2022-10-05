@@ -23,6 +23,10 @@ import { useIncept } from '~/hooks/useIncept'
 import MoreMenu from '~/components/Common/MoreMenu';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import "@fontsource/almarai";
+import { getUSDiAccount } from '~/utils/token_accounts'
+import { Transaction } from '@solana/web3.js'
+import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
+
 
 const GNB: React.FC = () => {
 	const router = useRouter()
@@ -91,10 +95,21 @@ const RightMenu = () => {
 			if (connected && publicKey && mintUsdi) {
 				const program = getInceptApp()
 				await program.loadManager()
+				let usdiAccount = await getUSDiAccount(program);
 
 				try {
-					const usdiAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-					await program.hackathonMintUsdi(usdiAccount.address, 10000000000)
+					const tx = new Transaction();
+					if (!usdiAccount) {
+						const ata = await getAssociatedTokenAddress(program.manager!.usdiMint, publicKey);
+						usdiAccount = ata;
+						tx.add(
+							await createAssociatedTokenAccountInstruction(publicKey, ata, publicKey, program.manager!.usdiMint)
+						)
+					}
+					tx.add(
+						await program.hackathonMintUsdiInstruction(usdiAccount, 10000000000)
+					)
+					await program.provider.send!(tx);
 				} finally {
 					setMintUsdi(false)
 				}
