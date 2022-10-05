@@ -3,6 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { useIncept } from '~/hooks/useIncept'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
+import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 
 export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: any, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return null
@@ -18,20 +19,26 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
   let iassetVal = 0.0
 
   try {
-		const associatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-    usdiVal = Number(associatedTokenAccount.amount) / 100000000;
+		const usdiAssociatedTokenAccount = await getUSDiAccount(program);
+    if (usdiAssociatedTokenAccount) {
+      const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount);
+      usdiVal = Number(usdiBalance.value.amount) / 100000000;
+    }
 	} catch (e) {
     console.error(e)
   }
 
   try {
-		const associatedTokenAccount = await program.getOrCreateAssociatedTokenAccount(
+		const associatedTokenAccount = await getTokenAccount(
       (
         await program.getPool(index)
-      ).assetInfo.iassetMint
+      ).assetInfo.iassetMint, program.provider.wallet.publicKey, program.connection
     );
+    if (associatedTokenAccount) {
+      const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount);
+      iassetVal =  Number(iassetBalance.value.amount) / 100000000;
+    }
 
-    iassetVal =  Number(associatedTokenAccount.amount) / 100000000;
 	} catch (e) {
     console.error(e)
   }

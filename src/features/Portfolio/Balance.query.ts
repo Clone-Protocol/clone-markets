@@ -2,6 +2,7 @@ import { QueryObserverOptions, useQuery } from 'react-query'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { PublicKey } from '@solana/web3.js'
 import { useIncept } from '~/hooks/useIncept'
+import { getUSDiAccount } from "~/utils/token_accounts"
 
 export const fetchBalance = async ({ program, userPubKey }: { program: Incept, userPubKey: PublicKey | null}) => {
 	if (!userPubKey) return null
@@ -12,8 +13,11 @@ export const fetchBalance = async ({ program, userPubKey }: { program: Incept, u
 	let balanceVal = 0.0
 
 	try {
-		const associatedTokenAccount = await program.getOrCreateUsdiAssociatedTokenAccount()
-    balanceVal = Number(associatedTokenAccount.amount) / 100000000;
+		const usdiAssociatedTokenAccount = await getUSDiAccount(program);
+		if (usdiAssociatedTokenAccount) {
+		  const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount);
+		  balanceVal = Number(usdiBalance.value.amount) / 100000000;
+		}
 	} catch (e) {
     console.error(e)
   }
