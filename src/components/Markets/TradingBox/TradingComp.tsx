@@ -1,5 +1,5 @@
 import { styled, FormHelperText, Box, Stack, Button } from '@mui/material'
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useEffect} from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
@@ -43,7 +43,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   const [tabIdx, setTabIdx] = useState(0)
-  const [convertVal, setConvertVal] = useState(50)
+  const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
 
@@ -99,29 +99,49 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     setTabIdx(newTabIdx)
 	}
 
+  useEffect(() => {
+    calculateTotalAmountByConvert(convertVal)
+  }, [tabIdx])
+
   const { mutateAsync } = useTradingMutation(publicKey)
 
 	const handleChangeConvert = useCallback((event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
       setConvertVal(newValue)
-      if (tabIdx === 0) {
-        calculateTotalAmount(amountUsdi, newValue)
-      } else {
-        calculateTotalAmount(amountIasset, newValue)
-      }      
+      calculateTotalAmountByConvert(newValue)     
 		}
-	}, [amountUsdi, convertVal])
+	}, [convertVal])
 
-  const calculateTotalAmount = (inputAmount: number, convertRatio: number) => {
+  const calculateTotalAmountByConvert = (convertRatio: number) => {
     const iassetPrice = assetData?.price!
     // buy
     if (tabIdx === 0) {
-      const amountTotal = (inputAmount * convertRatio) / (100 * iassetPrice)
+      const amountUsdi = balance?.usdiVal! * convertRatio / 100;
+      const amountTotal = amountUsdi * iassetPrice;
+      setValue('amountUsdi', amountUsdi)
       setAmountTotal(amountTotal)
-      // setValue('amountIasset', amountTotal)
     } else {
     // sell
-      const amountTotal = iassetPrice * inputAmount * convertRatio / 100
+      const amountIasset = balance?.iassetVal! * convertRatio / 100;
+      const amountTotal = amountIasset * iassetPrice
+      setValue('amountIasset', amountIasset)
+      setAmountTotal(amountTotal)
+    }
+  }
+
+  const calculateTotalAmountByFrom = (newValue: number) => {
+    const iassetPrice = assetData?.price!
+    // buy
+    if (tabIdx === 0) {
+      const convertRatio = newValue * 100 / balance?.usdiVal!
+      const amountTotal = newValue * iassetPrice;
+      setConvertVal(convertRatio)
+      setAmountTotal(amountTotal)
+    } else {
+    // sell
+      const convertRatio = newValue * 100 / balance?.iassetVal!
+      const amountTotal = newValue * iassetPrice
+      setConvertVal(convertRatio)
       setAmountTotal(amountTotal)
     }
   }
@@ -204,7 +224,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const usdiAmt = parseFloat(event.currentTarget.value)
                           field.onChange(usdiAmt)
-                          calculateTotalAmount(usdiAmt, convertVal)
+                          calculateTotalAmountByFrom(usdiAmt)
                         }}
                         onMax={(balance: number) => {
                           field.onChange(balance)
@@ -238,7 +258,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const iassetAmt = parseFloat(event.currentTarget.value)
                           field.onChange(iassetAmt)
-                          calculateTotalAmount(iassetAmt, convertVal)
+                          calculateTotalAmountByFrom(iassetAmt)
                         }}
                         onMax={(balance: number) => {
                           field.onChange(balance)

@@ -46,7 +46,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 
 const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 	const valueLabelFormat = (value: number) => {
-		return `${value}%`
+		return `${value.toFixed(0)}%`
 	}
 
 	return (

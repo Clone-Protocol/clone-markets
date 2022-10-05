@@ -26,7 +26,7 @@ const AssetPage: NextPage = () => {
 					sx={{
 						backgroundColor: '#000',
 					}}>
-					<Grid container spacing={1}>
+					<Grid container spacing={1} justifyContent="center">
 						<Grid item xs={12} md={7} sx={{ padding: '30px' }}>
 							<MarketDetail assetId={marketId} />
 						</Grid>

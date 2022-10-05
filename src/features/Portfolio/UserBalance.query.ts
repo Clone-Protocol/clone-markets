@@ -5,7 +5,7 @@ import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 
-export const fetchUserBalance = async ({ program, userPubKey, filter }: { program: Incept, userPubKey: PublicKey | null, filter: string}) => {
+export const fetchUserBalance = async ({ program, userPubKey }: { program: Incept, userPubKey: PublicKey | null}) => {
 	if (!userPubKey) return []
 
   await program.loadManager()
@@ -67,7 +67,7 @@ export interface BalanceList {
 
 export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['userBalance', userPubKey, filter], () => fetchUserBalance({ program: getInceptApp(), userPubKey, filter }), {
+  return useQuery(['userBalance', userPubKey, filter], () => fetchUserBalance({ program: getInceptApp(), userPubKey }), {
     refetchOnMount,
     enabled,
 		select: (assets) => assets.filter((asset) => {

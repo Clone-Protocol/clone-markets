@@ -37,7 +37,7 @@ const RateLoadingIndicator = () => {
 export default RateLoadingIndicator
 
 const Wrapper = styled(Box)`
-  width: 129px;
+  width: 159px;
   height: 35px;
   padding: 4px 11px 1px 8px;
   border-radius: 10px;
