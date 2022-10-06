@@ -25,46 +25,64 @@ const PortfolioView = () => {
 
 	const { data: assets } = useUserBalanceQuery({
     userPubKey: publicKey,
-    filter: selectedFilter as FilterType,
 	  refetchOnMount: true,
     enabled: publicKey != null
 	})
+	const [newAssets, setNewAssets] = useState<any>([])
 
 	useEffect(() => {
-		// only called when filter is all
-		if (assets && assets.length > 0 && selectedFilter === 'all') {
-			const result: any = []
-			let totalBalance = 0
-			assets.forEach((asset) => {
-				if (result[asset.assetType]) {
-					result[asset.assetType].val += asset.usdiBalance
-				} else {
-					result[asset.assetType] = {
-						id: asset.assetType,
-						val: asset.usdiBalance
-					}
-			  }
-				totalBalance += asset.usdiBalance
-			})
+		const filter = selectedFilter as FilterType
 
-			const ordered = result.sort((a: any, b: any) => a.val < b.val ? 1 : -1)
-
-			const finalPie = ordered.map((item: any) => {
-				const percentVal = item.val * 100 / totalBalance
-				if (item.id === AssetType.Crypto) {
-					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal }
-				} else if (item.id === AssetType.Stocks) {
-					return { key: 'istocks', name: FilterTypeMap.istocks, value: percentVal }
-				} else if (item.id === AssetType.Fx) {
-					return { key: 'ifx', name: FilterTypeMap.ifx, value: percentVal }
-				} else if (item.id === AssetType.Commodities) {
-					return { key: 'icommodities', name: FilterTypeMap.icommodities, value: percentVal }
+		if (assets && assets.length > 0) {
+			const newAssets = assets.filter((asset) => {
+				if (filter === 'icrypto') {
+					return asset.assetType === AssetType.Crypto
+				} else if (filter === 'ifx') {
+					return asset.assetType === AssetType.Fx
+				} else if (filter === 'icommodities') {
+					return asset.assetType === AssetType.Commodities
+				} else if (filter === 'istocks') {
+					return asset.assetType === AssetType.Stocks
 				}
+				return true;
 			})
-			console.log('f', finalPie)
-			setDataPie(finalPie)
+			setNewAssets(newAssets)
+
+			// only called when filter is all
+			if (filter === 'all') {
+				const result: any = []
+				let totalBalance = 0
+				newAssets.forEach((asset) => {
+					if (result[asset.assetType]) {
+						result[asset.assetType].val += asset.usdiBalance
+					} else {
+						result[asset.assetType] = {
+							id: asset.assetType,
+							val: asset.usdiBalance
+						}
+					}
+					totalBalance += asset.usdiBalance
+				})
+
+				const ordered = result.sort((a: any, b: any) => a.val < b.val ? 1 : -1)
+
+				const finalPie = ordered.map((item: any) => {
+					const percentVal = item.val * 100 / totalBalance
+					if (item.id === AssetType.Crypto) {
+						return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal }
+					} else if (item.id === AssetType.Stocks) {
+						return { key: 'istocks', name: FilterTypeMap.istocks, value: percentVal }
+					} else if (item.id === AssetType.Fx) {
+						return { key: 'ifx', name: FilterTypeMap.ifx, value: percentVal }
+					} else if (item.id === AssetType.Commodities) {
+						return { key: 'icommodities', name: FilterTypeMap.icommodities, value: percentVal }
+					}
+				})
+				console.log('f', finalPie)
+				setDataPie(finalPie)
+			}
 		}
-	}, [assets])
+	}, [assets, selectedFilter])
 
 	// const dataPie : PieItem[] = [
   //   { key: 'istocks', name: FilterTypeMap.istocks, value: 45 },
@@ -79,7 +97,7 @@ const PortfolioView = () => {
 			  { balance ? <BalanceView balance={balance} data={dataPie} /> : <></> }
 			</Box>
 			<Box sx={{ marginTop: '58px' }}>
-			  <BalanceList assets={assets} pieitems={dataPie} balance={balance} />
+			  <BalanceList assets={newAssets} pieitems={dataPie} balance={balance} />
 			</Box>
 		</div>
 	)

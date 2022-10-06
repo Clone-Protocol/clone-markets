@@ -47,7 +47,6 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Incep
 
 interface GetAssetsProps {
 	userPubKey: PublicKey | null
-	filter: FilterType
   refetchOnMount?: QueryObserverOptions['refetchOnMount']
   enabled?: boolean
 }
@@ -65,22 +64,22 @@ export interface BalanceList {
 	percentVal?: number
 }
 
-export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useUserBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: GetAssetsProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['userBalance', userPubKey, filter], () => fetchUserBalance({ program: getInceptApp(), userPubKey }), {
+  return useQuery(['userBalance', userPubKey], () => fetchUserBalance({ program: getInceptApp(), userPubKey }), {
     refetchOnMount,
     enabled,
-		select: (assets) => assets.filter((asset) => {
-			if (filter === 'icrypto') {
-				return asset.assetType === AssetType.Crypto
-			} else if (filter === 'ifx') {
-				return asset.assetType === AssetType.Fx
-			} else if (filter === 'icommodities') {
-				return asset.assetType === AssetType.Commodities
-			} else if (filter === 'istocks') {
-				return asset.assetType === AssetType.Stocks
-			}
-			return true;
-		})
+		// select: (assets) => assets.filter((asset) => {
+		// 	if (filter === 'icrypto') {
+		// 		return asset.assetType === AssetType.Crypto
+		// 	} else if (filter === 'ifx') {
+		// 		return asset.assetType === AssetType.Fx
+		// 	} else if (filter === 'icommodities') {
+		// 		return asset.assetType === AssetType.Commodities
+		// 	} else if (filter === 'istocks') {
+		// 		return asset.assetType === AssetType.Stocks
+		// 	}
+		// 	return true;
+		// })
   })
 }
