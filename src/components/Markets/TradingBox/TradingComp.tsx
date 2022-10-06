@@ -72,7 +72,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   const {
 		handleSubmit,
 		control,
-		formState: { isDirty, errors },
+		formState: { errors },
 		watch,
     setValue
 	} = useForm({
@@ -117,7 +117,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     // buy
     if (tabIdx === 0) {
       const amountUsdi = balance?.usdiVal! * convertRatio / 100;
-      const amountTotal = amountUsdi * iassetPrice;
+      const amountTotal = amountUsdi / iassetPrice;
       setValue('amountUsdi', amountUsdi)
       setAmountTotal(amountTotal)
     } else {
@@ -134,7 +134,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     // buy
     if (tabIdx === 0) {
       const convertRatio = newValue * 100 / balance?.usdiVal!
-      const amountTotal = newValue * iassetPrice;
+      const amountTotal = newValue / iassetPrice;
       setConvertVal(convertRatio)
       setAmountTotal(amountTotal)
     } else {
@@ -299,7 +299,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               </IconButton>
             </Stack>
 
-            <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!isDirty || !isValid}>Confirm market { tabIdx === 0 ? 'buy' : 'sell' }</ActionButton>
+            <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={amountTotal === 0 || !isValid}>Confirm market { tabIdx === 0 ? 'buy' : 'sell' }</ActionButton>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
               Order details <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
