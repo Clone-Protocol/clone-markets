@@ -28,7 +28,7 @@ const RateLoadingIndicator = () => {
 	return (
     <Wrapper>
       <div style={{ marginRight: '8px'}}>Rate refreshes in</div>
-      <CircularProgress variant="determinate" sx={{ color: '#fff' }} size={23}
+      <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#fff' }} size={23}
         thickness={8} value={progress} />
     </Wrapper>
 	)
@@ -36,16 +36,20 @@ const RateLoadingIndicator = () => {
 
 export default RateLoadingIndicator
 
+const CustomCircularProgress = styled(CircularProgress)`
+  .MuiCircularProgress-root	{
+    color: #525252;
+  }
+`
+
 const Wrapper = styled(Box)`
   width: 159px;
-  height: 35px;
-  padding: 4px 11px 1px 8px;
   border-radius: 10px;
-  background-color: #16171a;
+  margin-top: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
   font-weight: 500;
-  color: #989898;
+  color: #868686;
 `

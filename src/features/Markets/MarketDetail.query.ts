@@ -5,9 +5,7 @@ import { assetMapping } from 'src/data/assets'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
 
-export const fetchMarketDetail = async ({ program, userPubKey, index }: { program: Incept, userPubKey: PublicKey | null, index: number }) => {
-	if (!userPubKey) return
-
+export const fetchMarketDetail = async ({ program, index }: { program: Incept, index: number }) => {
 	console.log('fetchMarketDetail', index)
 
 	await program.loadManager()
@@ -46,7 +44,6 @@ export const fetchMarketDetailDefault = () => {
 }
 
 interface GetProps {
-	userPubKey: PublicKey | null
 	index: number
   refetchOnMount?: QueryObserverOptions['refetchOnMount']
   enabled?: boolean
@@ -58,9 +55,9 @@ export interface PairData {
 	tickerSymbol: string
 }
 
-export function useMarketDetailQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
+export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['marketDetail', userPubKey, index], () => fetchMarketDetail({ program: getInceptApp(), userPubKey, index }), {
+  return useQuery(['marketDetail', index], () => fetchMarketDetail({ program: getInceptApp(), index }), {
     refetchOnMount,
     enabled
   })

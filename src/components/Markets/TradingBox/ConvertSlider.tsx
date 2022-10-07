@@ -55,7 +55,7 @@ const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 				display: 'flex',
 			}}>
 			<ValueBox>{valueLabelFormat(value)}</ValueBox>
-			<Box width="270px">
+			<Box width="270px" sx={value === 0 ? { marginLeft: '12px' } : {}}>
 				<StyledSlider
           sx={
             isBuy ? {

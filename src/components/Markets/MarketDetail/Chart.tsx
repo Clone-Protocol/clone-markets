@@ -41,7 +41,7 @@ const Chart = ({ price }: { price: number }) => {
         setValue={setChartHover}
         topLeft={
           <Box>
-            <SelectValue>{formatDollarAmount(chartHover, 2, true)}</SelectValue>
+            <SelectValue>${chartHover?.toLocaleString()}</SelectValue>
           </Box>
         }
         topRight={

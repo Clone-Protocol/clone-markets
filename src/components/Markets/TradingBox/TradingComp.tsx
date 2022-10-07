@@ -3,8 +3,8 @@ import React, {useState, useCallback, useEffect} from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
-import reloadIcon from 'public/images/reload-icon.png'
-import settingsIcon from 'public/images/settings-icon.png'
+import reloadIcon from 'public/images/reload-icon.svg'
+import settingsIcon from 'public/images/setting-icon.svg'
 import { useSnackbar } from 'notistack'
 import { useForm, Controller } from 'react-hook-form'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -15,6 +15,8 @@ import BackdropMsg from '~/components/Markets/TradingBox/BackdropMsg'
 import { useTradingMutation } from '~/features/Markets/Trading.mutation'
 import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import LoadingIndicator, { LoadingWrapper } from '~/components/Common/LoadingIndicator'
+import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
+import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import BackdropPartMsg from './BackdropPartMsg'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
@@ -61,7 +63,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   });
 
   const { data: assetData } = useMarketDetailQuery({
-    userPubKey: publicKey,
     index: assetIndex,
     refetchOnMount: true,
     enabled: publicKey != null
@@ -74,7 +75,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 		control,
 		formState: { errors },
 		watch,
-    setValue
+    setValue,
+    trigger
 	} = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -108,7 +110,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	const handleChangeConvert = useCallback((event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
       setConvertVal(newValue)
-      calculateTotalAmountByConvert(newValue)     
+      calculateTotalAmountByConvert(newValue)    
+      trigger() 
 		}
 	}, [convertVal])
 
@@ -302,7 +305,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={amountTotal === 0 || !isValid}>Confirm market { tabIdx === 0 ? 'buy' : 'sell' }</ActionButton>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
-              Order details <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? '∧' : '∨' }</ArrowIcon>
+              <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon /> }</ArrowIcon>
             </TitleOrderDetails>
             { openOrderDetails && <OrderDetails iassetPrice={assetData?.price!} iassetAmount={amountTotal} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={0.1} tradeFee={0.15} /> }
 
@@ -331,6 +334,9 @@ const IconButton = styled('div')`
   align-content: center;
   padding-top: 6px;
   border-radius: 4px;
+  &:hover {
+    background-color: #3e3e3e;
+  }
 `
 
 const ActionButton = styled(Button)`
@@ -356,13 +362,14 @@ const ActionButton = styled(Button)`
 const TitleOrderDetails = styled('div')`
   cursor: pointer; 
   text-align: left; 
+  display: flex;
   color: #fff;
   font-size: 11px;
   font-weight: 600; 
   margin-left: 10px;
 `
 
-const ArrowIcon = styled('span')`
+const ArrowIcon = styled('div')`
   width: 9.4px;
   height: 6px;
   color: #0f6;
