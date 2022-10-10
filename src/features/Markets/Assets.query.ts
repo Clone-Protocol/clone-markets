@@ -2,9 +2,16 @@ import { QueryObserverOptions, useQuery } from 'react-query'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
+import { useDataLoading } from '~/hooks/useDataLoading'
+import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
 
-export const fetchAssets = async ({ program }: { program: Incept }) => {
+export const fetchAssets = async ({ program, setStartTimer }: { program: Incept, setStartTimer: (start: boolean) => void }) => {
+	console.log('fetchAssets')
+	// start timer in data-loading-indicator
+  setStartTimer(false);
+  setStartTimer(true);
+	
 	await program.loadManager()
 	const iassetInfos = await program.getiAssetInfo()
 	const result: AssetList[] = []
@@ -48,8 +55,12 @@ export interface AssetList {
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['assets', filter], () => fetchAssets({ program: getInceptApp() }), {
+	const { setStartTimer } = useDataLoading()
+
+  return useQuery(['assets'], () => fetchAssets({ program: getInceptApp(), setStartTimer }), {
     refetchOnMount,
+		refetchInterval: REFETCH_CYCLE,
+		refetchIntervalInBackground: true,
     enabled,
     select: (assets) => {
 			if (searchTerm && searchTerm.length > 0) {

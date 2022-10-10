@@ -3,15 +3,20 @@ import { PublicKey } from '@solana/web3.js'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
+import { useDataLoading } from '~/hooks/useDataLoading'
+import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
 
-export const fetchUserBalance = async ({ program, userPubKey }: { program: Incept, userPubKey: PublicKey | null}) => {
+export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: Incept, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return []
 
+	console.log('fetchUserBalance')
+	// start timer in data-loading-indicator
+  setStartTimer(false);
+  setStartTimer(true);
+
   await program.loadManager()
-
 	const iassetInfos = await program.getUseriAssetInfo()
-
 	const result: BalanceList[] = []
 
 	let i = 1
@@ -47,6 +52,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Incep
 
 interface GetAssetsProps {
 	userPubKey: PublicKey | null
+	filter: FilterType
   refetchOnMount?: QueryObserverOptions['refetchOnMount']
   enabled?: boolean
 }
@@ -64,22 +70,26 @@ export interface BalanceList {
 	percentVal?: number
 }
 
-export function useUserBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
   const { getInceptApp } = useIncept()
-  return useQuery(['userBalance', userPubKey], () => fetchUserBalance({ program: getInceptApp(), userPubKey }), {
+	const { setStartTimer } = useDataLoading()
+
+  return useQuery(['userBalance', userPubKey], () => fetchUserBalance({ program: getInceptApp(), userPubKey, setStartTimer }), {
     refetchOnMount,
+		refetchInterval: REFETCH_CYCLE,
+		refetchIntervalInBackground: true,
     enabled,
-		// select: (assets) => assets.filter((asset) => {
-		// 	if (filter === 'icrypto') {
-		// 		return asset.assetType === AssetType.Crypto
-		// 	} else if (filter === 'ifx') {
-		// 		return asset.assetType === AssetType.Fx
-		// 	} else if (filter === 'icommodities') {
-		// 		return asset.assetType === AssetType.Commodities
-		// 	} else if (filter === 'istocks') {
-		// 		return asset.assetType === AssetType.Stocks
-		// 	}
-		// 	return true;
-		// })
+		select: (assets) => assets.filter((asset) => {
+			if (filter === 'icrypto') {
+				return asset.assetType === AssetType.Crypto
+			} else if (filter === 'ifx') {
+				return asset.assetType === AssetType.Fx
+			} else if (filter === 'icommodities') {
+				return asset.assetType === AssetType.Commodities
+			} else if (filter === 'istocks') {
+				return asset.assetType === AssetType.Stocks
+			}
+			return true;
+		})
   })
 }

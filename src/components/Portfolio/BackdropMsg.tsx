@@ -16,10 +16,11 @@ const Wrapper = styled('div')`
   justify-content: center;
   align-items: center;
   top: 60px;
+  left: 260px;
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  background-color: rgba(20, 20, 20, 0.95);
+  background-color: rgba(0, 0, 0, 0.88);
   z-index: 800;
 `
 

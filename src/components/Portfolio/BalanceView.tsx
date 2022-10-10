@@ -15,16 +15,19 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
   const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('iPortfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
+	const [selectedUsdiAmount, setSelectedUsdiAmount] = useState(0)
 
 	useEffect(() => {
 		if (selectedFilter === 'all') {
 			setSelectedTitle('iPortfolio')
 			setSelectedIdx(-1)
+			setSelectedUsdiAmount(balance.totalVal);
 		} else {
 			data.forEach((item, index) => {
 				if (item.key === selectedFilter) {
 					setSelectedTitle(item.name)
 					setSelectedIdx(index)
+					setSelectedUsdiAmount(item.usdiAmount)
 					return;
 				}
 			})
@@ -36,7 +39,7 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 			<Box sx={{ width: '200px', marginBottom: '40px' }}>
 				<Title>{ selectedTitle }</Title>
 				<BalanceValue>
-					${balance.totalVal.toLocaleString()}
+					${selectedUsdiAmount.toLocaleString()}
 				</BalanceValue>
 			</Box>
 			<Box display="flex" alignItems="center">

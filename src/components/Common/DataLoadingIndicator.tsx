@@ -28,7 +28,7 @@ const DataLoadingIndicator = () => {
 	return (
     <Wrapper>
       <div style={{ marginRight: '8px'}}>Data refresh in</div>
-      <CircularProgress variant="determinate" sx={{ color: '#809cff' }} size={23}
+      <CircularProgress variant="determinate" sx={{ color: '#fff' }} size={23}
         thickness={8} value={progress} />
     </Wrapper>
 	)

@@ -19,7 +19,7 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
-// import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
+import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import "@fontsource/almarai";
@@ -81,6 +81,7 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu = () => {
+	const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
 	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
@@ -156,7 +157,9 @@ const RightMenu = () => {
 
 	return (
 		<Box display="flex">
-      {/* <DataLoadingIndicator /> */}
+			{ (router.asPath === '/' || router.asPath === '/iportfolio') &&
+      	<DataLoadingIndicator />
+			}
 			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px' }}>
 				Get USDi
 			</HeaderButton>
