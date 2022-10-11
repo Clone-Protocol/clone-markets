@@ -65,7 +65,7 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
             <Box sx={{ width: '110px', fontSize: '10px', fontWeight: '500'}}>
               Custom Slippage
             </Box>
-            <InputAmount id="ip-amount" type="number" min={0} max={1} step=".1" sx={ customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} min={0} value={customSlippage} onChange={onChangeCustom}  />
+            <InputAmount id="ip-amount" type="number" min={0} max={1} step=".1" placeholder="0" sx={ customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} min={0} value={customSlippage} onChange={onChangeCustom}  />
           </FormStack>
         </FormControl>
 			</Box>

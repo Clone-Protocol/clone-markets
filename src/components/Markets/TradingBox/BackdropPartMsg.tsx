@@ -15,9 +15,10 @@ const Wrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 0;
+  // bottom: 0;
+  top: 200px;
   width: 343px;
-  height: 344px;
+  height: 100%;
   border-radius: 10px;
   background-color: rgba(20, 20, 20, 0.95);
   z-index: 800;

@@ -10,9 +10,10 @@ interface Props {
 	value?: number
 	onChange?: any
   onMax?: any
+	max?: number
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, onChange, onMax }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, onChange, onMax, max }) => {
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between" sx={{ fontSize: '11px', fontWeight: '500', marginBottom: '3px' }}>
@@ -26,7 +27,7 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 						<div>{ticker}</div>
 					</Box>
 				</Box>
-				<InputAmount id="ip-amount" type="number" sx={ value && value > 0 ? { color: '#fff' } : { color: '#adadad' }} value={value} onChange={onChange} />
+				<InputAmount id="ip-amount" type="number" sx={ value && value > 0 ? { color: '#fff' } : { color: '#adadad' }} placeholder="0.00" min={0} max={max} value={value && value > 0 ? value : ""} onChange={onChange} />
 			</FormStack>
 		</FormControl>
 	)

@@ -225,15 +225,17 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         tickerIcon={fromPair.tickerIcon}
                         ticker={fromPair.tickerSymbol}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                          const usdiAmt = parseFloat(event.currentTarget.value)
+                          const usdiAmt = parseFloat(event.currentTarget.value) || 0
                           field.onChange(usdiAmt)
                           calculateTotalAmountByFrom(usdiAmt)
                         }}
                         onMax={(balance: number) => {
                           field.onChange(balance)
+                          calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
                         balance={balance?.usdiVal}
+                        max={balance?.usdiVal}
                       />
                     )}
                   />
@@ -259,15 +261,17 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         tickerIcon={assetData?.tickerIcon!}
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                          const iassetAmt = parseFloat(event.currentTarget.value)
+                          const iassetAmt = parseFloat(event.currentTarget.value) || 0
                           field.onChange(iassetAmt)
                           calculateTotalAmountByFrom(iassetAmt)
                         }}
                         onMax={(balance: number) => {
                           field.onChange(balance)
+                          calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
                         balance={balance?.iassetVal}
+                        max={balance?.iassetVal}
                       />
                     )}
                   />

@@ -40,6 +40,9 @@ export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
         border: '0',
         borderBottom: '1px solid #777'
       },
+      '& .MuiDataGrid-columnHeader:focus': {
+        outline: 'none',
+      },
       '& .MuiDataGrid-columnSeparator': {
         display: 'none',
       },
