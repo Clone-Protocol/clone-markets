@@ -133,6 +133,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
+    console.log('gg', newValue)
     const iassetPrice = assetData?.price!
     // buy
     if (tabIdx === 0) {
