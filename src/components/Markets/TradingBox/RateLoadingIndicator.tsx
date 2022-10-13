@@ -28,8 +28,19 @@ const RateLoadingIndicator = () => {
 	return (
     <Wrapper>
       <div style={{ marginRight: '8px'}}>Rate refreshes in</div>
-      <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#fff' }} size={23}
-        thickness={8} value={progress} />
+      <Box sx={{ position: 'relative' }}>
+        <CircularProgress
+          variant="determinate"
+          sx={{
+            color: '#525252'
+          }}
+          size={23}
+          thickness={8}
+          value={100}
+        />
+        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#fff', position: 'absolute', left: 0 }} size={23}
+          thickness={8} value={progress} />
+      </Box>
     </Wrapper>
 	)
 }
