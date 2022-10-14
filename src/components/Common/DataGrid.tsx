@@ -4,7 +4,8 @@ import Image from 'next/image'
 
 interface GridProps {
   headers: GridColDef[],
-  rows: any
+  rows: any,
+  minHeight: any,
 }
 
 const CustomNoRowsOverlay = () => {
@@ -15,12 +16,12 @@ const CustomNoRowsOverlay = () => {
   )
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, minHeight }) => (
   <DataGrid
     sx={{
       border: 0,
       color: '#fff',
-      minHeight: `${window.innerHeight - 80}px`,
+      minHeight: `${minHeight}px`,
       height: '100%',
       '& .last--cell': {
         display: 'flex',

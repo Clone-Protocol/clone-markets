@@ -55,6 +55,7 @@ const MarketList = () => {
 			<Grid
         headers={columns}
 				rows={assets || []}
+				minHeight={window.innerHeight - 50}
 			/>
 		</Box>
 	)

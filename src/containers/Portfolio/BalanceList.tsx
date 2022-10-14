@@ -44,6 +44,7 @@ const BalanceList: React.FC<Props> = ({ assets, pieitems, balance }) => {
       <Grid
         headers={columns}
 				rows={assets || []}
+				minHeight={window.innerHeight - 280}
 			/>
 		</>
 	)
