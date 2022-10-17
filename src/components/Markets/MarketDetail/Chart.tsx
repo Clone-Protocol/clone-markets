@@ -39,13 +39,14 @@ const Chart = ({ price }: { price: number }) => {
         data={totalPrices?.chartData}
         value={chartHover}
         setValue={setChartHover}
+        maxY={totalPrices?.maxValue}
         topLeft={
-          <Box>
+          <Box style={{ marginBottom: '25px' }}>
             <SelectValue>${chartHover?.toLocaleString()}</SelectValue>
           </Box>
         }
         topRight={
-          <div style={{ marginTop: '16px' }}>
+          <div style={{ marginTop: '25px', marginBottom: '30px' }}>
             <TimeTabs value={filterTime} onChange={handleFilterChange}>
               {Object.keys(FilterTimeMap).map((f) => (
                 <TimeTab key={f} value={f} label={FilterTimeMap[f as FilterTime]} />
@@ -66,7 +67,6 @@ const SelectValue = styled(Box)`
   letter-spacing: normal;
   text-align: left;
   color: #fff;
-  margin-left: 20px;
 `
 
 export default Chart

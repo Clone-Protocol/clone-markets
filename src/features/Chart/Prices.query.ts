@@ -35,8 +35,12 @@ export const fetchTotalPrices = async ({ timeframe, currentPrice } : { timeframe
     }
   ]
 
+  const allValues = chartData.map(elem => elem.value!)
+  const maxValue = Math.floor(Math.max(...allValues))
+
   return {
     chartData,
+    maxValue
   }
 }
 

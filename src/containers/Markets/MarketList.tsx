@@ -32,6 +32,8 @@ const MarketList = () => {
 		const newVal = e.currentTarget.value
 		if (newVal) {
 			setSearchTerm(newVal)
+		} else {
+			setSearchTerm('')
 		}
 	}, [searchTerm])
 

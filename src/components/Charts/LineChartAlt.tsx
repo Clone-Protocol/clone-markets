@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, ReactNode } from 'react';
 import { styled } from '@mui/system'
 import { Card, Box } from '@mui/material'
-import { ResponsiveContainer, XAxis, Tooltip, AreaChart, Area } from 'recharts'
+import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from 'recharts'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -21,6 +21,7 @@ export type LineChartProps = {
   topRight?: ReactNode | undefined
   bottomLeft?: ReactNode | undefined
   bottomRight?: ReactNode | undefined
+  maxY?: number
 } & React.HTMLAttributes<HTMLDivElement>
 
 
@@ -36,6 +37,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
   bottomLeft,
   bottomRight,
   minHeight = 307,
+  maxY,
   ...rest
 }) => {
   const parsedValue = value
@@ -48,13 +50,11 @@ const LineChartAlt: React.FC<LineChartProps> = ({
       </Box>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          width={700}
+          width={709}
           height={300}
           data={data}
           margin={{
             top: 5,
-            right: 30,
-            left: 20,
             bottom: 5,
           }}
           onMouseLeave={() => {
@@ -77,6 +77,10 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             tickFormatter={(time) => dayjs(time).format('DD')}
             minTickGap={10}
           />
+          {/* <YAxis
+            type="number"
+            domain={[0, maxY!]}
+          /> */}
           <Tooltip
             cursor={{ stroke: '#2C2F36' }}
             contentStyle={{ display: 'none' }}
@@ -98,9 +102,9 @@ const LineChartAlt: React.FC<LineChartProps> = ({
 const Wrapper = styled(Card)`
   width: 100%;
   max-width: 729px;
-  height: 287px;
-  padding: 1rem;
-  padding-right: 2rem;
+  height: 297px;
+  padding: 5px;
+  padding-right: 1rem;
   display: flex;
   background-color: #000;
   flex-direction: column;

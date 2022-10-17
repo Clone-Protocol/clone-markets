@@ -54,25 +54,36 @@ const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 			sx={{
 				display: 'flex',
 			}}>
-			<ValueBox>{valueLabelFormat(value)}</ValueBox>
-			<Box width="270px" sx={value === 0 ? { marginLeft: '12px' } : {}}>
+			<ValueBox>{ value <= 100 ? valueLabelFormat(value) : '100%+'}</ValueBox>
+			<Box width="252px" sx={value === 0 ? { marginLeft: '12px' } : {}}>
 				<StyledSlider
           sx={
-            isBuy ? {
-              '& .MuiSlider-thumb': {
-                border: `2px solid #00ff66`,
-              },
-              '& .MuiSlider-track': {
-                background: `#00ff66`
-              }
-            } : {
-              '& .MuiSlider-thumb': {
-                border: `2px solid #fb782e`,
-              },
-              '& .MuiSlider-track': {
-                background: `#fb782e`
-              }
-            }}
+						value <= 100 ?
+							isBuy ? {
+								'& .MuiSlider-thumb': {
+									border: `2px solid #00ff66`,
+								},
+								'& .MuiSlider-track': {
+									background: `#00ff66`
+								}
+							} : {
+								'& .MuiSlider-thumb': {
+									border: `2px solid #fb782e`,
+								},
+								'& .MuiSlider-track': {
+									background: `#fb782e`
+								}
+							}
+						:
+							{
+								'& .MuiSlider-thumb': {
+									border: `1px solid #282828`,
+								},
+								'& .MuiSlider-track': {
+									background: `#282828`
+								}
+							}
+					}
 					value={value}
 					min={0}
 					step={5}

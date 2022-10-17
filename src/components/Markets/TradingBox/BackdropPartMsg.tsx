@@ -16,8 +16,9 @@ const Wrapper = styled('div')`
   justify-content: center;
   align-items: center;
   // bottom: 0;
+  left: 0px;
   top: 200px;
-  width: 343px;
+  width: 100%;
   height: 100%;
   border-radius: 10px;
   background-color: rgba(20, 20, 20, 0.95);

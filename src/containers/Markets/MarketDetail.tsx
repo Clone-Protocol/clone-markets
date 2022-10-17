@@ -16,7 +16,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 		<>
 			{asset ? (
 				<Stack mb={2} direction="column" padding={5} paddingY={1}>
-					<Box sx={{ padding: '10px' }}>
+					<Box>
 						<Box display="inline-flex" alignItems="center" sx={{ height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', padding: '6px 12px' }}>
 							<Image src={asset.tickerIcon} width="45px" height="45px" />
 							<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>

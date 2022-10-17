@@ -133,7 +133,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
-    console.log('gg', newValue)
     const iassetPrice = assetData?.price!
     // buy
     if (tabIdx === 0) {
@@ -240,7 +239,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                       />
                     )}
                   />
-                  <FormHelperText error={!!errors.amountUsdi?.message}>{errors.amountUsdi?.message}</FormHelperText>
+                  {/* <FormHelperText error={!!errors.amountUsdi?.message}>{errors.amountUsdi?.message}</FormHelperText> */}
                 </Box>
               :
                 <Box>
@@ -276,7 +275,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                       />
                     )}
                   />
-                  <FormHelperText error={!!errors.amountIasset?.message}>{errors.amountIasset?.message}</FormHelperText>
+                  {/* <FormHelperText error={!!errors.amountIasset?.message}>{errors.amountIasset?.message}</FormHelperText> */}
                 </Box>
             }
           </Box>
@@ -307,7 +306,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               </IconButton>
             </Stack>
 
-            <ActionButton sx={ tabIdx===0? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={amountTotal === 0 || !isValid}>Confirm market { tabIdx === 0 ? 'buy' : 'sell' }</ActionButton>
+            <ActionButton sx={ tabIdx===0 ? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!amountTotal || amountTotal === 0 || !isValid}>
+              {!isValid ? `Insufficient Balance` : `Confirm market ${ tabIdx === 0 ? 'buy' : 'sell' }`}
+            </ActionButton>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
               <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon /> }</ArrowIcon>
