@@ -290,7 +290,7 @@ const ConnectButton = styled(Button)`
 const WalletSelectBox = styled(Stack)`
   position: absolute;
   top: 60px;
-  right: 59px;
+  right: 54px;
   width: 163px;
   height: 139px;
   padding: 14px 17px 16px;

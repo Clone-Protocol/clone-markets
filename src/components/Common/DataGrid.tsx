@@ -59,7 +59,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, minHeight }) => (
         outline: '0'
       },
       '& .MuiDataGrid-withBorder': {
-        borderRight: '1px solid #1b1b1b',
+        borderRight: '0px solid #1b1b1b',
         borderRadius: '10px',
         marginLeft: '-5px'
       }
