@@ -99,6 +99,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
     setTabIdx(newTabIdx)
+    setOpenOrderDetails(false)
 	}
 
   useEffect(() => {
@@ -280,7 +281,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             }
           </Box>
 
-          <Box>
+          <Box sx={{ height: '100%' }}>
             <Box sx={{ marginTop: '23px', marginBottom: '23px' }}>
               <ConvertSlider isBuy={tabIdx===0} value={convertVal} onChange={handleChangeConvert} />
             </Box>

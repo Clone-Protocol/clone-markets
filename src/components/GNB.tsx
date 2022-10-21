@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Image from 'next/image'
-import logoIcon from 'public/images/incept-logo.svg'
+import logoIcon from 'public/images/logo-markets.svg'
 import walletIcon from 'public/images/wallet-icon.svg'
 import { useSnackbar } from 'notistack'
 import { IconButton, styled, Stack, Theme, useMediaQuery } from '@mui/material'
@@ -59,9 +59,8 @@ const GNB: React.FC = () => {
 			<NavPlaceholder />
 			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth={false}>
-					<Toolbar disableGutters sx={{ paddingLeft: '5px' }}>
-						<Image src={logoIcon} alt="incept" />
-            <MarketTitle>Markets</MarketTitle>
+					<Toolbar disableGutters>
+						<Image src={logoIcon} width={217} alt="incept" />
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />

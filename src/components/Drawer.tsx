@@ -92,7 +92,7 @@ const StyledListItemButton = styled(ListItemButton)`
     background-color: #2e2e2e; 
     transition: all 0.3s ease 0.2s;
   }
-  &:hover {
+  &:not(.selected):hover {
     background-color: rgba(38, 38, 38, 0.5);
   }
 `
