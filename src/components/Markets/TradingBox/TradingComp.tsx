@@ -226,7 +226,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         tickerIcon={fromPair.tickerIcon}
                         ticker={fromPair.tickerSymbol}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                          const usdiAmt = parseFloat(event.currentTarget.value) || 0
+                          const usdiAmt = parseFloat(event.currentTarget.value)
                           field.onChange(usdiAmt)
                           calculateTotalAmountByFrom(usdiAmt)
                         }}
