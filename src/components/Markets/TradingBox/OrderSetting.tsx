@@ -9,7 +9,7 @@ interface Props {
 }
 
 const OrderSetting: React.FC<Props> = ({ onBack }) => {
-  const [customSlippage, setCustomSlippage] = useState(0.0)
+  const [customSlippage, setCustomSlippage] = useState(NaN)
   const [slippage, setSlippage] = useState(0.5)
   const [localSlippage, setLocalSlippage] = useLocalStorage("slippage", 0.5)
 
@@ -27,12 +27,14 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
 	}
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.value) {
+    // if (e.currentTarget.value) {
 			const newData = parseFloat(e.currentTarget.value)
-      if (newData > 0) {
-        setCustomSlippage(newData)
+      if (isNaN(newData)) {
+        setCustomSlippage(NaN)
+      }  else if (newData <= 50) {
+        setCustomSlippage(parseFloat(newData.toFixed(2)))
       }
-    }
+    // }
   }
 
   const onSave = () => {
@@ -65,7 +67,7 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
             <Box sx={{ width: '110px', fontSize: '10px', fontWeight: '500'}}>
               Custom Slippage
             </Box>
-            <InputAmount id="ip-amount" type="number" min={0} max={1} step=".1" placeholder="0" sx={ customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} min={0} value={customSlippage} onChange={onChangeCustom}  />
+            <InputAmount id="ip-amount" type="number" step=".1" placeholder="0.0" sx={ customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} value={Number(customSlippage).toString()} onChange={onChangeCustom}  />
           </FormStack>
         </FormControl>
 			</Box>
