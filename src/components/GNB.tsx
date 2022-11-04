@@ -215,11 +215,10 @@ const MarketTitle = styled('div')`
 `
 
 const StyledAppBar = styled(AppBar)`
-	z-index: 200;
+	z-index: 900;
 	background-color: #000;
 	height: 60px;
 	position: fixed;
-	z-index: 300;
 	top: 0px;
 	left: 0px;
 	.MuiContainer-root,
