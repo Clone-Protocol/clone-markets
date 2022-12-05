@@ -95,21 +95,20 @@ const RightMenu = () => {
 			if (connected && publicKey && mintUsdi) {
 				const program = getInceptApp()
 				await program.loadManager()
-				let usdiAccount = await getUSDiAccount(program);
-
+				const usdiTokenAccount = await getUSDiAccount(program);
 				try {
-					const tx = new Transaction();
-					if (!usdiAccount) {
+					if (usdiTokenAccount === undefined) {
 						const ata = await getAssociatedTokenAddress(program.manager!.usdiMint, publicKey);
-						usdiAccount = ata;
-						tx.add(
+						const tx = new Transaction().add(
 							await createAssociatedTokenAccountInstruction(publicKey, ata, publicKey, program.manager!.usdiMint)
-						)
-					}
-					tx.add(
-						await program.hackathonMintUsdiInstruction(usdiAccount, 10000000000)
-					)
-					await program.provider.send!(tx);
+						).add(
+							await program.hackathonMintUsdiInstruction(ata, 10000000000)
+						);
+						await program.provider.send!(tx);
+
+					} else {
+						await program.hackathonMintUsdi(usdiTokenAccount!, 10000000000);
+					} 
 				} finally {
 					setMintUsdi(false)
 				}

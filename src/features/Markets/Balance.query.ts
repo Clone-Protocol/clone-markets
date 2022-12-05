@@ -4,6 +4,7 @@ import { useIncept } from '~/hooks/useIncept'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
+import { token } from '@project-serum/anchor/dist/cjs/utils'
 
 export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: any, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return null
@@ -17,11 +18,15 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 
 	let usdiVal = 0.0
   let iassetVal = 0.0
+  
+  const [tokenDataResult, usdiAtaResult] = await Promise.allSettled([
+    program.getTokenData(), getUSDiAccount(program)
+  ]);
 
   try {
-		const usdiAssociatedTokenAccount = await getUSDiAccount(program);
-    if (usdiAssociatedTokenAccount) {
-      const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount);
+		//const usdiAssociatedTokenAccount = await getUSDiAccount(program);
+    if (usdiAtaResult.status === 'fulfilled') {
+      const usdiBalance = await program.connection.getTokenAccountBalance(usdiAtaResult.value);
       usdiVal = Number(usdiBalance.value.amount) / 100000000;
     }
 	} catch (e) {
@@ -29,16 +34,15 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
   }
 
   try {
-		const associatedTokenAccount = await getTokenAccount(
-      (
-        await program.getPool(index)
-      ).assetInfo.iassetMint, program.provider.wallet.publicKey, program.connection
-    );
-    if (associatedTokenAccount) {
-      const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount);
-      iassetVal =  Number(iassetBalance.value.amount) / 100000000;
+    if (tokenDataResult.status === 'fulfilled') {
+      const associatedTokenAccount = await program.connection.getTokenAccountBalance(
+        tokenDataResult.value.pool[index].assetInfo.iassetMint
+      );
+      if (associatedTokenAccount) {
+        const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount);
+        iassetVal =  Number(iassetBalance.value.amount) / 100000000;
+      }
     }
-
 	} catch (e) {
     console.error(e)
   }

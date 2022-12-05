@@ -6,32 +6,58 @@ import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
+import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
+import { getTokenAccount } from '~/utils/token_accounts'
 
 export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: Incept, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return []
 
 	console.log('fetchUserBalance')
 	// start timer in data-loading-indicator
-  setStartTimer(false);
-  setStartTimer(true);
+	setStartTimer(false);
+	setStartTimer(true);
 
-  await program.loadManager()
-	const iassetInfos = await program.getUseriAssetInfo()
+	await program.loadManager()
+	const tokenData = await program.getTokenData();
+
+	const fetchIassetBalance = async (iassetMint: PublicKey) => {
+		const iassetAssociatedTokenAccount = await getTokenAccount(
+			iassetMint, program.provider.wallet.publicKey!, program.provider.connection
+		);
+		if (iassetAssociatedTokenAccount) {
+			const balance = await program.provider.connection.getTokenAccountBalance(iassetAssociatedTokenAccount);
+			return balance.value.uiAmount!;
+		} else {
+			return 0;
+		}
+	}
+
+	const balanceQueries = [];
+	for (let i = 0; i < Number(tokenData.numPools); i++) {
+		balanceQueries.push(
+			fetchIassetBalance(tokenData.pools[i].assetInfo.iassetMint)
+		)
+	}
+	const iAssetBalancesResult = await Promise.allSettled(balanceQueries);
+
 	const result: BalanceList[] = []
 
-	let i = 1
-	for (let info of iassetInfos) {
-		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info[0])
+	for (let i = 0; i < Number(tokenData.numPools); i++) {
+		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
+		const pool = tokenData.pools[i]
+		const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
+		const balanceQueryResult = iAssetBalancesResult[i];
+		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
 		result.push({
 			id: i,
-			tickerName: tickerName,
-			tickerSymbol: tickerSymbol,
-			tickerIcon: tickerIcon,
-			price: info[1]!,
+			tickerName,
+			tickerSymbol,
+			tickerIcon,
+			price,
 			changePercent: 0,
 			assetType: assetType,
-			assetBalance: info[2]!,
-			usdiBalance: info[1]! * info[2]!,
+			assetBalance,
+			usdiBalance: price * assetBalance,
 		})
 		i++
 	}
