@@ -48,17 +48,19 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 		const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
 		const balanceQueryResult = iAssetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
-		result.push({
-			id: i,
-			tickerName,
-			tickerSymbol,
-			tickerIcon,
-			price,
-			changePercent: 0,
-			assetType: assetType,
-			assetBalance,
-			usdiBalance: price * assetBalance,
-		})
+		if (assetBalance > 0) {
+			result.push({
+				id: i,
+				tickerName,
+				tickerSymbol,
+				tickerIcon,
+				price,
+				changePercent: 0,
+				assetType: assetType,
+				assetBalance,
+				usdiBalance: price * assetBalance,
+			})
+		}
 	}
 
 	//set percent val for each asset
