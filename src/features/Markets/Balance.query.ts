@@ -35,8 +35,10 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 
   try {
     if (tokenDataResult.status === 'fulfilled') {
-      const associatedTokenAccount = await program.connection.getTokenAccountBalance(
-        tokenDataResult.value.pool[index].assetInfo.iassetMint
+      const associatedTokenAccount = await getTokenAccount(
+        tokenDataResult.value.pools[index].assetInfo.iassetMint,
+        program.provider.wallet.publicKey!,
+        program.provider.connection
       );
       if (associatedTokenAccount) {
         const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount);

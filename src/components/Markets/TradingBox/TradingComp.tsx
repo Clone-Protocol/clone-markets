@@ -144,9 +144,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     } else {
     // sell
       const convertRatio = newValue * 100 / balance?.iassetVal!
-      const amountTotal = newValue * iassetPrice
       setConvertVal(convertRatio)
-      setAmountTotal(amountTotal)
+      setAmountTotal(newValue)
     }
   }
 
