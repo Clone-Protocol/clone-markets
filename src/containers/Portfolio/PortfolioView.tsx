@@ -50,7 +50,7 @@ const PortfolioView = () => {
 			const ordered = result.sort((a: any, b: any) => a.val < b.val ? 1 : -1)
 
 			const finalPie = ordered.map((item: any) => {
-				const percentVal = item.val * 100 / totalBalance
+				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
 				if (item.id === AssetType.Crypto) {
 					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal, usdiAmount: item.val }
 				} else if (item.id === AssetType.Stocks) {
@@ -64,7 +64,7 @@ const PortfolioView = () => {
 			console.log('f', finalPie)
 			setDataPie(finalPie)
 		}
-	}, [assets])
+	}, [assets?.length])
 
 	useEffect(() => {
 		//unmounted
@@ -72,13 +72,6 @@ const PortfolioView = () => {
 			setSelectedFilter('all')
 		}
 	}, [])
-
-	// const dataPie : PieItem[] = [
-  //   { key: 'istocks', name: FilterTypeMap.istocks, value: 45 },
-  //   { key: 'icommodities', name: FilterTypeMap.icommodities, value: 23 },
-  //   { key: 'ifx', name: FilterTypeMap.ifx, value: 12 },
-  //   { key: 'icrypto', name: FilterTypeMap.icrypto, value: 10 },
-  // ];
 
 	return (
 		<div>

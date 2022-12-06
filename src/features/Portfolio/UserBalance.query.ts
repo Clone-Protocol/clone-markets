@@ -59,7 +59,6 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 			assetBalance,
 			usdiBalance: price * assetBalance,
 		})
-		i++
 	}
 
 	//set percent val for each asset
@@ -67,7 +66,7 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 		return prev + curr.usdiBalance
 	}, 0)
 	result.forEach((asset) => {
-		asset.percentVal = asset.usdiBalance * 100 / totalBalance
+		asset.percentVal = totalBalance > 0 ? asset.usdiBalance * 100 / totalBalance : 0
 	})
 	result.sort((a, b) => {
 		return a.percentVal! < b.percentVal! ? 1 : -1

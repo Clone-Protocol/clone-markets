@@ -33,7 +33,6 @@ export const fetchAssets = async ({ program, setStartTimer }: { program: Incept,
 			change24h: 0, //coming soon
 			changePercent: 0, //coming soon
 		})
-		i++
 	}
 	return result
 }

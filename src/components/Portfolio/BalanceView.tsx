@@ -34,7 +34,7 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 		}
 	}, [selectedFilter])
 
-	return balance.totalVal ? (
+	return (
 		<StyledPaper>
 			<Box sx={{ width: '200px', marginBottom: '40px' }}>
 				<Title>{ selectedTitle }</Title>
@@ -60,8 +60,6 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
         </Box>
 			</Box>
 		</StyledPaper>
-	) : (
-		<></>
 	)
 }
 

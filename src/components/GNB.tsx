@@ -185,10 +185,11 @@ const RightMenu = () => {
           )}
         </ConnectButton>
         { showWalletSelectPopup && <WalletSelectBox spacing={2}>
-          <CopyToClipboard text={publicKey!!.toString()}
-            onCopy={() => enqueueSnackbar('Copied address')}>
-            <PopupButton>Copy Address</PopupButton>
-          </CopyToClipboard>
+          {publicKey && 
+						<CopyToClipboard text={publicKey.toString()}
+							onCopy={() => enqueueSnackbar('Copied address')}>
+							<PopupButton>Copy Address</PopupButton>
+						</CopyToClipboard>}
           <PopupButton onClick={handleChangeWallet}>Change Wallet</PopupButton>
           <PopupButton onClick={handleDisconnect}>Disconnect</PopupButton>
         </WalletSelectBox> }
@@ -199,19 +200,6 @@ const RightMenu = () => {
 		</Box>
 	)
 }
-
-const MarketTitle = styled('div')`
-	font-family: 'Almarai';
-  font-size: 22px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: left;
-  color: #fff;
-  margin-left: 7px;
-`
 
 const StyledAppBar = styled(AppBar)`
 	z-index: 900;
