@@ -5,6 +5,7 @@ import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
+import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 
 export const fetchAssets = async ({ program, setStartTimer }: { program: Incept, setStartTimer: (start: boolean) => void }) => {
 	console.log('fetchAssets')
@@ -13,24 +14,25 @@ export const fetchAssets = async ({ program, setStartTimer }: { program: Incept,
   setStartTimer(true);
 	
 	await program.loadManager()
-	const iassetInfos = await program.getiAssetInfo()
+
+	const tokenData = await program.getTokenData();
 	const result: AssetList[] = []
 
-	let i = 0
-	for (var info of iassetInfos) {
+	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
+		const pool = tokenData.pools[i]
+		const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
 
 		result.push({
 			id: i,
-			tickerName: tickerName,
-			tickerSymbol: tickerSymbol,
-			tickerIcon: tickerIcon,
-			price: info[1]!,
-			assetType: assetType,
+			tickerName,
+			tickerSymbol,
+			tickerIcon,
+			price,
+			assetType,
 			change24h: 0, //coming soon
 			changePercent: 0, //coming soon
 		})
-		i++
 	}
 	return result
 }

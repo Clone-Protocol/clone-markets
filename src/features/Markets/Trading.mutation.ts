@@ -77,7 +77,7 @@ export const callTrading = async ({
 			iassetIndex
 		))
 	}
-	await program.provider.send!(tx);
+	await program.provider.send!(tx, [], {commitment: 'processed', preflightCommitment: 'processed'});
   
   return {
     result: true
