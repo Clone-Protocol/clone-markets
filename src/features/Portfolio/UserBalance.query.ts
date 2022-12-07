@@ -25,7 +25,7 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 			iassetMint, program.provider.wallet.publicKey!, program.provider.connection
 		);
 		if (iassetAssociatedTokenAccount) {
-			const balance = await program.provider.connection.getTokenAccountBalance(iassetAssociatedTokenAccount);
+			const balance = await program.provider.connection.getTokenAccountBalance(iassetAssociatedTokenAccount, "processed");
 			return balance.value.uiAmount!;
 		} else {
 			return 0;

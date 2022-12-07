@@ -15,7 +15,7 @@ export const fetchBalance = async ({ program, userPubKey }: { program: Incept, u
 	try {
 		const usdiAssociatedTokenAccount = await getUSDiAccount(program);
 		if (usdiAssociatedTokenAccount) {
-		  const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount);
+		  const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount, "processed");
 		  balanceVal = Number(usdiBalance.value.amount) / 100000000;
 		}
 	} catch (e) {

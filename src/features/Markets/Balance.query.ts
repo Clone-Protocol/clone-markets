@@ -25,8 +25,8 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 
   try {
 		//const usdiAssociatedTokenAccount = await getUSDiAccount(program);
-    if (usdiAtaResult.status === 'fulfilled') {
-      const usdiBalance = await program.connection.getTokenAccountBalance(usdiAtaResult.value);
+    if (usdiAtaResult.status === 'fulfilled' && usdiAtaResult.value !== undefined) {
+      const usdiBalance = await program.connection.getTokenAccountBalance(usdiAtaResult.value, "processed")
       usdiVal = Number(usdiBalance.value.amount) / 100000000;
     }
 	} catch (e) {
@@ -41,7 +41,7 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
         program.provider.connection
       );
       if (associatedTokenAccount) {
-        const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount);
+        const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
         iassetVal =  Number(iassetBalance.value.amount) / 100000000;
       }
     }
