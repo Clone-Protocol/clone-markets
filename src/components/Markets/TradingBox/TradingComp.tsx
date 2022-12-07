@@ -289,7 +289,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               title="Total"
               tickerIcon={tabIdx===0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={tabIdx===0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
-              value={parseFloat(amountTotal.toFixed(3))}
+              value={amountTotal}
               balanceDisabled={true}
             />
 

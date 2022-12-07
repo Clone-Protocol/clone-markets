@@ -26,7 +26,7 @@ const PortfolioView = () => {
 	const { data: assets } = useUserBalanceQuery({
     userPubKey: publicKey,
     filter: selectedFilter as FilterType,
-	  refetchOnMount: true,
+	  refetchOnMount: 'always',
     enabled: publicKey != null
 	})
 
