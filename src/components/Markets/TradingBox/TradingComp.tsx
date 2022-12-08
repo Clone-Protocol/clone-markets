@@ -100,7 +100,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
     setTabIdx(newTabIdx)
     setOpenOrderDetails(false)
-    initData()
     trigger()
 	}
 
@@ -212,7 +211,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     rules={{
                       validate(value) {
                         if (!value || value <= 0) {
-                          return 'the amount should be above zero.'
+                          return ''
                         } else if (value > balance?.usdiVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
@@ -248,7 +247,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     rules={{
                       validate(value) {
                         if (!value || value <= 0) {
-                          return 'the amount should be above zero.'
+                          return ''
                         } else if (value > balance?.iassetVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
