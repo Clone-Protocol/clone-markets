@@ -27,14 +27,12 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
 	}
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (e.currentTarget.value) {
-			const newData = parseFloat(e.currentTarget.value)
-      if (isNaN(newData)) {
-        setCustomSlippage(NaN)
-      }  else if (newData <= 50) {
-        setCustomSlippage(parseFloat(newData.toFixed(2)))
-      }
-    // }
+    const newData = parseFloat(e.currentTarget.value)
+    if (isNaN(newData)) {
+      setCustomSlippage(NaN)
+    }  else if (newData <= 50) {
+      setCustomSlippage(parseFloat(newData.toFixed(2)))
+    }
   }
 
   const onSave = () => {

@@ -4,7 +4,6 @@ import { styled } from '@mui/system'
 import { TimeTabs, TimeTab, FilterTimeMap, FilterTime } from '~/components/Charts/TimeTabs'
 import LineChartAlt from '~/components/Charts/LineChartAlt'
 import { useTotalPriceQuery } from '~/features/Chart/Prices.query'
-import { formatDollarAmount } from '~/utils/numbers'
 
 const Chart = ({ price }: { price: number }) => {
 	const [filterTime, setFilterTime] = useState<FilterTime>('24h')

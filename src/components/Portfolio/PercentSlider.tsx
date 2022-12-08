@@ -1,4 +1,4 @@
-import Slider, { SliderThumb } from '@mui/material/Slider'
+import Slider from '@mui/material/Slider'
 import { Box } from '@mui/material'
 import { styled } from '@mui/system'
 

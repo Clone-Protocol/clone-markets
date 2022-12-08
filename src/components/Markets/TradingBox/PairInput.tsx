@@ -14,7 +14,6 @@ interface Props {
 }
 
 const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, onChange, onMax, max }) => {
-	console.log('v', value)
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between" sx={{ fontSize: '11px', fontWeight: '500', marginBottom: '3px' }}>
