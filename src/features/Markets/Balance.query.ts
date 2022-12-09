@@ -4,7 +4,6 @@ import { useIncept } from '~/hooks/useIncept'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
-import { token } from '@project-serum/anchor/dist/cjs/utils'
 
 export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: any, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return null
@@ -24,7 +23,6 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
   ]);
 
   try {
-		//const usdiAssociatedTokenAccount = await getUSDiAccount(program);
     if (usdiAtaResult.status === 'fulfilled' && usdiAtaResult.value !== undefined) {
       const usdiBalance = await program.connection.getTokenAccountBalance(usdiAtaResult.value, "processed")
       usdiVal = Number(usdiBalance.value.amount) / 100000000;

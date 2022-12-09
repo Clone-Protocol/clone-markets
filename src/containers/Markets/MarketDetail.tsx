@@ -64,16 +64,16 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box>
 								<ContentHeader>Holding</ContentHeader>
 								<ContentValue>
-									{asset.myHolding} <SubValue>{asset.tickerSymbol}</SubValue>
+									{asset.myHolding.toLocaleString()} <SubValue>{asset.tickerSymbol}</SubValue>
 								</ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>Notional Value</ContentHeader>
-								<ContentValue>${asset.myNotionalVal} <SubValue>USDi</SubValue></ContentValue>
+								<ContentValue>${asset.myNotionalVal.toLocaleString()} <SubValue>USDi</SubValue></ContentValue>
 							</Box>
 							<Box>
 								<ContentHeader>iPortfolio Percentage</ContentHeader>
-								<ContentValue>{asset.myPortfolioPercentage}%</ContentValue>
+								<ContentValue>{asset.myPortfolioPercentage.toFixed(2)}%</ContentValue>
 							</Box>
 						</Stack>
 					</Box>

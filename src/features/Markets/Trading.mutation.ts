@@ -6,7 +6,6 @@ import { BN } from '@project-serum/anchor'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token"
 
-
 export const callTrading = async ({
 	program,
 	userPubKey,

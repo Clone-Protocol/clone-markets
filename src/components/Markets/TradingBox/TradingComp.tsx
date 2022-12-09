@@ -1,4 +1,4 @@
-import { styled, FormHelperText, Box, Stack, Button } from '@mui/material'
+import { styled, Box, Stack, Button } from '@mui/material'
 import React, {useState, useCallback, useEffect} from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
@@ -100,21 +100,24 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
     setTabIdx(newTabIdx)
     setOpenOrderDetails(false)
+    trigger()
 	}
 
   useEffect(() => {
     calculateTotalAmountByConvert(convertVal)
+    console.log('c', convertVal)
+    trigger()
   }, [tabIdx])
 
   const { mutateAsync } = useTradingMutation(publicKey)
 
-	const handleChangeConvert = useCallback((event: Event, newValue: number | number[]) => {
+	const handleChangeConvert = (event: Event, newValue: number | number[]) => {
 		if (typeof newValue === 'number') {
       setConvertVal(newValue)
       calculateTotalAmountByConvert(newValue)    
-      trigger() 
+      trigger()
 		}
-	}, [convertVal])
+	}
 
   const calculateTotalAmountByConvert = (convertRatio: number) => {
     const iassetPrice = assetData?.price!
@@ -149,13 +152,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     }
   }
 
-  const reloadData = () => {
-    refetch()
-  }
-
   const onConfirm = async () => {
     setLoading(true)
-    console.log('slippage', slippage)
     await mutateAsync(
       {
         amountUsdi,
@@ -213,7 +211,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     rules={{
                       validate(value) {
                         if (!value || value <= 0) {
-                          return 'the amount should be above zero.'
+                          return ''
                         } else if (value > balance?.usdiVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
@@ -249,7 +247,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     rules={{
                       validate(value) {
                         if (!value || value <= 0) {
-                          return 'the amount should be above zero.'
+                          return ''
                         } else if (value > balance?.iassetVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
@@ -298,7 +296,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               justifyContent="flex-end"
               alignItems="center"
               sx={{ marginTop: '16px', marginBottom: '23px' }}>
-              <IconButton onClick={reloadData}>
+              <IconButton onClick={() => refetch()}>
                 <Image src={reloadIcon} alt="reload" />
               </IconButton>
               <IconButton onClick={onShowOption}>
