@@ -1,11 +1,12 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
 import { useIncept } from '~/hooks/useIncept'
+import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 
-export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: any, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void}) => {
+export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: Incept, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void}) => {
 	if (!userPubKey) return null
 
   await program.loadManager()

@@ -130,7 +130,7 @@ const RightMenu = () => {
         setShowWalletSelectPopup(!showWalletSelectPopup)
 			}
 		} catch (error) {
-			console.log('Error connecting to the wallet: ', (error as any).message)
+			console.log('Error connecting to the wallet: ', error)
 		}
 	}
 

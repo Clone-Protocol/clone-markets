@@ -5,7 +5,7 @@ import Image from 'next/image'
 interface GridProps {
   headers: GridColDef[],
   rows: any,
-  minHeight: any,
+  minHeight: number,
 }
 
 const CustomNoRowsOverlay = () => {

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import SearchIcon from 'public/images/search-icon.svg'
 
 interface Props {
-  onChange?: any
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const SearchInput: React.FC<Props> = ({onChange}) => {
 	return <StyledBox>

@@ -1,29 +1,12 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { FilterTime } from '~/components/Charts/TimeTabs'
 
+export interface ChartElem {
+  time: string
+  value: number
+}
+
 export const fetchTotalPrices = async ({ timeframe, currentPrice } : { timeframe: FilterTime, currentPrice: number | undefined}) => {
-	// const chartData = [
-  //   {
-  //     time: '2022-03-01',
-  //     value: 15
-  //   },
-  //   {
-  //     time: '2022-03-02',
-  //     value: 35
-  //   },
-  //   {
-  //     time: '2022-03-03',
-  //     value: 80
-  //   },
-  //   {
-  //     time: '2022-03-04',
-  //     value: 65
-  //   },
-  //   {
-  //     time: '2022-03-05',
-  //     value: 115
-  //   },
-  // ]
   const chartData = [
     {
       time: new Date().toISOString().slice(0, 10),
