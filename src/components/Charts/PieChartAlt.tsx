@@ -1,15 +1,16 @@
 import React from 'react';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { styled } from '@mui/system'
 import { Box } from '@mui/material'
+import { PieItem } from '~/data/filter'
 
 const COLORS = ['#FFF', '#adadad', '#767474', '#595959'];
 
 export type ChartProps = {
-  data: any[]
+  data: PieItem[]
   selectedIdx: number
-  onSelect: any
+  onSelect: (index: number) => void
 }
 
 const PieChartAlt : React.FC<ChartProps> = ({
@@ -17,7 +18,7 @@ const PieChartAlt : React.FC<ChartProps> = ({
   selectedIdx,
   onSelect
 }) => {
-  const onPieEnter = (_, index) => {
+  const onPieEnter = (_, index: number) => {
     onSelect(index)
   }
 

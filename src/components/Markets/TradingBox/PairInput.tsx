@@ -8,9 +8,9 @@ interface Props {
 	balance?: number
   balanceDisabled?: boolean
 	value?: number
-	onChange?: any
-  onMax?: any
 	max?: number
+	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onMax?: (balance: number) => void
 }
 
 const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, onChange, onMax, max }) => {

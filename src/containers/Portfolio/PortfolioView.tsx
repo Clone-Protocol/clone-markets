@@ -12,6 +12,11 @@ import { AssetType } from '~/data/assets'
 import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
 
+interface ResultAsset {
+	id: number
+	val: number
+}
+
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
 	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
@@ -33,7 +38,7 @@ const PortfolioView = () => {
 	useEffect(() => {
 		// only called when filter is all
 		if (assets && assets.length > 0 && selectedFilter === 'all') {
-			const result: any = []
+			const result: ResultAsset[] = []
 			let totalBalance = 0
 			assets.forEach((asset) => {
 				if (result[asset.assetType]) {
@@ -47,18 +52,18 @@ const PortfolioView = () => {
 				totalBalance += asset.usdiBalance
 			})
 
-			const ordered = result.sort((a: any, b: any) => a.val < b.val ? 1 : -1)
+			const ordered = result.sort((a, b) => a.val < b.val ? 1 : -1)
 
-			const finalPie = ordered.map((item: any) => {
+			const finalPie = ordered.map((item) => {
 				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
 				if (item.id === AssetType.Crypto) {
-					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal, usdiAmount: item.val }
+					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal, usdiAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Stocks) {
-					return { key: 'istocks', name: FilterTypeMap.istocks, value: percentVal, usdiAmount: item.val }
+					return { key: 'istocks', name: FilterTypeMap.istocks, value: percentVal, usdiAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Fx) {
-					return { key: 'ifx', name: FilterTypeMap.ifx, value: percentVal, usdiAmount: item.val }
-				} else if (item.id === AssetType.Commodities) {
-					return { key: 'icommodities', name: FilterTypeMap.icommodities, value: percentVal, usdiAmount: item.val }
+					return { key: 'ifx', name: FilterTypeMap.ifx, value: percentVal, usdiAmount: item.val } as PieItem
+				} else {
+					return { key: 'icommodities', name: FilterTypeMap.icommodities, value: percentVal, usdiAmount: item.val } as PieItem
 				}
 			})
 			console.log('f', finalPie)
