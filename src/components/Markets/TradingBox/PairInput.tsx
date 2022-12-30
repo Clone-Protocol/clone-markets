@@ -6,7 +6,7 @@ interface Props {
 	tickerIcon: string
 	ticker: string | null
 	balance?: number
-  balanceDisabled?: boolean
+  	balanceDisabled?: boolean
 	value?: number
 	max?: number
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
