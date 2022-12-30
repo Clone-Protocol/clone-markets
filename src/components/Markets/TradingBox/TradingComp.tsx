@@ -20,6 +20,7 @@ import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import BackdropPartMsg from './BackdropPartMsg'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
+import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
 
 export enum ComponentEffect {
 	iAssetAmount,
@@ -38,6 +39,11 @@ export interface TradingData {
 interface Props {
   assetIndex: number
 	onShowOption: () => void
+}
+
+const round = (n: number, decimals: number) => {
+  const factor = Math.pow(10, decimals)
+  return Math.round(n * factor) / factor
 }
 
 const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
@@ -68,8 +74,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     enabled: publicKey != null
   })
 
-  const [amountTotal, setAmountTotal] = useState(0.0)
-
   const {
 		handleSubmit,
 		control,
@@ -93,7 +97,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   const initData = () => {
     setValue('amountUsdi', 0.0)
     setValue('amountIasset', 0.0)
-    setAmountTotal(0.0)
     refetch()
   }
 
@@ -120,35 +123,41 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 	}
 
   const calculateTotalAmountByConvert = (convertRatio: number) => {
-    const iassetPrice = assetData?.price!
+    const ammUsdiValue = balance?.ammUsdiValue!
+    const ammIassetValue = balance?.ammIassetValue!
+    const invariant = ammIassetValue * ammUsdiValue
+    let usdi
+    let iAsset
     // buy
     if (tabIdx === 0) {
-      const amountUsdi = balance?.usdiVal! * convertRatio / 100;
-      const amountTotal = amountUsdi / iassetPrice;
-      setValue('amountUsdi', amountUsdi)
-      setAmountTotal(amountTotal)
+      usdi = balance?.usdiVal! * convertRatio / 100;
+      iAsset = ammIassetValue - invariant / (ammUsdiValue + amountUsdi)
     } else {
     // sell
-      const amountIasset = balance?.iassetVal! * convertRatio / 100;
-      const amountTotal = amountIasset * iassetPrice
-      setValue('amountIasset', amountIasset)
-      setAmountTotal(amountTotal)
+      iAsset = balance?.iassetVal! * convertRatio / 100;
+      usdi = ammUsdiValue - invariant / (ammIassetValue + amountIasset)
     }
+    setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
+    setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
   }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
-    const iassetPrice = assetData?.price!
+    const ammUsdiValue = balance?.ammUsdiValue!
+    const ammIassetValue = balance?.ammIassetValue!
+    const invariant = ammIassetValue * ammUsdiValue
     // buy
     if (tabIdx === 0) {
       const convertRatio = newValue * 100 / balance?.usdiVal!
-      const amountTotal = newValue / iassetPrice;
+      const iAsset = ammIassetValue - invariant / (ammUsdiValue + newValue)
       setConvertVal(convertRatio)
-      setAmountTotal(amountTotal)
+      setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
     } else {
     // sell
       const convertRatio = newValue * 100 / balance?.iassetVal!
+      const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
       setConvertVal(convertRatio)
-      setAmountTotal(newValue)
+      setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
+
     }
   }
 
@@ -157,7 +166,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     await mutateAsync(
       {
         amountUsdi,
-        amountIasset: amountTotal,
+        amountIasset,
         iassetIndex: assetIndex,
         isBuy: tabIdx === 0
       },
@@ -178,6 +187,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
       }
     )
 	}
+
+  const getPrice = () => {
+    return amountUsdi / amountIasset 
+  }
+
+  const getPriceImpactPct = () => {
+    const idealPrice = assetData?.price!
+    return 100 * Math.abs(getPrice() - idealPrice) / idealPrice
+  }
 
   const isValid = Object.keys(errors).length === 0
 
@@ -287,7 +305,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               title="Total"
               tickerIcon={tabIdx===0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={tabIdx===0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
-              value={amountTotal}
+              value={tabIdx===0 ? amountIasset : amountUsdi}
               balanceDisabled={true}
             />
 
@@ -304,14 +322,14 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               </IconButton>
             </Stack>
 
-            <ActionButton sx={ tabIdx===0 ? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!amountTotal || amountTotal === 0 || !isValid}>
+            <ActionButton sx={ tabIdx===0 ? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!isValid}>
               {!isValid ? `Insufficient Balance` : `Confirm market ${ tabIdx === 0 ? 'buy' : 'sell' }`}
             </ActionButton>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
               <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon /> }</ArrowIcon>
             </TitleOrderDetails>
-            { openOrderDetails && <OrderDetails iassetPrice={assetData?.price!} iassetAmount={amountTotal} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={0.1} tradeFee={0.15} /> }
+            { openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} /> }
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <RateLoadingIndicator />
