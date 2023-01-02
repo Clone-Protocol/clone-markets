@@ -1,19 +1,19 @@
+import React from 'react';
 import { Box, Stack } from '@mui/material'
 import { styled } from '@mui/system'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 
 interface Props {
-	iassetPrice: number
+  iassetPrice: number
   iassetAmount: number
   tickerSymbol: string
-	priceImpact: number
+  priceImpact: number
   slippage: number
   tradeFee: number
 }
 
 const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol, priceImpact, slippage, tradeFee }) => {
-
-  const minReceived = (1-(slippage/100)) * iassetAmount
+  const minReceived = (1 - (slippage / 100)) * iassetAmount
   const iassetTradeFee = (tradeFee / 100) * iassetAmount
   const iassetTradeFeeDollar = (tradeFee / 100) * iassetPrice * iassetAmount
 
@@ -23,22 +23,22 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
         <DetailHeader>Rate</DetailHeader>
         <DetailValue>{iassetPrice?.toLocaleString()} USDi / {tickerSymbol}</DetailValue>
       </Stack>
-      <Stack sx={{ marginTop: '8px' }} direction="row" justifyContent="space-between" alignItems="center">
+      <Stack marginTop="8px" direction="row" justifyContent="space-between" alignItems="center">
         <DetailHeader>Price Impact <InfoTooltip title="Price Impact" /></DetailHeader>
-        <div style={{ color: '#0f6', fontSize: '11px', fontWeight: '600' }}>&lt; {priceImpact}%</div>
+        <PriceImpactValue>&lt; {priceImpact}%</PriceImpactValue>
       </Stack>
-      <Stack sx={{ marginTop: '8px' }} direction="row" justifyContent="space-between" alignItems="center">
+      <Stack marginTop="8px" direction="row" justifyContent="space-between" alignItems="center">
         <DetailHeader>Minimum received <InfoTooltip title="Minimum received" /></DetailHeader>
         <div style={{ lineHeight: '12px' }}>
           <DetailValue>{minReceived?.toLocaleString()} {tickerSymbol}</DetailValue>
-          <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>Slippage tolerance: {slippage?.toFixed(1)}%</div>
+          <DetailComment>Slippage tolerance: {slippage?.toFixed(1)}%</DetailComment>
         </div>
       </Stack>
-      <Stack sx={{ marginTop: '9px' }} direction="row" justifyContent="space-between" alignItems="center">
+      <Stack marginTop="9px" direction="row" justifyContent="space-between" alignItems="center">
         <DetailHeader>Trade fees <InfoTooltip title="Trade fees" /></DetailHeader>
         <div style={{ lineHeight: '12px' }}>
           <DetailValue>{iassetTradeFee?.toFixed(6)} {tickerSymbol}</DetailValue>
-          <div style={{ color: '#898989', fontSize: '10px', fontWeight: '500', textAlign: 'right' }}>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</div>
+          <DetailComment>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</DetailComment>
         </div>
       </Stack>
     </Wrapper>
@@ -65,6 +65,19 @@ const DetailValue = styled('div')`
   font-weight: 500;
   color: #fff;
   text-align: right;
+`
+
+const DetailComment = styled('div')`
+  color: #898989;
+  font-size: 10px; 
+  font-weight: 500;
+  text-align: right;
+`
+
+const PriceImpactValue = styled('div')`
+  color: #0f6; 
+  font-size: 11px; 
+  font-weight: 600;
 `
 
 export default OrderDetails

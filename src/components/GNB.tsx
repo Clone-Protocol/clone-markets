@@ -21,7 +21,7 @@ import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
 import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import "@fontsource/almarai";
 import { getUSDiAccount } from '~/utils/token_accounts'
 import { Transaction } from '@solana/web3.js'
@@ -29,24 +29,24 @@ import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } fr
 
 
 const GNB: React.FC = () => {
-	const router = useRouter()
-	const { pathname, push } = router
-	const [path, setPath] = useState<string>('/')
+	// const router = useRouter()
+	// const { pathname } = router
+	// const [path, setPath] = useState<string>('/')
 	const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+	// const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
 	const { scrolled } = useScroll()
 
-	const firstPathname = useMemo(() => {
-		return pathname.split('/').slice(0, 2).join('/')
-	}, [pathname])
+	// const firstPathname = useMemo(() => {
+	// 	return pathname.split('/').slice(0, 2).join('/')
+	// }, [pathname])
 
 	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 
-	useEffect(() => {
-		const path = GNB_ROUTES.find((route) => firstPathname === route.path)?.path
-		if (path) setPath(path)
-	}, [firstPathname])
+	// useEffect(() => {
+	// 	const path = GNB_ROUTES.find((route) => firstPathname === route.path)?.path
+	// 	if (path) setPath(path)
+	// }, [firstPathname])
 
 	const navClassName = useMemo(() => {
 		let className = mobileNavToggle ? 'mobile-on' : ''
@@ -81,14 +81,14 @@ export default withCsrOnly(GNB)
 
 const RightMenu = () => {
 	const router = useRouter()
-  const { enqueueSnackbar } = useSnackbar()
+	const { enqueueSnackbar } = useSnackbar()
 	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
 	const [mintUsdi, setMintUsdi] = useState(false)
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 
 	useEffect(() => {
 		async function userMintUsdi() {
@@ -108,7 +108,7 @@ const RightMenu = () => {
 
 					} else {
 						await program.hackathonMintUsdi(usdiTokenAccount!, 10000000000);
-					} 
+					}
 				} finally {
 					setMintUsdi(false)
 				}
@@ -125,9 +125,9 @@ const RightMenu = () => {
 				} else {
 					connect()
 				}
-        setShowWalletSelectPopup(false)
+				setShowWalletSelectPopup(false)
 			} else {
-        setShowWalletSelectPopup(!showWalletSelectPopup)
+				setShowWalletSelectPopup(!showWalletSelectPopup)
 			}
 		} catch (error) {
 			console.log('Error connecting to the wallet: ', error)
@@ -138,65 +138,62 @@ const RightMenu = () => {
 		setMintUsdi(true)
 	}
 
-  const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  }
+	const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	}
 
-  const handleChangeWallet = () => {
-    disconnect()
-    setShowWalletSelectPopup(false)
-    setOpen(true) 
-  }
+	const handleChangeWallet = () => {
+		disconnect()
+		setShowWalletSelectPopup(false)
+		setOpen(true)
+	}
 
-  const handleDisconnect = () => {
-    disconnect()
-    setShowWalletSelectPopup(false)
-  }
+	const handleDisconnect = () => {
+		disconnect()
+		setShowWalletSelectPopup(false)
+	}
 
 	return (
 		<Box display="flex">
-			{ (router.asPath === '/' || router.asPath === '/iportfolio') &&
-      	<DataLoadingIndicator />
+			{(router.asPath === '/' || router.asPath === '/iportfolio') &&
+				<DataLoadingIndicator />
 			}
 			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px' }}>
 				Get USDi
 			</HeaderButton>
 
-      <Box>
-        <ConnectButton
-          onClick={handleWalletClick}
-          variant="outlined"
-          sx={{ width: '163px' }}
-          disabled={connecting}
-          startIcon={!publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
-          {!connected ? (
-            <>Connect Wallet</>
-          ) : (
-            <>
-              <div style={{ width: '15px', height: '15px', backgroundImage: 'radial-gradient(circle at 0 0, #0f6, #fff)', borderRadius: '99px' }} />
-              {publicKey ? (
-                <Box sx={{ marginLeft: '10px', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
-                  {shortenAddress(publicKey.toString())}
-                </Box>
-              ) : (
-                <></>
-              )}
-            </>
-          )}
-        </ConnectButton>
-        { showWalletSelectPopup && <WalletSelectBox spacing={2}>
-          {publicKey && 
+			<Box>
+				<ConnectButton
+					onClick={handleWalletClick}
+					variant="outlined"
+					disabled={connecting}
+					startIcon={!publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
+					{!connected ? (
+						<>Connect Wallet</>
+					) : (
+						<>
+							<AccountIcon />
+							{publicKey ? (
+								<AccountText>{shortenAddress(publicKey.toString())}</AccountText>
+							) : (
+								<></>
+							)}
+						</>
+					)}
+				</ConnectButton>
+				{showWalletSelectPopup && <WalletSelectBox spacing={2}>
+					{publicKey &&
 						<CopyToClipboard text={publicKey.toString()}
 							onCopy={() => enqueueSnackbar('Copied address')}>
 							<PopupButton>Copy Address</PopupButton>
 						</CopyToClipboard>}
-          <PopupButton onClick={handleChangeWallet}>Change Wallet</PopupButton>
-          <PopupButton onClick={handleDisconnect}>Disconnect</PopupButton>
-        </WalletSelectBox> }
-      </Box>
+					<PopupButton onClick={handleChangeWallet}>Change Wallet</PopupButton>
+					<PopupButton onClick={handleDisconnect}>Disconnect</PopupButton>
+				</WalletSelectBox>}
+			</Box>
 
-			<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '20px' }} variant="outlined" onClick={handleMoreClick}>...</HeaderButton>
-      <MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
+			<MoreButton variant="outlined" onClick={handleMoreClick}>...</MoreButton>
+			<MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
 		</Box>
 	)
 }
@@ -265,11 +262,26 @@ const ConnectButton = styled(Button)`
 	font-weight: 600;
   margin-left: 16px;
 	color: #fff;
+	width: 163px;
 	height: 33px;
   &:hover {
     background-color: #2e2e2e;
 		border: solid 1px #aaa;
   }
+`
+
+const AccountIcon = styled('div')`
+	width: 15px; 
+	height: 15px; 
+	background-image: radial-gradient(circle at 0 0, #0f6, #fff); 
+	border-radius: 99px;
+`
+
+const AccountText = styled(Box)`
+	margin-left: 10px; 
+	color: #fff; 
+	font-size: 11px; 
+	font-weight: 600;
 `
 
 const WalletSelectBox = styled(Stack)`
@@ -295,4 +307,10 @@ const PopupButton = styled(Button)`
   font-size: 10px;
   font-weight: 500;
   color: #fff;
+`
+
+const MoreButton = styled(HeaderButton)`
+	font-size: 15px; 
+	font-weight: bold; 
+	padding-bottom: 20px;
 `
