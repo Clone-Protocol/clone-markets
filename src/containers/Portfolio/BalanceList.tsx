@@ -25,7 +25,7 @@ const BalanceList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 	const pieitemsKeys = pieitems.map((item) => item.key)
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
-    setFilterState(newValue)
+		setFilterState(newValue)
 	}
 
 	return (
@@ -36,13 +36,13 @@ const BalanceList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 						<PageTab disabled={pieitemsKeys.indexOf(f as FilterType) === -1 && f !== 'all'} key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
-        <BalanceBox>
-          <div>USDi balance</div>
-          <div style={{ color: '#fff', fontSize: '14px' }}>${balance?.balanceVal.toFixed(2)}</div>
-        </BalanceBox>
+				<BalanceBox>
+					<div>USDi balance</div>
+					<div style={{ color: '#fff', fontSize: '14px' }}>${balance?.balanceVal.toFixed(2)}</div>
+				</BalanceBox>
 			</Stack>
-      <Grid
-        headers={columns}
+			<Grid
+				headers={columns}
 				rows={assets || []}
 				minHeight={window.innerHeight - 280}
 			/>
@@ -57,7 +57,7 @@ let columns: GridColDef[] = [
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-        <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
+				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
 			)
 		},
 	},
@@ -97,14 +97,14 @@ let columns: GridColDef[] = [
 			)
 		},
 	},
-  {
+	{
 		field: 'iPortfolio',
 		headerName: 'iPortfolio %',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Stack sx={{ marginTop: '-5px', marginLeft: '10px' }}>
-          <PercentSlider percent={params.row.percentVal} />
+					<PercentSlider percent={params.row.percentVal} />
 				</Stack>
 			)
 		},
@@ -112,7 +112,7 @@ let columns: GridColDef[] = [
 	{
 		field: 'trade',
 		headerName: '',
-    cellClassName: 'last--cell',
+		cellClassName: 'last--cell',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
@@ -139,16 +139,16 @@ const BalanceBox = styled(Box)`
   color: #a6a6a6;
 `
 
-const ChangePricePlus = styled(Box)`
-	font-size: 12px;
-	font-weight: 500;
-	color: #00ff66;
-`
-const ChangePriceMinus = styled(Box)`
-	font-size: 12px;
-	font-weight: 500;
-	color: #fb782e;
-`
+// const ChangePricePlus = styled(Box)`
+// 	font-size: 12px;
+// 	font-weight: 500;
+// 	color: #00ff66;
+// `
+// const ChangePriceMinus = styled(Box)`
+// 	font-size: 12px;
+// 	font-weight: 500;
+// 	color: #fb782e;
+// `
 
 const TradeButton = styled(Button)`
 	border-radius: 8px;

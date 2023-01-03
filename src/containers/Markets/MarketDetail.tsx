@@ -6,10 +6,10 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
-  const { data: asset } = useMarketDetailQuery({
-	  index: parseInt(assetId),
-	  refetchOnMount: true,
-    enabled: !!assetId
+	const { data: asset } = useMarketDetailQuery({
+		index: parseInt(assetId),
+		refetchOnMount: true,
+		enabled: !!assetId
 	})
 
 	return (
@@ -17,22 +17,20 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 			{asset ? (
 				<Stack mb={2} direction="column" padding={5} paddingY={1}>
 					<Box>
-						<Box display="inline-flex" alignItems="center" sx={{ height: '57px', background: '#141414', borderRadius: '10px', marginBottom: '17px', padding: '6px 12px' }}>
+						<TickerWrapper display="inline-flex" alignItems="center">
 							<Image src={asset.tickerIcon} width="45px" height="45px" />
-							<Box sx={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginRight: '15px', marginLeft: '10px' }}>
+							<TickerName>
 								{asset.tickerName}
-							</Box>
-							<Box sx={{ color: '#757a7f', fontSize: '18px', fontWeight: '500', lineHeight: '30px' }}>
+							</TickerName>
+							<TickerSymbol>
 								{asset.tickerSymbol}
-							</Box>
-						</Box>
+							</TickerSymbol>
+						</TickerWrapper>
 					</Box>
 
-					<Box>
-						<Chart price={asset.price} />
-					</Box>
+					<Chart price={asset.price} />
 
-					<Box sx={{ marginTop: '15px', marginBottom: '15px', padding: '10px' }}>
+					<OverviewWrapper>
 						<SubTitle>Market Overview</SubTitle>
 						<Stack direction="row" justifyContent="space-between">
 							<Box>
@@ -54,11 +52,11 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 								<ContentValue>{asset.avgPremium.toFixed(3)}%</ContentValue>
 							</Box>
 						</Stack>
-					</Box>
+					</OverviewWrapper>
 
-          <StyledDivider />
+					<StyledDivider />
 
-					<Box sx={{ padding: '10px' }}>
+					<Box padding='10px'>
 						<SubTitle>My {asset.tickerSymbol}</SubTitle>
 						<Stack direction="row" justifyContent="flex-start" spacing={7}>
 							<Box>
@@ -78,14 +76,12 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Stack>
 					</Box>
 
-          <StyledDivider />
+					<StyledDivider />
 
-          <Box sx={{ marginBottom: '40px', padding: '10px' }}>
+					<Box marginBottom='40px' padding='10px'>
 						<SubTitle>About {asset.tickerSymbol}</SubTitle>
 						<DetailDesc>{asset.detailOverview}</DetailDesc>
-						<Box sx={{ color: '#cacaca', fontSize: '12px', fontWeight: '600', textDecoration: 'underline', marginTop: '8px' }}>
-							Tell me more
-						</Box>
+						<MoreText>Tell me more</MoreText>
 					</Box>
 				</Stack>
 			) : (
@@ -94,6 +90,33 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 		</>
 	)
 }
+
+const TickerWrapper = styled(Box)`
+	height: 57px; 
+	background: #141414; 
+	border-radius: 10px; 
+	margin-bottom: 17px; 
+	padding: 6px 12px;
+`
+const TickerName = styled(Box)`
+	color: #ffffff; 
+	font-size: 18px; 
+	font-weight: 600; 
+	margin-right: 15px; 
+	margin-left: 10px;
+`
+const TickerSymbol = styled(Box)`
+	color: #757a7f; 
+	font-size: 18px; 
+	font-weight: 500; 
+	line-height: 30px;
+`
+
+const OverviewWrapper = styled(Box)`
+	margin-top: 15px; 
+	margin-bottom: 15px; 
+	padding: 10px;
+`
 
 const StyledDivider = styled(Divider)`
 	background-color: #535353;
@@ -144,6 +167,14 @@ const DetailDesc = styled(Box)`
 const SubValue = styled('span')`
   font-size: 10px;
   font-weight: 600;
+`
+
+const MoreText = styled(Box)`
+	color: #cacaca; 
+	font-size: 12px; 
+	font-weight: 600; 
+	text-decoration: underline; 
+	margin-top: 8px;
 `
 
 export default withSuspense(MarketDetail, <LoadingProgress />)
