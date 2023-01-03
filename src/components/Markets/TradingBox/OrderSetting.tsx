@@ -21,16 +21,16 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
     }
   }, [localSlippage])
 
-	const handleSlippageChange = (event: React.SyntheticEvent, newValue: number) => {
-		setSlippage(newValue)
+  const handleSlippageChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSlippage(newValue)
     setCustomSlippage(0)
-	}
+  }
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newData = parseFloat(e.currentTarget.value)
     if (isNaN(newData)) {
       setCustomSlippage(NaN)
-    }  else if (newData <= 50) {
+    } else if (newData <= 50) {
       setCustomSlippage(parseFloat(newData.toFixed(2)))
     }
   }
@@ -44,15 +44,15 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
     onBack()
   }
 
-	return (
-		<Box sx={{ padding: '15px 20px' }}>
-			<StyledStack direction="row" justifyContent="space-between" alignItems="center">
-				<div style={{ cursor: 'pointer', color: '#fff', fontSize: '21px' }} onClick={() => {onBack()}}>{'<'}</div>
-				<div style={{ fontSize: '16px', fontWeight: '600', color: '#fff', marginTop: '5px' }}>Order Setting</div>
-				<div></div>
-			</StyledStack>
+  return (
+    <Box padding='15px 20px'>
+      <StyledStack direction="row" justifyContent="space-between" alignItems="center">
+        <BackButton onClick={() => { onBack() }}>{'<'}</BackButton>
+        <Title>Order Setting</Title>
+        <div></div>
+      </StyledStack>
 
-			<Box sx={{ marginTop: '10px' }}>
+      <Box marginTop='10px'>
         <Subtitle>Slippage Tolerance <InfoTooltip title="Slippage Tolerance is the pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when swapping on AMMs." /></Subtitle>
         <StyledTabs value={customSlippage > 0 ? 0 : slippage} onChange={handleSlippageChange} sx={{ maxWidth: '832px' }}>
           <StyledTab value={0.1} label="0.1%" />
@@ -61,18 +61,18 @@ const OrderSetting: React.FC<Props> = ({ onBack }) => {
         </StyledTabs>
 
         <FormControl variant="standard" sx={{ width: '100%' }}>
-          <FormStack sx={ customSlippage && customSlippage > 0 ? { border: '1px solid #00f0ff' } : {}} direction="row" justifyContent="space-between" alignItems="center">
-            <Box sx={{ width: '110px', fontSize: '10px', fontWeight: '500'}}>
+          <FormStack sx={customSlippage && customSlippage > 0 ? { border: '1px solid #00f0ff' } : {}} direction="row" justifyContent="space-between" alignItems="center">
+            <CustomSlippagePlaceholder>
               Custom Slippage
-            </Box>
-            <InputAmount id="ip-amount" type="number" step=".1" placeholder="0.0" sx={ customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} value={Number(customSlippage).toString()} onChange={onChangeCustom}  />
+            </CustomSlippagePlaceholder>
+            <InputAmount id="ip-amount" type="number" step=".1" placeholder="0.0" sx={customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} value={Number(customSlippage).toString()} onChange={onChangeCustom} />
           </FormStack>
         </FormControl>
-			</Box>
+      </Box>
 
       <ActionButton onClick={onSave}>Save Settings</ActionButton>
-		</Box>
-	)
+    </Box>
+  )
 }
 
 const FormStack = styled(Stack)`
@@ -93,6 +93,20 @@ const StyledStack = styled(Stack)`
   letter-spacing: normal;
 	margin-bottom: 30px;
 `
+
+const BackButton = styled('div')`
+  cursor: pointer; 
+  color: #fff;
+  font-size: 21px;
+`
+
+const Title = styled('div')`
+  font-size: 16px; 
+  font-weight: 600; 
+  color: #fff; 
+  margin-top: 5px;
+`
+
 const Subtitle = styled(Box)`
 	text-align: left;
 	margin-bottom: 13px;
@@ -126,6 +140,12 @@ const ActionButton = styled(Button)`
   &:hover {
     background-color: #2e2e2e;
   }
+`
+
+const CustomSlippagePlaceholder = styled(Box)`
+  width: 110px; 
+  font-size: 10px;
+  font-weight: 500;
 `
 
 export default OrderSetting

@@ -25,9 +25,9 @@ const DataLoadingIndicator = () => {
     };
   }, [startTimer]);
 
-	return (
+  return (
     <Wrapper>
-      <div style={{ marginRight: '8px'}}>Data refresh in</div>
+      <div style={{ marginRight: '8px' }}>Data refresh in</div>
       <Box sx={{ position: 'relative' }}>
         <CircularProgress
           variant="determinate"
@@ -42,7 +42,7 @@ const DataLoadingIndicator = () => {
           thickness={8} value={progress} />
       </Box>
     </Wrapper>
-	)
+  )
 }
 
 export default DataLoadingIndicator
@@ -52,7 +52,6 @@ const Wrapper = styled(Box)`
   height: 35px;
   padding: 4px 11px 1px 8px;
   border-radius: 10px;
-  // background-color: #16171a;
   display: flex;
   align-items: center;
   justify-content: center;
