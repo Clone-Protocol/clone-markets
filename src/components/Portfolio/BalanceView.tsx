@@ -1,3 +1,4 @@
+import React from 'react';
 import { styled, Box, Paper } from '@mui/material'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const BalanceView: React.FC<Props> = ({ balance, data }) => {
-  const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
+	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('iPortfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
 	const [selectedUsdiAmount, setSelectedUsdiAmount] = useState(0)
@@ -36,19 +37,19 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 
 	return (
 		<StyledPaper>
-			<Box sx={{ width: '200px', marginBottom: '40px' }}>
-				<Title>{ selectedTitle }</Title>
+			<Box width='200px' marginBottom='40px'>
+				<Title>{selectedTitle}</Title>
 				<BalanceValue>
 					${selectedUsdiAmount.toLocaleString()}
 				</BalanceValue>
 			</Box>
 			<Box display="flex" alignItems="center">
 				<PieChartAlt data={data} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(data[index].key)} />
-				<Box sx={{ width: '180px'}}>
-					{ data.length > 0 ? 
-							data.map(item => (
-								<CategoryText key={item.key} style={selectedFilter===item.key ? {color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px'} : { marginLeft: '12px' }}>{item.name} - {item.value.toFixed(1)}%</CategoryText>
-							))
+				<Box width='180px'>
+					{data.length > 0 ?
+						data.map(item => (
+							<CategoryText key={item.key} style={selectedFilter === item.key ? { color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px' } : { marginLeft: '12px' }}>{item.name} - {item.value.toFixed(1)}%</CategoryText>
+						))
 						:
 						<div>
 							<CategoryText>iStocks - _%</CategoryText>
@@ -57,7 +58,7 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 							<CategoryText>iCrypto - _%</CategoryText>
 						</div>
 					}
-        </Box>
+				</Box>
 			</Box>
 		</StyledPaper>
 	)

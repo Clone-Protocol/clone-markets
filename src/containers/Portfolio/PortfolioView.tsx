@@ -22,17 +22,17 @@ const PortfolioView = () => {
 	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 
-  const { data: balance } = useBalanceQuery({
-    userPubKey: publicKey,
-	  refetchOnMount: 'always',
-    enabled: publicKey != null
+	const { data: balance } = useBalanceQuery({
+		userPubKey: publicKey,
+		refetchOnMount: 'always',
+		enabled: publicKey != null
 	})
 
 	const { data: assets } = useUserBalanceQuery({
-    userPubKey: publicKey,
-    filter: selectedFilter as FilterType,
-	  refetchOnMount: 'always',
-    enabled: publicKey != null
+		userPubKey: publicKey,
+		filter: selectedFilter as FilterType,
+		refetchOnMount: 'always',
+		enabled: publicKey != null
 	})
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ const PortfolioView = () => {
 						id: asset.assetType,
 						val: asset.usdiBalance
 					}
-			  }
+				}
 				totalBalance += asset.usdiBalance
 			})
 
@@ -80,11 +80,11 @@ const PortfolioView = () => {
 
 	return (
 		<div>
-			<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-			  { balance ? <BalanceView balance={balance} data={dataPie} /> : <></> }
+			<Box display='flex' justifyContent='center'>
+				{balance ? <BalanceView balance={balance} data={dataPie} /> : <></>}
 			</Box>
-			<Box sx={{ marginTop: '58px' }}>
-			  <BalanceList assets={assets} pieitems={dataPie} balance={balance} />
+			<Box marginTop='58px'>
+				<BalanceList assets={assets} pieitems={dataPie} balance={balance} />
 			</Box>
 		</div>
 	)

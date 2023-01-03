@@ -1,11 +1,11 @@
 import { styled } from '@mui/material'
 
-const BackdropPartMsg = ({ isUsdi, tickerSymbol } : { isUsdi : boolean, tickerSymbol: string | undefined}) => {
-	return (
-		<Wrapper>
-			<TitleMsg>{ isUsdi ? 'Incept Markets are traded using USDi. Please obtain USDi.' : `Your ${tickerSymbol} balance is zero, therefore sell is disabled.` }</TitleMsg>
-		</Wrapper>
-	)
+const BackdropPartMsg = ({ isUsdi, tickerSymbol }: { isUsdi: boolean, tickerSymbol: string | undefined }) => {
+  return (
+    <Wrapper>
+      <TitleMsg>{isUsdi ? 'Incept Markets are traded using USDi. Please obtain USDi.' : `Your ${tickerSymbol} balance is zero, therefore sell is disabled.`}</TitleMsg>
+    </Wrapper>
+  )
 }
 
 export default BackdropPartMsg
@@ -15,7 +15,6 @@ const Wrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  // bottom: 0;
   left: 0px;
   top: 200px;
   width: 100%;

@@ -1,5 +1,5 @@
 import { styled, Box, Stack, Button } from '@mui/material'
-import React, {useState, useCallback, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
@@ -23,22 +23,22 @@ import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
 
 export enum ComponentEffect {
-	iAssetAmount,
-	UsdiAmount,
-	BarValue,
-	TabIndex,
+  iAssetAmount,
+  UsdiAmount,
+  BarValue,
+  TabIndex,
 }
 
 export interface TradingData {
-	tabIdx: number
-	fromAmount: number
-	fromBalance: number
-	convertVal: number
+  tabIdx: number
+  fromAmount: number
+  fromBalance: number
+  convertVal: number
 }
 
 interface Props {
   assetIndex: number
-	onShowOption: () => void
+  onShowOption: () => void
 }
 
 const round = (n: number, decimals: number) => {
@@ -57,14 +57,14 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 
   const fromPair: PairData = {
     tickerIcon: '/images/assets/USDi.png',
-		tickerName: 'USDi Coin',
-		tickerSymbol: 'USDi',	
+    tickerName: 'USDi Coin',
+    tickerSymbol: 'USDi',
   }
 
-  const { data: balance, refetch } = useBalanceQuery({ 
-    userPubKey: publicKey, 
+  const { data: balance, refetch } = useBalanceQuery({
+    userPubKey: publicKey,
     index: assetIndex,
-	  refetchOnMount: "always",
+    refetchOnMount: "always",
     enabled: publicKey != null
   });
 
@@ -75,24 +75,24 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   })
 
   const {
-		handleSubmit,
-		control,
-		formState: { errors },
-		watch,
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
     setValue,
     trigger
-	} = useForm({
+  } = useForm({
     mode: 'onChange',
     defaultValues: {
       amountUsdi: 0.0,
       amountIasset: 0.0,
     }
-	})
+  })
 
   const [amountUsdi, amountIasset] = watch([
-		'amountUsdi',
-		'amountIasset',
-	])
+    'amountUsdi',
+    'amountIasset',
+  ])
 
   const initData = () => {
     setValue('amountUsdi', 0.0)
@@ -100,11 +100,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     refetch()
   }
 
-	const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
+  const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
     setTabIdx(newTabIdx)
     setOpenOrderDetails(false)
     trigger()
-	}
+  }
 
   useEffect(() => {
     calculateTotalAmountByConvert(convertVal)
@@ -114,13 +114,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 
   const { mutateAsync } = useTradingMutation(publicKey)
 
-	const handleChangeConvert = (event: Event, newValue: number | number[]) => {
-		if (typeof newValue === 'number') {
+  const handleChangeConvert = (event: Event, newValue: number | number[]) => {
+    if (typeof newValue === 'number') {
       setConvertVal(newValue)
-      calculateTotalAmountByConvert(newValue)    
+      calculateTotalAmountByConvert(newValue)
       trigger()
-		}
-	}
+    }
+  }
 
   const calculateTotalAmountByConvert = (convertRatio: number) => {
     const ammUsdiValue = balance?.ammUsdiValue!
@@ -133,7 +133,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
       usdi = balance?.usdiVal! * convertRatio / 100;
       iAsset = ammIassetValue - invariant / (ammUsdiValue + amountUsdi)
     } else {
-    // sell
+      // sell
       iAsset = balance?.iassetVal! * convertRatio / 100;
       usdi = ammUsdiValue - invariant / (ammIassetValue + amountIasset)
     }
@@ -152,7 +152,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
       setConvertVal(convertRatio)
       setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
     } else {
-    // sell
+      // sell
       const convertRatio = newValue * 100 / balance?.iassetVal!
       const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
       setConvertVal(convertRatio)
@@ -186,10 +186,10 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
         }
       }
     )
-	}
+  }
 
   const getPrice = () => {
-    return amountUsdi / amountIasset 
+    return amountUsdi / amountIasset
   }
 
   const getPriceImpactPct = () => {
@@ -199,27 +199,27 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 
   const isValid = Object.keys(errors).length === 0
 
-	return  (
+  return (
     <>
       {loading && (
-				<LoadingWrapper>
-					<LoadingIndicator open inline />
-				</LoadingWrapper>
-			)}
-    
-      <div style={{ width: '100%', height: '100%'}}>
+        <LoadingWrapper>
+          <LoadingIndicator open inline />
+        </LoadingWrapper>
+      )}
+
+      <div style={{ width: '100%', height: '100%' }}>
         <Box
           sx={{
             p: '18px',
           }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box display='flex' justifyContent='center'>
             <StyledTabs value={tabIdx} onChange={handleChangeTab}>
               <StyledTab label="Buy"></StyledTab>
               <StyledTab label="Sell"></StyledTab>
             </StyledTabs>
           </Box>
-          <Box sx={{ marginTop: '30px' }}>
-            { 
+          <Box marginTop='30px'>
+            {
               // ::Buy
               tabIdx === 0 ?
                 <Box>
@@ -235,7 +235,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         }
                       }
                     }}
-                    render={({ field }) => (          
+                    render={({ field }) => (
                       <PairInput
                         title="How much?"
                         tickerIcon={fromPair.tickerIcon}
@@ -257,7 +257,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                   />
                   {/* <FormHelperText error={!!errors.amountUsdi?.message}>{errors.amountUsdi?.message}</FormHelperText> */}
                 </Box>
-              :
+                :
                 <Box>
                   <Controller
                     name="amountIasset"
@@ -271,7 +271,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         }
                       }
                     }}
-                    render={({ field }) => (          
+                    render={({ field }) => (
                       <PairInput
                         title="How much?"
                         tickerIcon={assetData?.tickerIcon!}
@@ -296,16 +296,16 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             }
           </Box>
 
-          <Box sx={{ height: '100%' }}>
-            <Box sx={{ marginTop: '23px', marginBottom: '23px' }}>
-              <ConvertSlider isBuy={tabIdx===0} value={convertVal} onChange={handleChangeConvert} />
+          <Box height='100%'>
+            <Box marginTop='23px' marginBottom='23px'>
+              <ConvertSlider isBuy={tabIdx === 0} value={convertVal} onChange={handleChangeConvert} />
             </Box>
 
             <PairInput
               title="Total"
-              tickerIcon={tabIdx===0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
-              ticker={tabIdx===0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
-              value={tabIdx===0 ? amountIasset : amountUsdi}
+              tickerIcon={tabIdx === 0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
+              ticker={tabIdx === 0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
+              value={tabIdx === 0 ? amountIasset : amountUsdi}
               balanceDisabled={true}
             />
 
@@ -313,7 +313,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               direction="row"
               justifyContent="flex-end"
               alignItems="center"
-              sx={{ marginTop: '16px', marginBottom: '23px' }}>
+              marginTop='16px'
+              marginBottom='23px'>
               <IconButton onClick={() => refetch()}>
                 <Image src={reloadIcon} alt="reload" />
               </IconButton>
@@ -322,28 +323,28 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               </IconButton>
             </Stack>
 
-            <ActionButton sx={ tabIdx===0 ? {borderColor: '#0f6'} : {borderColor: '#fb782e'}} onClick={handleSubmit(onConfirm)} disabled={!isValid}>
-              {!isValid ? `Insufficient Balance` : `Confirm market ${ tabIdx === 0 ? 'buy' : 'sell' }`}
+            <ActionButton sx={tabIdx === 0 ? { borderColor: '#0f6' } : { borderColor: '#fb782e' }} onClick={handleSubmit(onConfirm)} disabled={!isValid}>
+              {!isValid ? `Insufficient Balance` : `Confirm market ${tabIdx === 0 ? 'buy' : 'sell'}`}
             </ActionButton>
 
-            <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff'} : { color: '#868686' }}>
-              <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={ tabIdx===0? {color: '#0f6'} : {color: '#fb782e'}}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon /> }</ArrowIcon>
+            <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
+              <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={tabIdx === 0 ? { color: '#0f6' } : { color: '#fb782e' }}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
-            { openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} /> }
+            {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Box display='flex' justifyContent='center'>
               <RateLoadingIndicator />
-            </div>
+            </Box>
 
-            { (tabIdx===0 && balance?.usdiVal===0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} /> }
-            { (tabIdx===1 && balance?.iassetVal===0) && <BackdropPartMsg isUsdi={false} tickerSymbol={assetData?.tickerSymbol} /> }
-          </Box>
+            {(tabIdx === 0 && balance?.usdiVal === 0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} />}
+            {(tabIdx === 1 && balance?.iassetVal === 0) && <BackdropPartMsg isUsdi={false} tickerSymbol={assetData?.tickerSymbol} />}
+          </Box >
 
-          { !publicKey && <BackdropMsg /> }
-        </Box>
-      </div>
+          {!publicKey && <BackdropMsg />}
+        </Box >
+      </div >
     </>
-	)
+  )
 }
 
 const IconButton = styled('div')`
