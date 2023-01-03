@@ -2,6 +2,7 @@ import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
 import { useIncept } from '~/hooks/useIncept'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
@@ -18,6 +19,8 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 
 	let usdiVal = 0.0
   let iassetVal = 0.0
+  let ammIassetValue;
+  let ammUsdiValue;
   
   const [tokenDataResult, usdiAtaResult] = await Promise.allSettled([
     program.getTokenData(), getUSDiAccount(program)
@@ -34,15 +37,20 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 
   try {
     if (tokenDataResult.status === 'fulfilled') {
+      const pool = tokenDataResult.value.pools[index]
       const associatedTokenAccount = await getTokenAccount(
-        tokenDataResult.value.pools[index].assetInfo.iassetMint,
+        pool.assetInfo.iassetMint,
         program.provider.wallet.publicKey!,
         program.provider.connection
       );
+
       if (associatedTokenAccount) {
         const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
         iassetVal =  Number(iassetBalance.value.amount) / 100000000;
       }
+
+      ammIassetValue = toNumber(pool.iassetAmount)
+      ammUsdiValue = toNumber(pool.usdiAmount)
     }
 	} catch (e) {
     console.error(e)
@@ -50,7 +58,9 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 
 	return {
 		usdiVal,
-    iassetVal
+    iassetVal,
+    ammIassetValue,
+    ammUsdiValue
 	}
 }
 
@@ -64,6 +74,8 @@ interface GetProps {
 export interface Balance {
 	usdiVal: number
 	iassetVal: number
+  ammIassetValue: number
+  ammUsdiValue: number
 }
 
 export function useBalanceQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
