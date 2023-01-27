@@ -9,7 +9,7 @@ export enum Asset {
 	Solana,
 	Ethereum,
 	Bitcoin,
-	Luna,
+	Bnb,
 	Avalanche,
 	Tesla,
 	Apple,
@@ -30,8 +30,8 @@ export const ASSETS = [
 		tickerIcon: '/images/assets/euro.png',
 	},
 	{
-		tickerName: 'iSPTSGD (GOLD INDEX)',
-		tickerSymbol: 'iSPTSGD',
+		tickerName: 'iXAU (GOLD INDEX)',
+		tickerSymbol: 'iXAU',
 		tickerIcon: '/images/assets/gold.png',
 	},
 	{
@@ -50,9 +50,9 @@ export const ASSETS = [
 		tickerIcon: '/images/assets/bitcoin.png',
 	},
 	{
-		tickerName: 'iLuna',
-		tickerSymbol: 'iLUNA',
-		tickerIcon: '/images/assets/terra.png',
+		tickerName: 'iBNB',
+		tickerSymbol: 'iBNB',
+		tickerIcon: '/images/assets/bnb.png',
 	},
 	{
 		tickerName: 'iAvalanche',
@@ -89,8 +89,8 @@ export const assetMapping = (index: number) => {
 			assetType = AssetType.Fx
 			break
 		case Asset.Gold:
-			tickerName = 'iSPTSGD (GOLD INDEX)'
-			tickerSymbol = 'iSPTSGD'
+			tickerName = 'iXAU (GOLD INDEX)'
+			tickerSymbol = 'iXAU'
 			tickerIcon = '/images/assets/gold.png'
 			assetType = AssetType.Commodities
 			break
@@ -112,10 +112,10 @@ export const assetMapping = (index: number) => {
 			tickerIcon = '/images/assets/bitcoin.png'
 			assetType = AssetType.Crypto
 			break
-		case Asset.Luna:
-			tickerName = 'iLuna'
-			tickerSymbol = 'iLUNA'
-			tickerIcon = '/images/assets/terra.png'
+		case Asset.Bnb:
+			tickerName = 'iBNB'
+			tickerSymbol = 'iBNB'
+			tickerIcon = '/images/assets/bnb.png'
 			assetType = AssetType.Crypto
 			break
 		case Asset.Avalanche:
