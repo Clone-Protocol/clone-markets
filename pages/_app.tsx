@@ -13,50 +13,53 @@ import { NextPage } from 'next'
 import ClientWalletProvider from '~/hocs/ClientWalletProvider'
 import { DataLoadingIndicatorProvider } from '~/hocs/DataLoadingIndicatorProvider'
 import { RecoilRoot } from 'recoil'
+import { TransactionStateProvider } from '~/hocs/TransactionStateProvider'
 import './styles.css'
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-	const getLayout = Component.getLayout ?? ((page) => page)
+  const getLayout = Component.getLayout ?? ((page) => page)
 
-	return (
-		<QueryProvider>
+  return (
+    <QueryProvider>
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <SnackbarProvider maxSnack={3}>
             <ClientWalletProvider>
-              <DataLoadingIndicatorProvider>
-                <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
-                  <CssBaseline />
-                  <GNB />
-                  <Drawer />
+              <TransactionStateProvider>
+                <DataLoadingIndicatorProvider>
+                  <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
+                    <CssBaseline />
+                    <GNB />
+                    <Drawer />
 
-                  <Box
-                    component="main"
-                    sx={{
-                      flexGrow: 1,
-                      height: '100vh',
-                      overflow: 'auto',
-                    }}>
-                    {getLayout(<Component {...pageProps} />)}
+                    <Box
+                      component="main"
+                      sx={{
+                        flexGrow: 1,
+                        height: '100vh',
+                        overflow: 'auto',
+                      }}>
+                      {getLayout(<Component {...pageProps} />)}
+                    </Box>
                   </Box>
-                </Box>
-              </DataLoadingIndicatorProvider>
+                </DataLoadingIndicatorProvider>
+              </TransactionStateProvider>
             </ClientWalletProvider>
           </SnackbarProvider>
         </ThemeProvider>
       </RecoilRoot>
-			<ReactQueryDevtools initialIsOpen={false} />
-		</QueryProvider>
-	)
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryProvider>
+  )
 }
 
 type NextPageWithLayout = NextPage & {
-	// eslint-disable-next-line no-unused-vars
-	getLayout?: (page: ReactElement) => ReactNode
+  // eslint-disable-next-line no-unused-vars
+  getLayout?: (page: ReactElement) => ReactNode
 }
 
 type AppPropsWithLayout = AppProps & {
-	Component: NextPageWithLayout
+  Component: NextPageWithLayout
 }
 
 export default MyApp

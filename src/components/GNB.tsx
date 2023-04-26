@@ -22,7 +22,6 @@ import { useIncept } from '~/hooks/useIncept'
 import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import "@fontsource/almarai";
 import { getUSDiAccount } from '~/utils/token_accounts'
 import { Transaction } from '@solana/web3.js'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'

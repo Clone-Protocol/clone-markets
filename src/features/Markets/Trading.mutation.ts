@@ -2,14 +2,14 @@ import { PublicKey, Transaction } from '@solana/web3.js'
 import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
 import { useMutation } from 'react-query'
 import { useIncept } from '~/hooks/useIncept'
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token"
 
 export const callTrading = async ({
 	program,
 	userPubKey,
-  data,
+	data,
 }: CallTradingProps) => {
 	if (!userPubKey) throw new Error('no user public key')
 
@@ -37,10 +37,10 @@ export const callTrading = async ({
 		collateralAssociatedTokenAccount = usdiAssociatedToken;
 		tx.add(
 			await createAssociatedTokenAccountInstruction(
-			  userPubKey,
-			  usdiAssociatedToken,
-			  userPubKey,
-			  program.manager!.usdiMint,
+				userPubKey,
+				usdiAssociatedToken,
+				userPubKey,
+				program.manager!.usdiMint,
 			)
 		);
 	}
@@ -53,12 +53,12 @@ export const callTrading = async ({
 		iassetAssociatedTokenAccount = iAssetAssociatedToken;
 		tx.add(
 			await createAssociatedTokenAccountInstruction(
-			  userPubKey,
-			  iAssetAssociatedToken,
-			  userPubKey,
-			  assetInfo.iassetMint,
+				userPubKey,
+				iAssetAssociatedToken,
+				userPubKey,
+				assetInfo.iassetMint,
 			)
-		  );
+		);
 	}
 
 	if (isBuy) {
@@ -76,25 +76,25 @@ export const callTrading = async ({
 			iassetIndex
 		))
 	}
-	await program.provider.send!(tx, [], {commitment: 'processed', preflightCommitment: 'processed'});
-  
-  return {
-    result: true
-  }
+	await program.provider.send!(tx, [], { commitment: 'processed', preflightCommitment: 'processed' });
+
+	return {
+		result: true
+	}
 }
 
 type FormData = {
-  amountUsdi: number
-  amountIasset: number
+	amountUsdi: number
+	amountIasset: number
 	iassetIndex: number
 	isBuy: boolean
 }
 interface CallTradingProps {
 	program: Incept
 	userPubKey: PublicKey | null
-  data: FormData
+	data: FormData
 }
-export function useTradingMutation(userPubKey : PublicKey | null ) {
-  const { getInceptApp } = useIncept()
-  return useMutation((data: FormData) => callTrading({ program: getInceptApp(), userPubKey, data }))
+export function useTradingMutation(userPubKey: PublicKey | null) {
+	const { getInceptApp } = useIncept()
+	return useMutation((data: FormData) => callTrading({ program: getInceptApp(), userPubKey, data }))
 }
