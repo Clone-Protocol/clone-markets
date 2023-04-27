@@ -1,6 +1,6 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
@@ -8,8 +8,9 @@ import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { getTokenAccount } from '~/utils/token_accounts'
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
-export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: Incept, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void}) => {
+export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void }) => {
 	if (!userPubKey) return []
 
 	console.log('fetchUserBalance')
@@ -80,8 +81,8 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 interface GetAssetsProps {
 	userPubKey: PublicKey | null
 	filter: FilterType
-  refetchOnMount?: QueryObserverOptions['refetchOnMount']
-  enabled?: boolean
+	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	enabled?: boolean
 }
 
 export interface BalanceList {
@@ -98,14 +99,15 @@ export interface BalanceList {
 }
 
 export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
-  const { getInceptApp } = useIncept()
+	const wallet = useAnchorWallet()
+	const { getInceptApp } = useIncept()
 	const { setStartTimer } = useDataLoading()
 
-  return useQuery(['userBalance', userPubKey], () => fetchUserBalance({ program: getInceptApp(), userPubKey, setStartTimer }), {
-    refetchOnMount,
+	return useQuery(['userBalance', userPubKey], () => fetchUserBalance({ program: getInceptApp(wallet), userPubKey, setStartTimer }), {
+		refetchOnMount,
 		refetchInterval: REFETCH_CYCLE,
 		refetchIntervalInBackground: true,
-    enabled,
+		enabled,
 		select: (assets) => assets.filter((asset) => {
 			if (filter === 'icrypto') {
 				return asset.assetType === AssetType.Crypto
@@ -118,5 +120,5 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 			}
 			return true;
 		})
-  })
+	})
 }

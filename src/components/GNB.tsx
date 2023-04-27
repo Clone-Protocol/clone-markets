@@ -23,8 +23,9 @@ import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getUSDiAccount } from '~/utils/token_accounts'
-import { Transaction } from '@solana/web3.js'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
+import { sendAndConfirm } from '~/utils/tx_helper'
+import { useTransactionState } from '~/hooks/useTransactionState'
 
 
 const GNB: React.FC = () => {
@@ -88,26 +89,24 @@ const RightMenu = () => {
 	const [mintUsdi, setMintUsdi] = useState(false)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
+	const { setTxState } = useTransactionState()
 
 	useEffect(() => {
 		async function userMintUsdi() {
-			if (connected && publicKey && mintUsdi) {
-				const program = getInceptApp()
+			if (connected && publicKey && mintUsdi && wallet) {
+				const program = getInceptApp(wallet)
 				await program.loadManager()
 				const usdiTokenAccount = await getUSDiAccount(program);
+				const ata = await getAssociatedTokenAddress(program.incept!.usdiMint, publicKey);
+				let ixnCalls = []
 				try {
 					if (usdiTokenAccount === undefined) {
-						const ata = await getAssociatedTokenAddress(program.manager!.usdiMint, publicKey);
-						const tx = new Transaction().add(
-							await createAssociatedTokenAccountInstruction(publicKey, ata, publicKey, program.manager!.usdiMint)
-						).add(
-							await program.hackathonMintUsdiInstruction(ata, 10000000000)
-						);
-						await program.provider.send!(tx);
-
-					} else {
-						await program.hackathonMintUsdi(usdiTokenAccount!, 10000000000);
+						ixnCalls.push((async () => createAssociatedTokenAccountInstruction(publicKey, ata, publicKey, program.incept!.usdiMint))())
 					}
+					ixnCalls.push(program.hackathonMintUsdiInstruction(ata, 10000000000))
+					let ixns = await Promise.all(ixnCalls)
+					await sendAndConfirm(program.provider, ixns, setTxState)
+
 				} finally {
 					setMintUsdi(false)
 				}
@@ -150,6 +149,7 @@ const RightMenu = () => {
 	const handleDisconnect = () => {
 		disconnect()
 		setShowWalletSelectPopup(false)
+		router.replace('/')
 	}
 
 	return (

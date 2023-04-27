@@ -1,10 +1,11 @@
 import { PublicKey, Transaction } from '@solana/web3.js'
-import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { useMutation } from 'react-query'
 import { useIncept } from '~/hooks/useIncept'
 import { BN } from '@coral-xyz/anchor'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token"
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 export const callTrading = async ({
 	program,
@@ -90,11 +91,12 @@ type FormData = {
 	isBuy: boolean
 }
 interface CallTradingProps {
-	program: Incept
+	program: InceptClient
 	userPubKey: PublicKey | null
 	data: FormData
 }
 export function useTradingMutation(userPubKey: PublicKey | null) {
+	const wallet = useAnchorWallet()
 	const { getInceptApp } = useIncept()
-	return useMutation((data: FormData) => callTrading({ program: getInceptApp(), userPubKey, data }))
+	return useMutation((data: FormData) => callTrading({ program: getInceptApp(wallet), userPubKey, data }))
 }

@@ -1,11 +1,12 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { PublicKey } from '@solana/web3.js'
-import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { assetMapping } from '~/data/assets'
 import { useIncept } from '~/hooks/useIncept'
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
-export const fetchAsset = async ({ program, userPubKey, index }: { program: Incept, userPubKey: PublicKey | null, index: number }) => {
+export const fetchAsset = async ({ program, userPubKey, index }: { program: InceptClient, userPubKey: PublicKey | null, index: number }) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
@@ -46,7 +47,7 @@ interface GetProps {
 	userPubKey: PublicKey | null
 	index: number
 	refetchOnMount?: QueryObserverOptions['refetchOnMount']
-  enabled?: boolean
+	enabled?: boolean
 }
 
 export interface Asset {
@@ -66,9 +67,10 @@ export interface Asset {
 }
 
 export function useTradingQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
-  const { getInceptApp } = useIncept()
-  return useQuery(['tradeDetail', userPubKey, index], () => fetchAsset({ program: getInceptApp(), userPubKey, index }), {
-    refetchOnMount,
-    enabled
-  })
+	const wallet = useAnchorWallet()
+	const { getInceptApp } = useIncept()
+	return useQuery(['tradeDetail', userPubKey, index], () => fetchAsset({ program: getInceptApp(wallet), userPubKey, index }), {
+		refetchOnMount,
+		enabled
+	})
 }

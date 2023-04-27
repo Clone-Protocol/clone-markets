@@ -1,4 +1,3 @@
-import React from 'react'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled, List, ListItemButton, ListItemIcon, Box, Stack, Fade } from '@mui/material'
 import Link from 'next/link'

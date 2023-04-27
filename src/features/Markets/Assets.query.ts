@@ -1,18 +1,19 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
-export const fetchAssets = async ({ program, setStartTimer }: { program: Incept, setStartTimer: (start: boolean) => void }) => {
+export const fetchAssets = async ({ program, setStartTimer }: { program: InceptClient, setStartTimer: (start: boolean) => void }) => {
 	console.log('fetchAssets')
 	// start timer in data-loading-indicator
-  setStartTimer(false);
-  setStartTimer(true);
-	
+	setStartTimer(false);
+	setStartTimer(true);
+
 	await program.loadManager()
 
 	const tokenData = await program.getTokenData();
@@ -39,9 +40,9 @@ export const fetchAssets = async ({ program, setStartTimer }: { program: Incept,
 
 interface GetAssetsProps {
 	filter: FilterType
-  searchTerm: string
-  refetchOnMount?: QueryObserverOptions['refetchOnMount']
-  enabled?: boolean
+	searchTerm: string
+	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	enabled?: boolean
 }
 
 export interface AssetList {
@@ -56,17 +57,18 @@ export interface AssetList {
 }
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
-  const { getInceptApp } = useIncept()
+	const wallet = useAnchorWallet()
+	const { getInceptApp } = useIncept()
 	const { setStartTimer } = useDataLoading()
 
-  return useQuery(['assets'], () => fetchAssets({ program: getInceptApp(), setStartTimer }), {
-    refetchOnMount,
+	return useQuery(['assets'], () => fetchAssets({ program: getInceptApp(wallet), setStartTimer }), {
+		refetchOnMount,
 		refetchInterval: REFETCH_CYCLE,
 		refetchIntervalInBackground: true,
-    enabled,
-    select: (assets) => {
+		enabled,
+		select: (assets) => {
 			let filteredAssets = assets
-			
+
 			filteredAssets = assets.filter((asset) => {
 				if (filter === 'icrypto') {
 					return asset.assetType === AssetType.Crypto
@@ -86,5 +88,5 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = t
 
 			return filteredAssets
 		}
-  })
+	})
 }

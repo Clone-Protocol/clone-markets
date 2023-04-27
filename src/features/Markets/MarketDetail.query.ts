@@ -1,10 +1,11 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { assetMapping } from 'src/data/assets'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
-export const fetchMarketDetail = async ({ program, index }: { program: Incept, index: number }) => {
+export const fetchMarketDetail = async ({ program, index }: { program: InceptClient, index: number }) => {
 	console.log('fetchMarketDetail', index)
 
 	await program.loadManager()
@@ -44,8 +45,8 @@ export const fetchMarketDetailDefault = () => {
 
 interface GetProps {
 	index: number
-  refetchOnMount?: QueryObserverOptions['refetchOnMount']
-  enabled?: boolean
+	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	enabled?: boolean
 }
 
 export interface PairData {
@@ -55,9 +56,10 @@ export interface PairData {
 }
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
-  const { getInceptApp } = useIncept()
-  return useQuery(['marketDetail', index], () => fetchMarketDetail({ program: getInceptApp(), index }), {
-    refetchOnMount,
-    enabled
-  })
+	const wallet = useAnchorWallet()
+	const { getInceptApp } = useIncept()
+	return useQuery(['marketDetail', index], () => fetchMarketDetail({ program: getInceptApp(wallet), index }), {
+		refetchOnMount,
+		enabled
+	})
 }

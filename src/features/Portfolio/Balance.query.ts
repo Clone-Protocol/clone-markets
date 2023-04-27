@@ -1,10 +1,11 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { Incept } from 'incept-protocol-sdk/sdk/src/incept'
+import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { PublicKey } from '@solana/web3.js'
 import { useIncept } from '~/hooks/useIncept'
 import { getUSDiAccount } from "~/utils/token_accounts"
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
-export const fetchBalance = async ({ program, userPubKey }: { program: Incept, userPubKey: PublicKey | null}) => {
+export const fetchBalance = async ({ program, userPubKey }: { program: InceptClient, userPubKey: PublicKey | null }) => {
 	if (!userPubKey) return null
 
 	await program.loadManager()
@@ -15,12 +16,12 @@ export const fetchBalance = async ({ program, userPubKey }: { program: Incept, u
 	try {
 		const usdiAssociatedTokenAccount = await getUSDiAccount(program);
 		if (usdiAssociatedTokenAccount) {
-		  const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount, "processed");
-		  balanceVal = Number(usdiBalance.value.amount) / 100000000;
+			const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount, "processed");
+			balanceVal = Number(usdiBalance.value.amount) / 100000000;
 		}
 	} catch (e) {
-    console.error(e)
-  }
+		console.error(e)
+	}
 
 	try {
 		let iassetInfos = await program.getUseriAssetInfo()
@@ -29,8 +30,8 @@ export const fetchBalance = async ({ program, userPubKey }: { program: Incept, u
 			totalVal += infos[1] * infos[2]
 		})
 	} catch (e) {
-    console.error(e)
-  }
+		console.error(e)
+	}
 
 	return {
 		totalVal: totalVal + balanceVal,
@@ -40,8 +41,8 @@ export const fetchBalance = async ({ program, userPubKey }: { program: Incept, u
 
 interface GetProps {
 	userPubKey: PublicKey | null
-  refetchOnMount?: QueryObserverOptions['refetchOnMount']
-  enabled?: boolean
+	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	enabled?: boolean
 }
 
 export interface Balance {
@@ -50,9 +51,10 @@ export interface Balance {
 }
 
 export function useBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: GetProps) {
-  const { getInceptApp } = useIncept()
-  return useQuery(['balance', userPubKey], () => fetchBalance({ program: getInceptApp(), userPubKey }), {
-    refetchOnMount,
-    enabled
-  })
+	const wallet = useAnchorWallet()
+	const { getInceptApp } = useIncept()
+	return useQuery(['balance', userPubKey], () => fetchBalance({ program: getInceptApp(wallet), userPubKey }), {
+		refetchOnMount,
+		enabled
+	})
 }
