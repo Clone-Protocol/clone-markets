@@ -5,30 +5,34 @@ import { useCallback, useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType, FilterTypeMap } from '~/data/filter'
 import Link from 'next/link'
-import { Grid, CellTicker } from '~/components/Common/DataGrid'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { PageTabs, PageTab } from '~/components/Common/Tabs'
 import SearchInput from '~/components/Markets/SearchInput'
 import useDebounce from '~/hooks/useDebounce'
+import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
+import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
+import { GridEventListener } from '@mui/x-data-grid'
+import { useRouter } from 'next/router'
 
 const MarketList = () => {
 	const [filter, setFilter] = useState<FilterType>('all')
-  const [searchTerm, setSearchTerm] = useState('')
-  const debounceSearchTerm = useDebounce(searchTerm, 500)
+	const router = useRouter()
+	const [searchTerm, setSearchTerm] = useState('')
+	const debounceSearchTerm = useDebounce(searchTerm, 500)
 
 	const { data: assets } = useAssetsQuery({
-	  filter,
-    searchTerm: debounceSearchTerm ? debounceSearchTerm : '',
-	  refetchOnMount: true,
-    enabled: true
+		filter,
+		searchTerm: debounceSearchTerm ? debounceSearchTerm : '',
+		refetchOnMount: "always",
+		enabled: true
 	})
 
 	const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
 		setFilter(newValue)
 	}
 
-  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		const newVal = e.currentTarget.value
 		if (newVal) {
 			setSearchTerm(newVal)
@@ -37,14 +41,20 @@ const MarketList = () => {
 		}
 	}, [searchTerm])
 
+	const handleRowClick: GridEventListener<'rowClick'> = (
+		params
+	) => {
+		router.push(`/assets/${params.row.ticker}/asset`)
+	}
+
 	return (
 		<Box
 			sx={{
 				background: '#000',
 				color: '#fff',
-        padding: '18px 36px',
-        borderRadius: '10px',
-        '& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
+				padding: '18px 36px',
+				borderRadius: '10px',
+				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
 			<Stack mb={2} direction="row">
 				<PageTabs value={filter} onChange={handleFilterChange}>
@@ -52,12 +62,14 @@ const MarketList = () => {
 						<PageTab key={f} value={f} label={FilterTypeMap[f as FilterType]} />
 					))}
 				</PageTabs>
-        <SearchInput onChange={handleSearch} />
+				<SearchInput onChange={handleSearch} />
 			</Stack>
 			<Grid
-        headers={columns}
+				headers={columns}
 				rows={assets || []}
 				minHeight={window.innerHeight - 50}
+				customNoRowsOverlay={() => CustomNoRowsOverlay('No assets')}
+				onRowClick={handleRowClick}
 			/>
 		</Box>
 	)
@@ -65,78 +77,61 @@ const MarketList = () => {
 
 let columns: GridColDef[] = [
 	{
-		field: 'iAssets',
-    headerClassName: 'first--header',
-		headerName: 'iAssets',
+		field: 'iAsset',
+		headerClassName: 'super-app-theme--header',
+		cellClassName: 'super-app-theme--cell',
+		headerName: 'iAsset',
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-        <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
+				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
 			)
 		},
 	},
 	{
 		field: 'price',
+		headerClassName: 'super-app-theme--header',
+		cellClassName: 'super-app-theme--cell',
 		headerName: 'Price (USDi)',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box sx={{ fontSize: '14px', fontWeight: '500', marginLeft: '10px' }}>${params.value.toLocaleString()}</Box>
+			return <CellDigitValue value={params.value} symbol="USDi" />
 		},
 	},
 	{
-		field: '24hChange',
-		headerName: '24hr Change',
+		field: 'liquidity',
+		headerClassName: 'super-app-theme--header',
+		cellClassName: 'super-app-theme--cell',
+		headerName: 'Liquidity',
+		flex: 2,
+		renderCell(params: GridRenderCellParams<string>) {
+			return <CellDigitValue value={params.value} symbol="USDi" />
+		},
+	},
+	{
+		field: '24hVolume',
+		headerClassName: 'super-app-theme--header',
+		cellClassName: 'super-app-theme--cell',
+		headerName: '24h Volume',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			const val = parseFloat(params.row.change24h)
-			if (val >= 0) {
-				return <ChangePricePlus>+${val}</ChangePricePlus>
-			} else {
-				return <ChangePriceMinus>-${Math.abs(val)}</ChangePriceMinus>
-			}
+			return <CellDigitValue value={params.row.volume24h} symbol="USDi" />
 		},
 	},
 	{
-		field: 'percentChange',
-		headerName: '% Change',
-		flex: 1,
-		renderCell(params: GridRenderCellParams<string>) {
-			const val = parseFloat(params.row.changePercent)
-			if (val >= 0) {
-				return <ChangePricePlus>+${val}</ChangePricePlus>
-			} else {
-				return <ChangePriceMinus>-${Math.abs(val)}</ChangePriceMinus>
-			}
-		},
-	},
-	{
-		field: 'trade',
-    headerClassName: 'last--header',
-		headerName: '',
-    cellClassName: 'last--cell',
+		field: 'action',
+		headerClassName: 'super-app-theme--header',
+		cellClassName: 'last--cell',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-        <Link href={`/markets/${params.row.id}/asset`}>
-          <TradeButton>Trade</TradeButton>
-        </Link>
+				<Link href={`/markets/${params.row.id}/asset`}>
+					<TradeButton>Trade</TradeButton>
+				</Link>
 			)
 		},
 	},
 ]
-
-const ChangePricePlus = styled(Box)`
-	font-size: 12px;
-	font-weight: 500;
-	color: #00ff66;
-  margin-left: 10px;
-`
-const ChangePriceMinus = styled(Box)`
-	font-size: 12px;
-	font-weight: 500;
-	color: #fb782e;
-  margin-left: 10px;
-`
 
 const TradeButton = styled(Button)`
 	border-radius: 8px;

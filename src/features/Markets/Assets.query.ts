@@ -1,38 +1,55 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
-import { useIncept } from '~/hooks/useIncept'
 import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
-import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { getAggregatedPoolStats, getiAssetInfos } from '~/utils/assets';
+import { AnchorProvider } from "@coral-xyz/anchor";
+import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
+import { PublicKey, Connection } from "@solana/web3.js";
 
-export const fetchAssets = async ({ program, setStartTimer }: { program: InceptClient, setStartTimer: (start: boolean) => void }) => {
+export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: boolean) => void }) => {
 	console.log('fetchAssets')
 	// start timer in data-loading-indicator
 	setStartTimer(false);
 	setStartTimer(true);
 
+	// MEMO: to support provider without wallet adapter
+	const network = getNetworkDetailsFromEnv()
+	const new_connection = new Connection(network.endpoint)
+	const provider = new AnchorProvider(
+		new_connection,
+		{
+			signTransaction: () => Promise.reject(),
+			signAllTransactions: () => Promise.reject(),
+			publicKey: PublicKey.default, // MEMO: dummy pubkey
+		},
+		{}
+	);
+	// @ts-ignore
+	const program = new InceptClient(network.incept, provider)
 	await program.loadManager()
 
 	const tokenData = await program.getTokenData();
+	const iassetInfos = getiAssetInfos(tokenData);
+	const poolStats = await getAggregatedPoolStats(tokenData)
+
 	const result: AssetList[] = []
 
-	for (let i = 0; i < Number(tokenData.numPools); i++) {
-		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
-		const pool = tokenData.pools[i]
-		const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
-
+	for (const info of iassetInfos) {
+		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
+		const stats = poolStats[info.poolIndex]
 		result.push({
-			id: i,
+			id: info.poolIndex,
 			tickerName,
 			tickerSymbol,
 			tickerIcon,
-			price,
+			price: info.poolPrice,
 			assetType,
-			change24h: 0, //coming soon
-			changePercent: 0, //coming soon
+			liquidity: parseInt(info.liquidity.toString()),
+			volume24h: stats.volumeUSD,
+			feeRevenue24h: stats.fees
 		})
 	}
 	return result
@@ -52,16 +69,23 @@ export interface AssetList {
 	tickerIcon: string
 	price: number
 	assetType: number
-	change24h: number
-	changePercent: number
+	liquidity: number
+	volume24h: number
+	feeRevenue24h: number
 }
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
-	const wallet = useAnchorWallet()
-	const { getInceptApp } = useIncept()
 	const { setStartTimer } = useDataLoading()
 
-	return useQuery(['assets'], () => fetchAssets({ program: getInceptApp(wallet), setStartTimer }), {
+	let queryFunc
+	try {
+		queryFunc = () => fetchAssets({ setStartTimer })
+	} catch (e) {
+		console.error(e)
+		queryFunc = () => []
+	}
+
+	return useQuery(['assets'], queryFunc, {
 		refetchOnMount,
 		refetchInterval: REFETCH_CYCLE,
 		refetchIntervalInBackground: true,

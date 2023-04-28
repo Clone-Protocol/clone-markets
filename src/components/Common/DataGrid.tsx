@@ -1,36 +1,37 @@
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Box } from '@mui/material'
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
+import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 
 interface GridProps {
   headers: GridColDef[],
   rows: any,
-  minHeight: number,
+  customNoRowsOverlay: () => JSX.Element,
+  hasRangeIndicator?: boolean,
+  gridType?: GridType,
+  minHeight?: number,
+  onRowClick?: GridEventListener<'rowClick'>
 }
 
-const CustomNoRowsOverlay = () => {
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '60px', fontSize: '12px', fontWeight: '500', color: '#fff'}}>
-      No iAsset to display. <span style={{ fontWeight: 'bold', color: '#00f0ff', marginLeft: '3px' }}>Start Trading!</span>
-    </Box>
-  )
+export const enum GridType {
+  Normal = 'normal',
+  SingleComet = 'singleComet',
+  Borrow = 'borrow'
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows, minHeight }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, hasRangeIndicator = false, gridType = GridType.Normal, minHeight = 260, onRowClick }) => (
   <DataGrid
     sx={{
       border: 0,
       color: '#fff',
       minHeight: `${minHeight}px`,
-      height: '100%',
       '& .last--cell': {
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        marginRight: '4px',
       },
       '& .MuiDataGrid-columnHeaderTitle': {
-        color: '#777', 
-        fontSize: '10px',
-        fontWeight: '500'
+        color: '#989898',
+        fontSize: '12px'
       },
       '& .last--header': {
         '& .MuiDataGrid-columnHeaderTitle': {
@@ -38,8 +39,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, minHeight }) => (
         }
       },
       '& .MuiDataGrid-columnHeaders': {
-        border: '0',
-        borderBottom: '1px solid #777'
+        borderBottom: '1px solid #3f3f3f',
       },
       '& .MuiDataGrid-columnHeader:focus': {
         outline: 'none',
@@ -49,25 +49,58 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, minHeight }) => (
       },
       '& .MuiDataGrid-row': {
         marginRight: '10px',
-        borderBottom: '1px solid #3e3e3e'
+        borderBottom: '1px solid #3f3f3f',
+        cursor: 'pointer'
+      },
+      '& .MuiDataGrid-row:hover': {
+        backgroundColor: '#1b1b1b'
       },
       '& .MuiDataGrid-cell': {
         borderBottom: '0',
       },
       '& .MuiDataGrid-cell:focus': {
         border: '0',
-        outline: '0'
+        outline: 'none'
+      },
+      '& .MuiDataGrid-cell:focus-within': {
+        outline: 'none !important'
       },
       '& .MuiDataGrid-withBorder': {
         borderRight: '0px solid #1b1b1b',
-        borderRadius: '10px',
         marginLeft: '-5px'
+      },
+      '.border-warning--row': {
+        borderLeft: '1px solid #ff8e4f',
+        borderRight: '1px solid #ff8e4f',
+      },
+      '.border-poor--row': {
+        borderLeft: '1px solid #ed2525',
+        borderRight: '1px solid #ed2525'
       }
+      // '.super-app-theme--row': {
+      // }
     }}
     components={{
-      NoRowsOverlay: CustomNoRowsOverlay
+      NoResultsOverlay: customNoRowsOverlay
     }}
-    getRowClassName={(params) => 'super-app-theme--row'}
+    getRowClassName={(params) => {
+      if (hasRangeIndicator) {
+        if (gridType === GridType.SingleComet) {
+          //validate healthscore
+          if (params.row.healthScore < 20) {
+            return 'border-poor--row'
+          } else if (params.row.healthScore >= 20 && params.row.healthScore < 45) {
+            return 'border-warning--row'
+          }
+        } else if (gridType === GridType.Borrow) {
+          if (params.row.collateralRatio - params.row.minCollateralRatio < 20) {
+            return 'border-poor--row'
+          }
+        }
+      }
+      return 'super-app-theme--row'
+    }}
+    autoHeight
     disableColumnFilter
     disableSelectionOnClick
     disableColumnSelector
@@ -77,29 +110,41 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, minHeight }) => (
     hideFooter
     headerHeight={40}
     rowHeight={52}
+    rowCount={20}
+    onRowClick={onRowClick}
     columns={headers}
     rows={rows || []}
   />
 )
 
+export const CustomNoRowsOverlay = (msg: string) => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '21px' }}>
+      <Typography variant='p'>{msg}</Typography>
+    </Box>
+  )
+}
+
 export interface TickerType {
-	tickerIcon: string
-	tickerName: string
-	tickerSymbol: string
+  tickerIcon: string
+  tickerName: string
+  tickerSymbol: string
 }
 
 export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, tickerSymbol }) => (
-  <Box display="flex" justifyContent="flex-start">
-    <Image src={tickerIcon} width="30px" height="30px" layout="fixed" />
-    <Box sx={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ display: 'block', fontSize: '14px', fontWeight: '500', maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>{tickerName}</Box>
-      <Box sx={{ color: '#7b7b7b', fontSize: '14px', fontWeight: '500', marginLeft: '8px' }}>
-        ({tickerSymbol})
+  <Box display="flex" justifyContent="flex-start" marginLeft='4px'>
+    {tickerIcon && <Image src={tickerIcon} width="27px" height="27px" layout="fixed" />}
+    <Box display='flex' alignItems='center' marginLeft='16px'>
+      <Box sx={{ maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+        <Typography variant='p_lg'>{tickerName}</Typography>
+      </Box>
+      <Box sx={{ color: '#989898' }} marginLeft='8px'>
+        <Typography variant='p'>{tickerSymbol}</Typography>
       </Box>
     </Box>
   </Box>
 )
 
-export const CellDigitValue = ({ value, symbol }: {value: string | undefined, symbol?: string}) => (
-  <Box sx={{ fontSize: '12px', fontWeight: '500', marginLeft: '5px' }}>{value && value.toLocaleString()} <span style={{fontSize: '11px'}}>{symbol}</span></Box>
+export const CellDigitValue = ({ value, symbol }: { value: string | undefined, symbol?: string }) => (
+  <Typography variant='p'>{value && value.toLocaleString(undefined, { maximumFractionDigits: 5 })} {symbol}</Typography>
 )
