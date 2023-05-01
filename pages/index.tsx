@@ -9,8 +9,8 @@ const Home: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Incept Markets</title>
-				<meta name="description" content="Incept Markets" />
+				<title>Incept Markets - Beta</title>
+				<meta name="description" content="Incept Markets - Beta" />
 				<link rel="icon" href="/favicon.ico" />
 				<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet' />
 			</Head>

@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { CircularProgress, styled, Box } from '@mui/material'
 import { useDataLoading } from '~/hooks/useDataLoading'
 
-export const REFETCH_CYCLE = 20000
+export const REFETCH_CYCLE = 30000
 
-const DataLoadingIndicator = () => {
+const DataLoadingIndicator = ({ onRefresh }: { onRefresh?: () => void }) => {
   const { startTimer } = useDataLoading()
   const [progress, setProgress] = useState(0);
+  const [isEnabled, setIsEnabled] = useState(true);
+
+  let timer: any = null
 
   useEffect(() => {
-    let timer: any = null
     if (startTimer) {
       console.log('start Timer')
       timer = setInterval(() => {
-        setProgress((prevProgress) => (prevProgress > 100 ? 0 : prevProgress + 5));
-      }, 1000);
+        setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
+      }, 3000);
     } else {
       setProgress(0)
       clearInterval(timer)
@@ -25,9 +27,23 @@ const DataLoadingIndicator = () => {
     };
   }, [startTimer]);
 
+  const handleRefresh = () => {
+    if (isEnabled) {
+      setProgress(0)
+      clearInterval(timer)
+
+      onRefresh && onRefresh()
+
+      setIsEnabled(false)
+      setTimeout(() => {
+        setIsEnabled(true)
+      }, 4500)
+    }
+  }
+
   return (
-    <Wrapper>
-      <div style={{ marginRight: '8px' }}>Data refresh in</div>
+    <Wrapper onClick={handleRefresh}>
+      <div style={{ marginRight: '8px', marginTop: '-5px' }}>Data refresh in</div>
       <Box sx={{ position: 'relative' }}>
         <CircularProgress
           variant="determinate"
@@ -48,14 +64,14 @@ const DataLoadingIndicator = () => {
 export default DataLoadingIndicator
 
 const Wrapper = styled(Box)`
-  width: 129px;
+  width: 135px;
   height: 35px;
   padding: 4px 11px 1px 8px;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 10px;
   font-weight: 500;
-  color: #989898;
+  color: #868686;
+  cursor: pointer;
 `

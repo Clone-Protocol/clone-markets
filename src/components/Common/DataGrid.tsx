@@ -7,18 +7,11 @@ interface GridProps {
   rows: any,
   customNoRowsOverlay: () => JSX.Element,
   hasRangeIndicator?: boolean,
-  gridType?: GridType,
   minHeight?: number,
   onRowClick?: GridEventListener<'rowClick'>
 }
 
-export const enum GridType {
-  Normal = 'normal',
-  SingleComet = 'singleComet',
-  Borrow = 'borrow'
-}
-
-export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, hasRangeIndicator = false, gridType = GridType.Normal, minHeight = 260, onRowClick }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, hasRangeIndicator = false, minHeight = 260, onRowClick }) => (
   <DataGrid
     sx={{
       border: 0,
@@ -84,20 +77,6 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
       NoResultsOverlay: customNoRowsOverlay
     }}
     getRowClassName={(params) => {
-      if (hasRangeIndicator) {
-        if (gridType === GridType.SingleComet) {
-          //validate healthscore
-          if (params.row.healthScore < 20) {
-            return 'border-poor--row'
-          } else if (params.row.healthScore >= 20 && params.row.healthScore < 45) {
-            return 'border-warning--row'
-          }
-        } else if (gridType === GridType.Borrow) {
-          if (params.row.collateralRatio - params.row.minCollateralRatio < 20) {
-            return 'border-poor--row'
-          }
-        }
-      }
       return 'super-app-theme--row'
     }}
     autoHeight

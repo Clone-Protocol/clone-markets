@@ -1,20 +1,25 @@
-import { styled } from '@mui/material'
+import { styled, Typography, Box, Divider } from '@mui/material'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Image from 'next/image'
-import InfoIcon from 'public/images/more/info-icon.svg'
-import BookIcon from 'public/images/more/book-icon.svg'
-import DiscordIcon from 'public/images/more/discord-icon.svg'
-import TradingIcon from 'public/images/more/trading-icon.svg'
-import TwitterIcon from 'public/images/more/twitter-icon.svg'
+import FaucetIcon from 'public/images/more/faucet-icon.svg'
+import DocIcon from 'public/images/more/doc-icon.svg'
+import MarketsIcon from 'public/images/more/markets-icon.svg'
+import OpportunityIcon from 'public/images/more/opportunities-icon.svg'
+import HomeIcon from 'public/images/more/home.svg'
+import TwitterIcon from 'public/images/more/twitter.svg'
+import DiscordIcon from 'public/images/more/discord.svg'
+import { Stack } from '@mui/system';
 
 interface Props {
   anchorEl: null | HTMLElement
-  onClose?: () => void  
+  onShowTokenFaucet: () => void
+  onClose?: () => void
 }
 
-const MoreMenu: React.FC<Props> = ({ anchorEl, onClose }) => {
-  const open = Boolean(anchorEl);  
+const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => {
+  const open = Boolean(anchorEl);
 
   return <Menu
     anchorEl={anchorEl}
@@ -26,54 +31,84 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onClose }) => {
       elevation: 0,
       sx: {
         overflow: 'visible',
-        border: 'solid 1px #fff',
-        borderRadius: '8px',
-        boxShadow: '0 0 5px 5px rgba(0, 0, 0, 0.2)',
         mt: 1.5,
-        background: '#171717',
+        background: '#1b1b1b',
         color: '#fff',
       },
     }}
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
   >
+    <StyledMenuItem onClick={onShowTokenFaucet}>
+      <HoverStack direction='row' alignItems='center'>
+        <Image src={FaucetIcon} alt="faucet" />
+        <Box width='144px' ml='12px'>
+          <div><Typography variant='p'>Token Faucet</Typography></div>
+          <div><Typography variant='p_sm' color='#989898'>Get started on Solana devnet</Typography></div>
+        </Box>
+      </HoverStack>
+    </StyledMenuItem>
+    <StyledDivider />
     <StyledMenuItem>
-      <div>About</div>
-      <Image src={InfoIcon} alt="about" />
+      <HoverStack direction='row' alignItems='center'>
+        <Image src={DocIcon} alt="docs" />
+        <Box width='144px' ml='12px'>
+          <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography> <IconBase><ArrowOutwardIcon sx={{ width: '13px' }} /></IconBase></Stack>
+          <Box mt='-8px'><Typography variant='p_sm' color='#989898'>Learn about Incept Liquidity</Typography></Box>
+        </Box>
+      </HoverStack>
     </StyledMenuItem>
     <StyledMenuItem>
-      <div>Docs</div>
-      <Image src={BookIcon} alt="docs" />
+      <HoverStack direction='row' alignItems='center'>
+        <Image src={MarketsIcon} alt="markets" />
+        <Box width='144px' ml='12px'>
+          <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Markets</Typography> <IconBase><ArrowOutwardIcon sx={{ width: '13px' }} /></IconBase></Stack>
+          <Box mt='-8px'><Typography variant='p_sm' color='#989898'>Trade all kinds of iAssets</Typography></Box>
+        </Box>
+      </HoverStack>
     </StyledMenuItem>
-    <StyledMenuItem>
-      <div>Discord</div> 
-      <Image src={DiscordIcon} alt="discord" />
-    </StyledMenuItem>
-    <StyledMenuItem>
-      <div>Twitter</div>
+    <a href={`https://join-incept.super.site/`} target='_blank' rel="noreferrer">
+      <StyledMenuItem>
+        <HoverStack direction='row' alignItems='center'>
+          <Image src={OpportunityIcon} alt="opportunities" />
+          <Box width='144px' ml='12px'>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Opportunities</Typography> <IconBase><ArrowOutwardIcon sx={{ width: '13px' }} /></IconBase></Stack>
+            <Box mt='-8px'><Typography variant='p_sm' color='#989898'>Wanna be a pioneer of Defi?</Typography></Box>
+          </Box>
+        </HoverStack>
+      </StyledMenuItem>
+    </a>
+    <Stack direction='row' gap={2} justifyContent='center' my='10px'>
+      <Image src={HomeIcon} alt="home" />
       <Image src={TwitterIcon} alt="twitter" />
-    </StyledMenuItem>
-    <StyledMenuItem>
-      <div>Incept Liquidity</div>
-      <Image src={TradingIcon} alt="liquidity" />
-    </StyledMenuItem>
-  </Menu>
+      <Image src={DiscordIcon} alt="discord" />
+    </Stack>
+  </Menu >
 }
 
 const StyledMenuItem = styled(MenuItem)`
   display: flex;
-  justify-content: space-between;
-  width: 219px;
+  width: 210px;
   height: 35px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: normal;
+  line-height: 12px;
   color: #fff;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+`
+const StyledDivider = styled(Divider)`
+	background-color: #3f3f3f;
+  width: 180px;
+	height: 1px;
+  margin: 0 auto;
+`
+const IconBase = styled('span')`
+  color: #989898;
+`
+const HoverStack = styled(Stack)`
+  padding: 6px;
+  &:hover {
+    background-color: #2d2d2d;
+  }
 `
 
 export default MoreMenu;

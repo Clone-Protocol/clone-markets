@@ -32,10 +32,6 @@ const Drawer: React.FC = () => {
 					</Link>
 				</List>
 			</Fade>
-			<BottomStack spacing={2}>
-				<div><span style={{ fontSize: '10px' }}>V1:</span> Polaris Devnet</div>
-				<Credit>© Incept 2022</Credit>
-			</BottomStack>
 		</StyledDrawer>
 	)
 }
@@ -45,8 +41,7 @@ export default withCsrOnly(Drawer)
 const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
 	'& .MuiDrawer-paper': {
 		position: 'relative',
-		background: 'rgba(20, 20, 20, 0.75)',
-		color: '#fff',
+		background: theme.palette.common.black,
 		whiteSpace: 'nowrap',
 		width: 241,
 		marginTop: 64,
@@ -55,7 +50,6 @@ const StyledDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.enteringScreen,
 		}),
-		borderRadius: '10px',
 		boxSizing: 'border-box',
 		...(!open && {
 			overflowX: 'hidden',
@@ -86,27 +80,10 @@ const StyledListItemButton = styled(ListItemButton)`
     background-color: rgba(38, 38, 38, 0.5);
   }
 `
-
 const StyledListItemText = styled(Box)`
 	font-size: 12px;
 	font-weight: bold;
 	height: 44px;
 	line-height: 44px;
   margin-left: -15px;
-`
-
-const BottomStack = styled(Stack)`
-	position: absolute;
-	left: 65px;
-	bottom: 100px;
-	font-size: 13px;
-	font-weight: 600;
-	color: #9c9c9c;
-	text-align: center;
-`
-
-const Credit = styled('div')`
-	font-size: 12px; 
-	font-weight: 500;
-	color: #8c8c8c;
 `

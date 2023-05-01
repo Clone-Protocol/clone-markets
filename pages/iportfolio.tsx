@@ -5,12 +5,9 @@ import { Container } from '@mui/material'
 import { useWallet } from '@solana/wallet-adapter-react'
 import PortfolioView from '~/containers/Portfolio/PortfolioView'
 import BackdropMsg from '~/components/Portfolio/BackdropMsg'
-import useInitialized from '~/hooks/useInitialized'
 
 const IportfolioPage: NextPage = () => {
-  const { publicKey } = useWallet()
-
-	useInitialized()
+	const { publicKey } = useWallet()
 
 	return (
 		<div>
@@ -24,7 +21,7 @@ const IportfolioPage: NextPage = () => {
 					<Container>
 						<PortfolioView />
 
-            { !publicKey && <BackdropMsg /> }
+						{!publicKey && <BackdropMsg />}
 					</Container>
 				</StyledSection>
 			</main>

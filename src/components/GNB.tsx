@@ -1,15 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Toolbar from '@mui/material/Toolbar'
-import Container from '@mui/material/Container'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.svg'
 import walletIcon from 'public/images/wallet-icon.svg'
 import { useSnackbar } from 'notistack'
-import { IconButton, styled, Stack, Theme, useMediaQuery } from '@mui/material'
-import { GNB_ROUTES } from '~/routes'
+import { Button, Toolbar, Container, Box, AppBar, IconButton, styled, Stack, Theme, useMediaQuery, Typography } from '@mui/material'
+// import { GNB_ROUTES } from '~/routes'
 import { useRouter } from 'next/router'
 import CancelIcon from './Icons/CancelIcon'
 import MenuIcon from './Icons/MenuIcon'
@@ -19,8 +14,8 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
-import DataLoadingIndicator from '~/components/Common/DataLoadingIndicator'
 import MoreMenu from '~/components/Common/MoreMenu';
+import TokenFaucetDialog from './Account/TokenFaucetDialog'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getUSDiAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
@@ -60,7 +55,7 @@ const GNB: React.FC = () => {
 			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth={false}>
 					<Toolbar disableGutters>
-						<Image src={logoIcon} width={217} alt="incept" />
+						<Image src={logoIcon} width={255} alt="incept" />
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
@@ -86,6 +81,7 @@ const RightMenu = () => {
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
+	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
 	const [mintUsdi, setMintUsdi] = useState(false)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
@@ -153,47 +149,56 @@ const RightMenu = () => {
 	}
 
 	return (
-		<Box display="flex">
-			{(router.asPath === '/' || router.asPath === '/iportfolio') &&
-				<DataLoadingIndicator />
-			}
-			<HeaderButton onClick={handleGetUsdiClick} variant="outlined" sx={{ width: '86px' }}>
-				Get USDi
-			</HeaderButton>
-
-			<Box>
-				<ConnectButton
-					onClick={handleWalletClick}
-					variant="outlined"
-					disabled={connecting}
-					startIcon={!publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
-					{!connected ? (
-						<>Connect Wallet</>
-					) : (
-						<>
-							<AccountIcon />
-							{publicKey ? (
-								<AccountText>{shortenAddress(publicKey.toString())}</AccountText>
-							) : (
-								<></>
-							)}
-						</>
-					)}
-				</ConnectButton>
-				{showWalletSelectPopup && <WalletSelectBox spacing={2}>
-					{publicKey &&
-						<CopyToClipboard text={publicKey.toString()}
-							onCopy={() => enqueueSnackbar('Copied address')}>
-							<PopupButton>Copy Address</PopupButton>
-						</CopyToClipboard>}
-					<PopupButton onClick={handleChangeWallet}>Change Wallet</PopupButton>
-					<PopupButton onClick={handleDisconnect}>Disconnect</PopupButton>
-				</WalletSelectBox>}
+		<>
+			<Box display="flex">
+				<HeaderButton onClick={() => setOpenTokenFaucet(true)}>
+					<Typography variant='p'>Devnet Faucet</Typography>
+				</HeaderButton>
+				<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
+				<MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
+				<Box>
+					<ConnectButton
+						onClick={handleWalletClick}
+						disabled={connecting}
+						startIcon={!publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
+						{!connected ? (
+							<Typography variant='p'>Connect Wallet</Typography>
+						) : (
+							<>
+								{publicKey && (
+									<Typography variant='p'>{shortenAddress(publicKey.toString())}</Typography>
+								)}
+							</>
+						)}
+					</ConnectButton>
+					{showWalletSelectPopup && <WalletSelectBox>
+						<Stack direction='row' alignItems='center'>
+							<WalletAddress onClick={handleChangeWallet}>
+								{publicKey && (
+									<Typography variant='p_lg'>{shortenAddress(publicKey.toString())}</Typography>
+								)}
+							</WalletAddress>
+							<Stack direction='row' spacing={2}>
+								<CopyToClipboard text={publicKey!!.toString()}
+									onCopy={() => enqueueSnackbar('Copied address')}>
+									<PopupButton><Typography variant='p_sm'>Copy</Typography></PopupButton>
+								</CopyToClipboard>
+								<PopupButton><Typography variant='p_sm' onClick={handleDisconnect}>Disconnect</Typography></PopupButton>
+							</Stack>
+						</Stack>
+						<NetworkInfo><Typography variant='p_xsm'>Polaris Devnet - V1</Typography></NetworkInfo>
+					</WalletSelectBox>}
+				</Box>
 			</Box>
 
-			<MoreButton variant="outlined" onClick={handleMoreClick}>...</MoreButton>
-			<MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
-		</Box>
+			<TokenFaucetDialog
+				open={openTokenFaucet}
+				isConnect={connected}
+				connectWallet={handleWalletClick}
+				onGetUsdiClick={handleGetUsdiClick}
+				onHide={() => setOpenTokenFaucet(false)}
+			/>
+		</>
 	)
 }
 
@@ -226,7 +231,6 @@ const StyledAppBar = styled(AppBar)`
 		height: 100%;
 	}
 `
-
 const NavPlaceholder = styled('div')`
 	${(props) => props.theme.breakpoints.up('md')} {
 		height: 80px;
@@ -235,81 +239,59 @@ const NavPlaceholder = styled('div')`
 		height: 65px;
 	}
 `
-
 const HeaderButton = styled(Button)`
-  border: 1px solid #404040;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-left: 12px;
-  color: #fff;
-  min-width: 40px;
-  height: 35px;
-  &:hover {
-    border: 1px solid #404040;
-    background-color: #2e2e2e;
-  }
-`
-
-const ConnectButton = styled(Button)`
-  border: solid 1px #aaa;
-  background-color: #171717;
 	padding: 12px;
-	border-radius: 10px;
-	font-size: 11px;
-	font-weight: 600;
-  margin-left: 16px;
+	margin-left: 16px;
+	color: ${(props) => props.theme.palette.text.secondary};
+	height: 35px;
+	&:hover {
+		background-color: ${(props) => props.theme.boxes.darkBlack};
+	}
+	&:active {
+		background-color: ${(props) => props.theme.boxes.darkBlack};
+	}
+`
+const ConnectButton = styled(Button)`
+	background-color: ${(props) => props.theme.boxes.black};
+	padding: 12px;
+	margin-left: 16px;
 	color: #fff;
-	width: 163px;
-	height: 33px;
-  &:hover {
-    background-color: #2e2e2e;
-		border: solid 1px #aaa;
-  }
+	width: 140px;
+	height: 36px;
+	&:hover {
+		background-color: ${(props) => props.theme.boxes.darkBlack};
+	}
 `
-
-const AccountIcon = styled('div')`
-	width: 15px; 
-	height: 15px; 
-	background-image: radial-gradient(circle at 0 0, #0f6, #fff); 
-	border-radius: 99px;
-`
-
-const AccountText = styled(Box)`
-	margin-left: 10px; 
-	color: #fff; 
-	font-size: 11px; 
-	font-weight: 600;
-`
-
 const WalletSelectBox = styled(Stack)`
-  position: absolute;
-  top: 60px;
-  right: 54px;
-  width: 163px;
-  height: 139px;
-  padding: 14px 17px 16px;
-  border-radius: 10px;
-  border: solid 1px #fff;
-  background-color: #181818;
-  z-index: 99;
+	position: absolute;
+	top: 60px;
+	right: 0px;
+	width: 282px;
+	height: 86px;
+	padding: 13px 16px;
+	background-color: ${(props) => props.theme.boxes.darkBlack};
+	z-index: 99;
 `
-
-const PopupButton = styled(Button)`
-  width: 129px;
-  height: 25px;
-  padding: 6px 27px 7px 26px;
-  border-radius: 10px;
-  border: solid 1px #fff;
-  background-color: #282828;
-  font-size: 10px;
-  font-weight: 500;
+const WalletAddress = styled(Box)`
   color: #fff;
+	margin-right: 45px;
+	cursor: pointer;
 `
-
-const MoreButton = styled(HeaderButton)`
-	font-size: 15px; 
-	font-weight: bold; 
-	padding-bottom: 20px;
+const PopupButton = styled(Box)`
+	font-size: 10px;
+	font-weight: 500;
+	color: ${(props) => props.theme.palette.text.secondary};
+	cursor: pointer;
+`
+const NetworkInfo = styled(Box)`
+	text-align: center;
+	line-height: 19px;
+	width: 104px;
+	border-style: solid;
+	border-width: 0.5px;
+	border-image-source: ${(props) => props.theme.gradients.light};
+	border-image-slice: 1;
+	color: #fff;
+	margin: 0 auto;
+	margin-top: 12px;
 `
