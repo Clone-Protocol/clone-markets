@@ -21,6 +21,7 @@ import { getUSDiAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
 import { sendAndConfirm } from '~/utils/tx_helper'
 import { useTransactionState } from '~/hooks/useTransactionState'
+import NaviMenu from './NaviMenu'
 
 
 const GNB: React.FC = () => {
@@ -54,8 +55,13 @@ const GNB: React.FC = () => {
 			<NavPlaceholder />
 			<StyledAppBar className={navClassName} position="static">
 				<Container maxWidth={false}>
-					<Toolbar disableGutters>
+					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
+
 						<Image src={logoIcon} width={255} alt="incept" />
+						<Box><NaviMenu /></Box>
+						<RightMenu />
+
+						{/* 
 						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
 						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
@@ -64,7 +70,7 @@ const GNB: React.FC = () => {
 							<IconButton sx={{ color: 'white' }} onClick={handleMobileNavBtn}>
 								{mobileNavToggle ? <CancelIcon color="info" /> : <MenuIcon />}
 							</IconButton>
-						</Box>
+						</Box> */}
 					</Toolbar>
 				</Container>
 			</StyledAppBar>
@@ -155,7 +161,7 @@ const RightMenu = () => {
 					<Typography variant='p'>Devnet Faucet</Typography>
 				</HeaderButton>
 				<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
-				<MoreMenu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} />
+				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
 					<ConnectButton
 						onClick={handleWalletClick}

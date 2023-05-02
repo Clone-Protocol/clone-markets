@@ -49,6 +49,7 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 			assetType,
 			liquidity: parseInt(info.liquidity.toString()),
 			volume24h: stats.volumeUSD,
+			change24h: 0, // @TODO need to set
 			feeRevenue24h: stats.fees
 		})
 	}
@@ -57,7 +58,7 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 
 interface GetAssetsProps {
 	filter: FilterType
-	searchTerm: string
+	// searchTerm: string
 	refetchOnMount?: QueryObserverOptions['refetchOnMount']
 	enabled?: boolean
 }
@@ -71,10 +72,11 @@ export interface AssetList {
 	assetType: number
 	liquidity: number
 	volume24h: number
+	change24h: number
 	feeRevenue24h: number
 }
 
-export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useAssetsQuery({ filter, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const { setStartTimer } = useDataLoading()
 
 	let queryFunc
@@ -106,9 +108,9 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = t
 				return true;
 			})
 
-			if (searchTerm && searchTerm.length > 0) {
-				filteredAssets = filteredAssets.filter((asset) => asset.tickerName.toLowerCase().includes(searchTerm.toLowerCase()) || asset.tickerSymbol.toLowerCase().includes(searchTerm.toLowerCase()))
-			}
+			// if (searchTerm && searchTerm.length > 0) {
+			// 	filteredAssets = filteredAssets.filter((asset) => asset.tickerName.toLowerCase().includes(searchTerm.toLowerCase()) || asset.tickerSymbol.toLowerCase().includes(searchTerm.toLowerCase()))
+			// }
 
 			return filteredAssets
 		}

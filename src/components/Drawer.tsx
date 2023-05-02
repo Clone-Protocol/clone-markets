@@ -1,5 +1,5 @@
 import MuiDrawer from '@mui/material/Drawer'
-import { styled, List, ListItemButton, ListItemIcon, Box, Stack, Fade } from '@mui/material'
+import { styled, List, ListItemButton, ListItemIcon, Box, Fade } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
 import menuPortfolioIcon from 'public/images/menu/portfolio-icon.svg'

@@ -6,7 +6,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '~/theme'
 import GNB from '~/components/GNB'
-import Drawer from '~/components/Drawer'
+// import Drawer from '~/components/Drawer'
 import Box from '@mui/material/Box'
 import { SnackbarProvider } from 'notistack'
 import { NextPage } from 'next'
@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
                   <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
                     <CssBaseline />
                     <GNB />
-                    <Drawer />
+                    {/* <Drawer /> */}
 
                     <Box
                       component="main"

@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { styled } from '@mui/system'
 import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
+import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
 
 const Home: NextPage = () => {
 	return (
@@ -18,6 +19,7 @@ const Home: NextPage = () => {
 			<main>
 				<StyledSection>
 					<Container>
+						<GetUSDiBadge />
 						<MarketList />
 					</Container>
 				</StyledSection>
