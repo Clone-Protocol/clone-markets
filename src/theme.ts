@@ -159,6 +159,10 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 			...headingCommon,
 			fontSize: '16px',
 		},
+		p_xxlg: {
+			...paragraphCommon,
+			fontSize: '17.3px',
+		},
 		p_xlg: {
 			...paragraphCommon,
 			fontSize: '16px',
@@ -228,13 +232,14 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 		grey: '#767676'
 	},
 	gradients: {
-		light: 'linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, var(--white) 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed)',
-		darker: 'linear-gradient(to bottom, var(--darket-gradient), var(--darket-gradient)), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, var(--white) 50%, #ff96e2 68%, #874fff 83%, #4d25ed)'
+		light: 'linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed)',
+		darker: 'linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed)'
 	}
 })
 
 declare module '@mui/material/styles' {
 	interface TypographyVariants {
+		p_xxlg: React.CSSProperties;
 		p_xlg: React.CSSProperties;
 		p_lg: React.CSSProperties;
 		p: React.CSSProperties;
@@ -244,6 +249,7 @@ declare module '@mui/material/styles' {
 
 	// allow configuration using `createTheme`
 	interface TypographyVariantsOptions {
+		p_xxlg?: React.CSSProperties;
 		p_xlg?: React.CSSProperties;
 		p_lg?: React.CSSProperties;
 		p?: React.CSSProperties;
@@ -319,6 +325,7 @@ declare module '@mui/material/styles' {
 // Update the Typography's variant prop options
 declare module '@mui/material/Typography' {
 	interface TypographyPropsVariantOverrides {
+		p_xxlg: true;
 		p_xlg: true;
 		p_lg: true;
 		p: true;

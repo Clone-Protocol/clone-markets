@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
@@ -49,7 +49,7 @@ const MarketList = () => {
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
 
-			<Box>All iAssets on Incept</Box>
+			<Box><Typography variant='p_xlg'>All iAssets on Incept</Typography></Box>
 			<Grid
 				headers={columns}
 				rows={assets || []}
@@ -89,7 +89,7 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: '24h Change',
-		flex: 1,
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <>{params.row.change24h.toFixed(2)}%</>
 		},

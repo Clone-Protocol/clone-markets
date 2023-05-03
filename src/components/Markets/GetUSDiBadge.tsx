@@ -1,13 +1,13 @@
 import { styled, Typography, Stack, Box, Button } from '@mui/material'
 import Image from 'next/image'
-import SearchIcon from 'public/images/search-icon.svg'
+import PrimaryIcon from 'public/images/icons-primary.svg'
 
 interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const GetUSDiBadge: React.FC<Props> = ({ onChange }) => {
   return <StyledStack direction='row' justifyContent='center' alignItems='center' spacing={2}>
-    <Image src={SearchIcon} />
+    <Image src={PrimaryIcon} />
     <Box>
       <Typography variant='p_lg'>Get USDi from the faucet to start trading on Devnet. On mainnet, you can easily acquire USDi through 1:1 swap with USDC.</Typography>
     </Box>
@@ -16,7 +16,7 @@ const GetUSDiBadge: React.FC<Props> = ({ onChange }) => {
 }
 
 const StyledStack = styled(Stack)`
-  width: 1085px;
+  max-width: 1085px;
   height: 74px;
   color: ${(props) => props.theme.basis.lightSlateBlue};
   border-radius: 10px;

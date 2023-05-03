@@ -5,6 +5,7 @@ import { styled } from '@mui/system'
 import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
 import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
+import PortfolioBalance from '~/components/Markets/PortfolioBalance'
 
 const Home: NextPage = () => {
 	return (
@@ -19,6 +20,8 @@ const Home: NextPage = () => {
 			<main>
 				<StyledSection>
 					<Container>
+						<PortfolioBalance />
+						<Divider />
 						<GetUSDiBadge />
 						<MarketList />
 					</Container>
@@ -35,6 +38,13 @@ const StyledSection = styled('section')`
 	${(props) => props.theme.breakpoints.down('md')} {
 		padding: 50px 0px;
 	}
+`
+
+const Divider = styled('div')`
+	width: 100%;
+	height: 1px;
+	margin: 20px;
+	background-color: rgba(155, 121, 252, 0.5);
 `
 
 export default Home
