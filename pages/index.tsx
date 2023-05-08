@@ -32,6 +32,8 @@ const Home: NextPage = () => {
 }
 
 const StyledSection = styled('section')`
+	max-width: 1085px;
+	margin: 0 auto;
 	${(props) => props.theme.breakpoints.up('md')} {
 		padding-top: 100px;
 	}
@@ -43,7 +45,8 @@ const StyledSection = styled('section')`
 const Divider = styled('div')`
 	width: 100%;
 	height: 1px;
-	margin: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
 	background-color: rgba(155, 121, 252, 0.5);
 `
 

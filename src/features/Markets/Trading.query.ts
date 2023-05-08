@@ -5,9 +5,15 @@ import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { assetMapping } from '~/data/assets'
 import { useIncept } from '~/hooks/useIncept'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { useDataLoading } from '~/hooks/useDataLoading'
+import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 
-export const fetchAsset = async ({ program, userPubKey, index }: { program: InceptClient, userPubKey: PublicKey | null, index: number }) => {
+export const fetchAsset = async ({ program, userPubKey, index, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void }) => {
 	if (!userPubKey) return null
+
+	// start timer in data-loading-indicator
+	setStartTimer(false);
+	setStartTimer(true);
 
 	await program.loadManager()
 
@@ -69,8 +75,16 @@ export interface Asset {
 export function useTradingQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
 	const wallet = useAnchorWallet()
 	const { getInceptApp } = useIncept()
-	return useQuery(['tradeDetail', userPubKey, index], () => fetchAsset({ program: getInceptApp(wallet), userPubKey, index }), {
-		refetchOnMount,
-		enabled
-	})
+	const { setStartTimer } = useDataLoading()
+
+	if (wallet) {
+		return useQuery(['tradeDetail', userPubKey, wallet, index], () => fetchAsset({ program: getInceptApp(wallet), userPubKey, index, setStartTimer }), {
+			refetchOnMount,
+			refetchInterval: REFETCH_CYCLE,
+			refetchIntervalInBackground: true,
+			enabled
+		})
+	} else {
+		return useQuery(['tradeDetail'], () => { })
+	}
 }

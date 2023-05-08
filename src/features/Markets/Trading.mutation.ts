@@ -6,10 +6,14 @@ import { BN } from '@coral-xyz/anchor'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token"
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
+import { funcNoWallet } from '../baseQuery';
+import { sendAndConfirm } from '~/utils/tx_helper';
 
 export const callTrading = async ({
 	program,
 	userPubKey,
+	setTxState,
 	data,
 }: CallTradingProps) => {
 	if (!userPubKey) throw new Error('no user public key')
@@ -93,10 +97,17 @@ type FormData = {
 interface CallTradingProps {
 	program: InceptClient
 	userPubKey: PublicKey | null
+	setTxState: (state: TransactionStateType) => void
 	data: FormData
 }
 export function useTradingMutation(userPubKey: PublicKey | null) {
 	const wallet = useAnchorWallet()
 	const { getInceptApp } = useIncept()
-	return useMutation((data: FormData) => callTrading({ program: getInceptApp(wallet), userPubKey, data }))
+	const { setTxState } = useTransactionState()
+
+	if (wallet) {
+		return useMutation((data: FormData) => callTrading({ program: getInceptApp(wallet), userPubKey, setTxState, data }))
+	} else {
+		return useMutation((_: FormData) => funcNoWallet())
+	}
 }

@@ -6,9 +6,14 @@ import { FilterType } from '~/data/filter'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
-import { CellDigitValue, Grid, CellTicker } from '~/components/Common/DataGrid'
+import { Grid, CellTicker } from '~/components/Common/DataGrid'
+import Divider from '@mui/material/Divider';
 import { GridEventListener } from '@mui/x-data-grid'
 import { useRouter } from 'next/router'
+import ArrowUpward from 'public/images/arrow-up-green.svg'
+import ArrowDownward from 'public/images/arrow-down-red.svg'
+import Image from 'next/image'
+import { formatDollarAmount } from '~/utils/numbers'
 
 const MarketList = () => {
 	const router = useRouter()
@@ -42,18 +47,20 @@ const MarketList = () => {
 	return (
 		<Box
 			sx={{
+				width: '100%',
 				background: '#000',
 				color: '#fff',
-				padding: '18px 36px',
+				paddingY: '18px',
 				borderRadius: '10px',
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
 
-			<Box><Typography variant='p_xlg'>All iAssets on Incept</Typography></Box>
+			<Box mb='9px'><Typography variant='p_xlg'>All iAssets on Incept</Typography></Box>
+			<Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
 			<Grid
 				headers={columns}
 				rows={assets || []}
-				minHeight={window.innerHeight - 50}
+				minHeight={600}
 				customNoRowsOverlay={() => CustomNoRowsOverlay('No assets')}
 				onRowClick={handleRowClick}
 			/>
@@ -81,7 +88,7 @@ let columns: GridColDef[] = [
 		headerName: 'Price (USDi)',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <>${params.value?.toLocaleString()}</>
+			return <Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
 		}
 	},
 	{
@@ -91,7 +98,7 @@ let columns: GridColDef[] = [
 		headerName: '24h Change',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <>{params.row.change24h.toFixed(2)}%</>
+			return params.row.change24h >= 0 ? <Box color='#00ff99' display='flex' alignItems='center' gap={1}><Typography variant='p_xlg'>+{params.row.change24h.toFixed(2)}%</Typography> <Image src={ArrowUpward} /></Box> : <Box color='#ff0084' display='flex' alignItems='center' gap={1}><Typography variant='p_xlg'>-{params.row.change24h.toFixed(2)}%</Typography> <Image src={ArrowDownward} /></Box>
 		},
 	},
 	{
@@ -101,7 +108,7 @@ let columns: GridColDef[] = [
 		headerName: 'Liquidity',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <>${params.value?.toLocaleString(undefined, { maximumFractionDigits: 3 })}</>
+			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.value), 3)}</Typography>
 		},
 	},
 	{
@@ -111,7 +118,7 @@ let columns: GridColDef[] = [
 		headerName: '24h Volume',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <>${params.row.volume24h.toLocaleString(undefined, { maximumFractionDigits: 3 })}</>
+			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
 		},
 	},
 ]

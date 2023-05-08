@@ -16,7 +16,7 @@ const GetUSDiBadge: React.FC<Props> = ({ onChange }) => {
 }
 
 const StyledStack = styled(Stack)`
-  max-width: 1085px;
+  width: 100%;
   height: 74px;
   color: ${(props) => props.theme.basis.lightSlateBlue};
   border-radius: 10px;

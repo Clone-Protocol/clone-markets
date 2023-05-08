@@ -103,22 +103,26 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 	const { getInceptApp } = useIncept()
 	const { setStartTimer } = useDataLoading()
 
-	return useQuery(['userBalance', userPubKey], () => fetchUserBalance({ program: getInceptApp(wallet), userPubKey, setStartTimer }), {
-		refetchOnMount,
-		refetchInterval: REFETCH_CYCLE,
-		refetchIntervalInBackground: true,
-		enabled,
-		select: (assets) => assets.filter((asset) => {
-			if (filter === 'icrypto') {
-				return asset.assetType === AssetType.Crypto
-			} else if (filter === 'ifx') {
-				return asset.assetType === AssetType.Fx
-			} else if (filter === 'icommodities') {
-				return asset.assetType === AssetType.Commodities
-			} else if (filter === 'istocks') {
-				return asset.assetType === AssetType.Stocks
-			}
-			return true;
+	if (wallet) {
+		return useQuery(['userBalance', wallet, userPubKey], () => fetchUserBalance({ program: getInceptApp(wallet), userPubKey, setStartTimer }), {
+			refetchOnMount,
+			refetchInterval: REFETCH_CYCLE,
+			refetchIntervalInBackground: true,
+			enabled,
+			select: (assets) => assets.filter((asset) => {
+				if (filter === 'icrypto') {
+					return asset.assetType === AssetType.Crypto
+				} else if (filter === 'ifx') {
+					return asset.assetType === AssetType.Fx
+				} else if (filter === 'icommodities') {
+					return asset.assetType === AssetType.Commodities
+				} else if (filter === 'istocks') {
+					return asset.assetType === AssetType.Stocks
+				}
+				return true;
+			})
 		})
-	})
+	} else {
+		return useQuery(['userBalance'], () => [])
+	}
 }

@@ -15,7 +15,7 @@ const PortfolioBalance: React.FC = () => {
 	})
 
 	return balance ? (
-		<Box>
+		<Box mt='30px'>
 			<Box>
 				<Box mb='43px'><Typography variant='p_xxlg' color='#c4b5fd'>iPortfolio Balance</Typography></Box>
 				<Box>

@@ -14,16 +14,21 @@ interface GridProps {
 export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, hasRangeIndicator = false, minHeight = 260, onRowClick }) => (
   <DataGrid
     sx={{
+      width: '100%',
       border: 0,
       color: '#fff',
       minHeight: `${minHeight}px`,
+      '& .MuiDataGrid-main': {
+        borderLeft: '1px solid rgba(195, 153, 248, 0.25)',
+        borderRight: '1px solid rgba(195, 153, 248, 0.25)',
+        borderBottom: '1px solid rgba(195, 153, 248, 0.25)',
+      },
       '& .last--cell': {
         display: 'flex',
         justifyContent: 'flex-end',
-        marginRight: '4px',
       },
       '& .MuiDataGrid-columnHeaderTitle': {
-        color: '#989898',
+        color: '#8988a3',
         fontSize: '12px'
       },
       '& .last--header': {
@@ -32,7 +37,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
         }
       },
       '& .MuiDataGrid-columnHeaders': {
-        borderBottom: '1px solid #3f3f3f',
+        borderBottom: '1px solid rgba(195, 153, 248, 0.25)',
       },
       '& .MuiDataGrid-columnHeader:focus': {
         outline: 'none',
@@ -42,11 +47,11 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
       },
       '& .MuiDataGrid-row': {
         marginRight: '10px',
-        borderBottom: '1px solid #3f3f3f',
+        // borderBottom: '1px solid #3f3f3f',
         cursor: 'pointer'
       },
       '& .MuiDataGrid-row:hover': {
-        backgroundColor: '#1b1b1b'
+        backgroundColor: 'rgba(255, 255, 255, 0.05)'
       },
       '& .MuiDataGrid-cell': {
         borderBottom: '0',
@@ -59,8 +64,8 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
         outline: 'none !important'
       },
       '& .MuiDataGrid-withBorder': {
-        borderRight: '0px solid #1b1b1b',
-        marginLeft: '-5px'
+        // borderRight: '1px solid rgba(195, 153, 248, 0.25)',
+        // marginLeft: '-5px'
       },
       '.border-warning--row': {
         borderLeft: '1px solid #ff8e4f',
@@ -115,10 +120,10 @@ export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, ticke
     {tickerIcon && <Image src={tickerIcon} width="27px" height="27px" layout="fixed" />}
     <Box display='flex' alignItems='center' marginLeft='16px'>
       <Box sx={{ maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-        <Typography variant='p_lg'>{tickerName}</Typography>
+        <Typography variant='p_xlg'>{tickerName}</Typography>
       </Box>
       <Box sx={{ color: '#989898' }} marginLeft='8px'>
-        <Typography variant='p'>{tickerSymbol}</Typography>
+        <Typography variant='p_lg'>{tickerSymbol}</Typography>
       </Box>
     </Box>
   </Box>
