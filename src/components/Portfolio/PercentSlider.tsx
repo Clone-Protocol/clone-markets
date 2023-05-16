@@ -1,13 +1,13 @@
 import Slider from '@mui/material/Slider'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 
 interface Props {
-	percent: number
+  percent: number
 }
 
 const PercentSlider: React.FC<Props> = ({ percent }) => {
-	
+
   const CustomSlider = styled(Slider)(({ theme }) => ({
     color: '#0038ff',
     width: 265,
@@ -27,19 +27,19 @@ const PercentSlider: React.FC<Props> = ({ percent }) => {
     }
   }))
 
-	return (
-		<Box>
-			<CustomSlider
-				min={0}
-				max={100}
-				step={1}
-				disableSwap
-				valueLabelDisplay="off"
-				value={percent}
-			/>
-      <div style={{ color: '#a6a6a6', fontSize: '12px', fontWeight: '500', marginTop: '-14px' }}>{percent.toFixed(2)}%</div>
-		</Box>
-	)
+  return (
+    <Box lineHeight={0.5}>
+      <CustomSlider
+        min={0}
+        max={100}
+        step={1}
+        disableSwap
+        valueLabelDisplay="off"
+        value={percent}
+      />
+      <Box><Typography variant='p_lg'>{percent.toFixed(2)}%</Typography></Box>
+    </Box>
+  )
 }
 
 export default PercentSlider

@@ -6,7 +6,7 @@ import { Box } from '@mui/material'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
 import StableAssetList from '~/containers/Portfolio/StableAssetList'
-import iAssetList from '~/containers/Portfolio/iAssetList'
+import OnAssetList from './OnAssetList'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
@@ -84,8 +84,11 @@ const PortfolioView = () => {
 			<Box display='flex' justifyContent='center'>
 				{balance ? <BalanceView balance={balance} data={dataPie} /> : <></>}
 			</Box>
-			<Box marginTop='58px'>
+			<Box my='20px'>
 				<StableAssetList assets={assets} pieitems={dataPie} balance={balance} />
+			</Box>
+			<Box>
+				<OnAssetList assets={assets} pieitems={dataPie} balance={balance} />
 			</Box>
 		</div>
 	)

@@ -98,7 +98,15 @@ let columns: GridColDef[] = [
 		headerName: '24h Change',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
-			return params.row.change24h >= 0 ? <Box color='#00ff99' display='flex' alignItems='center' gap={1}><Typography variant='p_xlg'>+{params.row.change24h.toFixed(2)}%</Typography> <Image src={ArrowUpward} /></Box> : <Box color='#ff0084' display='flex' alignItems='center' gap={1}><Typography variant='p_xlg'>-{params.row.change24h.toFixed(2)}%</Typography> <Image src={ArrowDownward} /></Box>
+			return params.row.change24h >= 0 ?
+				<Box color='#00ff99' display='flex' alignItems='center' gap={1}>
+					<Typography variant='p_xlg'>+{params.row.change24h.toFixed(2)}%</Typography>
+					<Image src={ArrowUpward} />
+				</Box>
+				: <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
+					<Typography variant='p_xlg'>-{params.row.change24h.toFixed(2)}%</Typography>
+					<Image src={ArrowDownward} />
+				</Box>
 		},
 	},
 	{
@@ -118,7 +126,7 @@ let columns: GridColDef[] = [
 		headerName: 'Volume',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
+			return <Typography variant='p_xlg' mr="25px">{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
 		},
 	},
 ]

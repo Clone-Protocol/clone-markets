@@ -1,15 +1,16 @@
-import { Box, Stack, Button } from '@mui/material'
+import { Box, Stack, Button, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { BalanceList } from '~/features/Portfolio/UserBalance.query'
 import { PieItem } from '~/data/filter'
 import { Grid, CellTicker } from '~/components/Common/DataGrid'
 import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
-import Link from 'next/link'
+import { GridEventListener } from '@mui/x-data-grid'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
-import PercentSlider from '~/components/Portfolio/PercentSlider'
 import { Balance } from '~/features/Portfolio/Balance.query'
+import Divider from '@mui/material/Divider';
+import { useRouter } from 'next/router'
 
 interface Props {
 	assets: BalanceList[]
@@ -21,20 +22,27 @@ const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 	// const [selectedFilter, setFilterState] = useRecoilState(filterState)
 
 	// const pieitemsKeys = pieitems.map((item) => item.key)
+	const router = useRouter()
+
+	const handleRowClick: GridEventListener<'rowClick'> = (
+		params
+	) => {
+		router.push(`/markets/${params.row.id}/asset`)
+	}
 
 	return (
 		<>
-			<Box>
-				<Box>
-					<div>USDi balance</div>
-					<div style={{ color: '#fff', fontSize: '14px' }}>${balance?.balanceVal.toFixed(2)}</div>
-				</Box>
-			</Box>
+			<TopBox>
+				<Box><Typography variant='p' color='#8988a3'>Stable Coin</Typography></Box>
+				<Box><Typography variant='h3' fontWeight={500}>${balance?.balanceVal.toFixed(2)}</Typography></Box>
+			</TopBox>
+			<Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
 			<Grid
 				headers={columns}
 				rows={assets || []}
-				minHeight={window.innerHeight - 280}
+				minHeight={100}
 				customNoRowsOverlay={() => CustomNoRowsOverlay('No assets')}
+				onRowClick={handleRowClick}
 			/>
 		</>
 	)
@@ -43,7 +51,7 @@ const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 let columns: GridColDef[] = [
 	{
 		field: 'iAssets',
-		headerName: 'iAssets',
+		headerName: 'Stable Coin',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
@@ -52,91 +60,68 @@ let columns: GridColDef[] = [
 		},
 	},
 	{
+		field: 'myBalance',
+		headerName: 'Total Balance',
+		flex: 1,
+		renderCell(params: GridRenderCellParams<string>) {
+			return (
+				<Stack>
+					<Box>
+						<Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString()}</Typography>
+					</Box>
+				</Stack>
+			)
+		},
+	},
+	{
 		field: 'price',
-		headerName: 'Price(USDi)',
+		headerName: 'Price',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			// const percent = parseFloat(params.row.changePercent)
 			return (
-				<Stack sx={{ marginLeft: '10px' }}>
-					<Box sx={{ fontSize: '14px', fontWeight: '500' }}>${params.row.price.toLocaleString()}</Box>
-					{/* {percent >= 0 ? (
-						<ChangePricePlus>+${percent}</ChangePricePlus>
-					) : (
-						<ChangePriceMinus>-${Math.abs(percent)}</ChangePriceMinus>
-					)} */}
-				</Stack>
-			)
-		},
-	},
-
-	{
-		field: 'myBalance',
-		headerName: 'My Balance',
-		flex: 1,
-		renderCell(params: GridRenderCellParams<string>) {
-			return (
-				<Stack sx={{ marginLeft: '10px' }}>
-					<Box sx={{ fontSize: '14px', fontWeight: '500' }}>
-						{params.row.assetBalance.toLocaleString()} {params.row.tickerSymbol}
-					</Box>
-					<Box sx={{ color: '#a6a6a6', fontSize: '12px', fontWeight: '500' }}>
-						${params.row.usdiBalance.toLocaleString()}
+				<Stack>
+					<Box>
+						<Typography variant='p_xlg'>${params.row.price.toLocaleString()}</Typography>
 					</Box>
 				</Stack>
 			)
 		},
 	},
 	{
-		field: 'iPortfolio',
-		headerName: 'Portfolio %',
+		field: '',
+		headerName: '',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Stack sx={{ marginTop: '-5px', marginLeft: '10px' }}>
-					<PercentSlider percent={params.row.percentVal} />
-				</Stack>
-			)
-		},
-	},
-	{
-		field: 'trade',
-		headerName: '',
-		cellClassName: 'last--cell',
-		flex: 1,
-		renderCell(params: GridRenderCellParams<string>) {
-			return (
-				<Link href={`/markets/${params.row.id}/asset`}>
-					<TradeButton>Trade</TradeButton>
-				</Link>
+				<GetUSDButton><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>
 			)
 		},
 	},
 ]
 
-// const ChangePricePlus = styled(Box)`
-// 	font-size: 12px;
-// 	font-weight: 500;
-// 	color: #00ff66;
-// `
-// const ChangePriceMinus = styled(Box)`
-// 	font-size: 12px;
-// 	font-weight: 500;
-// 	color: #fb782e;
-// `
+const TopBox = styled(Box)`
+	// background: ${(props) => props.theme.basis.darkPurple};
+	height: 87px;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	border-left: solid 1px rgba(196, 181, 253, 0.25);
+	border-right: solid 1px rgba(196, 181, 253, 0.25);
+	border-top: solid 1px rgba(196, 181, 253, 0.25);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 29px;
+`
 
-const TradeButton = styled(Button)`
-	border-radius: 8px;
-	border: solid 1px #535353;
-  background-color: rgba(47, 47, 47, 0.97);
-	font-size: 11px;
-  font-weight: 500;
-	width: 82px;
-	height: 30px;
-  color: #fff;
-  &:hover {
-    color: #fff;
-  }
+const GetUSDButton = styled(Button)`
+	width: 108px;
+	height: 28px;
+	padding: 6px;
+	border-radius: 100px;
+	border: solid 1px rgba(104, 0, 237, 0.5);
+	background-color: rgba(155, 121, 252, 0.15);
+	color: #fff;
 `
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))

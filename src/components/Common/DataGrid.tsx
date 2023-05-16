@@ -29,7 +29,8 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
       },
       '& .MuiDataGrid-columnHeaderTitle': {
         color: '#8988a3',
-        fontSize: '12px'
+        fontSize: '12px',
+        lineHeight: 1.33
       },
       '& .last--header': {
         '& .MuiDataGrid-columnHeaderTitle': {
@@ -118,11 +119,11 @@ export interface TickerType {
 export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, tickerSymbol }) => (
   <Box display="flex" justifyContent="flex-start" marginLeft='4px'>
     {tickerIcon && <Image src={tickerIcon} width="27px" height="27px" layout="fixed" />}
-    <Box display='flex' alignItems='center' marginLeft='16px'>
+    <Box display='flex' alignItems='center' ml='10px'>
       <Box sx={{ maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
         <Typography variant='p_xlg'>{tickerName}</Typography>
       </Box>
-      <Box sx={{ color: '#989898' }} marginLeft='8px'>
+      <Box sx={{ color: '#989898' }} ml='10px'>
         <Typography variant='p_lg'>{tickerSymbol}</Typography>
       </Box>
     </Box>
