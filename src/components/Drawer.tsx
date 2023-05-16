@@ -27,7 +27,7 @@ const Drawer: React.FC = () => {
 							<ListItemIcon sx={{ marginLeft: '20px' }}>
 								<Image src={menuPortfolioIcon} alt="portfolio" />
 							</ListItemIcon>
-							<StyledListItemText>iPortfolio</StyledListItemText>
+							<StyledListItemText>Portfolio</StyledListItemText>
 						</StyledListItemButton>
 					</Link>
 				</List>

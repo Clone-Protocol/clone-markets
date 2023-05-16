@@ -1,11 +1,11 @@
 import { styled } from '@mui/material'
 
 const BackdropMsg: React.FC = () => {
-	return (
-		<Wrapper>
-			<TitleMsg>Please connect wallet to view your iPortfolio.</TitleMsg>
-		</Wrapper>
-	)
+  return (
+    <Wrapper>
+      <TitleMsg>Please connect wallet to view your Portfolio.</TitleMsg>
+    </Wrapper>
+  )
 }
 
 export default BackdropMsg

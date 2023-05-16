@@ -15,7 +15,7 @@ const NaviMenu = () => {
         </Link>
         <Link href="/iportfolio">
           <StyledListItemButton className={router.asPath.startsWith('/iportfolio') ? 'selected' : ''}>
-            <StyledListItemText>iPortfolio</StyledListItemText>
+            <StyledListItemText>Portfolio</StyledListItemText>
           </StyledListItemButton>
         </Link>
         <Link href="/trade">

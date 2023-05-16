@@ -12,8 +12,8 @@ const IportfolioPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>iPortfolio - Incept Protocol</title>
-				<meta name="description" content="iPortfolio - Incept Markets" />
+				<title>Portfolio - Clone Protocol</title>
+				<meta name="description" content="Portfolio - Clone Markets" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>

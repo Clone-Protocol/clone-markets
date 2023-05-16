@@ -14,13 +14,13 @@ interface Props {
 
 const BalanceView: React.FC<Props> = ({ balance, data }) => {
 	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
-	const [selectedTitle, setSelectedTitle] = useState('iPortfolio')
+	const [selectedTitle, setSelectedTitle] = useState('Portfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
 	const [selectedUsdiAmount, setSelectedUsdiAmount] = useState(0)
 
 	useEffect(() => {
 		if (selectedFilter === 'all') {
-			setSelectedTitle('iPortfolio')
+			setSelectedTitle('Portfolio')
 			setSelectedIdx(-1)
 			setSelectedUsdiAmount(balance.totalVal);
 		} else {

@@ -89,7 +89,7 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: 'iPortfolio',
-		headerName: 'iPortfolio %',
+		headerName: 'Portfolio %',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (

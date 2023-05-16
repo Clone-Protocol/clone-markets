@@ -9,9 +9,9 @@ const GetUSDiBadge: React.FC<Props> = ({ onChange }) => {
   return <StyledStack direction='row' justifyContent='center' alignItems='center' spacing={2}>
     <Image src={PrimaryIcon} />
     <Box>
-      <Typography variant='p_lg'>Get USDi from the faucet to start trading on Devnet. On mainnet, you can easily acquire USDi through 1:1 swap with USDC.</Typography>
+      <Typography variant='p_lg'>Get onUSD from the faucet to start trading on Devnet. On mainnet, you can acquire onUSD through 1:1 swap with USDC.</Typography>
     </Box>
-    <GetButton><Typography variant='p'>Get Devnet USDi</Typography></GetButton>
+    <GetButton><Typography variant='p'>Get Devnet onUSD</Typography></GetButton>
   </StyledStack>
 }
 

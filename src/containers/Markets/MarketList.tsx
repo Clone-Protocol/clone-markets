@@ -55,7 +55,7 @@ const MarketList = () => {
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
 
-			<Box mb='9px'><Typography variant='p_xlg'>All iAssets on Incept</Typography></Box>
+			<Box mb='9px'><Typography variant='p_xlg'>All onAssets on Clone Protocol</Typography></Box>
 			<Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
 			<Grid
 				headers={columns}
@@ -73,7 +73,7 @@ let columns: GridColDef[] = [
 		field: 'iAsset',
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
-		headerName: 'iAsset',
+		headerName: 'onAsset',
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
@@ -85,7 +85,7 @@ let columns: GridColDef[] = [
 		field: 'price',
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
-		headerName: 'Price (USDi)',
+		headerName: 'Price (onUSD)',
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
@@ -115,7 +115,7 @@ let columns: GridColDef[] = [
 		field: '24hVolume',
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'last--cell',
-		headerName: '24h Volume',
+		headerName: 'Volume',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>

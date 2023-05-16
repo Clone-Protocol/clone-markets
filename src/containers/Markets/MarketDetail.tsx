@@ -70,7 +70,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 								<ContentValue>${asset.myNotionalVal.toLocaleString()} <SubValue>USDi</SubValue></ContentValue>
 							</Box>
 							<Box>
-								<ContentHeader>iPortfolio Percentage</ContentHeader>
+								<ContentHeader>Portfolio Percentage</ContentHeader>
 								<ContentValue>{asset.myPortfolioPercentage.toFixed(2)}%</ContentValue>
 							</Box>
 						</Stack>
