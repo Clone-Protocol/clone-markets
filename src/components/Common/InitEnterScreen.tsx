@@ -15,12 +15,14 @@ const InitEnterScreen = ({ onClose }: { onClose: () => void }) => {
     <BackScreen>
       <BoxWrapper>
         <Box><Typography variant='h1'>Before you enter...</Typography></Box>
-        <Box my='30px' lineHeight={1.1}>
+        <Box my='30px' lineHeight={1.4}>
           <Typography variant='p_xlg'>
-            `${"Welcome to Incept Markets (Beta) on Solana Devnet. As the word \"Beta\" in the name suggests, you may find minor bugs in the interface. If you do, please report the issue to us on Discord or write an email to us at beta@incept.so and we will address them ASAP. Thank you and congrats for being an early bird in Incept Ecosystem!"}`
+            Welcome to Clone Markets (Beta) on Solana Devnet. As the word {`"Beta"`} in the name suggests, you may find minor bugs in the interface. If you do, please report the issue to us on Discord or write an email to us at team@clone.so and we will address them ASAP. Thank you and congrats for being an early bird in Clone Ecosystem!
           </Typography>
         </Box>
-        <EnterButton onClick={() => close()}><Typography variant='h4' color='#fff'>Enter App</Typography></EnterButton>
+        <Box display='flex' justifyContent='center'>
+          <EnterButton onClick={() => close()}><Typography variant='h4' color='#fff'>Enter App</Typography></EnterButton>
+        </Box>
       </BoxWrapper>
     </BackScreen>
   )
@@ -39,9 +41,8 @@ const BackScreen = styled('div')`
   z-index: 99999;
 `
 const BoxWrapper = styled(Box)`
-  width: 600px;
-  color: #fff; 
-  text-align: left;
+  width: 680px;
+  color: #fff;
 `
 const EnterButton = styled(Button)`
   width: 360px;
@@ -57,7 +58,7 @@ const EnterButton = styled(Button)`
     right: 0;
     bottom: 0;
     border-radius: 10px;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     background: ${(props) => props.theme.gradients.light} border-box;
     -webkit-mask:
       linear-gradient(#fff 0 0) padding-box, 
