@@ -1,11 +1,11 @@
 import React from 'react';
-import { styled, Box, Paper } from '@mui/material'
+import { styled, Box, Paper, Typography, Stack } from '@mui/material'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import { useEffect, useState } from 'react'
-import { PieItem } from '~/data/filter'
+import { FilterTypeColorMap, PieItem } from '~/data/filter'
 
 interface Props {
 	balance: Balance
@@ -37,28 +37,67 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 
 	return (
 		<StyledPaper>
-			<Box width='200px' marginBottom='40px'>
-				<Title>{selectedTitle}</Title>
-				<BalanceValue>
-					${selectedUsdiAmount.toLocaleString()}
-				</BalanceValue>
-			</Box>
-			<Box display="flex" alignItems="center">
-				<PieChartAlt data={data} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(data[index].key)} />
-				<Box width='180px'>
-					{data.length > 0 ?
-						data.map(item => (
-							<CategoryText key={item.key} style={selectedFilter === item.key ? { color: '#fff', backgroundColor: '#292929', borderRadius: '100px', padding: '4px 12px' } : { marginLeft: '12px' }}>{item.name} - {item.value.toFixed(1)}%</CategoryText>
-						))
-						:
-						<div>
-							<CategoryText>iStocks - _%</CategoryText>
-							<CategoryText>iCommodity - _%</CategoryText>
-							<CategoryText>iFX - _%</CategoryText>
-							<CategoryText>iCrypto - _%</CategoryText>
-						</div>
-					}
+			<Box width='200px' mb='40px'>
+				<Box><Typography variant='p_lg' color='#c4b5fd'>{selectedTitle}</Typography></Box>
+				<Box>
+					<Typography variant='h1' fontWeight={500}>${selectedUsdiAmount.toLocaleString()}</Typography>
 				</Box>
+			</Box>
+			<PieChartAlt data={data} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(data[index].key)} />
+			<Box width='190px'>
+				<Stack direction='row' gap={4} mb='5px'>
+					<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
+					<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
+				</Stack>
+				{data.length > 0 ?
+					data.map(item => (
+						<Stack key={item.key} direction='row' gap={6} style={selectedFilter === item.key ? { border: `solid 1px ${FilterTypeColorMap[item.key]}`, borderRadius: '15px' } : { marginLeft: '12px' }}>
+							<Box display="flex" alignItems='center' gap={1} paddingLeft='15px'>
+								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[item.key] }} />
+								<Typography variant='p_lg'>{item.name}</Typography>
+							</Box>
+							<Box><Typography variant='p_lg' fontWeight={600}>{item.value.toFixed(0)}%</Typography></Box>
+						</Stack>
+					))
+					:
+					<Box>
+						<Stack direction='row' gap={3}>
+							<Box display="flex" gap={2}>
+								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap.stableCoin }} />
+								<Typography variant='p_lg'>Stable Coin</Typography>
+							</Box>
+							<Box><Typography variant='p_lg'>0%</Typography></Box>
+						</Stack>
+						<Stack direction='row' gap={3}>
+							<Box display="flex" gap={2}>
+								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap.onCrypto }} />
+								<Typography variant='p_lg'>onCrypto</Typography>
+							</Box>
+							<Box><Typography variant='p_lg'>0%</Typography></Box>
+						</Stack>
+						<Stack direction='row' gap={3}>
+							<Box display="flex" gap={2}>
+								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap.onCommodity }} />
+								<Typography variant='p_lg'>onCommodity</Typography>
+							</Box>
+							<Box><Typography variant='p_lg'>0%</Typography></Box>
+						</Stack>
+						<Stack direction='row' gap={3}>
+							<Box display="flex" gap={2}>
+								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap.onStock }} />
+								<Typography variant='p_lg'>onStock</Typography>
+							</Box>
+							<Box><Typography variant='p_lg'>0%</Typography></Box>
+						</Stack>
+						<Stack direction='row' gap={3}>
+							<Box display="flex" gap={2}>
+								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap.onFx }} />
+								<Typography variant='p_lg'>onFX</Typography>
+							</Box>
+							<Box><Typography variant='p_lg'>0%</Typography></Box>
+						</Stack>
+					</Box>
+				}
 			</Box>
 		</StyledPaper>
 	)
@@ -68,30 +107,13 @@ export default BalanceView
 
 const StyledPaper = styled(Paper)`
   display: flex;
+	width: 100%;
   justify-content: space-around;
   align-items: center;
-	font-size: 14px;
-	font-weight: 500;
-	color: #FFF;
-  padding-top: 10px;
-	border-radius: 8px;
-  background: #000;
+  background: transparent;
 `
-const Title = styled('div')`
-	font-size: 12px;
-	font-weight: 500;
-	color: #fff;
-	margin-bottom: 4px;
-`
-
-const BalanceValue = styled('div')`
-	font-size: 32px;
-	font-weight: 500;
-`
-
-const CategoryText = styled('div')`
-  font-size: 12px;
-  font-weight: 500;
-  color: #a3a3a3;
-  margin-bottom: 11px;
+const ColorIndicator = styled(Box)`
+	width: 10px;
+	height: 10px;
+	border-radius: 120px;
 `

@@ -96,13 +96,13 @@ export function useAssetsQuery({ filter, refetchOnMount, enabled = true }: GetAs
 			let filteredAssets = assets
 
 			filteredAssets = assets.filter((asset) => {
-				if (filter === 'icrypto') {
+				if (filter === 'onCrypto') {
 					return asset.assetType === AssetType.Crypto
-				} else if (filter === 'ifx') {
+				} else if (filter === 'onFx') {
 					return asset.assetType === AssetType.Fx
-				} else if (filter === 'icommodities') {
+				} else if (filter === 'onCommodity') {
 					return asset.assetType === AssetType.Commodities
-				} else if (filter === 'istocks') {
+				} else if (filter === 'onStock') {
 					return asset.assetType === AssetType.Stocks
 				}
 				return true;

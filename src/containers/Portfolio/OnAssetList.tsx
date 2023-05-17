@@ -43,7 +43,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
       <Grid
         headers={columns}
         rows={assets || []}
-        minHeight={window.innerHeight - 280}
+        minHeight={360}
         customNoRowsOverlay={() => CustomNoRowsOverlay('No assets')}
         onRowClick={handleRowClick}
       />
@@ -70,7 +70,7 @@ let columns: GridColDef[] = [
       return (
         <Stack>
           <Box>
-            <Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString()}</Typography>
+            <Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           </Box>
           <Box>
             <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString()} {params.row.tickerSymbol}</Typography>
@@ -81,13 +81,13 @@ let columns: GridColDef[] = [
   },
   {
     field: 'price',
-    headerName: 'Price(onUSD)',
+    headerName: 'Price (onUSD)',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       const percent = parseFloat(params.row.changePercent)
       return (
         <Stack>
-          <Typography variant='p_xlg'>${params.row.price.toLocaleString()}</Typography>
+          <Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           {percent >= 0 ? (
             <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
               <Typography variant='p_lg'>+{percent.toFixed(2)}%</Typography>
@@ -106,6 +106,7 @@ let columns: GridColDef[] = [
   },
   {
     field: 'iPortfolio',
+    headerClassName: 'last--header',
     headerName: 'Portfolio %',
     flex: 2,
     renderCell(params: GridRenderCellParams<string>) {
@@ -119,18 +120,17 @@ let columns: GridColDef[] = [
 ]
 
 const TopBox = styled(Box)`
-	// background: ${(props) => props.theme.basis.darkPurple};
-              height: 87px;
-              border-top-left-radius: 8px;
-              border-top-right-radius: 8px;
-              border-left: solid 1px rgba(196, 181, 253, 0.25);
-              border-right: solid 1px rgba(196, 181, 253, 0.25);
-              border-top: solid 1px rgba(196, 181, 253, 0.25);
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              padding-left: 29px;
-              `
+  height: 87px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-left: solid 1px rgba(196, 181, 253, 0.25);
+  border-right: solid 1px rgba(196, 181, 253, 0.25);
+  border-top: solid 1px rgba(196, 181, 253, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 29px;
+`
 
 
 columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))

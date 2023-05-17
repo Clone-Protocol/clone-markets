@@ -58,13 +58,13 @@ const PortfolioView = () => {
 			const finalPie = ordered.map((item) => {
 				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
 				if (item.id === AssetType.Crypto) {
-					return { key: 'icrypto', name: FilterTypeMap.icrypto, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, usdiAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Stocks) {
-					return { key: 'istocks', name: FilterTypeMap.istocks, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onStock', name: FilterTypeMap.onStock, value: percentVal, usdiAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Fx) {
-					return { key: 'ifx', name: FilterTypeMap.ifx, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onFx', name: FilterTypeMap.onFx, value: percentVal, usdiAmount: item.val } as PieItem
 				} else {
-					return { key: 'icommodities', name: FilterTypeMap.icommodities, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onCommodity', name: FilterTypeMap.onCommodity, value: percentVal, usdiAmount: item.val } as PieItem
 				}
 			})
 			console.log('f', finalPie)
@@ -84,10 +84,10 @@ const PortfolioView = () => {
 			<Box display='flex' justifyContent='center'>
 				{balance ? <BalanceView balance={balance} data={dataPie} /> : <></>}
 			</Box>
-			<Box my='20px'>
+			<Box my='45px'>
 				<StableAssetList assets={assets} pieitems={dataPie} balance={balance} />
 			</Box>
-			<Box>
+			<Box mb='25px'>
 				<OnAssetList assets={assets} pieitems={dataPie} balance={balance} />
 			</Box>
 		</div>

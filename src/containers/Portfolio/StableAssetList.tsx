@@ -67,7 +67,7 @@ let columns: GridColDef[] = [
 			return (
 				<Stack>
 					<Box>
-						<Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString()}</Typography>
+						<Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
 					</Box>
 				</Stack>
 			)
@@ -82,7 +82,7 @@ let columns: GridColDef[] = [
 			return (
 				<Stack>
 					<Box>
-						<Typography variant='p_xlg'>${params.row.price.toLocaleString()}</Typography>
+						<Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
 					</Box>
 				</Stack>
 			)
