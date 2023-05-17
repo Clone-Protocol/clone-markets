@@ -2,13 +2,9 @@ import type { NextPage } from 'next'
 import { styled } from '@mui/system'
 import Head from 'next/head'
 import { Container } from '@mui/material'
-import { useWallet } from '@solana/wallet-adapter-react'
 import PortfolioView from '~/containers/Portfolio/PortfolioView'
-import BackdropMsg from '~/components/Portfolio/BackdropMsg'
 
 const IportfolioPage: NextPage = () => {
-	const { publicKey } = useWallet()
-
 	return (
 		<div>
 			<Head>
@@ -20,8 +16,6 @@ const IportfolioPage: NextPage = () => {
 				<StyledSection>
 					<Container>
 						<PortfolioView />
-
-						{!publicKey && <BackdropMsg />}
 					</Container>
 				</StyledSection>
 			</main>

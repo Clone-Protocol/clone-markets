@@ -41,7 +41,7 @@ const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 				headers={columns}
 				rows={assets || []}
 				minHeight={100}
-				customNoRowsOverlay={() => CustomNoRowsOverlay('No assets')}
+				customNoRowsOverlay={() => CustomNoRowsOverlay('Please connect wallet.')}
 				onRowClick={handleRowClick}
 			/>
 		</>
