@@ -87,7 +87,7 @@ const PortfolioView = () => {
 			<Box my='45px'>
 				<StableAssetList assets={assets} pieitems={dataPie} balance={balance} />
 			</Box>
-			<Box mb='25px'>
+			<Box mb='45px'>
 				<OnAssetList assets={assets} pieitems={dataPie} balance={balance} />
 			</Box>
 		</div>

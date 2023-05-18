@@ -52,7 +52,7 @@ let columns: GridColDef[] = [
 	{
 		field: 'iAssets',
 		headerName: 'Stable Coin',
-		flex: 2,
+		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -91,7 +91,7 @@ let columns: GridColDef[] = [
 	{
 		field: '',
 		headerName: '',
-		flex: 2,
+		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<GetUSDButton><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>

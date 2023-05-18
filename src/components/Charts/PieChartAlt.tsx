@@ -45,14 +45,14 @@ const PieChartAlt: React.FC<ChartProps> = ({
   return (
     <Wrapper>
       <Box width='100%' maxWidth='229px'>
-        <PieChart width={250} height={250}>
+        <PieChart width={278} height={278}>
           {data.length > 0 ? (
             <Pie
               data={data}
               cx={110}
-              cy={100}
-              innerRadius={65}
-              outerRadius={80}
+              cy={110}
+              innerRadius={80}
+              outerRadius={100}
               fill="#8884d8"
               paddingAngle={0}
               dataKey="value"
@@ -68,10 +68,10 @@ const PieChartAlt: React.FC<ChartProps> = ({
             <Pie
               data={[{ key: 'all', name: 'all', value: 100 }]}
               cx={110}
-              cy={100}
-              innerRadius={65}
-              outerRadius={80}
-              fill="#363636"
+              cy={110}
+              innerRadius={80}
+              outerRadius={100}
+              fill="rgba(255, 255, 255, 0.09)"
               paddingAngle={0}
               dataKey="value"
             >
@@ -94,7 +94,7 @@ const Wrapper = styled(Box)`
 `
 const CloseWrapper = styled(Box)`
   position: absolute;
-  top: 86px;
+  top: 96px;
   left: calc(50% - 17px);
   cursor: pointer;
 `

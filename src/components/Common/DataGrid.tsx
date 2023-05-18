@@ -1,6 +1,7 @@
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface GridProps {
   headers: GridColDef[],
@@ -110,8 +111,17 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
 
 export const CustomNoRowsOverlay = (msg: string) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '21px' }}>
-      <Typography variant='p'>{msg}</Typography>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px' }}>
+      <Typography variant='p_lg' color='#8988a3'>{msg}</Typography>
+    </Box>
+  )
+}
+
+export const CustomNoOnAssetOverlay = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px' }}>
+      <Typography variant='p_lg'>No onAsset to display. </Typography>
+      <Link href="/trade"><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline' }}>Start Trading!</Typography></Link>
     </Box>
   )
 }

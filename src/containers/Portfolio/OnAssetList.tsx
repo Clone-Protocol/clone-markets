@@ -3,7 +3,7 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { BalanceList } from '~/features/Portfolio/UserBalance.query'
 import { PieItem } from '~/data/filter'
 import { styled } from '@mui/system'
-import { Grid, CellTicker } from '~/components/Common/DataGrid'
+import { Grid, CellTicker, CustomNoOnAssetOverlay } from '~/components/Common/DataGrid'
 import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { GridEventListener } from '@mui/x-data-grid'
 import Image from 'next/image'
@@ -15,6 +15,7 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Divider from '@mui/material/Divider';
 import { useRouter } from 'next/router'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 interface Props {
   assets: BalanceList[]
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
+  const { publicKey } = useWallet()
   // const [selectedFilter, setFilterState] = useRecoilState(filterState)
 
   // const pieitemsKeys = pieitems.map((item) => item.key)
@@ -43,8 +45,8 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
       <Grid
         headers={columns}
         rows={assets || []}
-        minHeight={360}
-        customNoRowsOverlay={() => CustomNoRowsOverlay('Please connect wallet.')}
+        minHeight={100}
+        customNoRowsOverlay={() => publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
         onRowClick={handleRowClick}
       />
     </>
@@ -55,7 +57,7 @@ let columns: GridColDef[] = [
   {
     field: 'iAssets',
     headerName: 'Token',
-    flex: 2,
+    flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -68,8 +70,8 @@ let columns: GridColDef[] = [
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <Stack>
-          <Box>
+        <Stack lineHeight={1.2}>
+          <Box display='flex' justifyContent='flex-end'>
             <Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           </Box>
           <Box>
@@ -86,8 +88,10 @@ let columns: GridColDef[] = [
     renderCell(params: GridRenderCellParams<string>) {
       const percent = parseFloat(params.row.changePercent)
       return (
-        <Stack>
-          <Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+        <Stack lineHeight={1.1}>
+          <Box display='flex' justifyContent='flex-end'>
+            <Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+          </Box>
           {percent >= 0 ? (
             <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
               <Typography variant='p_lg'>+{percent.toFixed(2)}%</Typography>
@@ -108,7 +112,7 @@ let columns: GridColDef[] = [
     field: 'iPortfolio',
     headerClassName: 'last--header',
     headerName: 'Portfolio %',
-    flex: 2,
+    flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <Stack>
