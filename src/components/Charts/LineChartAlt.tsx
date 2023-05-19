@@ -28,7 +28,7 @@ export type LineChartProps = {
 
 const LineChartAlt: React.FC<LineChartProps> = ({
   data,
-  color = '#00ff66',
+  color = '#ff0ed8',
   value,
   label,
   setValue,
@@ -93,7 +93,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
               if (setLabel && label !== formattedTime) setLabel(formattedTime)
             }}
           />
-          <Area dataKey="value" type="monotone" stroke="#00ff66" fill="url(#gradient)" strokeWidth={1} />
+          <Area dataKey="value" type="monotone" stroke="#ff0ed8" fill="url(#gradient)" strokeWidth={1} />
         </AreaChart>
       </ResponsiveContainer>
     </Wrapper>

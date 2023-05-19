@@ -1,5 +1,6 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
+import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { assetMapping } from 'src/data/assets'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useIncept } from '~/hooks/useIncept'
@@ -17,8 +18,9 @@ export const fetchMarketDetail = async ({ program, index, setStartTimer }: { pro
 
 	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
 
-	const balances = await program.getPoolBalances(index)
-	const price = balances[1] / balances[0]
+	const tokenData = await program.getTokenData();
+	const pool = tokenData.pools[index];
+	const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
 
 	return {
 		...(fetchMarketDetailDefault()),

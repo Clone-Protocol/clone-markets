@@ -21,8 +21,7 @@ export const TimeTabs: React.FC<Pick<TabsProps, 'value' | 'onChange' | 'sx' | 'v
 )
 
 export const StyledTabs = styled(Tabs)`
-	height: 23px;
-  background-color: #282828;
+	height: 20px;
   border-radius: 10px;
   padding-top: 4px;
   padding-left: 4px;
@@ -36,7 +35,7 @@ export const TimeTab = styled(Tab)`
 	color: #fff;
 	&.MuiTab-root {
 		padding: 0px;
-    min-width: 39px;
+    min-width: 36px;
 		height: 15px;
 		min-height: 15px;
 		border-radius: 10px;
@@ -44,7 +43,7 @@ export const TimeTab = styled(Tab)`
 		text-transform: none;
 	}
 	&.Mui-selected {
-    background-color: #000;
+    background-color: #414166;
 		color: #fff;
 	}
 	&.Mui-focusVisible {

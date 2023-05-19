@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { TimeTabs, TimeTab, FilterTimeMap, FilterTime } from '~/components/Charts/TimeTabs'
 import LineChartAlt from '~/components/Charts/LineChartAlt'
 import { useTotalPriceQuery } from '~/features/Chart/Prices.query'
+import Image from 'next/image'
+import ArrowUpward from 'public/images/arrow-up-green.svg'
 
 const Chart = ({ price }: { price: number }) => {
-	const [filterTime, setFilterTime] = useState<FilterTime>('24h')
+  const [filterTime, setFilterTime] = useState<FilterTime>('24h')
   const [chartHover, setChartHover] = useState<number | undefined>()
   const { data: totalPrices } = useTotalPriceQuery({
     timeframe: filterTime,
@@ -15,33 +17,40 @@ const Chart = ({ price }: { price: number }) => {
     enabled: true
   })
   const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterTime) => {
-		setFilterTime(newValue)
-	}
+    setFilterTime(newValue)
+  }
 
   useEffect(() => {
     if (totalPrices) {
-      setChartHover(totalPrices?.chartData[totalPrices?.chartData.length-1].value)
+      setChartHover(totalPrices?.chartData[totalPrices?.chartData.length - 1].value)
     }
   }, [totalPrices])
 
 
   useEffect(() => {
     if (chartHover === undefined && totalPrices) {
-      setChartHover(totalPrices?.chartData[totalPrices?.chartData.length-1].value)
+      setChartHover(totalPrices?.chartData[totalPrices?.chartData.length - 1].value)
     }
   }, [chartHover, totalPrices])
 
 
-	return (
-		<>
+  return (
+    <>
       <LineChartAlt
         data={totalPrices?.chartData}
         value={chartHover}
         setValue={setChartHover}
         maxY={totalPrices?.maxValue}
         topLeft={
-          <Box style={{ marginBottom: '25px' }}>
-            <SelectValue>${chartHover?.toLocaleString()}</SelectValue>
+          <Box mb='25px'>
+            <Box display='flex' alignItems='baseline'>
+              <Typography variant='h1' fontWeight={500}>${chartHover?.toLocaleString()}</Typography>
+              <Typography variant='p_xlg' ml='8px'>onUSD</Typography>
+            </Box>
+            <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
+              <Typography variant='p_xlg'>+3.47%</Typography>
+              <Image src={ArrowUpward} />
+            </Box>
           </Box>
         }
         topRight={
@@ -54,18 +63,9 @@ const Chart = ({ price }: { price: number }) => {
           </div>
         }
       />
-		</>
-	)
+    </>
+  )
 }
 
-const SelectValue = styled(Box)`
-  font-size: 35px;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: left;
-  color: #fff;
-`
 
 export default Chart

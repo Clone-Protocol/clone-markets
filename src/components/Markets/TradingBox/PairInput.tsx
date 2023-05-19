@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, Stack, Box, styled } from '@mui/material'
+import { FormControl, Stack, Box, styled, Typography } from '@mui/material'
 import Image from 'next/image'
 
 interface Props {
@@ -17,35 +17,29 @@ interface Props {
 const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, onChange, onMax, max }) => {
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
-			<HeaderStack direction="row" justifyContent="space-between">
-				<Box marginLeft='10px'>{title}</Box>
+			<Stack direction="row" justifyContent="space-between">
+				<Box><Typography variant='p_lg' color='#8988a3'>{title}</Typography></Box>
 				{!balanceDisabled ? <Box marginRight='10px'>Balance: <TextWhitePointer onClick={() => onMax && onMax(balance!)}>{balance?.toLocaleString()}</TextWhitePointer></Box> : <></>}
-			</HeaderStack>
+			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display="flex" alignItems="center">
 					{tickerIcon && <Image src={tickerIcon} width="26px" height="26px" />}
 					<TickerName>{ticker}</TickerName>
 				</Box>
-				<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#adadad' }} placeholder="0.00" min={0} max={max} value={value} onChange={onChange} />
+				<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} onChange={onChange} />
 			</FormStack>
 		</FormControl>
 	)
 }
-
-const HeaderStack = styled(Stack)`
-	font-size: 11px; 
-	font-weight: 500; 
-	margin-bottom: 3px;
-`
 
 const FormStack = styled(Stack)`
 	display: flex;
 	width: 100%;
 	height: 54px;
 	padding: 12px;
-	border-radius: 8px;
-	background-color: #282828;
-  border: solid 1px #444;
+	border-radius: 10px;
+	color: #8988a3;
+	background-color: rgba(255, 255, 255, 0.1);
 `
 
 const TickerName = styled(Box)`

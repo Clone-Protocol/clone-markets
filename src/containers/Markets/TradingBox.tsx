@@ -12,12 +12,13 @@ enum Section {
 
 interface Props {
 	assetId: string
+	onSelectAssetId: (id: number) => void
 }
 
-const TradingBox: React.FC<Props> = ({ assetId }) => {
+const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const [showTradingComp, setShowTradingComp] = useState(true)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
-  const assetIndex = parseInt(assetId)
+	const assetIndex = parseInt(assetId)
 
 	const showSection = (section: Section) => {
 		switch (section) {
@@ -39,10 +40,10 @@ const TradingBox: React.FC<Props> = ({ assetId }) => {
 	return (
 		<StyledPaper>
 			{showTradingComp && (
-        <TradingComp
+				<TradingComp
 					assetIndex={assetIndex}
-          onShowOption={() => showSection(Section.OrderSetting)}
-        />
+					onShowOption={() => showSection(Section.OrderSetting)}
+				/>
 			)}
 			{showOrderSetting && <OrderSetting onBack={goTradingComp} />}
 		</StyledPaper>

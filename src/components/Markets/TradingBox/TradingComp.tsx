@@ -1,4 +1,4 @@
-import { styled, Box, Stack, Button } from '@mui/material'
+import { styled, Box, Stack, Button, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
@@ -50,7 +50,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
-  const [tabIdx, setTabIdx] = useState(0)
+  // const [tabIdx, setTabIdx] = useState(0)
+  const [isBuy, setIsBuy] = useState(true)
   const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
@@ -100,8 +101,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     refetch()
   }
 
-  const handleChangeTab = (_: React.SyntheticEvent, newTabIdx: number) => {
-    setTabIdx(newTabIdx)
+  const handleChangeOrderType = (_: React.SyntheticEvent, newTabIdx: number) => {
+    setIsBuy(!isBuy)
     setOpenOrderDetails(false)
     trigger()
   }
@@ -110,7 +111,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     calculateTotalAmountByConvert(convertVal)
     console.log('c', convertVal)
     trigger()
-  }, [tabIdx])
+  }, [isBuy])
 
   const { mutateAsync } = useTradingMutation(publicKey)
 
@@ -129,7 +130,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     let usdi
     let iAsset
     // buy
-    if (tabIdx === 0) {
+    if (isBuy) {
       usdi = balance?.usdiVal! * convertRatio / 100;
       iAsset = ammIassetValue - invariant / (ammUsdiValue + amountUsdi)
     } else {
@@ -145,8 +146,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     const ammUsdiValue = balance?.ammUsdiValue!
     const ammIassetValue = balance?.ammIassetValue!
     const invariant = ammIassetValue * ammUsdiValue
-    // buy
-    if (tabIdx === 0) {
+
+    if (isBuy) {
       const convertRatio = newValue * 100 / balance?.usdiVal!
       const iAsset = ammIassetValue - invariant / (ammUsdiValue + newValue)
       setConvertVal(convertRatio)
@@ -168,7 +169,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
         amountUsdi,
         amountIasset,
         iassetIndex: assetIndex,
-        isBuy: tabIdx === 0
+        isBuy
       },
       {
         onSuccess(data) {
@@ -212,16 +213,23 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
           sx={{
             p: '18px',
           }}>
-          <Box display='flex' justifyContent='center'>
-            <StyledTabs value={tabIdx} onChange={handleChangeTab}>
-              <StyledTab label="Buy"></StyledTab>
-              <StyledTab label="Sell"></StyledTab>
-            </StyledTabs>
-          </Box>
-          <Box marginTop='30px'>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            marginTop='16px'
+            marginBottom='23px'>
+            <IconButton onClick={() => refetch()}>
+              <Image src={reloadIcon} alt="reload" />
+            </IconButton>
+            <IconButton onClick={onShowOption}>
+              <Image src={settingsIcon} alt="settings" />
+            </IconButton>
+          </Stack>
+          <Box>
             {
               // ::Buy
-              tabIdx === 0 ?
+              isBuy ?
                 <Box>
                   <Controller
                     name="amountUsdi"
@@ -273,7 +281,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     }}
                     render={({ field }) => (
                       <PairInput
-                        title="How much?"
+                        title="You pay"
                         tickerIcon={assetData?.tickerIcon!}
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,37 +306,29 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 
           <Box height='100%'>
             <Box marginTop='23px' marginBottom='23px'>
-              <ConvertSlider isBuy={tabIdx === 0} value={convertVal} onChange={handleChangeConvert} />
+              {/* <ConvertSlider isBuy={isBuy} value={convertVal} onChange={handleChangeConvert} /> */}
             </Box>
 
             <PairInput
-              title="Total"
-              tickerIcon={tabIdx === 0 ? assetData?.tickerIcon! : fromPair.tickerIcon}
-              ticker={tabIdx === 0 ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
-              value={tabIdx === 0 ? amountIasset : amountUsdi}
+              title="You Receive"
+              tickerIcon={isBuy ? assetData?.tickerIcon! : fromPair.tickerIcon}
+              ticker={isBuy ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
+              value={isBuy ? amountIasset : amountUsdi}
               balanceDisabled={true}
             />
 
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              alignItems="center"
-              marginTop='16px'
-              marginBottom='23px'>
-              <IconButton onClick={() => refetch()}>
-                <Image src={reloadIcon} alt="reload" />
-              </IconButton>
-              <IconButton onClick={onShowOption}>
-                <Image src={settingsIcon} alt="settings" />
-              </IconButton>
-            </Stack>
-
-            <ActionButton sx={tabIdx === 0 ? { borderColor: '#0f6' } : { borderColor: '#fb782e' }} onClick={handleSubmit(onConfirm)} disabled={!isValid}>
-              {!isValid ? `Insufficient Balance` : `Confirm market ${tabIdx === 0 ? 'buy' : 'sell'}`}
-            </ActionButton>
+            <Box my='15px'>
+              {!publicKey ? <ConnectButton>
+                <Typography variant='h4'>Connect Wallet</Typography>
+              </ConnectButton> :
+                <ActionButton sx={isBuy ? { borderColor: '#0f6' } : { borderColor: '#fb782e' }} onClick={handleSubmit(onConfirm)} disabled={!isValid}>
+                  {!isValid ? `Insufficient Balance` : `Confirm market ${isBuy ? 'buy' : 'sell'}`}
+                </ActionButton>
+              }
+            </Box>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
-              <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={tabIdx === 0 ? { color: '#0f6' } : { color: '#fb782e' }}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
+              <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={isBuy ? { color: '#0f6' } : { color: '#fb782e' }}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}
 
@@ -336,11 +336,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               <RateLoadingIndicator />
             </Box>
 
-            {(tabIdx === 0 && balance?.usdiVal === 0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} />}
-            {(tabIdx === 1 && balance?.iassetVal === 0) && <BackdropPartMsg isUsdi={false} tickerSymbol={assetData?.tickerSymbol} />}
+            {/* {(tabIdx === 0 && balance?.usdiVal === 0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} />}
+            {(tabIdx === 1 && balance?.iassetVal === 0) && <BackdropPartMsg isUsdi={false} tickerSymbol={assetData?.tickerSymbol} />} */}
           </Box >
 
-          {!publicKey && <BackdropMsg />}
+          {/* {!publicKey && <BackdropMsg />} */}
         </Box >
       </div >
     </>
@@ -361,7 +361,14 @@ const IconButton = styled('div')`
     background-color: #3e3e3e;
   }
 `
-
+const ConnectButton = styled(Button)`
+  width: 100%;
+  height: 52px;
+  color: #fff;
+  border: solid 1px rgba(65, 65, 102, 0.5);
+  background: ${(props) => props.theme.basis.royalPurple};
+  border-radius: 10px;
+`
 const ActionButton = styled(Button)`
 	width: 100%;
   font-size: 12px;
