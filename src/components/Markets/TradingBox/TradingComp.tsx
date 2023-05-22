@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
+import swapIcon from 'public/images/swap-icon.svg'
 import reloadIcon from 'public/images/reload-icon.svg'
 import settingsIcon from 'public/images/setting-icon.svg'
 import { useSnackbar } from 'notistack'
@@ -17,7 +18,6 @@ import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import LoadingIndicator, { LoadingWrapper } from '~/components/Common/LoadingIndicator'
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
-import BackdropPartMsg from './BackdropPartMsg'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
@@ -245,7 +245,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                     }}
                     render={({ field }) => (
                       <PairInput
-                        title="How much?"
+                        title="You Pay"
                         tickerIcon={fromPair.tickerIcon}
                         ticker={fromPair.tickerSymbol}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,6 +259,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         }}
                         value={parseFloat(field.value.toFixed(3))}
                         balance={balance?.usdiVal}
+                        dollarBalance={balance?.usdiVal}
                         max={balance?.usdiVal}
                       />
                     )}
@@ -295,6 +296,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         }}
                         value={parseFloat(field.value.toFixed(3))}
                         balance={balance?.iassetVal}
+                        dollarBalance={balance?.iassetVal}
                         max={balance?.iassetVal}
                       />
                     )}
@@ -314,6 +316,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               tickerIcon={isBuy ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={isBuy ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
               value={isBuy ? amountIasset : amountUsdi}
+              dollarBalance={balance?.iassetVal}
               balanceDisabled={true}
             />
 
@@ -328,9 +331,12 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             </Box>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
-              <div style={{ marginTop: '3px' }}>Order details</div> <ArrowIcon sx={isBuy ? { color: '#0f6' } : { color: '#fb782e' }}>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
+              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(getPrice(), 4)} onUSD</Typography>
+              <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}
+
+
 
             <Box display='flex' justifyContent='center'>
               <RateLoadingIndicator />
@@ -348,8 +354,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
 }
 
 const IconButton = styled('div')`
-	background: #2f2f2f;
-	color: #737373;
   width: 29px;
   height: 29px;
   margin-left: 12px;
@@ -402,8 +406,10 @@ const TitleOrderDetails = styled('div')`
 const ArrowIcon = styled('div')`
   width: 9.4px;
   height: 6px;
-  color: #0f6;
-  font-weight: 700;
+  margin-left: 5px;
+  margin-top: -3px;
+  font-weight: 600;
+  color: #c5c7d9;
 `
 
 export default TradingComp

@@ -1,6 +1,6 @@
 import { styled, Typography, Stack, Box, Button } from '@mui/material'
 import Image from 'next/image'
-import PrimaryIcon from 'public/images/icons-primary.svg'
+import PrimaryIcon from 'public/images/icons-badge.svg'
 
 interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void

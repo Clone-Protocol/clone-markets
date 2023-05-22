@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 
@@ -20,25 +20,21 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
   return (
     <Wrapper>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <DetailHeader>Rate</DetailHeader>
-        <DetailValue>{iassetPrice?.toLocaleString()} USDi / {tickerSymbol}</DetailValue>
-      </Stack>
-      <Stack marginTop="8px" direction="row" justifyContent="space-between" alignItems="center">
-        <DetailHeader>Price Impact <InfoTooltip title="Price Impact" /></DetailHeader>
+        <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Price Impact <InfoTooltip title="Price Impact" color='#8988a3' /></Typography>
         <PriceImpactValue>&lt; {priceImpact}%</PriceImpactValue>
       </Stack>
-      <Stack marginTop="8px" direction="row" justifyContent="space-between" alignItems="center">
-        <DetailHeader>Minimum received <InfoTooltip title="Minimum received" /></DetailHeader>
-        <div style={{ lineHeight: '12px' }}>
-          <DetailValue>{minReceived?.toLocaleString()} {tickerSymbol}</DetailValue>
-          <DetailComment>Slippage tolerance: {slippage?.toFixed(1)}%</DetailComment>
+      <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title="Minimum received" color='#8988a3' /></Typography>
+        <div style={{ lineHeight: '10px', textAlign: 'right' }}>
+          <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{minReceived?.toLocaleString()} {tickerSymbol}</Typography></Box>
+          <Box><Typography variant='p_sm'>Slippage tolerance: {slippage?.toFixed(1)}%</Typography></Box>
         </div>
       </Stack>
-      <Stack marginTop="9px" direction="row" justifyContent="space-between" alignItems="center">
-        <DetailHeader>Trade fees <InfoTooltip title="Trade fees" /></DetailHeader>
-        <div style={{ lineHeight: '12px' }}>
-          <DetailValue>{iassetTradeFee?.toFixed(6)} {tickerSymbol}</DetailValue>
-          <DetailComment>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</DetailComment>
+      <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Trade Fees <InfoTooltip title="Trade fees" color='#8988a3' /></Typography>
+        <div style={{ lineHeight: '10px', textAlign: 'right' }}>
+          <Typography variant='p' fontWeight={600} color='#c4b5fd'>{iassetTradeFee?.toFixed(6)} {tickerSymbol}</Typography>
+          <Box><Typography variant='p_sm'>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</Typography></Box>
         </div>
       </Stack>
     </Wrapper>
@@ -47,17 +43,10 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
 
 const Wrapper = styled(Box)`
   width: 100%;
-  height: 153px;
   margin: 13px 0 16px;
-  padding: 14px 23px 13px 15px;
+  padding: 5px 12px;
   border-radius: 10px;
-  border: solid 1px #444;
-`
-
-const DetailHeader = styled('div')`
-	font-size: 10px;
-	font-weight: 500;
-	color: #868686;
+  background-color: rgba(255, 255, 255, 0.05);
 `
 
 const DetailValue = styled('div')`
@@ -75,8 +64,8 @@ const DetailComment = styled('div')`
 `
 
 const PriceImpactValue = styled('div')`
-  color: #0f6; 
-  font-size: 11px; 
+  color: ${(props) => props.theme.basis.lightGreen};
+  font-size: 12px; 
   font-weight: 600;
 `
 
