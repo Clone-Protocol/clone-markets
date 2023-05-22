@@ -6,6 +6,7 @@ import Image from 'next/image'
 import swapIcon from 'public/images/swap-icon.svg'
 import reloadIcon from 'public/images/reload-icon.svg'
 import settingsIcon from 'public/images/setting-icon.svg'
+import swapChangeIcon from 'public/images/swap-change.svg'
 import { useSnackbar } from 'notistack'
 import { useForm, Controller } from 'react-hook-form'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -101,7 +102,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
     refetch()
   }
 
-  const handleChangeOrderType = (_: React.SyntheticEvent, newTabIdx: number) => {
+  const handleChangeOrderType = () => {
     setIsBuy(!isBuy)
     setOpenOrderDetails(false)
     trigger()
@@ -307,8 +308,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
           </Box>
 
           <Box height='100%'>
-            <Box marginTop='23px' marginBottom='23px'>
+            <Box my='23px' sx={{ cursor: 'pointer' }}>
               {/* <ConvertSlider isBuy={isBuy} value={convertVal} onChange={handleChangeConvert} /> */}
+              <Image src={swapChangeIcon} alt="swap" onClick={handleChangeOrderType} />
             </Box>
 
             <PairInput
