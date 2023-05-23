@@ -1,7 +1,7 @@
 import { Paper, styled } from '@mui/material'
 import { useState } from 'react'
-import OrderSetting from '~/components/Markets/TradingBox/OrderSetting'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
+import SwapSettingDialog from '~/components/Markets/TradingBox/SwapSettingDialog'
 import withSuspense from '~/hocs/withSuspense'
 
 enum Section {
@@ -16,50 +16,30 @@ interface Props {
 }
 
 const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
-	const [showTradingComp, setShowTradingComp] = useState(true)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
 	const assetIndex = parseInt(assetId)
 
-	const showSection = (section: Section) => {
-		switch (section) {
-			case Section.TradingComp:
-				setShowOrderSetting(false)
-				setShowTradingComp(true)
-				break
-			case Section.OrderSetting:
-				setShowOrderSetting(true)
-				setShowTradingComp(false)
-				break
-		}
-	}
-
-	const goTradingComp = () => {
-		showSection(Section.TradingComp)
-	}
-
 	return (
 		<StyledPaper>
-			{showTradingComp && (
-				<TradingComp
-					assetIndex={assetIndex}
-					onShowOption={() => showSection(Section.OrderSetting)}
-				/>
-			)}
-			{showOrderSetting && <OrderSetting onBack={goTradingComp} />}
+			<TradingComp
+				assetIndex={assetIndex}
+				onShowOption={() => setShowOrderSetting(true)}
+			/>
+
+			{/* {showOrderSetting && <OrderSetting onBack={goTradingComp} />} */}
+			<SwapSettingDialog
+				open={showOrderSetting}
+				onHide={() => setShowOrderSetting(false)}
+			/>
 		</StyledPaper>
 	)
 }
 
 const StyledPaper = styled(Paper)`
   position: relative;
-	width: 373px;
-  background: #141414;
-	font-size: 14px;
-	font-weight: 500;
+	width: 360px;
+	background: transparent;
 	text-align: center;
-	color: #606060;
-	border-radius: 10px;
-	padding: 10px;
 `
 
 export default withSuspense(TradingBox, <></>)

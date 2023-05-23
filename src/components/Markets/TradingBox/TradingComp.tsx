@@ -22,6 +22,7 @@ import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
+import GetOnUSD from './GetOnUSD'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -214,12 +215,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
           sx={{
             p: '18px',
           }}>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-            marginTop='16px'
-            marginBottom='23px'>
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" mt='16px' mb='23px'>
             <IconButton onClick={() => refetch()}>
               <Image src={reloadIcon} alt="reload" />
             </IconButton>
@@ -333,19 +329,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
             </Box>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
+              <RateLoadingIndicator />
               <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(getPrice(), 4)} onUSD</Typography>
               <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}
 
-
-
-            <Box display='flex' justifyContent='center'>
-              <RateLoadingIndicator />
+            <Box mt='10px'>
+              <GetOnUSD />
             </Box>
-
-            {/* {(tabIdx === 0 && balance?.usdiVal === 0) && <BackdropPartMsg isUsdi={true} tickerSymbol={''} />}
-            {(tabIdx === 1 && balance?.iassetVal === 0) && <BackdropPartMsg isUsdi={false} tickerSymbol={assetData?.tickerSymbol} />} */}
           </Box >
 
           {/* {!publicKey && <BackdropMsg />} */}
@@ -394,17 +386,11 @@ const ActionButton = styled(Button)`
     color: #adadad;
   } 
 `
-
 const TitleOrderDetails = styled('div')`
   cursor: pointer; 
   text-align: left; 
   display: flex;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600; 
-  margin-left: 10px;
 `
-
 const ArrowIcon = styled('div')`
   width: 9.4px;
   height: 6px;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { CircularProgress, styled, Box } from '@mui/material'
 import { useDataLoading } from '~/hooks/useDataLoading'
 
-export const REFETCH_CYCLE = 15000
+export const REFETCH_CYCLE = 30000
 
 const RateLoadingIndicator = () => {
   const { startTimer } = useDataLoading()
@@ -25,24 +25,23 @@ const RateLoadingIndicator = () => {
     };
   }, [startTimer]);
 
-	return (
+  return (
     <Wrapper>
-      <div style={{ marginRight: '8px'}}>Rate refreshes in</div>
       <Box sx={{ position: 'relative' }}>
         <CircularProgress
           variant="determinate"
           sx={{
-            color: '#525252'
+            color: 'rgba(66, 0, 255, 0.0)'
           }}
-          size={23}
-          thickness={8}
+          size={12}
+          thickness={2}
           value={100}
         />
-        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#fff', position: 'absolute', left: 0 }} size={23}
-          thickness={8} value={progress} />
+        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#ff6cdf', position: 'absolute', left: 0 }} size={12}
+          thickness={5} value={progress} />
       </Box>
     </Wrapper>
-	)
+  )
 }
 
 export default RateLoadingIndicator
@@ -54,13 +53,7 @@ const CustomCircularProgress = styled(CircularProgress)`
 `
 
 const Wrapper = styled(Box)`
-  width: 159px;
-  border-radius: 10px;
-  margin-top: 18px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 500;
-  color: #868686;
+  margin-right: 6px;
 `
