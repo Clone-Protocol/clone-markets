@@ -6,9 +6,9 @@ import SearchIcon from 'public/images/search-icon.svg'
 interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-const SearchInput: React.FC<Props> = ({onChange}) => {
-	return <StyledBox>
-    <StyledInput placeholder="Search for iAsset" disableUnderline onChange={onChange} />
+const SearchInput: React.FC<Props> = ({ onChange }) => {
+  return <StyledBox>
+    <StyledInput placeholder="Search onAssets" disableUnderline onChange={onChange} />
     <Box sx={{ position: 'relative', right: '-10px', top: '0px' }}>
       <Image src={SearchIcon} />
     </Box>
@@ -17,14 +17,13 @@ const SearchInput: React.FC<Props> = ({onChange}) => {
 
 const StyledBox = styled(Box)`
   display: flex;
-  width: 270px;
+  width: 100%;
   height: 36px;
   color: #fff;
-  margin-left: 32px;
-  padding: 6px 20px 6px 24px;
-  border-radius: 8px;
-  border: solid 1px #444;
-  background-color: #282828;
+  padding: 14px 11px;
+  border-radius: 10px;
+  border: solid 1px ${(props) => props.theme.basis.portGore};
+  background-color: rgba(255, 255, 255, 0.05);
   &:hover {
     border: solid 1px #809cff;
   }
@@ -34,7 +33,7 @@ const StyledInput = styled(Input)`
   & input {
     width: 206px;
     height: 30px;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 500;
     font-stretch: normal;
     font-style: normal;
@@ -44,7 +43,7 @@ const StyledInput = styled(Input)`
     color: #fff;
 
     &::placeholder {
-      color: #fff;
+      color: #8988a3;
     }
   }
 `

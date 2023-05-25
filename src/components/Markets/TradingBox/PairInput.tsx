@@ -11,11 +11,13 @@ interface Props {
 	balanceDisabled?: boolean
 	value?: number
 	max?: number
+	tickerClickable?: boolean
+	onTickerClick?: () => void
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 	onMax?: (balance: number) => void
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, dollarBalance, balanceDisabled, value, onChange, onMax, max }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, dollarBalance, balanceDisabled, value, tickerClickable = false, onTickerClick, onChange, onMax, max }) => {
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between">
@@ -27,7 +29,7 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, dollar
 					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} onChange={onChange} />
 					<Box><Typography variant='p' color='#8988a3'>${dollarBalance?.toLocaleString()}</Typography></Box>
 				</Box>
-				<TickerBox>
+				<TickerBox onClick={onTickerClick} sx={tickerClickable ? { cursor: 'pointer' } : {}}>
 					{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
 					<Box ml='4px' display='flex' alignItems='center'><Typography variant='h4' color='#fff'>{ticker}</Typography></Box>
 				</TickerBox>

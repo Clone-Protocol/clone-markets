@@ -38,12 +38,12 @@ const SwapSettingDialog = ({ open, onHide }: { open: boolean, onHide: () => void
     } else {
       setLocalSlippage(slippage)
     }
-    // onBack()
+    onHide()
   }
 
   return (
     <>
-      <Dialog open={open} onClose={onHide} TransitionComponent={FadeTransition}>
+      <Dialog open={open} onClose={onSave} TransitionComponent={FadeTransition}>
         <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
           <BoxWrapper>
             <Box mb="21px"><Typography variant='h3' fontWeight={500}>Swap Settings</Typography></Box>

@@ -1,8 +1,9 @@
 import { Paper, styled } from '@mui/material'
 import { useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
-import SwapSettingDialog from '~/components/Markets/TradingBox/SwapSettingDialog'
+import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'
 import withSuspense from '~/hocs/withSuspense'
+import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
 
 enum Section {
 	TradingComp,
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
+	const [showSearchAssetDlog, setShowSearchAssetDlog] = useState(false)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
 	const assetIndex = parseInt(assetId)
 
@@ -24,6 +26,13 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 			<TradingComp
 				assetIndex={assetIndex}
 				onShowOption={() => setShowOrderSetting(true)}
+				onShowSearchAsset={() => setShowSearchAssetDlog(true)}
+			/>
+
+			<SearchAssetDialog
+				open={showSearchAssetDlog}
+				onChooseAsset={(id) => onSelectAssetId(id)}
+				onHide={() => setShowSearchAssetDlog(false)}
 			/>
 
 			{/* {showOrderSetting && <OrderSetting onBack={goTradingComp} />} */}

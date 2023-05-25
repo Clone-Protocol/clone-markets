@@ -41,6 +41,7 @@ export interface TradingData {
 interface Props {
   assetIndex: number
   onShowOption: () => void
+  onShowSearchAsset: () => void
 }
 
 const round = (n: number, decimals: number) => {
@@ -48,7 +49,7 @@ const round = (n: number, decimals: number) => {
   return Math.round(n * factor) / factor
 }
 
-const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
+const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAsset }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
@@ -294,6 +295,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
                         value={parseFloat(field.value.toFixed(3))}
                         balance={balance?.iassetVal}
                         dollarBalance={balance?.iassetVal}
+                        tickerClickable
+                        onTickerClick={onShowSearchAsset}
                         max={balance?.iassetVal}
                       />
                     )}
@@ -316,6 +319,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption }) => {
               value={isBuy ? amountIasset : amountUsdi}
               dollarBalance={balance?.iassetVal}
               balanceDisabled={true}
+              tickerClickable
+              onTickerClick={onShowSearchAsset}
             />
 
             <Box my='15px'>
