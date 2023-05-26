@@ -203,6 +203,16 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
 
   const isValid = Object.keys(errors).length === 0
 
+  const invalidMsg = () => {
+    if (amountUsdi === 0 || isNaN(amountUsdi) || !amountUsdi) {
+      return 'Enter Amount'
+    } else if (amountUsdi > balance?.usdiVal!) {
+      return 'Insufficient onUSD'
+    } else {
+      return ''
+    }
+  }
+
   return (
     <>
       {loading && (
@@ -327,8 +337,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               {!publicKey ? <ConnectButton>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
-                <ActionButton sx={isBuy ? { borderColor: '#0f6' } : { borderColor: '#fb782e' }} onClick={handleSubmit(onConfirm)} disabled={!isValid}>
-                  {!isValid ? `Insufficient Balance` : `Confirm market ${isBuy ? 'buy' : 'sell'}`}
+                <ActionButton onClick={handleSubmit(onConfirm)} disabled={!isValid}>
+                  <Typography variant='h4'>{!isValid ? invalidMsg() : `Swap`}</Typography>
                 </ActionButton>
               }
             </Box>
@@ -374,21 +384,21 @@ const ConnectButton = styled(Button)`
 `
 const ActionButton = styled(Button)`
 	width: 100%;
-  font-size: 12px;
-  font-weight: 600;
+  height: 52px;
 	color: #fff;
-	border-radius: 8px;
 	margin-bottom: 10px;
   border-radius: 10px;
-  border: solid 1px #0f6;
-  background-color: rgba(51, 255, 0, 0);
+  background-image: linear-gradient(to bottom, #14081c, #14081c), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed);
+  border-width: 1px;
+	border-image-source: linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fffff 50%, #ff96e2 68%, #874fff 83%, #4d25ed);
+	border-image-slice: 1;
   &:hover {
     background-color: #2e2e2e;
   }
   &:disabled {
-    border: solid 1px #444;
-    background-color: rgba(51, 255, 0, 0);
-    color: #adadad;
+    border: solid 1px ${(props) => props.theme.basis.portGore};
+    background: transparent;
+    color: ${(props) => props.theme.basis.textRaven};
   } 
 `
 const TitleOrderDetails = styled('div')`
