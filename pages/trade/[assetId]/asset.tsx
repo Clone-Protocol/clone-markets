@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -9,7 +9,11 @@ import { Grid } from '@mui/material'
 
 const AssetPage: NextPage = () => {
 	const router = useRouter()
-	const { marketId } = router.query
+	const [assetId, setAssetId] = useState(router.query.assetId || 0)
+
+	const handleSelectAssetId = (id: number) => {
+		setAssetId(id)
+	}
 
 	return (
 		<div>
@@ -25,10 +29,10 @@ const AssetPage: NextPage = () => {
 					}}>
 					<Grid container spacing={1} justifyContent="center">
 						<Grid item xs={12} md={7} sx={{ padding: '30px' }}>
-							<MarketDetail assetId={marketId} />
+							<MarketDetail assetId={assetId} />
 						</Grid>
 						<Grid item xs={12} md={4} sx={{ padding: '30px' }}>
-							<TradingBox assetId={marketId} />
+							<TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />
 						</Grid>
 					</Grid>
 				</StyledSection>

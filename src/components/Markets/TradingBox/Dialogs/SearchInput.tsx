@@ -8,10 +8,10 @@ interface Props {
 }
 const SearchInput: React.FC<Props> = ({ onChange }) => {
   return <StyledBox>
-    <StyledInput placeholder="Search onAssets" disableUnderline onChange={onChange} />
-    <Box sx={{ position: 'relative', right: '-10px', top: '0px' }}>
+    <Box sx={{ position: 'relative', left: '0px', top: '-10px' }}>
       <Image src={SearchIcon} />
     </Box>
+    <StyledInput placeholder="Search onAssets" disableUnderline onChange={onChange} />
   </StyledBox>
 }
 
@@ -32,7 +32,7 @@ const StyledBox = styled(Box)`
 const StyledInput = styled(Input)`
   & input {
     width: 206px;
-    height: 30px;
+    height: 46px;
     font-size: 14px;
     font-weight: 500;
     font-stretch: normal;
@@ -40,6 +40,7 @@ const StyledInput = styled(Input)`
     line-height: normal;
     letter-spacing: normal;
     text-align: left;
+    margin-left: 10px;
     color: #fff;
 
     &::placeholder {

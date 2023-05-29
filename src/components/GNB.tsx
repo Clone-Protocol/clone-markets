@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.svg'
-import walletIcon from 'public/images/wallet-icon.svg'
+import walletIcon from 'public/images/gnb-wallet.svg'
 import { useSnackbar } from 'notistack'
 import { Button, Toolbar, Container, Box, AppBar, IconButton, styled, Stack, Theme, useMediaQuery, Typography } from '@mui/material'
 // import { GNB_ROUTES } from '~/routes'
@@ -20,6 +20,7 @@ import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } fr
 import { sendAndConfirm } from '~/utils/tx_helper'
 import { useTransactionState } from '~/hooks/useTransactionState'
 import NaviMenu from './NaviMenu'
+import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 
 
 const GNB: React.FC = () => {
@@ -161,28 +162,27 @@ const RightMenu = () => {
 				<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
-					<ConnectButton
-						onClick={handleWalletClick}
-						disabled={connecting}
-						startIcon={!publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
-						{!connected ? (
-							<Typography variant='p'>Connect Wallet</Typography>
-						) : (
-							<>
-								{publicKey && (
-									<Typography variant='p'>{shortenAddress(publicKey.toString())}</Typography>
-								)}
-							</>
-						)}
-					</ConnectButton>
+					{!connected ?
+						<ConnectButton
+							onClick={handleWalletClick}
+							disabled={connecting}
+						>
+							<Typography variant='p_lg'>Connect Wallet</Typography>
+						</ConnectButton>
+						:
+						<ConnectedButton onClick={handleWalletClick} startIcon={publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
+							<Typography variant='p'>{publicKey && shortenAddress(publicKey.toString())}</Typography>
+						</ConnectedButton>
+					}
 					{showWalletSelectPopup && <WalletSelectBox>
-						<Stack direction='row' alignItems='center'>
+						<Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
 							<WalletAddress onClick={handleChangeWallet}>
+								<Box><Typography variant='p' fontWeight={600} color='#fff'>13.56 SOL</Typography></Box>
 								{publicKey && (
-									<Typography variant='p_lg'>{shortenAddress(publicKey.toString())}</Typography>
+									<Box><Typography variant='p' color='#c5c7d9'>{shortenAddress(publicKey.toString())}</Typography></Box>
 								)}
 							</WalletAddress>
-							<Stack direction='row' spacing={2}>
+							<Stack direction='row' spacing={1}>
 								<CopyToClipboard text={publicKey!!.toString()}
 									onCopy={() => enqueueSnackbar('Copied address')}>
 									<PopupButton><Typography variant='p_sm'>Copy</Typography></PopupButton>
@@ -190,7 +190,9 @@ const RightMenu = () => {
 								<PopupButton><Typography variant='p_sm' onClick={handleDisconnect}>Disconnect</Typography></PopupButton>
 							</Stack>
 						</Stack>
-						<NetworkInfo><Typography variant='p_xsm'>Polaris Devnet - V1</Typography></NetworkInfo>
+						<AssetBox>
+							<Typography variant='h3'>$150,453</Typography> <Typography variant='p_lg'>onUSD</Typography>
+						</AssetBox>
 					</WalletSelectBox>}
 				</Box>
 			</Box>
@@ -246,8 +248,8 @@ const NavPlaceholder = styled('div')`
 const HeaderButton = styled(Button)`
 	padding: 12px;
 	margin-left: 16px;
-	color: ${(props) => props.theme.palette.text.secondary};
-	height: 35px;
+	color: ${(props) => props.theme.basis.ghost};
+	height: 42px;
 	&:hover {
 		background-color: ${(props) => props.theme.boxes.darkBlack};
 	}
@@ -256,46 +258,72 @@ const HeaderButton = styled(Button)`
 	}
 `
 const ConnectButton = styled(Button)`
-	background-color: ${(props) => props.theme.boxes.black};
-	padding: 12px;
+	padding: 9px;
 	margin-left: 16px;
 	color: #fff;
-	width: 140px;
-	height: 36px;
+	width: 142px;
+	height: 42px;
+	&::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: ${(props) => props.theme.gradients.light} border-box;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
 	&:hover {
-		background-color: ${(props) => props.theme.boxes.darkBlack};
-	}
+    background-color: #2e2e2e;
+  }
+`
+const ConnectedButton = styled(Button)`
+	width: 142px;
+	height: 42px;
+	padding: 9px;
+	color: #fff;
+	border-radius: 10px;
+	border: solid 1px ${(props) => props.theme.basis.portGore};
+  background: ${(props) => props.theme.basis.royalPurple};
+	&:hover {
+    background-color: #2e2e2e;
+  }
 `
 const WalletSelectBox = styled(Stack)`
 	position: absolute;
-	top: 60px;
+	top: 70px;
 	right: 0px;
 	width: 282px;
-	height: 86px;
-	padding: 13px 16px;
 	background-color: ${(props) => props.theme.boxes.darkBlack};
+	border-radius: 10px;
+  border: solid 1px ${(props) => props.theme.basis.portGore};
 	z-index: 99;
 `
 const WalletAddress = styled(Box)`
-  color: #fff;
-	margin-right: 45px;
 	cursor: pointer;
+	line-height: 1;
 `
 const PopupButton = styled(Box)`
 	font-size: 10px;
-	font-weight: 500;
-	color: ${(props) => props.theme.palette.text.secondary};
+	font-weight: 600;
+	color: ${(props) => props.theme.basis.melrose};
+	padding: 2px 6px;
+	border-radius: 100px;
+  background-color: rgba(155, 121, 252, 0.3);
 	cursor: pointer;
 `
-const NetworkInfo = styled(Box)`
-	text-align: center;
-	line-height: 19px;
-	width: 104px;
-	border-style: solid;
-	border-width: 0.5px;
-	border-image-source: ${(props) => props.theme.gradients.light};
-	border-image-slice: 1;
+const AssetBox = styled(Box)`
+	width: 100%;
+	height: 61px;
+	padding: 17px;
+	display: flex;
+	gap: 10px;
 	color: #fff;
-	margin: 0 auto;
-	margin-top: 12px;
+	background-color: rgba(255, 255, 255, 0.05);
 `

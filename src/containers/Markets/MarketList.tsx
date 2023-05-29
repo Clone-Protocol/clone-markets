@@ -41,7 +41,7 @@ const MarketList = () => {
 	const handleRowClick: GridEventListener<'rowClick'> = (
 		params
 	) => {
-		router.push(`/markets/${params.row.id}/asset`)
+		router.push(`/trade/${params.row.id}/asset`)
 	}
 
 	return (

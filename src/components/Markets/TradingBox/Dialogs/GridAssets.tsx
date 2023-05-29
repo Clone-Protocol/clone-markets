@@ -8,12 +8,14 @@ import { useAssetsQuery } from '~/features/Markets/Assets.query'
 
 interface Props {
 	onChoose: (id: number) => void
+	searchTerm?: string
 }
 
-const GridAssets: React.FC<Props> = ({ onChoose }) => {
+const GridAssets: React.FC<Props> = ({ onChoose, searchTerm }) => {
 	const { data: assets } = useAssetsQuery({
 		filter: 'all',
 		refetchOnMount: "always",
+		searchTerm: searchTerm || '',
 		enabled: true
 	})
 

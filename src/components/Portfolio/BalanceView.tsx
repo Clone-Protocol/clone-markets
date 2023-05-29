@@ -19,7 +19,7 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 	const [selectedUsdiAmount, setSelectedUsdiAmount] = useState(0)
 
 	useEffect(() => {
-		if (selectedFilter === 'all') {
+		if (selectedFilter === 'all' && balance) {
 			setSelectedTitle('Portfolio')
 			setSelectedIdx(-1)
 			setSelectedUsdiAmount(balance.totalVal);
