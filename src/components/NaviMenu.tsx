@@ -34,6 +34,10 @@ const StyledListItemButton = styled(ListItemButton)`
   margin-right: 11px;
   margin-bottom: 13px;
   color: ${(props) => props.theme.basis.raven};
+  &:hover {
+    border-radius: 5px;
+    background-color: rgba(196, 181, 253, 0.1);
+  }
   &.selected {
     color: #fff;
     transition: all 0.3s ease 0.2s;
@@ -44,7 +48,6 @@ const StyledListItemText = styled(Box)`
 	font-weight: 500;
 	height: 44px;
 	line-height: 44px;
-  margin-left: -15px;
 `
 
 export default NaviMenu

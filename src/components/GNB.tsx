@@ -292,7 +292,8 @@ const ConnectedButton = styled(Button)`
 	border: solid 1px ${(props) => props.theme.basis.portGore};
   background: ${(props) => props.theme.basis.royalPurple};
 	&:hover {
-    background-color: #2e2e2e;
+		background: ${(props) => props.theme.basis.royalPurple};
+    border: solid 1px ${(props) => props.theme.basis.melrose};
   }
 `
 const WalletSelectBox = styled(Stack)`
