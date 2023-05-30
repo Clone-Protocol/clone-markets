@@ -36,6 +36,7 @@ const BoxWrapper = styled(Box)`
   color: #fff;
   width: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
 `
 
 

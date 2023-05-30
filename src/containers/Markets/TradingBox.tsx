@@ -21,6 +21,11 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
 	const assetIndex = parseInt(assetId)
 
+	const chooseAsset = (id: number) => {
+		onSelectAssetId(id)
+		setShowSearchAssetDlog(false)
+	}
+
 	return (
 		<StyledPaper>
 			<TradingComp
@@ -31,7 +36,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 
 			<SearchAssetDialog
 				open={showSearchAssetDlog}
-				onChooseAsset={(id) => onSelectAssetId(id)}
+				onChooseAsset={(id) => chooseAsset(id)}
 				onHide={() => setShowSearchAssetDlog(false)}
 			/>
 

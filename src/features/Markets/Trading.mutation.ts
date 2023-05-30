@@ -82,6 +82,7 @@ export const callTrading = async ({
 		))
 	}
 	await program.provider.send!(tx, [], { commitment: 'processed', preflightCommitment: 'processed' });
+	// await sendAndConfirm(program.provider, ixns, setTxState)
 
 	return {
 		result: true

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormControl, Stack, Box, styled, Typography } from '@mui/material'
 import Image from 'next/image'
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
 interface Props {
 	title: string | null
@@ -31,7 +32,10 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, dollar
 				</Box>
 				<TickerBox onClick={onTickerClick} sx={tickerClickable ? { cursor: 'pointer' } : {}}>
 					{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
-					<Box ml='4px' display='flex' alignItems='center'><Typography variant='h4' color='#fff'>{ticker}</Typography></Box>
+					<Box mx='4px' display='flex' alignItems='center'>
+						<Typography variant='h4' color='#fff'>{ticker}</Typography>
+						{tickerClickable && <ExpandMoreOutlinedIcon />}
+					</Box>
 				</TickerBox>
 			</FormStack>
 		</FormControl>
@@ -50,11 +54,11 @@ const FormStack = styled(Stack)`
 
 const TickerBox = styled(Box)`
 	display: flex;
-	alisgn-items: center;
-	padding: 3px 10px 3px 5px;
+	align-items: center;
+	padding: 3px 1px 3px 9px;
+	color: #fff;
 	border-radius: 100px;
 	background-color: rgba(65, 65, 102, 0.5);
-	padding: 3px 5px;
 `
 
 const InputAmount = styled(`input`)`

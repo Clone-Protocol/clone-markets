@@ -1,4 +1,4 @@
-import { styled, Box, Stack, Button, Typography } from '@mui/material'
+import { styled, Box, Stack, Button, Typography, CircularProgress } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import ConvertSlider from './ConvertSlider'
@@ -16,7 +16,6 @@ import RateLoadingIndicator from './RateLoadingIndicator'
 import BackdropMsg from '~/components/Markets/TradingBox/BackdropMsg'
 import { useTradingMutation } from '~/features/Markets/Trading.mutation'
 import { useBalanceQuery } from '~/features/Markets/Balance.query'
-import LoadingIndicator, { LoadingWrapper } from '~/components/Common/LoadingIndicator'
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import useLocalStorage from '~/hooks/useLocalStorage'
@@ -166,30 +165,27 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   }
 
   const onConfirm = async () => {
-    setLoading(true)
-    await mutateAsync(
-      {
-        amountUsdi,
-        amountIasset,
-        iassetIndex: assetIndex,
-        isBuy
-      },
-      {
-        onSuccess(data) {
-          if (data) {
-            console.log('data', data)
-            enqueueSnackbar('Success transaction...!')
-            setLoading(false)
-            initData()
-          }
-        },
-        onError(err) {
-          console.error(err)
-          enqueueSnackbar('Failed transaction...')
-          setLoading(false)
+    try {
+      setLoading(true)
+      const data = await mutateAsync(
+        {
+          amountUsdi,
+          amountIasset,
+          iassetIndex: assetIndex,
+          isBuy
         }
+      )
+
+      if (data) {
+        setLoading(false)
+        console.log('data', data)
+        refetch()
+        initData()
       }
-    )
+    } catch (err) {
+      console.error(err)
+      setLoading(false)
+    }
   }
 
   const getPrice = () => {
@@ -215,18 +211,12 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
 
   return (
     <>
-      {loading && (
-        <LoadingWrapper>
-          <LoadingIndicator open inline />
-        </LoadingWrapper>
-      )}
-
       <div style={{ width: '100%', height: '100%' }}>
         <Box
           sx={{
             p: '18px',
           }}>
-          <Stack direction="row" justifyContent="flex-end" alignItems="center" mt='16px' mb='23px'>
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
             <IconButton onClick={() => refetch()}>
               <Image src={reloadIcon} alt="reload" />
             </IconButton>
@@ -337,9 +327,17 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               {!publicKey ? <ConnectButton>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
-                <ActionButton onClick={handleSubmit(onConfirm)} disabled={!isValid}>
-                  <Typography variant='h4'>{!isValid ? invalidMsg() : `Swap`}</Typography>
-                </ActionButton>
+                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { backgroundImage: 'radial-gradient(circle at 26% 46%, #ff6cdf, rgba(66, 0, 255, 0) 45%)' } : {}}>
+                  {!loading ?
+                    <Typography variant='h4'>Swap</Typography> :
+                    <Stack direction='row' alignItems='center' gap={2}>
+                      <CircularProgress sx={{ color: '#ff6cdf' }} size={16} thickness={3} />
+                      <Typography variant='h4'>Swapping</Typography>
+                    </Stack>}
+                </ActionButton> :
+                  <DisableButton disabled={true}>
+                    <Typography variant='h4'>{invalidMsg()}</Typography>
+                  </DisableButton>
               }
             </Box>
 
@@ -387,14 +385,35 @@ const ActionButton = styled(Button)`
   height: 52px;
 	color: #fff;
 	margin-bottom: 10px;
-  border-radius: 10px;
-  background-image: linear-gradient(to bottom, #14081c, #14081c), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed);
-  border-width: 1px;
-	border-image-source: linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fffff 50%, #ff96e2 68%, #874fff 83%, #4d25ed);
-	border-image-slice: 1;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: ${(props) => props.theme.gradients.light} border-box;
+    opacity: 0.4;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
   &:hover {
     background-color: #2e2e2e;
   }
+  &:disabled {
+    opacity: 0.4;
+  } 
+`
+const DisableButton = styled(Button)`
+  width: 100%;
+  height: 52px;
+	color: #fff;
+	margin-bottom: 10px;
   &:disabled {
     border: solid 1px ${(props) => props.theme.basis.portGore};
     background: transparent;
