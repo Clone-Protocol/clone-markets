@@ -16,7 +16,7 @@ export const fetchBalance = async ({ program, userPubKey, setStartTimer }: { pro
 
 	await program.loadManager()
 
-	let totalVal = 0.0
+	let iassetVal = 0.0
 	let balanceVal = 0.0
 
 	try {
@@ -33,15 +33,16 @@ export const fetchBalance = async ({ program, userPubKey, setStartTimer }: { pro
 		let iassetInfos = await program.getUseriAssetInfo()
 
 		iassetInfos.forEach((infos) => {
-			totalVal += infos[1] * infos[2]
+			iassetVal += infos[1] * infos[2]
 		})
 	} catch (e) {
 		console.error(e)
 	}
 
 	return {
-		totalVal: totalVal + balanceVal,
-		balanceVal: balanceVal,
+		totalVal: iassetVal + balanceVal,
+		iassetVal,
+		balanceVal,
 	}
 }
 
@@ -53,6 +54,7 @@ interface GetProps {
 
 export interface Balance {
 	totalVal: number
+	iassetVal: number
 	balanceVal: number
 }
 
@@ -69,6 +71,6 @@ export function useBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: 
 			enabled
 		})
 	} else {
-		return useQuery(['balance'], () => ({ totalVal: 0, balanceVal: 0 }))
+		return useQuery(['balance'], () => ({ totalVal: 0, iassetVal: 0, balanceVal: 0 }))
 	}
 }

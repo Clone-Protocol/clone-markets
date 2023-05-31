@@ -3,8 +3,7 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { BalanceList } from '~/features/Portfolio/UserBalance.query'
 import { PieItem } from '~/data/filter'
 import { styled } from '@mui/system'
-import { Grid, CellTicker, CustomNoOnAssetOverlay } from '~/components/Common/DataGrid'
-import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
+import { Grid, CellTicker, CustomNoOnAssetOverlay, CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { GridEventListener } from '@mui/x-data-grid'
 import Image from 'next/image'
 import { LoadingProgress } from '~/components/Common/Loading'
@@ -39,14 +38,14 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
     <>
       <TopBox>
         <Box><Typography variant='p' color='#8988a3'>onAsset</Typography></Box>
-        <Box><Typography variant='h3' fontWeight={500}>${balance?.balanceVal.toFixed(2)}</Typography></Box>
+        <Box><Typography variant='h3' fontWeight={500}>${balance?.iassetVal.toFixed(2)}</Typography></Box>
       </TopBox>
       <Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
       <Grid
         headers={columns}
         rows={assets || []}
         minHeight={100}
-        customNoRowsOverlay={() => publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
+        customNoRowsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
         onRowClick={handleRowClick}
       />
     </>

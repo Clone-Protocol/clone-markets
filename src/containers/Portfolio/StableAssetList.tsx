@@ -3,14 +3,14 @@ import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { BalanceList } from '~/features/Portfolio/UserBalance.query'
 import { PieItem } from '~/data/filter'
-import { Grid, CellTicker } from '~/components/Common/DataGrid'
-import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
+import { Grid, CellTicker, CustomNoOnAssetOverlay, CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { GridEventListener } from '@mui/x-data-grid'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import Divider from '@mui/material/Divider';
 import { useRouter } from 'next/router'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 interface Props {
 	assets: BalanceList[]
@@ -19,6 +19,7 @@ interface Props {
 }
 
 const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
+	const { publicKey } = useWallet()
 	// const [selectedFilter, setFilterState] = useRecoilState(filterState)
 
 	// const pieitemsKeys = pieitems.map((item) => item.key)
@@ -41,7 +42,7 @@ const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 				headers={columns}
 				rows={assets || []}
 				minHeight={100}
-				customNoRowsOverlay={() => CustomNoRowsOverlay('Please connect wallet.')}
+				customNoRowsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
 				onRowClick={handleRowClick}
 			/>
 		</>

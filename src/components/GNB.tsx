@@ -2,10 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.svg'
 import walletIcon from 'public/images/gnb-wallet.svg'
-import { useSnackbar } from 'notistack'
-import { Button, Toolbar, Container, Box, AppBar, IconButton, styled, Stack, Theme, useMediaQuery, Typography } from '@mui/material'
+import { Button, Toolbar, Container, Box, AppBar, styled, Theme, useMediaQuery, Typography } from '@mui/material'
 // import { GNB_ROUTES } from '~/routes'
-import { useRouter } from 'next/router'
 import { useScroll } from '~/hooks/useScroll'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -14,14 +12,12 @@ import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useIncept } from '~/hooks/useIncept'
 import MoreMenu from '~/components/Common/MoreMenu';
 import TokenFaucetDialog from './Account/TokenFaucetDialog'
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getUSDiAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
 import { sendAndConfirm } from '~/utils/tx_helper'
 import { useTransactionState } from '~/hooks/useTransactionState'
 import NaviMenu from './NaviMenu'
-import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
-
+import WalletSelectBox from './Common/WalletSelectBox'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -79,10 +75,8 @@ const GNB: React.FC = () => {
 
 export default withCsrOnly(GNB)
 
-const RightMenu = () => {
-	const router = useRouter()
-	const { enqueueSnackbar } = useSnackbar()
-	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
+const RightMenu: React.FC = () => {
+	const { connecting, connected, publicKey, connect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
@@ -141,18 +135,6 @@ const RightMenu = () => {
 		setAnchorEl(event.currentTarget);
 	}
 
-	const handleChangeWallet = () => {
-		disconnect()
-		setShowWalletSelectPopup(false)
-		setOpen(true)
-	}
-
-	const handleDisconnect = () => {
-		disconnect()
-		setShowWalletSelectPopup(false)
-		router.replace('/')
-	}
-
 	return (
 		<>
 			<Box display="flex">
@@ -174,26 +156,7 @@ const RightMenu = () => {
 							<Typography variant='p'>{publicKey && shortenAddress(publicKey.toString())}</Typography>
 						</ConnectedButton>
 					}
-					{showWalletSelectPopup && <WalletSelectBox>
-						<Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
-							<WalletAddress onClick={handleChangeWallet}>
-								<Box><Typography variant='p' fontWeight={600} color='#fff'>13.56 SOL</Typography></Box>
-								{publicKey && (
-									<Box><Typography variant='p' color='#c5c7d9'>{shortenAddress(publicKey.toString())}</Typography></Box>
-								)}
-							</WalletAddress>
-							<Stack direction='row' spacing={1}>
-								<CopyToClipboard text={publicKey!!.toString()}
-									onCopy={() => enqueueSnackbar('Copied address')}>
-									<PopupButton><Typography variant='p_sm'>Copy</Typography></PopupButton>
-								</CopyToClipboard>
-								<PopupButton><Typography variant='p_sm' onClick={handleDisconnect}>Disconnect</Typography></PopupButton>
-							</Stack>
-						</Stack>
-						<AssetBox>
-							<Typography variant='h3'>$150,453</Typography> <Typography variant='p_lg'>onUSD</Typography>
-						</AssetBox>
-					</WalletSelectBox>}
+					{showWalletSelectPopup && <WalletSelectBox onHide={() => setShowWalletSelectPopup(false)} />}
 				</Box>
 			</Box>
 
@@ -295,36 +258,4 @@ const ConnectedButton = styled(Button)`
 		background: ${(props) => props.theme.basis.royalPurple};
     border: solid 1px ${(props) => props.theme.basis.melrose};
   }
-`
-const WalletSelectBox = styled(Stack)`
-	position: absolute;
-	top: 70px;
-	right: 0px;
-	width: 282px;
-	background-color: ${(props) => props.theme.boxes.darkBlack};
-	border-radius: 10px;
-  border: solid 1px ${(props) => props.theme.basis.portGore};
-	z-index: 99;
-`
-const WalletAddress = styled(Box)`
-	cursor: pointer;
-	line-height: 1;
-`
-const PopupButton = styled(Box)`
-	font-size: 10px;
-	font-weight: 600;
-	color: ${(props) => props.theme.basis.melrose};
-	padding: 2px 6px;
-	border-radius: 100px;
-  background-color: rgba(155, 121, 252, 0.3);
-	cursor: pointer;
-`
-const AssetBox = styled(Box)`
-	width: 100%;
-	height: 61px;
-	padding: 17px;
-	display: flex;
-	gap: 10px;
-	color: #fff;
-	background-color: rgba(255, 255, 255, 0.05);
 `
