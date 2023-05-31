@@ -16,8 +16,10 @@ import { getUSDiAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
 import { sendAndConfirm } from '~/utils/tx_helper'
 import { useTransactionState } from '~/hooks/useTransactionState'
+import { useRecoilState } from 'recoil'
 import NaviMenu from './NaviMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
+import { mintUSDi } from '~/features/globalAtom'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -81,7 +83,7 @@ const RightMenu: React.FC = () => {
 	const { setOpen } = useWalletDialog()
 	const { getInceptApp } = useIncept()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
-	const [mintUsdi, setMintUsdi] = useState(false)
+	const [mintUsdi, setMintUsdi] = useRecoilState(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	const { setTxState } = useTransactionState()

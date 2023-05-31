@@ -11,25 +11,27 @@ import { Balance } from '~/features/Portfolio/Balance.query'
 import Divider from '@mui/material/Divider';
 import { useRouter } from 'next/router'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { Collateral, collateralMapping } from '~/data/assets'
+import { useRecoilState } from 'recoil'
+import { mintUSDi } from '~/features/globalAtom'
 
 interface Props {
-	assets: BalanceList[]
-	pieitems: PieItem[]
 	balance: Balance
 }
 
-const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
+const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const { publicKey } = useWallet()
-	// const [selectedFilter, setFilterState] = useRecoilState(filterState)
-
-	// const pieitemsKeys = pieitems.map((item) => item.key)
 	const router = useRouter()
 
-	const handleRowClick: GridEventListener<'rowClick'> = (
-		params
-	) => {
-		router.push(`/markets/${params.row.id}/asset`)
-	}
+	const onUSDInfo = collateralMapping(Collateral.onUSD)
+	const assets = [{
+		id: onUSDInfo.collateralType,
+		tickerIcon: onUSDInfo.collateralIcon,
+		tickerName: onUSDInfo.collateralName,
+		tickerSymbol: onUSDInfo.collateralSymbol,
+		usdiBalance: balance?.balanceVal,
+		price: 1.0
+	}]
 
 	return (
 		<>
@@ -43,7 +45,6 @@ const StableAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
 				rows={assets || []}
 				minHeight={100}
 				customNoRowsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
-				onRowClick={handleRowClick}
 			/>
 		</>
 	)
@@ -79,11 +80,10 @@ let columns: GridColDef[] = [
 		headerName: 'Price',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			// const percent = parseFloat(params.row.changePercent)
 			return (
 				<Stack>
 					<Box>
-						<Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+						<Typography variant='p_xlg'>${params.row.price.toFixed(2)}</Typography>
 					</Box>
 				</Stack>
 			)
@@ -94,8 +94,10 @@ let columns: GridColDef[] = [
 		headerName: '',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
+			const [_, setMintUsdi] = useRecoilState(mintUSDi)
+
 			return (
-				<GetUSDButton><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>
+				<GetUSDButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>
 			)
 		},
 	},

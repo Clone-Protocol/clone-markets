@@ -1,5 +1,5 @@
 export enum Collateral {
-	USDi,
+	onUSD,
 	mockUSDC,
 }
 
@@ -150,20 +150,26 @@ export const assetMapping = (index: number) => {
 }
 
 export const collateralMapping = (index: number) => {
-  let collateralName = ''
-  let collateralType: number
-  switch (index) {
-    case Collateral.USDi:
-      collateralName = 'USDi'
-      collateralType = Collateral.USDi
-      break
-    case Collateral.mockUSDC:
-      collateralName = 'USDC'
-      collateralType = Collateral.mockUSDC
-      break
-    default:
-      throw new Error('Not supported')
-  }
+	let collateralName = ''
+	let collateralSymbol = ''
+	let collateralIcon = ''
+	let collateralType: number
+	switch (index) {
+		case Collateral.onUSD:
+			collateralName = 'Clone USD'
+			collateralType = Collateral.onUSD
+			collateralSymbol = 'onUSD'
+			collateralIcon = '/images/assets/usd.png'
+			break
+		case Collateral.mockUSDC:
+			collateralName = 'USDC'
+			collateralType = Collateral.mockUSDC
+			collateralSymbol = 'USDC'
+			collateralIcon = '/images/assets/usd.png'
+			break
+		default:
+			throw new Error('Not supported')
+	}
 
-  return { collateralName, collateralType }
+	return { collateralName, collateralSymbol, collateralIcon, collateralType }
 }

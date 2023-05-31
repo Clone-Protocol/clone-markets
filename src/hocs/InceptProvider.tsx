@@ -16,7 +16,6 @@ export interface InceptProviderProps {
 
 export const InceptProvider: FC<InceptProviderProps> = ({ children, ...props }) => {
 	const createAccountStatus = useRecoilValue(createAccountDialogState)
-
 	const getInceptApp = (wallet: AnchorWallet | undefined, force?: boolean): InceptClient => {
 		if (!force) {
 			if (!wallet) {

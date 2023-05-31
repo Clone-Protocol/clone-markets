@@ -1,6 +1,11 @@
 import { atom } from 'recoil'
 import { CreateAccountDialogStates } from '~/utils/constants'
 
+export const mintUSDi = atom({
+  key: 'mintUSDi',
+  default: false
+})
+
 export const syncFetchNetworkState = atom({
   key: 'syncFetchNetworkState',
   default: false,
