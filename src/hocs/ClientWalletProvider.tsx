@@ -16,8 +16,7 @@ import {
 import { WalletDialogProvider } from '~/hocs/WalletDialogProvider'
 import { InceptProvider } from '~/hocs/InceptProvider'
 import { clusterApiUrl } from '@solana/web3.js'
-import { useSnackbar } from 'notistack'
-import React, { FC, ReactNode, useCallback, useMemo } from 'react'
+import React, { FC, ReactNode, useMemo } from 'react'
 
 const ClientWalletProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const network = WalletAdapterNetwork.Devnet
@@ -29,15 +28,7 @@ const ClientWalletProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		() => [
 			new PhantomWalletAdapter(),
 			new SolflareWalletAdapter({ network }),
-			new SolletWalletAdapter({ network }),
-			new LedgerWalletAdapter(),
-			new SlopeWalletAdapter(),
-			new SolletExtensionWalletAdapter({ network }),
 			new TorusWalletAdapter(),
-			new CloverWalletAdapter(),
-			new SolongWalletAdapter(),
-			new MathWalletAdapter(),
-			new GlowWalletAdapter(),
 		],
 		[network]
 	)

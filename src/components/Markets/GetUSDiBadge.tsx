@@ -31,6 +31,27 @@ const GetButton = styled(Button)`
   border-radius: 100px;
   color: #fff;
   background-color: rgba(196, 181, 253, 0.1);
+
+  &:hover {
+		background-color: rgba(155, 121, 252, 0.15);
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			border-radius: 10px;
+			border: 1px solid transparent;
+			background: ${(props) => props.theme.gradients.light} border-box;
+			-webkit-mask:
+				linear-gradient(#fff 0 0) padding-box, 
+				linear-gradient(#fff 0 0);
+			-webkit-mask-composite: destination-out;
+			mask-composite: exclude;
+		}
+	}
 `
 
 export default GetUSDiBadge

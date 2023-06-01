@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { styled, List, ListItemButton, Box, Fade } from '@mui/material'
+import { styled, List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import Link from 'next/link'
 
 const NaviMenu = () => {
@@ -10,17 +10,17 @@ const NaviMenu = () => {
       <List component="nav" sx={{ display: 'flex' }}>
         <Link href="/">
           <StyledListItemButton className={router.asPath === '/' || router.asPath.startsWith('/markets') ? 'selected' : ''}>
-            <StyledListItemText>Markets</StyledListItemText>
+            <Box><Typography variant='p_lg'>Home</Typography></Box>
           </StyledListItemButton>
         </Link>
         <Link href="/iportfolio">
           <StyledListItemButton className={router.asPath.startsWith('/iportfolio') ? 'selected' : ''}>
-            <StyledListItemText>Portfolio</StyledListItemText>
+            <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
           </StyledListItemButton>
         </Link>
         <Link href="/trade">
           <StyledListItemButton className={router.asPath.startsWith('/trade') ? 'selected' : ''}>
-            <StyledListItemText>Trade</StyledListItemText>
+            <Box><Typography variant='p_lg'>Trade</Typography></Box>
           </StyledListItemButton>
         </Link>
       </List>
@@ -30,8 +30,8 @@ const NaviMenu = () => {
 
 const StyledListItemButton = styled(ListItemButton)`
   height: 41px;
-  margin-left: 11px;
-  margin-right: 11px;
+  margin-left: 8px;
+  margin-right: 8px;
   margin-bottom: 13px;
   color: ${(props) => props.theme.basis.raven};
   &:hover {
@@ -42,12 +42,6 @@ const StyledListItemButton = styled(ListItemButton)`
     color: #fff;
     transition: all 0.3s ease 0.2s;
   }
-`
-const StyledListItemText = styled(Box)`
-	font-size: 14px;
-	font-weight: 500;
-	height: 44px;
-	line-height: 44px;
 `
 
 export default NaviMenu

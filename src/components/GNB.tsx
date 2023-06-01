@@ -19,6 +19,7 @@ import { useTransactionState } from '~/hooks/useTransactionState'
 import { useRecoilState } from 'recoil'
 import NaviMenu from './NaviMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
+import MobileWarningDialog from './Common/MobileWarningDialog'
 import { mintUSDi } from '~/features/globalAtom'
 
 const GNB: React.FC = () => {
@@ -26,8 +27,7 @@ const GNB: React.FC = () => {
 	// const { pathname } = router
 	// const [path, setPath] = useState<string>('/')
 	const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	// const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
-
+	const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	const { scrolled } = useScroll()
 
 	// const firstPathname = useMemo(() => {
@@ -70,6 +70,7 @@ const GNB: React.FC = () => {
 						</Box> */}
 					</Toolbar>
 				</Container>
+				<MobileWarningDialog open={isMobile} handleClose={() => { return null }} />
 			</StyledAppBar>
 		</>
 	)
