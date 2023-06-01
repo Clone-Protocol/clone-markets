@@ -53,7 +53,7 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
                 You need Devnet SOL in your wallet before you can claim Devnet onUSD.
               </Typography>
             </InfoBox>
-            <InfoBox>
+            <InfoBox sx={{ cursor: 'pointer' }}>
               <Image src={infoOutlineIcon} alt="info" width='18px' />
               <Typography variant='p' ml='12px' maxWidth='278px'>
                 The Solana Devnet is a safe playground for developers, users, and validators to test applications at no risk. Click this box to learn more.
@@ -96,6 +96,9 @@ const InfoBox = styled(Box)`
   border-radius: 10px;
   border: solid 1px ${(props) => props.theme.basis.portGore};
   color: ${(props) => props.theme.basis.textRaven};
+  &:hover {
+    border: solid 1px ${(props) => props.theme.basis.melrose};
+  }
 `
 
 export default TokenFaucetDialog

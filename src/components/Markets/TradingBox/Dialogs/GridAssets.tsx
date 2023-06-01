@@ -40,7 +40,7 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: '',
-		flex: 1,
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Box display="flex" justifyContent="flex-start" marginLeft='4px'>

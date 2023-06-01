@@ -7,12 +7,16 @@ interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const SearchInput: React.FC<Props> = ({ onChange }) => {
-  return <StyledBox>
-    <Box sx={{ position: 'relative', left: '0px', top: '-10px' }}>
-      <Image src={SearchIcon} />
+  return (
+    <Box>
+      <StyledBox>
+        <Box sx={{ position: 'relative', left: '0px', top: '-6px' }}>
+          <Image src={SearchIcon} />
+        </Box>
+        <StyledInput placeholder="Search onAssets" disableUnderline onChange={onChange} />
+      </StyledBox>
     </Box>
-    <StyledInput placeholder="Search onAssets" disableUnderline onChange={onChange} />
-  </StyledBox>
+  )
 }
 
 const StyledBox = styled(Box)`
@@ -25,7 +29,7 @@ const StyledBox = styled(Box)`
   border: solid 1px ${(props) => props.theme.basis.portGore};
   background-color: rgba(255, 255, 255, 0.05);
   &:hover {
-    border: solid 1px #809cff;
+    border: 1px solid ${(props) => props.theme.gradients.light};
   }
 `
 

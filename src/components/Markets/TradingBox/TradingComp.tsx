@@ -1,19 +1,15 @@
 import { styled, Box, Stack, Button, Typography, CircularProgress } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
-import ConvertSlider from './ConvertSlider'
 import Image from 'next/image'
 import swapIcon from 'public/images/swap-icon.svg'
 import reloadIcon from 'public/images/reload-icon.svg'
 import settingsIcon from 'public/images/setting-icon.svg'
 import swapChangeIcon from 'public/images/swap-change.svg'
-import { useSnackbar } from 'notistack'
 import { useForm, Controller } from 'react-hook-form'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { StyledTabs, StyledTab } from '~/components/Markets/TradingBox/StyledTabs'
 import OrderDetails from './OrderDetails'
 import RateLoadingIndicator from './RateLoadingIndicator'
-import BackdropMsg from '~/components/Markets/TradingBox/BackdropMsg'
 import { useTradingMutation } from '~/features/Markets/Trading.mutation'
 import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
@@ -49,7 +45,6 @@ const round = (n: number, decimals: number) => {
 }
 
 const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAsset }) => {
-  const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
@@ -403,7 +398,10 @@ const ActionButton = styled(Button)`
     mask-composite: exclude;
   }
   &:hover {
-    background-color: #2e2e2e;
+    background-color: transparent;
+    &::before {
+      opacity: 1;
+    }
   }
   &:disabled {
     opacity: 0.4;

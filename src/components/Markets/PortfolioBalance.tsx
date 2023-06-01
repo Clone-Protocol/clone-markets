@@ -14,7 +14,7 @@ const PortfolioBalance: React.FC = () => {
 		enabled: publicKey != null
 	})
 
-	return balance ? (
+	return balance?.totalVal ? (
 		<Box mt='30px'>
 			<Box>
 				<Box mb='43px'><Typography variant='p_xxlg' color='#c4b5fd'>My Portfolio Balance</Typography></Box>

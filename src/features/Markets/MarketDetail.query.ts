@@ -3,17 +3,33 @@ import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { assetMapping } from 'src/data/assets'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
-import { useIncept } from '~/hooks/useIncept'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
+import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
+import { PublicKey, Connection } from "@solana/web3.js";
+import { AnchorProvider } from "@coral-xyz/anchor";
 
-export const fetchMarketDetail = async ({ program, index, setStartTimer }: { program: InceptClient, index: number, setStartTimer: (start: boolean) => void }) => {
+export const fetchMarketDetail = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
 	console.log('fetchMarketDetail', index)
 	// start timer in data-loading-indicator
 	setStartTimer(false);
 	setStartTimer(true);
 
+	// MEMO: to support provider without wallet adapter
+	const network = getNetworkDetailsFromEnv()
+	const new_connection = new Connection(network.endpoint)
+	const provider = new AnchorProvider(
+		new_connection,
+		{
+			signTransaction: () => Promise.reject(),
+			signAllTransactions: () => Promise.reject(),
+			publicKey: PublicKey.default, // MEMO: dummy pubkey
+		},
+		{}
+	);
+	// @ts-ignore
+	const program = new InceptClient(network.incept, provider)
 	await program.loadManager()
 
 	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
@@ -63,18 +79,20 @@ export interface PairData {
 }
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
-	const wallet = useAnchorWallet()
-	const { getInceptApp } = useIncept()
 	const { setStartTimer } = useDataLoading()
 
-	if (wallet) {
-		return useQuery(['marketDetail', wallet, index], () => fetchMarketDetail({ program: getInceptApp(wallet), index, setStartTimer }), {
-			refetchOnMount,
-			refetchInterval: REFETCH_CYCLE,
-			refetchIntervalInBackground: true,
-			enabled
-		})
-	} else {
-		return useQuery(['marketDetail'], () => { })
+	let queryFunc
+	try {
+		queryFunc = () => fetchMarketDetail({ index, setStartTimer })
+	} catch (e) {
+		console.error(e)
+		queryFunc = () => fetchMarketDetailDefault()
 	}
+
+	return useQuery(['marketDetail', index], queryFunc, {
+		refetchOnMount,
+		refetchInterval: REFETCH_CYCLE,
+		refetchIntervalInBackground: true,
+		enabled
+	})
 }

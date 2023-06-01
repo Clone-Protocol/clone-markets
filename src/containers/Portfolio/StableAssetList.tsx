@@ -6,7 +6,6 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import Divider from '@mui/material/Divider';
-import { useRouter } from 'next/router'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Collateral, collateralMapping } from '~/data/assets'
 import { useRecoilState } from 'recoil'
@@ -18,7 +17,6 @@ interface Props {
 
 const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const { publicKey } = useWallet()
-	const router = useRouter()
 
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
 	const assets = [{
