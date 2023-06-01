@@ -23,7 +23,7 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 
 	const fetchIassetBalance = async (iassetMint: PublicKey) => {
 		const iassetAssociatedTokenAccount = await getTokenAccount(
-			iassetMint, program.provider.wallet.publicKey!, program.provider.connection
+			iassetMint, program.provider.publicKey!, program.provider.connection
 		);
 		if (iassetAssociatedTokenAccount) {
 			const balance = await program.provider.connection.getTokenAccountBalance(iassetAssociatedTokenAccount, "processed");
