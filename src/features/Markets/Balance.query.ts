@@ -41,7 +41,7 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
       const pool = tokenDataResult.value.pools[index]
       const associatedTokenAccount = await getTokenAccount(
         pool.assetInfo.iassetMint,
-        program.provider.wallet.publicKey!,
+        program.provider.publicKey!,
         program.provider.connection
       );
 
