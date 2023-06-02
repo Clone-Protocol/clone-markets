@@ -212,15 +212,13 @@ const NavPlaceholder = styled('div')`
 	}
 `
 const HeaderButton = styled(Button)`
-	padding: 12px;
+	padding: 8px;
 	margin-left: 16px;
 	color: ${(props) => props.theme.basis.ghost};
 	height: 42px;
 	&:hover {
-		background-color: ${(props) => props.theme.boxes.darkBlack};
-	}
-	&:active {
-		background-color: ${(props) => props.theme.boxes.darkBlack};
+		border-radius: 10px;
+  	background-color: rgba(196, 181, 253, 0.1);
 	}
 `
 const ConnectButton = styled(Button)`
@@ -246,7 +244,10 @@ const ConnectButton = styled(Button)`
     mask-composite: exclude;
   }
 	&:hover {
-    background-color: #2e2e2e;
+		background: transparent;
+		&::before {
+			background: linear-gradient(to right, #8e1674 0%, #642f99 16%, #905a99 34%, #999 50%, #995a88 68%, #512f99 83%, #2e168e) border-box;
+		}
   }
 `
 const ConnectedButton = styled(Button)`

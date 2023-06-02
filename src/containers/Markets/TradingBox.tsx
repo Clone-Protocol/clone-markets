@@ -5,12 +5,6 @@ import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSetti
 import withSuspense from '~/hocs/withSuspense'
 import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
 
-enum Section {
-	TradingComp,
-	ReviewOrder,
-	OrderSetting,
-}
-
 interface Props {
 	assetId: string
 	onSelectAssetId: (id: number) => void

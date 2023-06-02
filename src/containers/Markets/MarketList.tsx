@@ -22,6 +22,7 @@ const MarketList = () => {
 	const { data: assets } = useAssetsQuery({
 		filter,
 		refetchOnMount: "always",
+		searchTerm: '',
 		enabled: true
 	})
 

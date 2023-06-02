@@ -355,16 +355,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   )
 }
 
-const IconButton = styled('div')`
+const IconButton = styled(Box)`
   width: 29px;
   height: 29px;
   margin-left: 12px;
   cursor: pointer;
   align-content: center;
-  padding-top: 6px;
-  border-radius: 4px;
   &:hover {
-    background-color: #3e3e3e;
+    border-radius: 10px;
+  	background-color: rgba(196, 181, 253, 0.1);
   }
 `
 const ConnectButton = styled(Button)`
@@ -374,6 +373,10 @@ const ConnectButton = styled(Button)`
   border: solid 1px rgba(65, 65, 102, 0.5);
   background: ${(props) => props.theme.basis.royalPurple};
   border-radius: 10px;
+  &:hover {
+    background: ${(props) => props.theme.basis.royalPurple};
+    opacity: 0.6;
+  }
 `
 const ActionButton = styled(Button)`
 	width: 100%;
