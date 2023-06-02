@@ -37,10 +37,11 @@ const PortfolioView = () => {
 	})
 
 	useEffect(() => {
+		const usdiBalance =  balance?.balanceVal!
 		// only called when filter is all
 		if (assets && assets.length > 0 && selectedFilter === 'all') {
 			const result: ResultAsset[] = []
-			let totalBalance = 0
+			let totalBalance = usdiBalance
 			assets.forEach((asset) => {
 				if (result[asset.assetType]) {
 					result[asset.assetType].val += asset.usdiBalance
@@ -55,7 +56,7 @@ const PortfolioView = () => {
 
 			const ordered = result.sort((a, b) => a.val < b.val ? 1 : -1)
 
-			const finalPie = ordered.map((item) => {
+			let finalPie = ordered.map((item) => {
 				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
 				if (item.id === AssetType.Crypto) {
 					return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, usdiAmount: item.val } as PieItem
@@ -67,6 +68,9 @@ const PortfolioView = () => {
 					return { key: 'onCommodity', name: FilterTypeMap.onCommodity, value: percentVal, usdiAmount: item.val } as PieItem
 				}
 			})
+			finalPie.push(
+				{key: 'stableCoin', name: FilterTypeMap.stableCoin, value: 100 * usdiBalance / totalBalance, usdiAmount: usdiBalance} as PieItem
+			)
 			console.log('f', finalPie)
 			setDataPie(finalPie)
 		}
