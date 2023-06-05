@@ -1,14 +1,17 @@
-import { PublicKey, Transaction } from '@solana/web3.js'
-import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
+import { PublicKey, TransactionInstruction } from '@solana/web3.js'
+import { InceptClient, toDevnetScale } from 'incept-protocol-sdk/sdk/src/incept'
 import { useMutation } from 'react-query'
 import { useIncept } from '~/hooks/useIncept'
-import { BN } from '@coral-xyz/anchor'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
-import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token"
+import {
+	getAssociatedTokenAddress,
+	createAssociatedTokenAccountInstruction,
+} from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
-import { sendAndConfirm } from '~/utils/tx_helper';
+import { calculateExecutionThreshold } from 'incept-protocol-sdk/sdk/src/utils'
+import { sendAndConfirm } from '~/utils/tx_helper'
 
 export const callTrading = async ({
 	program,
@@ -28,26 +31,39 @@ export const callTrading = async ({
 
 	await program.loadManager()
 
-	let assetInfo = await program.getAssetInfo(iassetIndex)
+	const tokenData = await program.getTokenData();
+	const pool = tokenData.pools[iassetIndex]
+	const assetInfo = pool.assetInfo
 
 	let collateralAssociatedTokenAccount = await getUSDiAccount(program);
 	let iassetAssociatedTokenAccount = await getTokenAccount(assetInfo.iassetMint, userPubKey, program.provider.connection);
-	let tx = new Transaction();
+	let treasuryUsdiAddress = await getTokenAccount(
+		program.incept!.usdiMint,
+		program.incept!.treasuryAddress,
+		program.provider.connection
+	);
+	let treasuryIassetAddress = await getTokenAccount(
+		assetInfo.iassetMint,
+		program.incept!.treasuryAddress,
+		program.provider.connection
+	);
+
+	let ixnCalls: Promise<TransactionInstruction>[] = []
 
 	if (!collateralAssociatedTokenAccount) {
 		const usdiAssociatedToken = await getAssociatedTokenAddress(
-			program.manager!.usdiMint,
+			program.incept!.usdiMint,
 			userPubKey,
 		);
 		collateralAssociatedTokenAccount = usdiAssociatedToken;
-		tx.add(
-			await createAssociatedTokenAccountInstruction(
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
 				userPubKey,
 				usdiAssociatedToken,
 				userPubKey,
-				program.manager!.usdiMint,
-			)
-		);
+				program.incept!.usdiMint,
+			))()
+		)
 	}
 
 	if (!iassetAssociatedTokenAccount) {
@@ -56,34 +72,70 @@ export const callTrading = async ({
 			userPubKey,
 		);
 		iassetAssociatedTokenAccount = iAssetAssociatedToken;
-		tx.add(
-			await createAssociatedTokenAccountInstruction(
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
 				userPubKey,
 				iAssetAssociatedToken,
 				userPubKey,
 				assetInfo.iassetMint,
-			)
+			))()
+		)
+	}
+	if (!treasuryUsdiAddress) {
+		const treasuryUsdiTokenAddress = await getAssociatedTokenAddress(
+			program.incept!.usdiMint,
+			program.incept!.treasuryAddress,
+		);
+		treasuryUsdiAddress = treasuryUsdiTokenAddress;
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
+				userPubKey,
+				treasuryUsdiTokenAddress,
+				program.incept!.treasuryAddress,
+				program.incept!.usdiMint,
+			))()
 		);
 	}
-
+	if (!treasuryIassetAddress) {
+		const treasuryIassetTokenAddress = await getAssociatedTokenAddress(
+			assetInfo.iassetMint,
+			program.incept!.treasuryAddress,
+		);
+		treasuryIassetAddress = treasuryIassetTokenAddress;
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
+				userPubKey,
+				treasuryIassetTokenAddress,
+				program.incept!.treasuryAddress,
+				assetInfo.iassetMint,
+			))()
+		);
+	}
+	const executionEstimate = calculateExecutionThreshold(
+		amountIasset, isBuy, tokenData.pools[Number(iassetIndex)], 0.0050
+	)
 	if (isBuy) {
-		tx.add(await program.buySynthInstruction(
-			collateralAssociatedTokenAccount,
-			iassetAssociatedTokenAccount,
-			new BN(amountIasset * 10 ** 8),
-			iassetIndex
+		ixnCalls.push(program.buyIassetInstruction(
+			collateralAssociatedTokenAccount!,
+			iassetAssociatedTokenAccount!,
+			toDevnetScale(amountIasset),
+			iassetIndex,
+			toDevnetScale(executionEstimate.usdiThresholdAmount),
+			treasuryIassetAddress!,
 		))
 	} else {
-		tx.add(await program.sellSynthInstruction(
-			collateralAssociatedTokenAccount,
-			iassetAssociatedTokenAccount,
-			new BN(amountIasset * 10 ** 8),
-			iassetIndex
+		ixnCalls.push(program.sellIassetInstruction(
+			collateralAssociatedTokenAccount!,
+			iassetAssociatedTokenAccount!,
+			toDevnetScale(amountIasset),
+			iassetIndex,
+			toDevnetScale(executionEstimate.usdiThresholdAmount),
+			treasuryUsdiAddress!,
 		))
 	}
-	await program.provider.send!(tx, [], { commitment: 'processed', preflightCommitment: 'processed' });
-	// await sendAndConfirm(program.provider, ixns, setTxState)
 
+	const ixns = await Promise.all(ixnCalls)
+	await sendAndConfirm(program.provider, ixns, setTxState)
 	return {
 		result: true
 	}

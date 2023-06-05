@@ -329,7 +329,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                     <Typography variant='h4'>Swap</Typography> :
                     <Stack direction='row' alignItems='center' gap={2}>
                       <CircularProgress sx={{ color: '#ff6cdf' }} size={16} thickness={3} />
-                      <Typography variant='h4'>Swapping</Typography>
+                      <Typography variant='h4' color='#fff'>Swapping</Typography>
                     </Stack>}
                 </ActionButton> :
                   <DisableButton disabled={true}>
