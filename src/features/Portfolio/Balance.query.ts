@@ -29,15 +29,16 @@ export const fetchBalance = async ({ program, userPubKey, setStartTimer }: { pro
 		console.error(e)
 	}
 
-	try {
-		let iassetInfos = await program.getUseriAssetInfo()
+	//// NOTE: getUseriAssetInfo is removed, we should utilize the fetchUserBalance query for this instead.
+	// try {
+	// 	let iassetInfos = await program.getUseriAssetInfo()
 
-		iassetInfos.forEach((infos) => {
-			iassetVal += infos[1] * infos[2]
-		})
-	} catch (e) {
-		console.error(e)
-	}
+	// 	iassetInfos.forEach((infos) => {
+	// 		iassetVal += infos[1] * infos[2]
+	// 	})
+	// } catch (e) {
+	// 	console.error(e)
+	// }
 
 	return {
 		totalVal: iassetVal + balanceVal,
