@@ -8,9 +8,9 @@ interface Props {
 	tickerIcon: string
 	ticker: string | null
 	balance?: number
-	dollarBalance?: number
 	balanceDisabled?: boolean
 	value?: number
+	dollarValue?: number
 	max?: number
 	tickerClickable?: boolean
 	onTickerClick?: () => void
@@ -18,7 +18,7 @@ interface Props {
 	onMax?: (balance: number) => void
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, dollarBalance, balanceDisabled, value, tickerClickable = false, onTickerClick, onChange, onMax, max }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, dollarValue, tickerClickable = false, onTickerClick, onChange, onMax, max }) => {
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between">
@@ -28,15 +28,25 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, dollar
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display='flex' flexDirection='column' alignItems='flex-start' pl='5px'>
 					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} onChange={onChange} />
-					<Box><Typography variant='p' color='#8988a3'>${dollarBalance?.toLocaleString()}</Typography></Box>
+					<Box><Typography variant='p' color='#8988a3'>${dollarValue?.toLocaleString()}</Typography></Box>
 				</Box>
-				<TickerBox onClick={onTickerClick} sx={tickerClickable ? { cursor: 'pointer' } : {}}>
-					{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
-					<Box mx='4px' display='flex' alignItems='center'>
-						<Typography variant='h4' color='#fff'>{ticker}</Typography>
-						{tickerClickable && <ExpandMoreOutlinedIcon />}
-					</Box>
-				</TickerBox>
+
+				{!tickerClickable ?
+					<TickerBox>
+						{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
+						<Box mx='4px' display='flex' alignItems='center'>
+							<Typography variant='h4' color='#fff'>{ticker}</Typography>
+						</Box>
+					</TickerBox>
+					:
+					<SelectTickerBox onClick={onTickerClick}>
+						{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
+						<Box mx='4px' display='flex' alignItems='center'>
+							<Typography variant='h4' color='#fff'>{ticker}</Typography>
+							<ExpandMoreOutlinedIcon />
+						</Box>
+					</SelectTickerBox>
+				}
 			</FormStack>
 		</FormControl>
 	)
@@ -59,6 +69,31 @@ const TickerBox = styled(Box)`
 	color: #fff;
 	border-radius: 100px;
 	background-color: rgba(65, 65, 102, 0.5);
+`
+
+const SelectTickerBox = styled(TickerBox)`
+	cursor: pointer;
+
+	// &:hover {
+	// 	background-color: rgba(155, 121, 252, 0.15);
+
+	// 	&::before {
+	// 		content: "";
+	// 		position: absolute;
+	// 		top: 0;
+	// 		left: 0;
+	// 		right: 0;
+	// 		bottom: 0;
+	// 		border-radius: 10px;
+	// 		border: 1px solid transparent;
+	// 		background: ${(props) => props.theme.gradients.light} border-box;
+	// 		-webkit-mask:
+	// 			linear-gradient(#fff 0 0) padding-box, 
+	// 			linear-gradient(#fff 0 0);
+	// 		-webkit-mask-composite: destination-out;
+	// 		mask-composite: exclude;
+	// 	}
+	// }
 `
 
 const InputAmount = styled(`input`)`

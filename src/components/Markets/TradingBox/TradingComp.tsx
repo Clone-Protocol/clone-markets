@@ -18,6 +18,7 @@ import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
 import GetOnUSD from './GetOnUSD'
+import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -53,10 +54,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
 
+  const onUSDInfo = collateralMapping(StableCollateral.onUSD)
   const fromPair: PairData = {
-    tickerIcon: '/images/assets/USDi.png',
-    tickerName: 'USDi Coin',
-    tickerSymbol: 'USDi',
+    tickerIcon: onUSDInfo.collateralIcon,
+    tickerName: onUSDInfo.collateralName,
+    tickerSymbol: onUSDInfo.collateralSymbol,
   }
 
   const { data: balance, refetch } = useBalanceQuery({
@@ -251,8 +253,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
+                        dollarValue={isNaN(field.value) ? 0 : field.value}
                         balance={balance?.usdiVal}
-                        dollarBalance={balance?.usdiVal}
                         max={balance?.usdiVal}
                       />
                     )}
@@ -288,8 +290,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
+                        dollarValue={field.value * getPrice()}
                         balance={balance?.iassetVal}
-                        dollarBalance={balance?.iassetVal}
                         tickerClickable
                         onTickerClick={onShowSearchAsset}
                         max={balance?.iassetVal}
@@ -312,7 +314,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               tickerIcon={isBuy ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={isBuy ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
               value={isBuy ? amountIasset : amountUsdi}
-              dollarBalance={balance?.iassetVal}
+              dollarValue={isBuy ? amountUsdi : amountUsdi}
               balanceDisabled={true}
               tickerClickable
               onTickerClick={onShowSearchAsset}
@@ -327,7 +329,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                     <Typography variant='h4'>Swap</Typography> :
                     <Stack direction='row' alignItems='center' gap={2}>
                       <CircularProgress sx={{ color: '#ff6cdf' }} size={16} thickness={3} />
-                      <Typography variant='h4'>Swapping</Typography>
+                      <Typography variant='h4' color='#fff'>Swapping</Typography>
                     </Stack>}
                 </ActionButton> :
                   <DisableButton disabled={true}>
@@ -355,16 +357,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   )
 }
 
-const IconButton = styled('div')`
+const IconButton = styled(Box)`
   width: 29px;
   height: 29px;
   margin-left: 12px;
   cursor: pointer;
   align-content: center;
-  padding-top: 6px;
-  border-radius: 4px;
   &:hover {
-    background-color: #3e3e3e;
+    border-radius: 10px;
+  	background-color: rgba(196, 181, 253, 0.1);
   }
 `
 const ConnectButton = styled(Button)`
@@ -374,6 +375,10 @@ const ConnectButton = styled(Button)`
   border: solid 1px rgba(65, 65, 102, 0.5);
   background: ${(props) => props.theme.basis.royalPurple};
   border-radius: 10px;
+  &:hover {
+    background: ${(props) => props.theme.basis.royalPurple};
+    opacity: 0.6;
+  }
 `
 const ActionButton = styled(Button)`
 	width: 100%;

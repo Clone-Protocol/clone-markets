@@ -1,19 +1,17 @@
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { InceptClient, toDevnetScale } from 'incept-protocol-sdk/sdk/src/incept'
 import { useMutation } from 'react-query'
 import { useIncept } from '~/hooks/useIncept'
-import { BN } from '@coral-xyz/anchor'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
 import {
-	TOKEN_PROGRAM_ID,
 	getAssociatedTokenAddress,
 	createAssociatedTokenAccountInstruction,
-	ASSOCIATED_TOKEN_PROGRAM_ID,
-  } from "@solana/spl-token";
+} from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
 import { calculateExecutionThreshold } from 'incept-protocol-sdk/sdk/src/utils'
+import { sendAndConfirm } from '~/utils/tx_helper'
 
 export const callTrading = async ({
 	program,
@@ -43,13 +41,14 @@ export const callTrading = async ({
 		program.incept!.usdiMint,
 		program.incept!.treasuryAddress,
 		program.provider.connection
-	  );
+	);
 	let treasuryIassetAddress = await getTokenAccount(
 		assetInfo.iassetMint,
 		program.incept!.treasuryAddress,
 		program.provider.connection
 	);
-	let tx = new Transaction();
+
+	let ixnCalls: Promise<TransactionInstruction>[] = []
 
 	if (!collateralAssociatedTokenAccount) {
 		const usdiAssociatedToken = await getAssociatedTokenAddress(
@@ -57,14 +56,14 @@ export const callTrading = async ({
 			userPubKey,
 		);
 		collateralAssociatedTokenAccount = usdiAssociatedToken;
-		tx.add(
-			await createAssociatedTokenAccountInstruction(
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
 				userPubKey,
 				usdiAssociatedToken,
 				userPubKey,
 				program.incept!.usdiMint,
-			)
-		);
+			))()
+		)
 	}
 
 	if (!iassetAssociatedTokenAccount) {
@@ -73,14 +72,14 @@ export const callTrading = async ({
 			userPubKey,
 		);
 		iassetAssociatedTokenAccount = iAssetAssociatedToken;
-		tx.add(
-			await createAssociatedTokenAccountInstruction(
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
 				userPubKey,
 				iAssetAssociatedToken,
 				userPubKey,
 				assetInfo.iassetMint,
-			)
-		);
+			))()
+		)
 	}
 	if (!treasuryUsdiAddress) {
 		const treasuryUsdiTokenAddress = await getAssociatedTokenAddress(
@@ -88,13 +87,13 @@ export const callTrading = async ({
 			program.incept!.treasuryAddress,
 		);
 		treasuryUsdiAddress = treasuryUsdiTokenAddress;
-		tx.add(
-			await createAssociatedTokenAccountInstruction(
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
 				userPubKey,
 				treasuryUsdiTokenAddress,
 				program.incept!.treasuryAddress,
 				program.incept!.usdiMint,
-			)
+			))()
 		);
 	}
 	if (!treasuryIassetAddress) {
@@ -103,20 +102,20 @@ export const callTrading = async ({
 			program.incept!.treasuryAddress,
 		);
 		treasuryIassetAddress = treasuryIassetTokenAddress;
-		tx.add(
-			await createAssociatedTokenAccountInstruction(
+		ixnCalls.push(
+			(async () => createAssociatedTokenAccountInstruction(
 				userPubKey,
 				treasuryIassetTokenAddress,
 				program.incept!.treasuryAddress,
 				assetInfo.iassetMint,
-			)
+			))()
 		);
 	}
 	const executionEstimate = calculateExecutionThreshold(
 		amountIasset, isBuy, tokenData.pools[Number(iassetIndex)], 0.0050
 	)
 	if (isBuy) {
-		tx.add(await program.buyIassetInstruction(
+		ixnCalls.push(program.buyIassetInstruction(
 			collateralAssociatedTokenAccount!,
 			iassetAssociatedTokenAccount!,
 			toDevnetScale(amountIasset),
@@ -125,7 +124,7 @@ export const callTrading = async ({
 			treasuryIassetAddress!,
 		))
 	} else {
-		tx.add(await program.sellIassetInstruction(
+		ixnCalls.push(program.sellIassetInstruction(
 			collateralAssociatedTokenAccount!,
 			iassetAssociatedTokenAccount!,
 			toDevnetScale(amountIasset),
@@ -134,8 +133,9 @@ export const callTrading = async ({
 			treasuryUsdiAddress!,
 		))
 	}
-	await program.provider.sendAndConfirm!(tx);
-	// await sendAndConfirm(program.provider, ixns, setTxState)
+
+	const ixns = await Promise.all(ixnCalls)
+	await sendAndConfirm(program.provider, ixns, setTxState)
 	return {
 		result: true
 	}
