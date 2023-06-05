@@ -3,7 +3,7 @@ import { styled } from '@mui/material'
 const BackdropPartMsg = ({ isUsdi, tickerSymbol }: { isUsdi: boolean, tickerSymbol: string | undefined }) => {
   return (
     <Wrapper>
-      <TitleMsg>{isUsdi ? 'Incept Markets are traded using USDi. Please obtain USDi.' : `Your ${tickerSymbol} balance is zero, therefore sell is disabled.`}</TitleMsg>
+      <TitleMsg>{isUsdi ? 'Incept Markets are traded using onUSD. Please obtain onUSD.' : `Your ${tickerSymbol} balance is zero, therefore sell is disabled.`}</TitleMsg>
     </Wrapper>
   )
 }

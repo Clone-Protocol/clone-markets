@@ -18,6 +18,7 @@ import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
 import GetOnUSD from './GetOnUSD'
+import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -53,10 +54,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
 
+  const onUSDInfo = collateralMapping(StableCollateral.onUSD)
   const fromPair: PairData = {
-    tickerIcon: '/images/assets/USDi.png',
-    tickerName: 'USDi Coin',
-    tickerSymbol: 'USDi',
+    tickerIcon: onUSDInfo.collateralIcon,
+    tickerName: onUSDInfo.collateralName,
+    tickerSymbol: onUSDInfo.collateralSymbol,
   }
 
   const { data: balance, refetch } = useBalanceQuery({
@@ -251,8 +253,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
+                        dollarValue={isNaN(field.value) ? 0 : field.value}
                         balance={balance?.usdiVal}
-                        dollarBalance={balance?.usdiVal}
                         max={balance?.usdiVal}
                       />
                     )}
@@ -288,8 +290,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
+                        dollarValue={field.value * getPrice()}
                         balance={balance?.iassetVal}
-                        dollarBalance={balance?.iassetVal}
                         tickerClickable
                         onTickerClick={onShowSearchAsset}
                         max={balance?.iassetVal}
@@ -312,7 +314,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               tickerIcon={isBuy ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={isBuy ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
               value={isBuy ? amountIasset : amountUsdi}
-              dollarBalance={balance?.iassetVal}
+              dollarValue={isBuy ? amountUsdi : amountUsdi}
               balanceDisabled={true}
               tickerClickable
               onTickerClick={onShowSearchAsset}
