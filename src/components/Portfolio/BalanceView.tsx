@@ -1,6 +1,5 @@
 import React from 'react';
 import { styled, Box, Paper, Typography, Stack } from '@mui/material'
-import { Balance } from '~/features/Portfolio/Balance.query'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
@@ -8,23 +7,25 @@ import { useEffect, useState } from 'react'
 import { FilterTypeColorMap, FilterTypeMap, PieItem } from '~/data/filter'
 
 interface Props {
-	balance: Balance
 	data: PieItem[]
 }
 
-const BalanceView: React.FC<Props> = ({ balance, data }) => {
+const BalanceView: React.FC<Props> = ({ data }) => {
 	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('Portfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
 	const [selectedUsdiAmount, setSelectedUsdiAmount] = useState(0)
 
+	const newData = data.filter((item) => item !== undefined)
+
 	useEffect(() => {
-		if (selectedFilter === 'all' && balance) {
+		if (selectedFilter === 'all') {
 			setSelectedTitle('Portfolio')
 			setSelectedIdx(-1)
-			setSelectedUsdiAmount(balance.totalVal);
+			const totaliAsset = newData.reduce((acc, item) => acc + item.usdiAmount, 0)
+			setSelectedUsdiAmount(totaliAsset);
 		} else {
-			data.forEach((item, index) => {
+			newData.forEach((item, index) => {
 				if (item.key === selectedFilter) {
 					setSelectedTitle(item.name)
 					setSelectedIdx(index)
@@ -43,14 +44,14 @@ const BalanceView: React.FC<Props> = ({ balance, data }) => {
 					<Typography variant='h1' fontWeight={500}>${selectedUsdiAmount.toLocaleString()}</Typography>
 				</Box>
 			</Box>
-			<PieChartAlt data={data} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(data[index].key)} />
+			<PieChartAlt data={newData} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
 			<Box width='190px'>
 				<Stack direction='row' gap={4} mb='5px'>
 					<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
 					<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
 				</Stack>
-				{data.length > 0 ?
-					data.map(item => (
+				{newData.length > 0 ?
+					newData.map(item => (
 						<Stack key={item.key} direction='row' gap={1} style={selectedFilter === item.key ? { border: `solid 1px ${FilterTypeColorMap[item.key]}`, borderRadius: '15px' } : {}}>
 							<Box display="flex" alignItems='center' gap={2} width='120px' pl='5px'>
 								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[item.key] }} />

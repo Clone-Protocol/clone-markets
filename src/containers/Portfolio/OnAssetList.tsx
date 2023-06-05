@@ -33,12 +33,13 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
   ) => {
     router.push(`/markets/${params.row.id}/asset`)
   }
+  const totalAsset = assets.reduce((acc, item) => acc + item.usdiBalance, 0)
 
   return (
     <>
       <TopBox>
         <Box><Typography variant='p' color='#8988a3'>onAsset</Typography></Box>
-        <Box><Typography variant='h3' fontWeight={500}>${balance?.iassetVal.toFixed(2)}</Typography></Box>
+        <Box><Typography variant='h3' fontWeight={500}>${totalAsset.toFixed(2)}</Typography></Box>
       </TopBox>
       <Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
       <Grid

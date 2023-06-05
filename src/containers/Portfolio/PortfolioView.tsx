@@ -37,7 +37,7 @@ const PortfolioView = () => {
 	})
 
 	useEffect(() => {
-		const usdiBalance =  balance?.balanceVal!
+		const usdiBalance = balance?.balanceVal!
 		// only called when filter is all
 		if (assets && assets.length > 0 && selectedFilter === 'all') {
 			const result: ResultAsset[] = []
@@ -69,7 +69,7 @@ const PortfolioView = () => {
 				}
 			})
 			finalPie.push(
-				{key: 'stableCoin', name: FilterTypeMap.stableCoin, value: 100 * usdiBalance / totalBalance, usdiAmount: usdiBalance} as PieItem
+				{ key: 'stableCoin', name: FilterTypeMap.stableCoin, value: 100 * usdiBalance / totalBalance, usdiAmount: usdiBalance } as PieItem
 			)
 			console.log('f', finalPie)
 			setDataPie(finalPie)
@@ -86,7 +86,7 @@ const PortfolioView = () => {
 	return (
 		<div>
 			<Box display='flex' justifyContent='center'>
-				{balance ? <BalanceView balance={balance} data={dataPie} /> : <></>}
+				{balance ? <BalanceView data={dataPie} /> : <></>}
 			</Box>
 			<Box my='45px'>
 				<StableAssetList balance={balance} />
