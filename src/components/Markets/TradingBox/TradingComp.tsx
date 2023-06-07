@@ -114,13 +114,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
 
   const { mutateAsync } = useTradingMutation(publicKey)
 
-  const handleChangeConvert = (event: Event, newValue: number | number[]) => {
-    if (typeof newValue === 'number') {
-      setConvertVal(newValue)
-      calculateTotalAmountByConvert(newValue)
-      trigger()
-    }
-  }
+  // const handleChangeConvert = (event: Event, newValue: number | number[]) => {
+  //   if (typeof newValue === 'number') {
+  //     setConvertVal(newValue)
+  //     calculateTotalAmountByConvert(newValue)
+  //     trigger()
+  //   }
+  // }
 
   const calculateTotalAmountByConvert = (convertRatio: number) => {
     const ammUsdiValue = balance?.ammUsdiValue!
@@ -157,7 +157,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
       const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
       setConvertVal(convertRatio)
       setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
-
     }
   }
 
@@ -183,6 +182,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
       console.error(err)
       setLoading(false)
     }
+  }
+
+  const getDefaultPrice = () => {
+    const ammUsdiValue = balance?.ammUsdiValue!
+    const ammIassetValue = balance?.ammIassetValue!
+    const invariant = ammIassetValue * ammUsdiValue
+
+    const iAsset = ammIassetValue - invariant / (ammUsdiValue + 1)
+    return 1 / round(iAsset, DEVNET_TOKEN_SCALE)
   }
 
   const getPrice = () => {
@@ -340,7 +348,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
               <RateLoadingIndicator />
-              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(getPrice(), 4)} onUSD</Typography>
+              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(getDefaultPrice(), 4)} onUSD</Typography>
               <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}

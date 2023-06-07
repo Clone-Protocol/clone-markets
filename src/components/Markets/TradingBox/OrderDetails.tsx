@@ -21,19 +21,19 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
     <Wrapper>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Price Impact <InfoTooltip title="Price Impact" color='#8988a3' /></Typography>
-        <PriceImpactValue>&lt; {priceImpact}%</PriceImpactValue>
+        <PriceImpactValue>&lt; {isNaN(priceImpact) ? '0' : priceImpact}%</PriceImpactValue>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title="Minimum received" color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
-          <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{minReceived?.toLocaleString()} {tickerSymbol}</Typography></Box>
+          <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(minReceived) ? '0' : minReceived?.toLocaleString()} {tickerSymbol}</Typography></Box>
           <Box><Typography variant='p_sm'>Slippage tolerance: {slippage?.toFixed(1)}%</Typography></Box>
         </div>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Trade Fees <InfoTooltip title="Trade fees" color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
-          <Typography variant='p' fontWeight={600} color='#c4b5fd'>{iassetTradeFee?.toFixed(6)} {tickerSymbol}</Typography>
+          <Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(iassetTradeFee) ? '0' : iassetTradeFee?.toFixed(6)} {tickerSymbol}</Typography>
           <Box><Typography variant='p_sm'>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</Typography></Box>
         </div>
       </Stack>
