@@ -38,6 +38,9 @@ const BackScreen = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
+  -webkit-backdrop-filter: blur(72px);
+  backdrop-filter: blur(72px);
+  background-color: rgba(11, 7, 15, 0.32);
   z-index: 99999;
 `
 const BoxWrapper = styled(Box)`
@@ -58,6 +61,7 @@ const EnterButton = styled(Button)`
     right: 0;
     bottom: 0;
     border-radius: 10px;
+    opacity: 1;
     border: 1px solid transparent;
     background: ${(props) => props.theme.gradients.light} border-box;
     -webkit-mask:
@@ -68,7 +72,10 @@ const EnterButton = styled(Button)`
   }
 
   &:hover {
-    background: radial-gradient(circle at 26% 46%, #ff6cdf, rgba(66, 0, 255, 0) 45%);
+    background: transparent;
+    &::before {
+      opacity: 0.4;
+    }
   }
 `
 

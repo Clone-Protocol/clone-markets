@@ -227,6 +227,8 @@ const ConnectButton = styled(Button)`
 	color: #fff;
 	width: 142px;
 	height: 42px;
+	box-shadow: 0 0 10px 0 ${(props) => props.theme.basis.hansPurple};
+	background: linear-gradient(to bottom, ${(props) => props.theme.basis.royalPurple}, ${(props) => props.theme.basis.royalPurple}), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed);
 	&::before {
     content: "";
     position: absolute;
@@ -244,7 +246,6 @@ const ConnectButton = styled(Button)`
     mask-composite: exclude;
   }
 	&:hover {
-		background: transparent;
 		&::before {
 			background: linear-gradient(to right, #8e1674 0%, #642f99 16%, #905a99 34%, #999 50%, #995a88 68%, #512f99 83%, #2e168e) border-box;
 		}

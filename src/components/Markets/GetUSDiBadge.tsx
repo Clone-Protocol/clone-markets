@@ -42,7 +42,7 @@ const GetButton = styled(Button)`
 			left: 0;
 			right: 0;
 			bottom: 0;
-			border-radius: 10px;
+			border-radius: 100px;
 			border: 1px solid transparent;
 			background: ${(props) => props.theme.gradients.light} border-box;
 			-webkit-mask:

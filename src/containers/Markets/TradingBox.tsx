@@ -34,7 +34,6 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 				onHide={() => setShowSearchAssetDlog(false)}
 			/>
 
-			{/* {showOrderSetting && <OrderSetting onBack={goTradingComp} />} */}
 			<SwapSettingDialog
 				open={showOrderSetting}
 				onHide={() => setShowOrderSetting(false)}

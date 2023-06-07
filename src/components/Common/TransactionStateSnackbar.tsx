@@ -28,9 +28,9 @@ const getTxnURL = (txHash: string) => {
 
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
   const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
-  return (<Stack direction='row' gap={2}>
-    <Box mt='10px'><Image src={isSuccess ? SuccessIcon : FailureIcon} width={51} height={51} /></Box>
-    <Box my='6px' lineHeight={1.3}>
+  return (<Stack direction='row' alignItems='center' gap={2}>
+    <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} width={65} height={65} /></Box>
+    <Box lineHeight={1.3}>
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
       {!isSuccess && <Box mt='6px'><Typography variant='p' color='#8988a3'>Something went wrong. Please try again.</Typography></Box>}
       <Box mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>

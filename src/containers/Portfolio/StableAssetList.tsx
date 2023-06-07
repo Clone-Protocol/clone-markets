@@ -10,6 +10,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Collateral, collateralMapping } from '~/data/assets'
 import { useRecoilState } from 'recoil'
 import { mintUSDi } from '~/features/globalAtom'
+import { useEffect, useState } from 'react'
 
 interface Props {
 	balance: Balance
@@ -19,14 +20,20 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const { publicKey } = useWallet()
 
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
-	const assets = [{
-		id: onUSDInfo.collateralType,
-		tickerIcon: onUSDInfo.collateralIcon,
-		tickerName: onUSDInfo.collateralName,
-		tickerSymbol: onUSDInfo.collateralSymbol,
-		usdiBalance: balance?.balanceVal,
-		price: 1.0
-	}]
+	const [assets, setAssets] = useState<any>([])
+
+	useEffect(() => {
+		if (publicKey) {
+			setAssets([{
+				id: onUSDInfo.collateralType,
+				tickerIcon: onUSDInfo.collateralIcon,
+				tickerName: onUSDInfo.collateralName,
+				tickerSymbol: onUSDInfo.collateralSymbol,
+				usdiBalance: balance?.balanceVal,
+				price: 1.0
+			}])
+		}
+	}, [publicKey])
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import { styled, Box, Stack, Button, Typography, CircularProgress } from '@mui/material'
+import { styled, Box, Stack, Button, IconButton, Typography, CircularProgress } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import Image from 'next/image'
@@ -221,14 +221,16 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
           sx={{
             p: '18px',
           }}>
-          <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
-            <IconButton onClick={() => refetch()}>
-              <Image src={reloadIcon} alt="reload" />
-            </IconButton>
-            <IconButton onClick={onShowOption}>
-              <Image src={settingsIcon} alt="settings" />
-            </IconButton>
-          </Stack>
+          {publicKey &&
+            <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
+              <ToolButton onClick={() => refetch()}>
+                <Image src={reloadIcon} alt="reload" />
+              </ToolButton>
+              <ToolButton onClick={onShowOption}>
+                <Image src={settingsIcon} alt="settings" />
+              </ToolButton>
+            </Stack>
+          }
           <Box>
             {
               // ::Buy
@@ -312,10 +314,10 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
           </Box>
 
           <Box height='100%'>
-            <Box my='23px' sx={{ cursor: 'pointer' }}>
+            <SwapButton onClick={handleChangeOrderType}>
               {/* <ConvertSlider isBuy={isBuy} value={convertVal} onChange={handleChangeConvert} /> */}
-              <Image src={swapChangeIcon} alt="swap" onClick={handleChangeOrderType} />
-            </Box>
+              <Image src={swapChangeIcon} alt="swap" />
+            </SwapButton>
 
             <PairInput
               title="You Receive"
@@ -353,27 +355,67 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}
 
-            <Box mt='10px'>
-              <GetOnUSD />
-            </Box>
+            {publicKey &&
+              <Box mt='10px'>
+                <GetOnUSD />
+              </Box>
+            }
           </Box >
-
-          {/* {!publicKey && <BackdropMsg />} */}
         </Box >
       </div >
     </>
   )
 }
 
-const IconButton = styled(Box)`
-  width: 29px;
-  height: 29px;
-  margin-left: 12px;
-  cursor: pointer;
+const ToolButton = styled(IconButton)`
+  width: 30px;
+  height: 30px;
+  margin-left: 6px;
   align-content: center;
   &:hover {
-    border-radius: 10px;
   	background-color: rgba(196, 181, 253, 0.1);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 100px;
+      border: 1px solid transparent;
+      background: ${(props) => props.theme.gradients.light} border-box;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+    }
+  }
+`
+const SwapButton = styled(IconButton)`
+  margin-top: 23px;
+  margin-bottom: 13px;
+  padding: 8px;
+  &:hover {
+    background-color: rgba(196, 181, 253, 0.1);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 100px;
+      border: 1px solid transparent;
+      background: ${(props) => props.theme.gradients.light} border-box;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+    }
   }
 `
 const ConnectButton = styled(Button)`

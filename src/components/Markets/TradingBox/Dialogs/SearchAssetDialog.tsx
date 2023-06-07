@@ -22,7 +22,9 @@ const SearchAssetDialog = ({ open, onChooseAsset, onHide }: { open: boolean, onC
         <DialogContent sx={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
           <BoxWrapper>
             <Box mb="19px"><Typography variant='h3' fontWeight={500}>Search onAsset</Typography></Box>
-            <SearchInput onChange={handleSearch} />
+            <Box mb='25px'>
+              <SearchInput onChange={handleSearch} />
+            </Box>
             <GridAssets onChoose={onChooseAsset} searchTerm={searchTerm} />
           </BoxWrapper>
         </DialogContent>

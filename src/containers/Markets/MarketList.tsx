@@ -51,7 +51,6 @@ const MarketList = () => {
 				width: '100%',
 				background: '#000',
 				color: '#fff',
-				paddingY: '18px',
 				borderRadius: '10px',
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>

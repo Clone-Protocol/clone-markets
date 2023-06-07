@@ -52,25 +52,25 @@ export const fetchStatsData = async (interval: Interval, poolIndex?: number): Pr
   return response.data?.body
 }
 
-export const getiAssetInfos = (tokenData: TokenData): {poolIndex: number, poolPrice: number, liquidity: number}[] => {
-    const iassetInfo = [];
-    for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
-      let pool = tokenData.pools[poolIndex];
-      let poolBalances = [toNumber(pool.iassetAmount), toNumber(pool.usdiAmount)];
-      let poolPrice = poolBalances[1] / poolBalances[0];
-      let liquidity = poolBalances[1] * 2;
-      iassetInfo.push({poolIndex, poolPrice, liquidity});
-    }
-    return iassetInfo;
+export const getiAssetInfos = (tokenData: TokenData): { poolIndex: number, poolPrice: number, liquidity: number }[] => {
+  const iassetInfo = [];
+  for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
+    let pool = tokenData.pools[poolIndex];
+    let poolBalances = [toNumber(pool.iassetAmount), toNumber(pool.usdiAmount)];
+    let poolPrice = poolBalances[1] / poolBalances[0];
+    let liquidity = poolBalances[1] * 2;
+    iassetInfo.push({ poolIndex, poolPrice, liquidity });
   }
+  return iassetInfo;
+}
 
-type AggregatedStats = { 
+export type AggregatedStats = {
   volumeUSD: number,
   fees: number,
   previousVolumeUSD: number,
   previousFees: number,
   liquidityUSD: number,
-  previousLiquidity: number 
+  previousLiquidity: number
 }
 
 const convertToNumber = (val: string) => {
@@ -80,7 +80,7 @@ const convertToNumber = (val: string) => {
 export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<AggregatedStats[]> => {
 
   let result: AggregatedStats[] = [];
-  for (let i=0; i< tokenData.numPools.toNumber(); i++) {
+  for (let i = 0; i < tokenData.numPools.toNumber(); i++) {
     result.push({ volumeUSD: 0, fees: 0, previousVolumeUSD: 0, previousFees: 0, liquidityUSD: 0, previousLiquidity: 0 })
   }
 
@@ -91,7 +91,7 @@ export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<Aggr
     const dt = new Date(item.datetime)
     const hoursDifference = (now - dt.getTime()) / 3600000
     const poolIndex = Number(item.pool_index)
-  
+
     if (poolIndex >= tokenData.numPools.toNumber()) {
       return;
     }
@@ -130,7 +130,7 @@ const fetch30DayOHLCV = async (poolIndex: number, interval: 'hour' | 'day') => {
 
   let response = await axios.get(url, {
     data: { interval },
-    headers: {'Authorization': authorization }
+    headers: { 'Authorization': authorization }
   })
 
   let result: OHLCVResponse[] = response.data?.body
@@ -164,7 +164,7 @@ export const getDailyPoolPrices30Day = async (poolIndex: number) => {
         return Number(result.close)
       }
     })()
-    prices.push({time: date.toUTCString(), value: price})
+    prices.push({ time: date.toUTCString(), value: price })
     datesIndex++
   }
 

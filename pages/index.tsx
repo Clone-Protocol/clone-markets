@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { styled } from '@mui/system'
+import { styled, Box } from '@mui/system'
 import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
 import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
@@ -22,7 +22,9 @@ const Home: NextPage = () => {
 					<Container>
 						<PortfolioBalance />
 						<Divider />
-						<GetUSDiBadge />
+						<Box mb='30px'>
+							<GetUSDiBadge />
+						</Box>
 						<MarketList />
 					</Container>
 				</StyledSection>

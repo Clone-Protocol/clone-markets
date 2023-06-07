@@ -4,7 +4,7 @@ import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
-import { getAggregatedPoolStats, getiAssetInfos } from '~/utils/assets';
+import { AggregatedStats, getAggregatedPoolStats, getiAssetInfos } from '~/utils/assets';
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
@@ -33,7 +33,13 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 
 	const tokenData = await program.getTokenData();
 	const iassetInfos = getiAssetInfos(tokenData);
-	const poolStats = await getAggregatedPoolStats(tokenData)
+
+	let poolStats: AggregatedStats[] = []
+	try {
+		poolStats = await getAggregatedPoolStats(tokenData)
+	} catch (e) {
+		console.error(e)
+	}
 
 	const result: AssetList[] = []
 
@@ -48,9 +54,9 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 			price: info.poolPrice,
 			assetType,
 			liquidity: parseInt(info.liquidity.toString()),
-			volume24h: stats.volumeUSD,
+			volume24h: stats?.volumeUSD,
 			change24h: 0, // @TODO need to set
-			feeRevenue24h: stats.fees
+			feeRevenue24h: stats?.fees
 		})
 	}
 	return result
