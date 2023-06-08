@@ -5,12 +5,14 @@ import { useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { formatDollarAmount } from '~/utils/numbers'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
+	const { publicKey } = useWallet()
 	const { data: asset } = useMarketDetailQuery({
 		index: parseInt(assetId),
 		refetchOnMount: true,
-		enabled: !!assetId
+		enabled: true
 	})
 
 	return (
@@ -55,31 +57,35 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Stack>
 					</OverviewWrapper>
 
-					<StyledDivider />
+					{publicKey &&
+						<Box>
+							<StyledDivider />
 
-					<Box padding='10px'>
-						<Typography variant='h3' fontWeight={500}>My {asset.tickerSymbol}</Typography>
-						<Stack direction="row" justifyContent="flex-start" spacing={9} mt='25px'>
-							<Box width='150px'>
-								<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
-								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500}>{asset.myHolding.toLocaleString()} {asset.tickerSymbol}</Typography>
-								</Box>
+							<Box padding='10px'>
+								<Typography variant='h3' fontWeight={500}>My {asset.tickerSymbol}</Typography>
+								<Stack direction="row" justifyContent="flex-start" spacing={9} mt='25px'>
+									<Box width='150px'>
+										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
+										<Box mt='8px'>
+											<Typography variant='h3' fontWeight={500}>{asset.myHolding.toLocaleString()} {asset.tickerSymbol}</Typography>
+										</Box>
+									</Box>
+									<Box width='150px'>
+										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
+										<Box mt='8px'>
+											<Typography variant='h3' fontWeight={500}>${asset.myNotionalVal.toLocaleString()} onUSD</Typography>
+										</Box>
+									</Box>
+									<Box width='150px'>
+										<Box><Typography variant='p' color='#8988a3'>Portfolio %</Typography></Box>
+										<Box mt='8px'>
+											<Typography variant='h3' fontWeight={500}>{asset.myPortfolioPercentage.toFixed(2)}%</Typography>
+										</Box>
+									</Box>
+								</Stack>
 							</Box>
-							<Box width='150px'>
-								<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
-								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500}>${asset.myNotionalVal.toLocaleString()} onUSD</Typography>
-								</Box>
-							</Box>
-							<Box width='150px'>
-								<Box><Typography variant='p' color='#8988a3'>Portfolio %</Typography></Box>
-								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500}>{asset.myPortfolioPercentage.toFixed(2)}%</Typography>
-								</Box>
-							</Box>
-						</Stack>
-					</Box>
+						</Box>
+					}
 
 					<StyledDivider />
 

@@ -41,13 +41,13 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 						</Box>
 					</TickerBox>
 					:
-					<SelectTickerBox onClick={onTickerClick}>
+					<SelectTickerButton onClick={onTickerClick}>
 						{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
 						<Box mx='4px' display='flex' alignItems='center'>
 							<Typography variant='h4' color='#fff'>{ticker}</Typography>
 							<ExpandMoreOutlinedIcon />
 						</Box>
-					</SelectTickerBox>
+					</SelectTickerButton>
 				}
 			</FormStack>
 		</FormControl>
@@ -62,40 +62,49 @@ const FormStack = styled(Stack)`
 	border-radius: 10px;
 	color: ${(props) => props.theme.basis.textRaven};
 	background-color: rgba(255, 255, 255, 0.1);
+	&:hover {
+		box-shadow: 0 3px 20px 0 rgba(67, 48, 119, 0.52);
+		box-shadow: 0 0 0 1px ${(props) => props.theme.basis.portGore} inset;
+	}
 `
 
 const TickerBox = styled(Box)`
 	display: flex;
 	align-items: center;
-	padding: 3px 1px 3px 9px;
+	padding: 3px 10px 3px 5px;
 	color: #fff;
 	border-radius: 100px;
 	background-color: rgba(65, 65, 102, 0.5);
 `
 
-const SelectTickerBox = styled(TickerBox)`
-	cursor: pointer;
+const SelectTickerButton = styled(Button)`
+	display: flex;
+	align-items: center;
+	color: #fff;
+	border-radius: 100px;
+	background-color: rgba(65, 65, 102, 0.5);
+	padding: 3px 0px 3px 5px;
 
-	// &:hover {
-	// 	background-color: rgba(155, 121, 252, 0.15);
+	&:hover {
+		background-color: rgba(155, 121, 252, 0.15);
 
-	// 	&::before {
-	// 		content: "";
-	// 		position: absolute;
-	// 		top: 0;
-	// 		left: 0;
-	// 		right: 0;
-	// 		bottom: 0;
-	// 		border-radius: 10px;
-	// 		border: 1px solid transparent;
-	// 		background: ${(props) => props.theme.gradients.light} border-box;
-	// 		-webkit-mask:
-	// 			linear-gradient(#fff 0 0) padding-box, 
-	// 			linear-gradient(#fff 0 0);
-	// 		-webkit-mask-composite: destination-out;
-	// 		mask-composite: exclude;
-	// 	}
-	// }
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			border-radius: 10px;
+			border: 1px solid transparent;
+			background: ${(props) => props.theme.gradients.light} border-box;
+			-webkit-mask:
+				linear-gradient(#fff 0 0) padding-box, 
+				linear-gradient(#fff 0 0);
+			-webkit-mask-composite: destination-out;
+			mask-composite: exclude;
+		}
+	}
 `
 
 const InputAmount = styled(`input`)`

@@ -50,7 +50,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setIsBuy] = useState(true)
-  const [convertVal, setConvertVal] = useState(0)
+  // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
 
@@ -71,7 +71,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const { data: assetData } = useMarketDetailQuery({
     index: assetIndex,
     refetchOnMount: true,
-    enabled: publicKey != null
+    enabled: true
   })
 
   const {
@@ -107,8 +107,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   }
 
   useEffect(() => {
-    calculateTotalAmountByConvert(convertVal)
-    console.log('c', convertVal)
+    calculateTotalAmountByFrom(0)
+    // console.log('c', convertVal)
     trigger()
   }, [isBuy])
 
@@ -147,15 +147,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     const invariant = ammIassetValue * ammUsdiValue
 
     if (isBuy) {
-      const convertRatio = newValue * 100 / balance?.usdiVal!
+      // const convertRatio = newValue * 100 / balance?.usdiVal!
       const iAsset = ammIassetValue - invariant / (ammUsdiValue + newValue)
-      setConvertVal(convertRatio)
+      // setConvertVal(convertRatio)
       setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
     } else {
       // sell
-      const convertRatio = newValue * 100 / balance?.iassetVal!
+      // const convertRatio = newValue * 100 / balance?.iassetVal!
       const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
-      setConvertVal(convertRatio)
+      // setConvertVal(convertRatio)
       setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
     }
   }
@@ -265,6 +265,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                         value={parseFloat(field.value.toFixed(3))}
                         dollarValue={isNaN(field.value) ? 0 : field.value}
                         balance={balance?.usdiVal}
+                        balanceDisabled={!publicKey}
                         max={balance?.usdiVal}
                       />
                     )}
@@ -300,8 +301,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
-                        dollarValue={field.value * getPrice()}
+                        dollarValue={isNaN(field.value) ? 0 : field.value * getPrice()}
                         balance={balance?.iassetVal}
+                        balanceDisabled={!publicKey}
                         tickerClickable
                         onTickerClick={onShowSearchAsset}
                         max={balance?.iassetVal}
@@ -397,6 +399,7 @@ const SwapButton = styled(IconButton)`
   margin-top: 23px;
   margin-bottom: 13px;
   padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
   &:hover {
     background-color: rgba(196, 181, 253, 0.1);
 

@@ -1,4 +1,4 @@
-import { Box, styled, Dialog, DialogContent, FormControl, Stack, Typography } from '@mui/material'
+import { Box, styled, Dialog, DialogContent, FormControl, Stack, Typography, Divider } from '@mui/material'
 import { FadeTransition } from '~/components/Common/Dialog'
 import { useCallback, useEffect, useState } from 'react'
 import SearchInput from './SearchInput'
@@ -19,12 +19,13 @@ const SearchAssetDialog = ({ open, onChooseAsset, onHide }: { open: boolean, onC
   return (
     <>
       <Dialog open={open} onClose={onHide} TransitionComponent={FadeTransition}>
-        <DialogContent sx={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
+        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
           <BoxWrapper>
             <Box mb="19px"><Typography variant='h3' fontWeight={500}>Search onAsset</Typography></Box>
             <Box mb='25px'>
               <SearchInput onChange={handleSearch} />
             </Box>
+            <StyledDivider />
             <GridAssets onChoose={onChooseAsset} searchTerm={searchTerm} />
           </BoxWrapper>
         </DialogContent>
@@ -39,6 +40,10 @@ const BoxWrapper = styled(Box)`
   width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+`
+const StyledDivider = styled(Divider)`
+  background-color: ${(props) => props.theme.basis.portGore};
+  margin-bottom: 1px;
 `
 
 
