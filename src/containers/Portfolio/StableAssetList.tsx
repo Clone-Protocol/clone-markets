@@ -21,6 +21,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
 	const [assets, setAssets] = useState<any>([])
+	const [_, setMintUsdi] = useRecoilState(mintUSDi)
 
 	useEffect(() => {
 		if (publicKey) {
@@ -30,7 +31,8 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				tickerName: onUSDInfo.collateralName,
 				tickerSymbol: onUSDInfo.collateralSymbol,
 				usdiBalance: balance?.balanceVal,
-				price: 1.0
+				price: 1.0,
+				setMintUsdi
 			}])
 		}
 	}, [publicKey])
@@ -45,8 +47,8 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 			<Grid
 				headers={columns}
 				rows={assets || []}
-				minHeight={100}
-				customNoRowsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
+				minHeight={10}
+				customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
 			/>
 		</>
 	)
@@ -56,7 +58,7 @@ let columns: GridColDef[] = [
 	{
 		field: 'iAssets',
 		headerName: 'Stable Coin',
-		flex: 1,
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -66,7 +68,7 @@ let columns: GridColDef[] = [
 	{
 		field: 'myBalance',
 		headerName: 'Total Balance',
-		flex: 1,
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Stack>
@@ -80,7 +82,7 @@ let columns: GridColDef[] = [
 	{
 		field: 'price',
 		headerName: 'Price',
-		flex: 1,
+		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Stack>
@@ -96,10 +98,9 @@ let columns: GridColDef[] = [
 		headerName: '',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			const [_, setMintUsdi] = useRecoilState(mintUSDi)
 
 			return (
-				<GetUSDButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>
+				<GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>
 			)
 		},
 	},
@@ -120,9 +121,9 @@ const TopBox = styled(Box)`
 `
 
 const GetUSDButton = styled(Button)`
-	width: 108px;
+	width: 102px;
 	height: 28px;
-	padding: 6px;
+	padding: 6px 3px;
 	border-radius: 100px;
 	border: solid 1px rgba(104, 0, 237, 0.5);
 	background-color: rgba(155, 121, 252, 0.15);

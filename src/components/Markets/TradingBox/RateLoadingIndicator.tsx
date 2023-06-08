@@ -56,9 +56,10 @@ const Wrapper = styled(Box)`
   display: flex;
   align-items: center;
   margin-right: 6px;
+  margin-top: 6px;
   width: 12px;
   height: 12px;
-  -webkit-filter: blur(13px);
-  filter: blur(13px);
-  background-image: linear-gradient(141deg, #8a7ba4 20%, #4e1597 128%);
+  // -webkit-filter: blur(13px);
+  // filter: blur(13px);
+  // background-image: linear-gradient(141deg, #8a7ba4 20%, #4e1597 128%);
 `

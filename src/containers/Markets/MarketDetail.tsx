@@ -18,7 +18,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	return (
 		<>
 			{asset ? (
-				<Stack mb={2} direction="column" padding={5} paddingY={1}>
+				<Stack mb={2} direction="column" paddingLeft={5} paddingY={1} maxWidth='750px'>
 					<Box>
 						<Box display="inline-flex" alignItems="center">
 							<Image src={asset.tickerIcon} width="30px" height="30px" />

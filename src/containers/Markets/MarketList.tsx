@@ -61,7 +61,7 @@ const MarketList = () => {
 				headers={columns}
 				rows={assets || []}
 				minHeight={600}
-				customNoRowsOverlay={() => CustomNoRowsOverlay('No assets')}
+				customNoResultsOverlay={() => CustomNoRowsOverlay('No assets')}
 				onRowClick={handleRowClick}
 			/>
 		</Box>

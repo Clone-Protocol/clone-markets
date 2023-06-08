@@ -438,6 +438,7 @@ const ActionButton = styled(Button)`
   height: 52px;
 	color: #fff;
 	margin-bottom: 10px;
+  border-radius: 10px;
   &::before {
     content: "";
     position: absolute;
@@ -469,6 +470,7 @@ const DisableButton = styled(Button)`
   width: 100%;
   height: 52px;
 	color: #fff;
+  border-radius: 10px;
 	margin-bottom: 10px;
   &:disabled {
     border: solid 1px ${(props) => props.theme.basis.portGore};
@@ -480,12 +482,13 @@ const TitleOrderDetails = styled('div')`
   cursor: pointer; 
   text-align: left; 
   display: flex;
+  align-items: center;
 `
 const ArrowIcon = styled('div')`
   width: 9.4px;
   height: 6px;
   margin-left: 5px;
-  margin-top: -3px;
+  margin-top: -20px;
   font-weight: 600;
   color: #c5c7d9;
 `

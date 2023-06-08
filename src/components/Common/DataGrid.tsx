@@ -6,13 +6,13 @@ import Link from 'next/link'
 interface GridProps {
   headers: GridColDef[],
   rows: any,
-  customNoRowsOverlay: () => JSX.Element,
+  customNoResultsOverlay: () => JSX.Element,
   hasRangeIndicator?: boolean,
   minHeight?: number,
   onRowClick?: GridEventListener<'rowClick'>
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, hasRangeIndicator = false, minHeight = 260, onRowClick }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, hasRangeIndicator = false, minHeight = 260, onRowClick }) => (
   <DataGrid
     sx={{
       width: '100%',
@@ -87,7 +87,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoRowsOverlay, 
       // }
     }}
     components={{
-      NoResultsOverlay: customNoRowsOverlay
+      NoResultsOverlay: customNoResultsOverlay
     }}
     getRowClassName={(params) => {
       return 'super-app-theme--row'
@@ -119,9 +119,9 @@ export const CustomNoRowsOverlay = (msg: string) => {
 
 export const CustomNoOnAssetOverlay = () => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px', zIndex: '999', position: 'relative' }}>
       <Typography variant='p_lg'>No onAsset to display. </Typography>
-      <Link href="/trade"><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline' }}>Start Trading!</Typography></Link>
+      <Link href="/trade/0/asset"><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Start Trading!</Typography></Link>
     </Box>
   )
 }

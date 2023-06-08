@@ -45,8 +45,8 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
       <Grid
         headers={columns}
         rows={assets || []}
-        minHeight={100}
-        customNoRowsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
+        minHeight={10}
+        customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
         onRowClick={handleRowClick}
       />
     </>
@@ -115,9 +115,9 @@ let columns: GridColDef[] = [
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <Stack>
+        <Box mt='-15px'>
           <PercentSlider percent={params.row.percentVal} />
-        </Stack>
+        </Box>
       )
     },
   },

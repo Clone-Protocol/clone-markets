@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Typography, styled, Stack } from '@mui/material'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
@@ -7,14 +7,13 @@ import { useSnackbar } from 'notistack'
 import withSuspense from '~/hocs/withSuspense'
 import { useRouter } from 'next/router'
 import { shortenAddress } from '~/utils/address'
-import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
   const { publicKey, disconnect } = useWallet()
-  const { setOpen } = useWalletDialog()
+  // const { setOpen } = useWalletDialog()
 
   const { data: balance } = useBalanceQuery({
     userPubKey: publicKey,
@@ -22,11 +21,11 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
     enabled: publicKey != null
   })
 
-  const handleChangeWallet = () => {
-    disconnect()
-    onHide()
-    setOpen(true)
-  }
+  // const handleChangeWallet = () => {
+  //   disconnect()
+  //   onHide()
+  //   setOpen(true)
+  // }
   const handleDisconnect = () => {
     disconnect()
     onHide()
@@ -36,7 +35,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   return balance ? (
     <WalletWrapper>
       <Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
-        <WalletAddress onClick={handleChangeWallet}>
+        <WalletAddress>
           <Box><Typography variant='p' fontWeight={600} color='#fff'>13.56 SOL</Typography></Box>
           {publicKey && (
             <Box><Typography variant='p' color='#c5c7d9'>{shortenAddress(publicKey.toString())}</Typography></Box>
@@ -70,7 +69,6 @@ const WalletWrapper = styled(Stack)`
 	z-index: 99;
 `
 const WalletAddress = styled(Box)`
-	cursor: pointer;
 	line-height: 1;
 `
 const PopupButton = styled(Box)`
@@ -81,12 +79,17 @@ const PopupButton = styled(Box)`
 	border-radius: 100px;
   background-color: rgba(155, 121, 252, 0.3);
 	cursor: pointer;
+  &:hover {
+		background-color: rgba(155, 121, 252, 0.3);
+    box-shadow: 0 0 0 1px ${(props) => props.theme.basis.melrose} inset;
+  }
 `
 const AssetBox = styled(Box)`
 	width: 100%;
 	height: 61px;
 	padding: 17px;
 	display: flex;
+  align-items: center;
 	gap: 10px;
 	color: #fff;
 	background-color: rgba(255, 255, 255, 0.05);

@@ -44,7 +44,9 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 					<Typography variant='h1' fontWeight={500}>${selectedUsdiAmount.toLocaleString()}</Typography>
 				</Box>
 			</Box>
-			<PieChartAlt data={newData} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
+			<Box mb='-30px'>
+				<PieChartAlt data={newData} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
+			</Box>
 			<Box width='190px'>
 				<Stack direction='row' gap={4} mb='5px'>
 					<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
@@ -61,7 +63,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 						</Stack>
 					))
 					:
-					<Box sx={{ opacity: '0.5' }}>
+					<Box sx={{ opacity: '0.5', lineHeight: '1.2', }}>
 						{Object.keys(FilterTypeMap).filter((v, index) => index !== 0).map((key: string) => (
 							<Stack direction='row' gap={3} key={key}>
 								<Box display="flex" alignItems='center' gap={2} width='120px'>

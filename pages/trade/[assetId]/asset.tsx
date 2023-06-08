@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { styled } from '@mui/system'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
-import { Grid } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 
 const AssetPage: NextPage = () => {
 	const router = useRouter()
@@ -27,14 +27,14 @@ const AssetPage: NextPage = () => {
 					sx={{
 						backgroundColor: '#000',
 					}}>
-					<Grid container spacing={1} justifyContent="center">
-						<Grid item xs={12} md={7} sx={{ padding: '30px' }}>
+					<Stack direction='row' gap={1} justifyContent="center">
+						<Box>
 							<MarketDetail assetId={assetId} />
-						</Grid>
-						<Grid item xs={12} md={4} sx={{ padding: '30px' }}>
+						</Box>
+						<Box width='360px'>
 							<TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />
-						</Grid>
-					</Grid>
+						</Box>
+					</Stack>
 				</StyledSection>
 			</main>
 		</div>

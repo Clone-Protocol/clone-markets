@@ -88,11 +88,13 @@ const PortfolioView = () => {
 			<Box display='flex' justifyContent='center'>
 				{balance ? <BalanceView data={dataPie} /> : <></>}
 			</Box>
-			<Box my='45px'>
-				<StableAssetList balance={balance} />
-			</Box>
-			<Box mb='45px'>
-				<OnAssetList assets={assets} pieitems={dataPie} balance={balance} />
+			<Box py='30px'>
+				<Box mb='45px'>
+					<StableAssetList balance={balance} />
+				</Box>
+				<Box>
+					<OnAssetList assets={assets} pieitems={dataPie} balance={balance} />
+				</Box>
 			</Box>
 		</div>
 	)

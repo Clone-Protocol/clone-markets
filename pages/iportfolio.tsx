@@ -24,6 +24,8 @@ const IportfolioPage: NextPage = () => {
 }
 
 const StyledSection = styled('section')`
+	max-width: 1085px;
+	margin: 0 auto;
 	${(props) => props.theme.breakpoints.up('md')} {
 		padding-top: 100px;
 	}
