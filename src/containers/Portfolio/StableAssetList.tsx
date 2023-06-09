@@ -122,7 +122,7 @@ const TopBox = styled(Box)`
 
 const GetUSDButton = styled(Button)`
 	width: 102px;
-	height: 28px;
+	height: 29px;
 	padding: 6px 3px;
 	border-radius: 100px;
 	border: solid 1px rgba(104, 0, 237, 0.5);
@@ -138,7 +138,7 @@ const GetUSDButton = styled(Button)`
 			left: 0;
 			right: 0;
 			bottom: 0;
-			border-radius: 10px;
+			border-radius: 100px;
 			border: 1px solid transparent;
 			background: ${(props) => props.theme.gradients.light} border-box;
 			-webkit-mask:

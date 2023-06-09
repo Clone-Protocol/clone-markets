@@ -23,12 +23,13 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         borderLeft: '1px solid rgba(195, 153, 248, 0.25)',
         borderRight: '1px solid rgba(195, 153, 248, 0.25)',
         borderBottom: '1px solid rgba(195, 153, 248, 0.25)',
-        borderBottomLeftRadius: '10px',
-        borderBottomRightRadius: '10px',
+        borderTop: '1px solid rgba(195, 153, 248, 0.25)',
+        borderRadius: '20px'
       },
       '& .last--cell': {
         display: 'flex',
         justifyContent: 'flex-end',
+        maxWidth: '180px'
       },
       '& .MuiDataGrid-columnHeaderTitle': {
         color: '#8988a3',

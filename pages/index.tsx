@@ -6,8 +6,10 @@ import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
 import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
 import PortfolioBalance from '~/components/Markets/PortfolioBalance'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const Home: NextPage = () => {
+	const { publicKey } = useWallet()
 	return (
 		<div>
 			<Head>
@@ -21,10 +23,14 @@ const Home: NextPage = () => {
 				<StyledSection>
 					<Container>
 						<PortfolioBalance />
-						<Divider />
-						<Box mb='30px'>
-							<GetUSDiBadge />
-						</Box>
+						{publicKey &&
+							<Box>
+								<Divider />
+								<Box mb='30px'>
+									<GetUSDiBadge />
+								</Box>
+							</Box>
+						}
 						<MarketList />
 					</Container>
 				</StyledSection>

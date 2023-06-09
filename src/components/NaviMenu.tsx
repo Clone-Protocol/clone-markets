@@ -33,6 +33,7 @@ const StyledListItemButton = styled(ListItemButton)`
   margin-left: 8px;
   margin-right: 8px;
   margin-bottom: 13px;
+  border-radius: 5px;
   color: ${(props) => props.theme.basis.raven};
   &:hover {
     border-radius: 5px;

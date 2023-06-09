@@ -7,7 +7,6 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { Grid, CellTicker } from '~/components/Common/DataGrid'
-import Divider from '@mui/material/Divider';
 import { GridEventListener } from '@mui/x-data-grid'
 import { useRouter } from 'next/router'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
@@ -50,17 +49,17 @@ const MarketList = () => {
 			sx={{
 				width: '100%',
 				background: '#000',
+				paddingBottom: '25px',
 				color: '#fff',
 				borderRadius: '10px',
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
 
 			<Box mb='9px'><Typography variant='p_xlg'>All onAssets on Clone Protocol</Typography></Box>
-			<Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
 			<Grid
 				headers={columns}
 				rows={assets || []}
-				minHeight={600}
+				minHeight={570}
 				customNoResultsOverlay={() => CustomNoRowsOverlay('No assets')}
 				onRowClick={handleRowClick}
 			/>
@@ -74,7 +73,7 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: 'onAsset',
-		flex: 3,
+		flex: 4,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -86,7 +85,7 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: 'Price (onUSD)',
-		flex: 2,
+		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
 		}
@@ -96,7 +95,7 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: '24h Change',
-		flex: 2,
+		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return params.row.change24h >= 0 ?
 				<Box color='#00ff99' display='flex' alignItems='center' gap={1}>
@@ -114,19 +113,19 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: 'Liquidity',
-		flex: 2,
+		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.value), 3)}</Typography>
 		},
 	},
 	{
 		field: '24hVolume',
-		headerClassName: 'super-app-theme--header',
+		headerClassName: 'last--header',
 		cellClassName: 'last--cell',
 		headerName: 'Volume',
-		flex: 1,
+		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Typography variant='p_xlg' mr="25px">{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
+			return <Typography variant='p_xlg' mr="20px">{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
 		},
 	},
 ]

@@ -19,6 +19,7 @@ import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
 import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
+import { useWalletDialog } from '~/hooks/useWalletDialog'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -50,9 +51,10 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setIsBuy] = useState(true)
-  // const [convertVal, setConvertVal] = useState(0)
+  const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
+  const { setOpen } = useWalletDialog()
 
   const onUSDInfo = collateralMapping(StableCollateral.onUSD)
   const fromPair: PairData = {
@@ -84,8 +86,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   } = useForm({
     mode: 'onChange',
     defaultValues: {
-      amountUsdi: 0.0,
-      amountIasset: 0.0,
+      amountUsdi: NaN,
+      amountIasset: NaN,
     }
   })
 
@@ -107,8 +109,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   }
 
   useEffect(() => {
-    calculateTotalAmountByFrom(0)
-    // console.log('c', convertVal)
+    calculateTotalAmountByConvert(convertVal)
+    console.log('c', convertVal)
     trigger()
   }, [isBuy])
 
@@ -147,15 +149,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     const invariant = ammIassetValue * ammUsdiValue
 
     if (isBuy) {
-      // const convertRatio = newValue * 100 / balance?.usdiVal!
+      const convertRatio = newValue * 100 / balance?.usdiVal!
       const iAsset = ammIassetValue - invariant / (ammUsdiValue + newValue)
-      // setConvertVal(convertRatio)
+      setConvertVal(convertRatio)
       setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
     } else {
       // sell
-      // const convertRatio = newValue * 100 / balance?.iassetVal!
+      const convertRatio = newValue * 100 / balance?.iassetVal!
       const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
-      // setConvertVal(convertRatio)
+      setConvertVal(convertRatio)
       setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
     }
   }
@@ -288,7 +290,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                     }}
                     render={({ field }) => (
                       <PairInput
-                        title="You pay"
+                        title="You Pay"
                         tickerIcon={assetData?.tickerIcon!}
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -333,7 +335,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
             />
 
             <Box my='15px'>
-              {!publicKey ? <ConnectButton>
+              {!publicKey ? <ConnectButton onClick={() => setOpen(true)}>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
                 isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { backgroundImage: 'radial-gradient(circle at 26% 46%, #ff6cdf, rgba(66, 0, 255, 0) 45%)' } : {}}>
@@ -399,6 +401,7 @@ const SwapButton = styled(IconButton)`
   margin-top: 23px;
   margin-bottom: 13px;
   padding: 8px;
+  border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.05);
   &:hover {
     background-color: rgba(196, 181, 253, 0.1);
@@ -410,7 +413,8 @@ const SwapButton = styled(IconButton)`
       left: 0;
       right: 0;
       bottom: 0;
-      border-radius: 100px;
+      border-radius: 999px;
+      padding: 8px;
       border: 1px solid transparent;
       background: ${(props) => props.theme.gradients.light} border-box;
       -webkit-mask:

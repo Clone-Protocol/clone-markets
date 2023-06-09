@@ -216,6 +216,7 @@ const HeaderButton = styled(Button)`
 	margin-left: 16px;
 	color: ${(props) => props.theme.basis.ghost};
 	height: 42px;
+	border-radius: 10px;
 	&:hover {
 		border-radius: 10px;
   	background-color: rgba(196, 181, 253, 0.1);
@@ -227,6 +228,7 @@ const ConnectButton = styled(Button)`
 	color: #fff;
 	width: 142px;
 	height: 42px;
+	border-radius: 10px;
 	box-shadow: 0 0 10px 0 ${(props) => props.theme.basis.hansPurple};
 	background: linear-gradient(to bottom, ${(props) => props.theme.basis.royalPurple}, ${(props) => props.theme.basis.royalPurple}), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed);
 	&::before {
