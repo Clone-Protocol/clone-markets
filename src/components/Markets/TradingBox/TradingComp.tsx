@@ -330,7 +330,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               value={isBuy ? amountIasset : amountUsdi}
               dollarValue={isBuy ? amountUsdi : amountUsdi}
               balanceDisabled={true}
-              tickerClickable
+              tickerClickable={isBuy}
               onTickerClick={onShowSearchAsset}
             />
 
