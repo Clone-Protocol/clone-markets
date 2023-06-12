@@ -96,8 +96,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   ])
 
   const initData = () => {
-    setValue('amountUsdi', 0.0)
-    setValue('amountIasset', 0.0)
+    setValue('amountUsdi', NaN)
+    setValue('amountIasset', NaN)
     refetch()
   }
 
