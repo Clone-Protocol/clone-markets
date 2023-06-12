@@ -1,22 +1,35 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { PublicKey } from '@solana/web3.js'
-import { useIncept } from '~/hooks/useIncept'
 import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { AnchorProvider } from "@coral-xyz/anchor";
+import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
+import { PublicKey, Connection } from "@solana/web3.js";
 
-export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void }) => {
-  if (!userPubKey) return null
-
-  await program.loadManager()
+export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
 
   console.log('fetchBalance')
   // start timer in data-loading-indicator
   setStartTimer(false);
   setStartTimer(true);
+
+  // MEMO: to support provider without wallet adapter
+  const network = getNetworkDetailsFromEnv()
+  const new_connection = new Connection(network.endpoint)
+  const provider = new AnchorProvider(
+    new_connection,
+    {
+      signTransaction: () => Promise.reject(),
+      signAllTransactions: () => Promise.reject(),
+      publicKey: PublicKey.default, // MEMO: dummy pubkey
+    },
+    {}
+  );
+  // @ts-ignore
+  const program = new InceptClient(network.incept, provider)
+  await program.loadManager()
 
   let usdiVal = 0.0
   let iassetVal = 0.0
@@ -66,7 +79,6 @@ export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }
 }
 
 interface GetProps {
-  userPubKey: PublicKey | null
   index: number
   refetchOnMount?: QueryObserverOptions['refetchOnMount']
   enabled?: boolean
@@ -79,24 +91,13 @@ export interface Balance {
   ammUsdiValue: number
 }
 
-export function useBalanceQuery({ userPubKey, index, refetchOnMount, enabled = true }: GetProps) {
-  const wallet = useAnchorWallet()
-  const { getInceptApp } = useIncept()
+export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const { setStartTimer } = useDataLoading()
 
-  if (wallet) {
-    return useQuery(['balance', userPubKey, wallet, index], () => fetchBalance({ program: getInceptApp(wallet), userPubKey, index, setStartTimer }), {
-      refetchOnMount,
-      refetchInterval: REFETCH_CYCLE,
-      refetchIntervalInBackground: true,
-      enabled
-    })
-  } else {
-    return useQuery(['balance'], () => ({
-      usdiVal: 0,
-      iassetVal: 0,
-      ammIassetValue: 0,
-      ammUsdiValue: 0
-    }))
-  }
+  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer }), {
+    refetchOnMount,
+    refetchInterval: REFETCH_CYCLE,
+    refetchIntervalInBackground: true,
+    enabled
+  })
 }

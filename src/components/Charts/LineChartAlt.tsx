@@ -22,7 +22,7 @@ export type LineChartProps = {
   topRight?: ReactNode | undefined
   bottomLeft?: ReactNode | undefined
   bottomRight?: ReactNode | undefined
-  maxY?: number
+  // maxY?: number
 } & React.HTMLAttributes<HTMLDivElement>
 
 
@@ -38,7 +38,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
   bottomLeft,
   bottomRight,
   minHeight = 307,
-  maxY,
+  // maxY,
   ...rest
 }) => {
   const parsedValue = value

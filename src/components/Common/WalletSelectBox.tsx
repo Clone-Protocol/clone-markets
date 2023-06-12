@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Typography, styled, Stack } from '@mui/material'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
@@ -8,12 +8,13 @@ import withSuspense from '~/hocs/withSuspense'
 import { useRouter } from 'next/router'
 import { shortenAddress } from '~/utils/address'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { getSolInBalance } from '~/utils/address';
 
 const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
   const { publicKey, disconnect } = useWallet()
-  // const { setOpen } = useWalletDialog()
+  const [solBalance, setSolBalance] = useState(0)
 
   const { data: balance } = useBalanceQuery({
     userPubKey: publicKey,
@@ -21,11 +22,16 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
     enabled: publicKey != null
   })
 
-  // const handleChangeWallet = () => {
-  //   disconnect()
-  //   onHide()
-  //   setOpen(true)
-  // }
+  useMemo(() => {
+    const getBalance = async () => {
+      if (publicKey) {
+        const balance = await getSolInBalance(publicKey)
+        setSolBalance(balance)
+      }
+    }
+    getBalance()
+  }, [publicKey])
+
   const handleDisconnect = () => {
     disconnect()
     onHide()
@@ -36,7 +42,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
     <WalletWrapper>
       <Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
         <WalletAddress>
-          <Box><Typography variant='p' fontWeight={600} color='#fff'>13.56 SOL</Typography></Box>
+          <Box><Typography variant='p' fontWeight={600} color='#fff'>{solBalance.toLocaleString()} SOL</Typography></Box>
           {publicKey && (
             <Box><Typography variant='p' color='#c5c7d9'>{shortenAddress(publicKey.toString())}</Typography></Box>
           )}

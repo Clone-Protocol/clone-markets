@@ -30,7 +30,7 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display='flex' flexDirection='column' alignItems='flex-start' pl='5px'>
 					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} onChange={onChange} />
-					<Box><Typography variant='p' color='#8988a3'>${dollarValue?.toLocaleString()}</Typography></Box>
+					<Box><Typography variant='p' color='#8988a3'>${isNaN(dollarValue) ? 0 : dollarValue?.toLocaleString()}</Typography></Box>
 				</Box>
 
 				{!tickerClickable ?

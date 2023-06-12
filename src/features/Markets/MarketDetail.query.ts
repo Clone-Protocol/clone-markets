@@ -3,7 +3,6 @@ import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { assetMapping } from 'src/data/assets'
 import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
@@ -32,7 +31,7 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 	const program = new InceptClient(network.incept, provider)
 	await program.loadManager()
 
-	const { tickerName, tickerSymbol, tickerIcon } = assetMapping(index)
+	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
 
 	const tokenData = await program.getTokenData();
 	const pool = tokenData.pools[index];
@@ -43,6 +42,7 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 		tickerName,
 		tickerSymbol,
 		tickerIcon,
+		pythSymbol,
 		price,
 	}
 }
@@ -50,8 +50,9 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 export const fetchMarketDetailDefault = () => {
 	return {
 		id: 1,
-		tickerName: 'iSolana',
-		tickerSymbol: 'iSol',
+		tickerName: 'Clone Euro',
+		tickerSymbol: 'onEUR',
+		pythSymbol: 'FX.EUR/USD',
 		tickerIcon: ethLogo,
 		price: 160.51,
 		volume: 12.4,

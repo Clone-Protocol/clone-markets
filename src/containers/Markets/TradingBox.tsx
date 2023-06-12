@@ -3,6 +3,7 @@ import { useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
 import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'
 import withSuspense from '~/hocs/withSuspense'
+import { useRouter } from 'next/router'
 import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
+	const router = useRouter()
 	const [showSearchAssetDlog, setShowSearchAssetDlog] = useState(false)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
 	const assetIndex = parseInt(assetId)
@@ -18,6 +20,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const chooseAsset = (id: number) => {
 		onSelectAssetId(id)
 		setShowSearchAssetDlog(false)
+		router.push(`/trade/${id}/asset`)
 	}
 
 	return (

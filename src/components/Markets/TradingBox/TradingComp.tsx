@@ -64,10 +64,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   }
 
   const { data: balance, refetch } = useBalanceQuery({
-    userPubKey: publicKey,
     index: assetIndex,
     refetchOnMount: "always",
-    enabled: publicKey != null
+    enabled: true
   });
 
   const { data: assetData } = useMarketDetailQuery({
@@ -109,9 +108,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   }
 
   useEffect(() => {
-    calculateTotalAmountByConvert(convertVal)
-    console.log('c', convertVal)
-    trigger()
+    if (!isNaN(amountUsdi)) {
+      calculateTotalAmountByConvert(convertVal)
+      console.log('c', convertVal)
+      trigger()
+    }
   }, [isBuy])
 
   const { mutateAsync } = useTradingMutation(publicKey)
@@ -219,20 +220,16 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   return (
     <>
       <div style={{ width: '100%', height: '100%' }}>
-        <Box
-          sx={{
-            p: '18px',
-          }}>
-          {publicKey &&
-            <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
-              <ToolButton onClick={() => refetch()}>
-                <Image src={reloadIcon} alt="reload" />
-              </ToolButton>
-              <ToolButton onClick={onShowOption}>
-                <Image src={settingsIcon} alt="settings" />
-              </ToolButton>
-            </Stack>
-          }
+        <Box p='18px'>
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
+            <ToolButton onClick={() => refetch()}>
+              <Image src={reloadIcon} alt="reload" />
+            </ToolButton>
+            <ToolButton onClick={onShowOption} disabled={!publicKey}>
+              <Image src={settingsIcon} alt="settings" />
+            </ToolButton>
+          </Stack>
+
           <Box>
             {
               // ::Buy
@@ -265,7 +262,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
-                        dollarValue={isNaN(field.value) ? 0 : field.value}
+                        dollarValue={field.value}
                         balance={balance?.usdiVal}
                         balanceDisabled={!publicKey}
                         max={balance?.usdiVal}
@@ -303,7 +300,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={parseFloat(field.value.toFixed(3))}
-                        dollarValue={isNaN(field.value) ? 0 : field.value * getPrice()}
+                        dollarValue={field.value * getPrice()}
                         balance={balance?.iassetVal}
                         balanceDisabled={!publicKey}
                         tickerClickable

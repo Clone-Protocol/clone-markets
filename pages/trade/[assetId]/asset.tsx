@@ -28,7 +28,7 @@ const AssetPage: NextPage = () => {
 						backgroundColor: '#000',
 					}}>
 					<Stack direction='row' gap={1} justifyContent="center">
-						<Box>
+						<Box minWidth='750px'>
 							<MarketDetail assetId={assetId} />
 						</Box>
 						<Box width='360px'>

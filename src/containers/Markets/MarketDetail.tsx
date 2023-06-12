@@ -11,7 +11,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
 	const { data: asset } = useMarketDetailQuery({
 		index: parseInt(assetId),
-		refetchOnMount: true,
+		refetchOnMount: "always",
 		enabled: true
 	})
 
@@ -31,7 +31,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Box>
 					</Box>
 
-					<Chart price={asset.price} />
+					<Chart pythSymbol={asset.pythSymbol} price={asset.price} />
 
 					<OverviewWrapper>
 						<Typography variant='h3' fontWeight={500}>Market Overview</Typography>
