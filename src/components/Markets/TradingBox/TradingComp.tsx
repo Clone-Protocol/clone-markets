@@ -12,6 +12,7 @@ import OrderDetails from './OrderDetails'
 import RateLoadingIndicator from './RateLoadingIndicator'
 import { useTradingMutation } from '~/features/Markets/Trading.mutation'
 import { useBalanceQuery } from '~/features/Markets/Balance.query'
+import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balance.query'
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import useLocalStorage from '~/hooks/useLocalStorage'
@@ -73,6 +74,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     index: assetIndex,
     refetchOnMount: true,
     enabled: true
+  })
+
+  const { data: myBalance } = useMyBalanceQuery({
+    userPubKey: publicKey,
+    index: assetIndex,
+    refetchOnMount: 'always',
+    enabled: publicKey != null
   })
 
   const {
@@ -242,7 +250,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                       validate(value) {
                         if (!value || value <= 0) {
                           return ''
-                        } else if (value > balance?.usdiVal!) {
+                        } else if (value > myBalance?.usdiVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
                       }
@@ -263,9 +271,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                         }}
                         value={parseFloat(field.value.toFixed(3))}
                         dollarValue={field.value}
-                        balance={balance?.usdiVal}
+                        balance={myBalance?.usdiVal}
                         balanceDisabled={!publicKey}
-                        max={balance?.usdiVal}
+                        max={myBalance?.usdiVal}
                       />
                     )}
                   />
@@ -280,7 +288,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                       validate(value) {
                         if (!value || value <= 0) {
                           return ''
-                        } else if (value > balance?.iassetVal!) {
+                        } else if (value > myBalance?.iassetVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
                       }
@@ -301,11 +309,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                         }}
                         value={parseFloat(field.value.toFixed(3))}
                         dollarValue={field.value * getPrice()}
-                        balance={balance?.iassetVal}
+                        balance={myBalance?.iassetVal}
                         balanceDisabled={!publicKey}
                         tickerClickable
                         onTickerClick={onShowSearchAsset}
-                        max={balance?.iassetVal}
+                        max={myBalance?.iassetVal}
                       />
                     )}
                   />
@@ -335,7 +343,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               {!publicKey ? <ConnectButton onClick={() => setOpen(true)}>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
-                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { backgroundImage: 'radial-gradient(circle at 26% 46%, #ff6cdf, rgba(66, 0, 255, 0) 45%)' } : {}}>
+                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(66, 0, 255, 0) 0%, #ff6cdf 100% )' } : {}}>
                   {!loading ?
                     <Typography variant='h4'>Swap</Typography> :
                     <Stack direction='row' alignItems='center' gap={2}>

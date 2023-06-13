@@ -3,17 +3,18 @@ import { Box, Typography } from '@mui/material'
 import { TimeTabs, TimeTab, FilterTimeMap, FilterTime } from '~/components/Charts/TimeTabs'
 import LineChartAlt from '~/components/Charts/LineChartAlt'
 // import { useTotalPriceQuery } from '~/features/Chart/Prices.query'
+import { formatDollarAmount } from '~/utils/numbers'
 import Image from 'next/image'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import { usePriceHistoryQuery } from '~/features/Chart/PriceByAsset.query'
 
 const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => {
-  const [filterTime, setFilterTime] = useState<FilterTime>('24h')
+  const [filterTime, setFilterTime] = useState<FilterTime>('7d')
   const [chartHover, setChartHover] = useState<number | undefined>()
   const { data: priceHistory } = usePriceHistoryQuery({
+    timeframe: filterTime,
     pythSymbol: pythSymbol,
-    isOraclePrice: true,
     refetchOnMount: "always",
     enabled: pythSymbol != null
   })
@@ -28,18 +29,17 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
     setFilterTime(newValue)
   }
 
-  // useEffect(() => {
-  //   if (totalPrices) {
-  //     setChartHover(totalPrices?.chartData[totalPrices?.chartData.length - 1].value)
-  //   }
-  // }, [totalPrices])
+  useEffect(() => {
+    if (priceHistory) {
+      setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
+    }
+  }, [priceHistory])
 
-
-  // useEffect(() => {
-  //   if (chartHover === undefined && totalPrices) {
-  //     setChartHover(totalPrices?.chartData[totalPrices?.chartData.length - 1].value)
-  //   }
-  // }, [chartHover, totalPrices])
+  useEffect(() => {
+    if (chartHover === undefined && priceHistory) {
+      setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
+    }
+  }, [chartHover, priceHistory])
 
 
   return (
@@ -49,11 +49,11 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
           data={priceHistory.chartData}
           value={chartHover}
           setValue={setChartHover}
-          // maxY={totalPrices?.maxValue}
+          // maxY={priceHistory?.maxValue}
           topLeft={
             <Box mb='25px'>
               <Box display='flex' alignItems='baseline'>
-                <Typography variant='h1' fontWeight={500}>${priceHistory.currentPrice?.toLocaleString(undefined, { maximumFractionDigits: 3 })}</Typography>
+                <Typography variant='h1' fontWeight={500}>{formatDollarAmount(chartHover, 3, true)}</Typography>
                 <Typography variant='p_xlg' ml='8px'>onUSD</Typography>
               </Box>
               <Box color='#00ff99' display='flex' alignItems='center' gap={1}>

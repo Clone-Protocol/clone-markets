@@ -137,13 +137,13 @@ const fetch30DayOHLCV = async (poolIndex: number, interval: 'hour' | 'day') => {
   return result
 }
 
-export const getDailyPoolPrices30Day = async (poolIndex: number) => {
-  const requestResult = await fetch30DayOHLCV(poolIndex, 'hour')
+export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour' | 'day') => {
+  const requestResult = await fetch30DayOHLCV(poolIndex, interval)
   console.log("RESULT:", requestResult)
   const now = new Date()
   const lookback30Day = new Date(now.getTime() - 30 * 86400 * 1000)
 
-  const dates = generateDates(lookback30Day, 'hour')
+  const dates = generateDates(lookback30Day, interval)
   let prices = []
 
   let resultIndex = 0

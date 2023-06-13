@@ -34,7 +34,7 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Trade Fees <InfoTooltip title="Trade fees" color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
           <Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(iassetTradeFee) ? '0' : iassetTradeFee?.toFixed(6)} {tickerSymbol}</Typography>
-          <Box><Typography variant='p_sm'>{tradeFee}% (${iassetTradeFeeDollar?.toFixed(2)})</Typography></Box>
+          <Box><Typography variant='p_sm'>{tradeFee}% (${isNaN(iassetTradeFeeDollar) ? '0' : iassetTradeFeeDollar?.toFixed(2)})</Typography></Box>
         </div>
       </Stack>
     </Wrapper>

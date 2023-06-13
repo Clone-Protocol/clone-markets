@@ -30,7 +30,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				tickerIcon: onUSDInfo.collateralIcon,
 				tickerName: onUSDInfo.collateralName,
 				tickerSymbol: onUSDInfo.collateralSymbol,
-				usdiBalance: balance?.balanceVal,
+				usdiBalance: balance?.usdiVal,
 				price: 1.0,
 				setMintUsdi
 			}])
@@ -41,7 +41,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 		<>
 			<TopBox>
 				<Box><Typography variant='p' color='#8988a3'>Stable Coin</Typography></Box>
-				<Box><Typography variant='h3' fontWeight={500}>${balance?.balanceVal.toFixed(2)}</Typography></Box>
+				<Box><Typography variant='h3' fontWeight={500}>${balance?.usdiVal.toFixed(2)}</Typography></Box>
 			</TopBox>
 			<Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
 			<Grid

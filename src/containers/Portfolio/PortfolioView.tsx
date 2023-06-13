@@ -37,7 +37,7 @@ const PortfolioView = () => {
 	})
 
 	useEffect(() => {
-		const usdiBalance = balance?.balanceVal!
+		const usdiBalance = balance?.usdiVal!
 		// only called when filter is all
 		if (assets && assets.length > 0 && selectedFilter === 'all') {
 			const result: ResultAsset[] = []

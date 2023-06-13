@@ -22,7 +22,7 @@ export type LineChartProps = {
   topRight?: ReactNode | undefined
   bottomLeft?: ReactNode | undefined
   bottomRight?: ReactNode | undefined
-  // maxY?: number
+  maxY?: number
 } & React.HTMLAttributes<HTMLDivElement>
 
 
@@ -38,7 +38,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
   bottomLeft,
   bottomRight,
   minHeight = 307,
-  // maxY,
+  maxY,
   ...rest
 }) => {
   const parsedValue = value
@@ -69,7 +69,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis
+          {/* <XAxis
             dataKey="time"
             axisLine={false}
             tickLine={false}
@@ -77,11 +77,14 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             fontSize="8px"
             tickFormatter={(time) => dayjs(time).format('DD')}
             minTickGap={10}
-          />
-          {/* <YAxis
-            type="number"
-            domain={[0, maxY!]}
           /> */}
+          <YAxis
+            type="number"
+            fontSize="10px"
+            color="#9e9e9e"
+            axisLine={false}
+          // domain={[0, 1]}
+          />
           <Tooltip
             cursor={{ stroke: '#2C2F36' }}
             contentStyle={{ display: 'none' }}

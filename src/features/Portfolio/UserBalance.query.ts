@@ -10,6 +10,76 @@ import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
+const fetchIassetBalance = async (iassetMint: PublicKey, program: InceptClient) => {
+	const iassetAssociatedTokenAccount = await getTokenAccount(
+		iassetMint, program.provider.publicKey!, program.provider.connection
+	);
+	if (iassetAssociatedTokenAccount) {
+		const balance = await program.provider.connection.getTokenAccountBalance(iassetAssociatedTokenAccount, "processed");
+		return balance.value.uiAmount!;
+	} else {
+		return 0;
+	}
+}
+
+export const fetchUserTotalBalance = async ({ program, userPubKey, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void }) => {
+	if (!userPubKey) return []
+
+	console.log('fetchUserTotalBalance')
+	// start timer in data-loading-indicator
+	setStartTimer(false);
+	setStartTimer(true);
+
+	await program.loadManager()
+	const tokenData = await program.getTokenData();
+
+	const balanceQueries = [];
+	for (let i = 0; i < Number(tokenData.numPools); i++) {
+		balanceQueries.push(
+			fetchIassetBalance(tokenData.pools[i].assetInfo.iassetMint, program)
+		)
+	}
+
+	const iAssetBalancesResult = await Promise.allSettled(balanceQueries);
+	const result = []
+	for (let i = 0; i < Number(tokenData.numPools); i++) {
+		const pool = tokenData.pools[i]
+		const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
+		const balanceQueryResult = iAssetBalancesResult[i];
+		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
+		if (assetBalance > 0) {
+			result.push({
+				id: i,
+				usdiBalance: price * assetBalance,
+			})
+		}
+	}
+
+	const totalBalance = result.reduce((prev, curr) => {
+		return prev + curr.usdiBalance
+	}, 0)
+
+	return totalBalance
+}
+
+export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: GetAssetsProps) {
+	const wallet = useAnchorWallet()
+	const { getInceptApp } = useIncept()
+	const { setStartTimer } = useDataLoading()
+
+	if (wallet) {
+		return useQuery(['userTotalBalance', wallet, userPubKey], () => fetchUserTotalBalance({ program: getInceptApp(wallet), userPubKey, setStartTimer }), {
+			refetchOnMount,
+			refetchInterval: REFETCH_CYCLE,
+			refetchIntervalInBackground: true,
+			enabled,
+		})
+	} else {
+		return useQuery(['userTotalBalance'], () => [])
+	}
+}
+
+
 export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void }) => {
 	if (!userPubKey) return []
 
@@ -21,22 +91,10 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 	await program.loadManager()
 	const tokenData = await program.getTokenData();
 
-	const fetchIassetBalance = async (iassetMint: PublicKey) => {
-		const iassetAssociatedTokenAccount = await getTokenAccount(
-			iassetMint, program.provider.publicKey!, program.provider.connection
-		);
-		if (iassetAssociatedTokenAccount) {
-			const balance = await program.provider.connection.getTokenAccountBalance(iassetAssociatedTokenAccount, "processed");
-			return balance.value.uiAmount!;
-		} else {
-			return 0;
-		}
-	}
-
 	const balanceQueries = [];
 	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		balanceQueries.push(
-			fetchIassetBalance(tokenData.pools[i].assetInfo.iassetMint)
+			fetchIassetBalance(tokenData.pools[i].assetInfo.iassetMint, program)
 		)
 	}
 	const iAssetBalancesResult = await Promise.allSettled(balanceQueries);
@@ -80,7 +138,7 @@ export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: {
 
 interface GetAssetsProps {
 	userPubKey: PublicKey | null
-	filter: FilterType
+	filter?: FilterType
 	refetchOnMount?: QueryObserverOptions['refetchOnMount']
 	enabled?: boolean
 }

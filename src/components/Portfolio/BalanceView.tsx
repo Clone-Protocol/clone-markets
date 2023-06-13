@@ -34,7 +34,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 				}
 			})
 		}
-	}, [selectedFilter])
+	}, [newData, selectedFilter])
 
 	return (
 		<StyledPaper>
