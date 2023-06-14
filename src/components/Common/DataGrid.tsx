@@ -2,17 +2,18 @@ import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+import { BorderBottomRounded } from '@mui/icons-material'
 
 interface GridProps {
   headers: GridColDef[],
   rows: any,
   customNoResultsOverlay: () => JSX.Element,
-  hasRangeIndicator?: boolean,
+  isBorderTopRadius?: boolean,
   minHeight?: number,
   onRowClick?: GridEventListener<'rowClick'>
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, hasRangeIndicator = false, minHeight = 260, onRowClick }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, onRowClick }) => (
   <DataGrid
     sx={{
       width: '100%',
@@ -24,7 +25,10 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         borderRight: '1px solid rgba(195, 153, 248, 0.25)',
         borderBottom: '1px solid rgba(195, 153, 248, 0.25)',
         borderTop: '1px solid rgba(195, 153, 248, 0.25)',
-        borderRadius: '20px'
+        borderBottomLeftRadius: '20px',
+        borderBottomRightRadius: '20px',
+        borderTopLeftRadius: isBorderTopRadius ? '20px' : '0',
+        borderTopRightRadius: isBorderTopRadius ? '20px' : '0',
       },
       '& .last--cell': {
         display: 'flex',

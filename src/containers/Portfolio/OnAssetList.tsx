@@ -9,7 +9,6 @@ import Image from 'next/image'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
-import { Balance } from '~/features/Portfolio/Balance.query'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Divider from '@mui/material/Divider';
@@ -19,10 +18,9 @@ import { useWallet } from '@solana/wallet-adapter-react'
 interface Props {
   assets: BalanceList[]
   pieitems: PieItem[]
-  balance: Balance
 }
 
-const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
+const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const { publicKey } = useWallet()
   // const [selectedFilter, setFilterState] = useRecoilState(filterState)
 
@@ -46,6 +44,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems, balance }) => {
         headers={columns}
         rows={assets || []}
         minHeight={10}
+        isBorderTopRadius={false}
         customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
         onRowClick={handleRowClick}
       />

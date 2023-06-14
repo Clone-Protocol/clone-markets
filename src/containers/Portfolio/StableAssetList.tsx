@@ -24,20 +24,20 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const [_, setMintUsdi] = useRecoilState(mintUSDi)
 
 	useEffect(() => {
-		if (publicKey) {
+		if (publicKey && balance) {
 			setAssets([{
 				id: onUSDInfo.collateralType,
 				tickerIcon: onUSDInfo.collateralIcon,
 				tickerName: onUSDInfo.collateralName,
 				tickerSymbol: onUSDInfo.collateralSymbol,
-				usdiBalance: balance?.usdiVal,
+				usdiBalance: balance.usdiVal,
 				price: 1.0,
 				setMintUsdi
 			}])
 		}
-	}, [publicKey])
+	}, [publicKey, balance])
 
-	return (
+	return balance ? (
 		<>
 			<TopBox>
 				<Box><Typography variant='p' color='#8988a3'>Stable Coin</Typography></Box>
@@ -47,11 +47,12 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 			<Grid
 				headers={columns}
 				rows={assets || []}
+				isBorderTopRadius={false}
 				minHeight={10}
 				customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
 			/>
 		</>
-	)
+	) : <></>
 }
 
 let columns: GridColDef[] = [
@@ -121,13 +122,13 @@ const TopBox = styled(Box)`
 `
 
 const GetUSDButton = styled(Button)`
-	width: 102px;
+	width: 108px;
 	height: 29px;
-	padding: 6px 3px;
 	border-radius: 100px;
 	border: solid 1px rgba(104, 0, 237, 0.5);
 	background-color: rgba(155, 121, 252, 0.15);
 	color: #fff;
+	line-height: 29px;
 	&:hover {
 		background-color: rgba(155, 121, 252, 0.15);
 

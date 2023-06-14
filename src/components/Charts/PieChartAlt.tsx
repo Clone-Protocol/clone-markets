@@ -57,6 +57,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
               paddingAngle={0}
               dataKey="value"
               activeIndex={selectedIdx}
+              cursor="pointer"
               activeShape={renderActiveShape}
               onMouseDown={onPieEnter}
             >
@@ -71,6 +72,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
               cy={110}
               innerRadius={80}
               outerRadius={100}
+              cursor="pointer"
               fill="rgba(255, 255, 255, 0.09)"
               paddingAngle={0}
               dataKey="value"
@@ -94,9 +96,19 @@ const Wrapper = styled(Box)`
 `
 const CloseWrapper = styled(Box)`
   position: absolute;
-  top: 96px;
-  left: calc(50% - 17px);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 76px;
+  left: calc(50% - 38px);
+  border-radius: 50%;
   cursor: pointer;
+  background: rgba(196, 181, 253, 0.07);
+  &:hover {
+    background: rgba(196, 181, 253, 0.05);
+  }
 `
 
 export default withCsrOnly(PieChartAlt)

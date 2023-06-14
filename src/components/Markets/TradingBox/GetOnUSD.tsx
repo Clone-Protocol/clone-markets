@@ -1,8 +1,11 @@
 import { Button, styled, Box, Typography } from '@mui/material'
 import PrimaryIcon from 'public/images/icons-badge.svg'
 import Image from 'next/image'
+import { useSetRecoilState } from 'recoil'
+import { mintUSDi } from '~/features/globalAtom'
 
 const GetOnUSD: React.FC = () => {
+  const setMintUsdi = useSetRecoilState(mintUSDi)
   return (
     <Wrapper>
       <Box display='flex' gap={1} alignItems='center'>
@@ -10,7 +13,7 @@ const GetOnUSD: React.FC = () => {
         <Box><Typography variant='p_lg' color='#9b79fc'>Need onUSD?</Typography></Box>
       </Box>
       <Box lineHeight={1}><Typography variant='p' color='#8988a3'>Devnet onUSD is needed for you to trade on Devnet Clone Markets app.</Typography></Box>
-      <GetButton><Typography variant='p'>Get Devnet onUSD</Typography></GetButton>
+      <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet onUSD</Typography></GetButton>
     </Wrapper>
   )
 }

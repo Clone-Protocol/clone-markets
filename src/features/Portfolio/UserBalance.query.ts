@@ -9,6 +9,7 @@ import { FilterType } from '~/data/filter'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { getUSDiAccount } from "~/utils/token_accounts"
 
 const fetchIassetBalance = async (iassetMint: PublicKey, program: InceptClient) => {
 	const iassetAssociatedTokenAccount = await getTokenAccount(
@@ -31,6 +32,14 @@ export const fetchUserTotalBalance = async ({ program, userPubKey, setStartTimer
 	setStartTimer(true);
 
 	await program.loadManager()
+
+	let usdiVal = 0.0
+	const usdiAssociatedTokenAccount = await getUSDiAccount(program);
+	if (usdiAssociatedTokenAccount) {
+		const usdiBalance = await program.connection.getTokenAccountBalance(usdiAssociatedTokenAccount, "processed");
+		usdiVal = Number(usdiBalance.value.amount) / 100000000;
+	}
+
 	const tokenData = await program.getTokenData();
 
 	const balanceQueries = [];
@@ -55,7 +64,7 @@ export const fetchUserTotalBalance = async ({ program, userPubKey, setStartTimer
 		}
 	}
 
-	const totalBalance = result.reduce((prev, curr) => {
+	const totalBalance = usdiVal + result.reduce((prev, curr) => {
 		return prev + curr.usdiBalance
 	}, 0)
 

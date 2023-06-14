@@ -47,15 +47,15 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 			<Box mb='-30px'>
 				<PieChartAlt data={newData} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
 			</Box>
-			<Box width='190px'>
-				<Stack direction='row' gap={4} mb='5px'>
+			<Box width='200px'>
+				<Stack direction='row' gap={6} mb='5px'>
 					<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
 					<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
 				</Stack>
 				{newData.length > 0 ?
 					newData.map(item => (
 						<Stack key={item.key} direction='row' gap={1} style={selectedFilter === item.key ? { border: `solid 1px ${FilterTypeColorMap[item.key]}`, borderRadius: '15px' } : {}}>
-							<Box display="flex" alignItems='center' gap={2} width='120px' pl='5px'>
+							<Box display="flex" alignItems='center' gap={2} width='130px' pl='5px'>
 								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[item.key] }} />
 								<Typography variant='p_lg' mt='3px'>{item.name}</Typography>
 							</Box>

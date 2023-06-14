@@ -22,9 +22,10 @@ const Home: NextPage = () => {
 			<main>
 				<StyledSection>
 					<Container>
-						<PortfolioBalance />
 						{publicKey &&
 							<Box>
+								<PortfolioBalance />
+
 								<Divider />
 								<Box mb='30px'>
 									<GetUSDiBadge />

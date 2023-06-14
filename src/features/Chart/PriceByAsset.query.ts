@@ -43,38 +43,6 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
     }
   })()
 
-  // oracle price:
-  // if (isOraclePrice) {
-  // const history = await fetchPythPriceHistory(
-  //   pythSymbol,
-  //   "devnet",
-  //   "1M"
-  // );
-
-  // chartData = history.map((data) => {
-  //   return { time: data.timestamp, value: data.close_price }
-  // })
-
-  // const lastEntry = chartData[chartData.length - 1];
-
-  // const previous24hrDatetime = moment(lastEntry.time).utc(
-  // ).subtract(1, 'days');
-
-  // let previous24hrPrice = lastEntry.value;
-  // for (let { time, value } of chartData) {
-  //   const entryTime = moment(time).utc()
-  //   if (entryTime > previous24hrDatetime) {
-  //     break;
-  //   }
-  //   previous24hrPrice = value;
-  // }
-
-  // currentPrice = lastEntry.value;
-  // rateOfPrice = currentPrice - previous24hrPrice
-  // percentOfRate = 100 * rateOfPrice / previous24hrPrice
-
-  // } else {
-  //   // Get pool index from pythSymbol
   let poolIndex = (() => {
     for (let i = 0; i < ASSETS.length; i++) {
       if (ASSETS[i].pythSymbol === pythSymbol) {

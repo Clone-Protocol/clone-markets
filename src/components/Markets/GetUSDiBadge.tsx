@@ -1,17 +1,17 @@
 import { styled, Typography, Stack, Box, Button } from '@mui/material'
 import Image from 'next/image'
 import PrimaryIcon from 'public/images/icons-badge.svg'
+import { useSetRecoilState } from 'recoil'
+import { mintUSDi } from '~/features/globalAtom'
 
-interface Props {
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-}
-const GetUSDiBadge: React.FC<Props> = ({ onChange }) => {
+const GetUSDiBadge: React.FC = () => {
+  const setMintUsdi = useSetRecoilState(mintUSDi)
   return <StyledStack direction='row' justifyContent='center' alignItems='center' spacing={2}>
     <Image src={PrimaryIcon} />
     <Box>
       <Typography variant='p_lg'>Get onUSD from the faucet to start trading on Devnet. On mainnet, you can acquire onUSD through 1:1 swap with USDC.</Typography>
     </Box>
-    <GetButton><Typography variant='p'>Get Devnet onUSD</Typography></GetButton>
+    <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet onUSD</Typography></GetButton>
   </StyledStack>
 }
 
