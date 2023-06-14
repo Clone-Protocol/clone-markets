@@ -78,13 +78,13 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             tickFormatter={(time) => dayjs(time).format('DD')}
             minTickGap={10}
           /> */}
-          <YAxis
+          {/* <YAxis
             type="number"
             fontSize="10px"
             color="#9e9e9e"
             axisLine={false}
           // domain={[0, 1]}
-          />
+          /> */}
           <Tooltip
             cursor={{ stroke: '#2C2F36' }}
             contentStyle={{ display: 'none' }}

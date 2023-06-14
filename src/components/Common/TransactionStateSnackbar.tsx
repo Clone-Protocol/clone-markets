@@ -34,7 +34,7 @@ const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHa
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
       {!isSuccess && <Box mt='6px'><Typography variant='p' color='#8988a3'>Something went wrong. Please try again.</Typography></Box>}
       <Box mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>
-        <a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p_sm' color={txStatusColor}>{isSuccess ? 'View Transaction' : 'Check Solana network status'}</Typography></a>
+        <a href={isSuccess ? getTxnURL(txHash) : 'https://status.solana.com/'} target='_blank' rel="noreferrer"><Typography variant='p_sm' color={txStatusColor}>{isSuccess ? 'View Transaction' : 'Check Solana network status'}</Typography></a>
       </Box>
     </Box>
   </Stack>)
