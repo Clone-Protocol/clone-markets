@@ -39,13 +39,13 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box width='150px'>
 								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500}>${asset.volume.toLocaleString()} onUSD</Typography>
+									<Typography variant='h3' fontWeight={500}>${asset.volume.toLocaleString()} {asset.tickerSymbol}</Typography>
 								</Box>
 							</Box>
 							<Box width='150px'>
 								<Box><Typography variant='p' color='#8988a3'>Avg Liquidity (24h)</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} onUSD</Typography>
+									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} {asset.tickerSymbol}</Typography>
 								</Box>
 							</Box>
 							<Box width='150px'>

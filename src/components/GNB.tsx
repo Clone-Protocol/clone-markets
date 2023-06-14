@@ -257,6 +257,7 @@ const ConnectedButton = styled(Button)`
 	width: 142px;
 	height: 42px;
 	padding: 9px;
+	margin-left: 16px;
 	color: #fff;
 	border-radius: 10px;
 	border: solid 1px ${(props) => props.theme.basis.portGore};

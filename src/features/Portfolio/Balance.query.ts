@@ -63,13 +63,13 @@ export function useBalanceQuery({ userPubKey, index = -1, refetchOnMount, enable
 	const { setStartTimer } = useDataLoading()
 
 	if (wallet) {
-		return useQuery(['balance', wallet, userPubKey, index], () => fetchBalance({ program: getInceptApp(wallet), userPubKey, index, setStartTimer }), {
+		return useQuery(['portfolioBalance', wallet, userPubKey, index], () => fetchBalance({ program: getInceptApp(wallet), userPubKey, index, setStartTimer }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,
 			enabled
 		})
 	} else {
-		return useQuery(['balance'], () => ({ iassetVal: 0, usdiVal: 0 }))
+		return useQuery(['portfolioBalance'], () => ({ iassetVal: 0, usdiVal: 0 }))
 	}
 }

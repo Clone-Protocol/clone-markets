@@ -112,6 +112,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const handleChangeOrderType = () => {
     setIsBuy(!isBuy)
     setOpenOrderDetails(false)
+    initData()
     trigger()
   }
 
@@ -213,7 +214,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     return 100 * Math.abs(getPrice() - idealPrice) / idealPrice
   }
 
-  const isValid = Object.keys(errors).length === 0
+  const isValid = !isNaN(amountUsdi) && Object.keys(errors).length === 0
 
   const invalidMsg = () => {
     if (amountUsdi === 0 || isNaN(amountUsdi) || !amountUsdi) {
@@ -233,9 +234,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
             <ToolButton onClick={() => refetch()}>
               <Image src={reloadIcon} alt="reload" />
             </ToolButton>
-            <ToolButton onClick={onShowOption} disabled={!publicKey}>
-              <Image src={settingsIcon} alt="settings" />
-            </ToolButton>
+            {publicKey &&
+              <ToolButton onClick={onShowOption}>
+                <Image src={settingsIcon} alt="settings" />
+              </ToolButton>
+            }
           </Stack>
 
           <Box>
@@ -248,8 +251,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                     control={control}
                     rules={{
                       validate(value) {
-                        if (!value || value <= 0) {
-                          return ''
+                        if (!value || isNaN(value) || value <= 0) {
+                          return 'the amount should not empty'
                         } else if (value > myBalance?.usdiVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
@@ -286,8 +289,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                     control={control}
                     rules={{
                       validate(value) {
-                        if (!value || value <= 0) {
-                          return ''
+                        if (!value || isNaN(value) || value <= 0) {
+                          return 'the amount should not empty'
                         } else if (value > myBalance?.iassetVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
@@ -335,6 +338,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
               value={isBuy ? amountIasset : amountUsdi}
               dollarValue={isBuy ? amountUsdi : amountUsdi}
               balanceDisabled={true}
+              valueDisabled={true}
               tickerClickable={isBuy}
               onTickerClick={onShowSearchAsset}
             />

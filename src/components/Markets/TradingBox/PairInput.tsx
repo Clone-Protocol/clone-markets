@@ -11,6 +11,7 @@ interface Props {
 	balanceDisabled?: boolean
 	value?: number
 	dollarValue?: number
+	valueDisabled?: boolean
 	max?: number
 	tickerClickable?: boolean
 	onTickerClick?: () => void
@@ -18,7 +19,7 @@ interface Props {
 	onMax?: (balance: number) => void
 }
 
-const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, dollarValue, tickerClickable = false, onTickerClick, onChange, onMax, max }) => {
+const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanceDisabled, value, dollarValue, valueDisabled = false, tickerClickable = false, onTickerClick, onChange, onMax, max }) => {
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between">
@@ -28,8 +29,8 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 					<MaxButton onClick={() => onMax && onMax(balance!)}>Max</MaxButton></Box> : <></>}
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
-				<Box display='flex' flexDirection='column' alignItems='flex-start' pl='5px'>
-					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} onChange={onChange} />
+				<Box display='flex' flexDirection='column' alignItems='flex-start' pl='5px' sx={valueDisabled ? { cursor: 'not-allowed' } : { cursor: 'default' }}>
+					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} disabled={valueDisabled} onChange={onChange} />
 					<Box><Typography variant='p' color='#8988a3'>${isNaN(dollarValue) ? 0 : dollarValue?.toLocaleString()}</Typography></Box>
 				</Box>
 
