@@ -56,6 +56,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
   const { setOpen } = useWalletDialog()
+  const [restartTimer, setRestartTimer] = useState(false)
+  const [isEnabledRestart, setIsEnabledRestart] = useState(true);
 
   const onUSDInfo = collateralMapping(StableCollateral.onUSD)
   const fromPair: PairData = {
@@ -117,12 +119,21 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   }
 
   useEffect(() => {
-    if (!isNaN(amountUsdi)) {
-      calculateTotalAmountByConvert(convertVal)
-      console.log('c', convertVal)
+    if (assetIndex) {
+      setIsBuy(true)
+      setOpenOrderDetails(false)
+      initData()
       trigger()
     }
-  }, [isBuy])
+  }, [assetIndex])
+
+  // useEffect(() => {
+  //   if (!isNaN(amountUsdi)) {
+  //     calculateTotalAmountByConvert(convertVal)
+  //     console.log('c', convertVal)
+  //     trigger()
+  //   }
+  // }, [isBuy])
 
   const { mutateAsync } = useTradingMutation(publicKey)
 
@@ -214,6 +225,18 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     return 100 * Math.abs(getPrice() - idealPrice) / idealPrice
   }
 
+  const refreshBalance = () => {
+    if (isEnabledRestart) {
+      refetch();
+      setRestartTimer(!restartTimer);
+
+      setIsEnabledRestart(false)
+      setTimeout(() => {
+        setIsEnabledRestart(true)
+      }, 4500)
+    }
+  }
+
   const isValid = !isNaN(amountUsdi) && Object.keys(errors).length === 0
 
   const invalidMsg = () => {
@@ -231,7 +254,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
       <div style={{ width: '100%', height: '100%' }}>
         <Box p='18px'>
           <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
-            <ToolButton onClick={() => refetch()}>
+            <ToolButton onClick={() => { refreshBalance() }} disabled={!isEnabledRestart}>
               <Image src={reloadIcon} alt="reload" />
             </ToolButton>
             {publicKey &&
@@ -362,7 +385,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
             </Box>
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
-              <RateLoadingIndicator />
+              <RateLoadingIndicator restartTimer={restartTimer} />
               <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(getDefaultPrice(), 4)} onUSD</Typography>
               <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>

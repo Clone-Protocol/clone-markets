@@ -4,12 +4,12 @@ import { useDataLoading } from '~/hooks/useDataLoading'
 
 export const REFETCH_CYCLE = 30000
 
-const RateLoadingIndicator = () => {
+const RateLoadingIndicator = ({ restartTimer }: { restartTimer: boolean }) => {
   const { startTimer } = useDataLoading()
   const [progress, setProgress] = useState(0);
+  let timer: any = null
 
   useEffect(() => {
-    let timer: any = null
     if (startTimer) {
       console.log('start Timer')
       timer = setInterval(() => {
@@ -24,6 +24,20 @@ const RateLoadingIndicator = () => {
       clearInterval(timer)
     };
   }, [startTimer]);
+
+  useEffect(() => {
+    console.log('restartTimer', restartTimer)
+
+    setProgress(0)
+    clearInterval(timer)
+    timer = setInterval(() => {
+      setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
+    }, 3000);
+
+    return () => {
+      clearInterval(timer)
+    };
+  }, [restartTimer]);
 
   return (
     <Wrapper>

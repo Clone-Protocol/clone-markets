@@ -20,14 +20,14 @@ const SwapSettingDialog = ({ open, onHide }: { open: boolean, onHide: () => void
 
   const handleSlippageChange = (event: React.SyntheticEvent, newValue: number) => {
     setSlippage(newValue)
-    setCustomSlippage(0)
+    setCustomSlippage(NaN)
   }
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newData = parseFloat(e.currentTarget.value)
     if (isNaN(newData)) {
       setCustomSlippage(NaN)
-    } else if (newData <= 50) {
+    } else if (newData <= 100) {
       setCustomSlippage(parseFloat(newData.toFixed(2)))
     }
   }
@@ -49,18 +49,18 @@ const SwapSettingDialog = ({ open, onHide }: { open: boolean, onHide: () => void
             <Box mb="21px"><Typography variant='h3' fontWeight={500}>Swap Settings</Typography></Box>
             <Box><Typography variant='p_lg'>Slippage Tolerance</Typography> <InfoTooltip title="Slippage Tolerance is the pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when swapping on AMMs." /></Box>
             <SlippageStack direction="row" alignItems="center">
-              <StyledTabs value={customSlippage > 0 ? 0 : slippage} onChange={handleSlippageChange}>
+              <StyledTabs value={!isNaN(customSlippage) ? 0 : slippage} onChange={handleSlippageChange}>
                 <StyledTab value={0.1} label="0.1%" />
                 <StyledTab value={0.5} label="0.5%" />
                 <StyledTab value={1} label="1%" />
               </StyledTabs>
 
               <FormControl variant="standard" sx={{ width: '132px' }}>
-                <FormStack direction="row" justifyContent="space-between" alignItems="center">
+                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #fff' } : {}}>
                   <CustomSlippagePlaceholder>
                     <Typography variant='p_lg'>Custom</Typography>
                   </CustomSlippagePlaceholder>
-                  <InputAmount id="ip-amount" type="number" step=".1" placeholder="0.0%" sx={customSlippage && customSlippage > 0 ? { color: '#fff' } : { color: '#adadad' }} value={Number(customSlippage).toString()} onChange={onChangeCustom} />
+                  <InputAmount id="ip-amount" type="number" step=".1" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: '#adadad' }} value={Number(customSlippage).toString()} onChange={onChangeCustom} />
                 </FormStack>
               </FormControl>
             </SlippageStack>
@@ -86,8 +86,8 @@ const SlippageStack = styled(Stack)`
 `
 const FormStack = styled(Stack)`
 	display: flex;
-	width: 100%;
-	height: 45px;
+	width: 120px;
+	height: 56px;
 	padding: 14px 17px 14px 6px;
   border-left: solid 1px ${(props) => props.theme.basis.portGore};
   color: ${(props) => props.theme.basis.textRaven};
