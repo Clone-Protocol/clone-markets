@@ -49,7 +49,8 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
           data={priceHistory.chartData}
           value={chartHover}
           setValue={setChartHover}
-          // maxY={priceHistory?.maxValue}
+          maxY={priceHistory?.maxValue}
+          minY={priceHistory?.minValue}
           topLeft={
             <Box mb='25px'>
               <Box display='flex' alignItems='baseline'>

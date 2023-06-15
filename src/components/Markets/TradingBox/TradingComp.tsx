@@ -237,17 +237,19 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     }
   }
 
-  const isValid = !isNaN(amountUsdi) && Object.keys(errors).length === 0
-
   const invalidMsg = () => {
     if (amountUsdi === 0 || isNaN(amountUsdi) || !amountUsdi) {
       return 'Enter Amount'
-    } else if (amountUsdi > balance?.usdiVal!) {
+    } else if (isBuy && amountUsdi > myBalance?.usdiVal!) {
       return 'Insufficient onUSD'
+    } else if (!isBuy && amountIasset > myBalance?.iassetVal!) {
+      return `Insufficient ${assetData?.tickerSymbol}`
     } else {
       return ''
     }
   }
+
+  const isValid = invalidMsg() === ''
 
   return (
     <>
@@ -295,7 +297,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           field.onChange(balance)
                           calculateTotalAmountByFrom(balance)
                         }}
-                        value={parseFloat(field.value.toFixed(3))}
+                        value={field.value}
                         dollarValue={field.value}
                         balance={myBalance?.usdiVal}
                         balanceDisabled={!publicKey}
@@ -325,7 +327,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                         tickerIcon={assetData?.tickerIcon!}
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                          const iassetAmt = parseFloat(event.currentTarget.value) || 0
+                          const iassetAmt = parseFloat(event.currentTarget.value)
                           field.onChange(iassetAmt)
                           calculateTotalAmountByFrom(iassetAmt)
                         }}
@@ -333,7 +335,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                           field.onChange(balance)
                           calculateTotalAmountByFrom(balance)
                         }}
-                        value={parseFloat(field.value.toFixed(3))}
+                        value={field.value}
                         dollarValue={field.value * getPrice()}
                         balance={myBalance?.iassetVal}
                         balanceDisabled={!publicKey}

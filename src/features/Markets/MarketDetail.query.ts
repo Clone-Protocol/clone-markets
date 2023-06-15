@@ -10,7 +10,7 @@ import { PublicKey, Connection } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
 
 export const fetchMarketDetail = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
-	console.log('fetchMarketDetail', index)
+	// console.log('fetchMarketDetail', index)
 	// start timer in data-loading-indicator
 	setStartTimer(false);
 	setStartTimer(true);

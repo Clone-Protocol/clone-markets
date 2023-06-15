@@ -74,7 +74,7 @@ let columns: GridColDef[] = [
             <Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           </Box>
           <Box>
-            <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString()} {params.row.tickerSymbol}</Typography>
+            <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
           </Box>
         </Stack>
       )

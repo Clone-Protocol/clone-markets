@@ -58,9 +58,9 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   )
   chartData = filterHistoricalData(chartData, daysLookback)
 
-  // const allValues = chartData.map(elem => elem.value!)
-  // const maxValue = Math.floor(Math.max(...allValues))
-  // console.log('max', maxValue)
+  const allValues = chartData.map(elem => elem.value!)
+  const maxValue = Math.floor(Math.max(...allValues))
+  const minValue = Math.floor(Math.min(...allValues))
 
   const lastEntry = chartData[chartData.length - 1];
   const previous24hrDatetime = moment(lastEntry.time).utc().subtract(1, 'days');
@@ -81,7 +81,8 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
     currentPrice,
     rateOfPrice,
     percentOfRate,
-    // maxValue
+    maxValue,
+    minValue
   }
 }
 
@@ -90,6 +91,8 @@ export interface PriceHistory {
   currentPrice: number
   rateOfPrice: number
   percentOfRate: number
+  maxValue: number
+  minValue: number
 }
 
 interface GetProps {
