@@ -23,7 +23,6 @@ const Wrapper = styled('div')`
   background-color: rgba(20, 20, 20, 0.95);
   z-index: 800;
 `
-
 const TitleMsg = styled('div')`
   width: 186px;
   font-size: 12px;

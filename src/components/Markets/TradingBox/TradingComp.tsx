@@ -52,7 +52,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setIsBuy] = useState(true)
-  const [convertVal, setConvertVal] = useState(0)
+  // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [slippage, _] = useLocalStorage("slippage", 0.5)
   const { setOpen } = useWalletDialog()
@@ -145,24 +145,24 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
   //   }
   // }
 
-  const calculateTotalAmountByConvert = (convertRatio: number) => {
-    const ammUsdiValue = balance?.ammUsdiValue!
-    const ammIassetValue = balance?.ammIassetValue!
-    const invariant = ammIassetValue * ammUsdiValue
-    let usdi
-    let iAsset
-    // buy
-    if (isBuy) {
-      usdi = balance?.usdiVal! * convertRatio / 100;
-      iAsset = ammIassetValue - invariant / (ammUsdiValue + amountUsdi)
-    } else {
-      // sell
-      iAsset = balance?.iassetVal! * convertRatio / 100;
-      usdi = ammUsdiValue - invariant / (ammIassetValue + amountIasset)
-    }
-    setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
-    setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
-  }
+  // const calculateTotalAmountByConvert = (convertRatio: number) => {
+  //   const ammUsdiValue = balance?.ammUsdiValue!
+  //   const ammIassetValue = balance?.ammIassetValue!
+  //   const invariant = ammIassetValue * ammUsdiValue
+  //   let usdi
+  //   let iAsset
+  //   // buy
+  //   if (isBuy) {
+  //     usdi = balance?.usdiVal! * convertRatio / 100;
+  //     iAsset = ammIassetValue - invariant / (ammUsdiValue + amountUsdi)
+  //   } else {
+  //     // sell
+  //     iAsset = balance?.iassetVal! * convertRatio / 100;
+  //     usdi = ammUsdiValue - invariant / (ammIassetValue + amountIasset)
+  //   }
+  //   setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
+  //   setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
+  // }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
     const ammUsdiValue = balance?.ammUsdiValue!
@@ -170,15 +170,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
     const invariant = ammIassetValue * ammUsdiValue
 
     if (isBuy) {
-      const convertRatio = newValue * 100 / balance?.usdiVal!
+      // const convertRatio = newValue * 100 / balance?.usdiVal!
       const iAsset = ammIassetValue - invariant / (ammUsdiValue + newValue)
-      setConvertVal(convertRatio)
+      // setConvertVal(convertRatio)
       setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
     } else {
       // sell
-      const convertRatio = newValue * 100 / balance?.iassetVal!
+      // const convertRatio = newValue * 100 / balance?.iassetVal!
       const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
-      setConvertVal(convertRatio)
+      // setConvertVal(convertRatio)
       setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
     }
   }

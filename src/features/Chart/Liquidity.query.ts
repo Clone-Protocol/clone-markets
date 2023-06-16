@@ -40,7 +40,7 @@ const aggregatePoolData = (poolDataArray: ResponseValue[], interval: Interval): 
       dt.setMinutes(0, 0, 0);
     } else {
       dt.setHours(0, 0, 0, 0);
-    } 
+    }
   }
   const getDTKeys = (dt: Date) => {
     setDatetime(dt)
@@ -76,12 +76,12 @@ const aggregatePoolData = (poolDataArray: ResponseValue[], interval: Interval): 
   const dates = generateDates(startingDate, interval)
 
   for (let i = 0; i < dates.length; i++) {
- 
+
     const currentDate = getDTKeys(dates[i])
     let record: AggregatedData = {
       datetime: currentDate, total_liquidity: 0, trading_volume: 0, total_trading_fees: 0, total_treasury_fees: 0
     }
-  
+
     const currentGBData = groupedByDtAndPool[currentDate]
     if (!currentGBData) {
       poolIndices.forEach((index) => {
@@ -126,37 +126,11 @@ export const fetchTotalLiquidity = async ({ timeframe }: { timeframe: FilterTime
 
   const rawData = await fetchStatsData(interval)
   const aggregatedData = aggregatePoolData(rawData, interval)
-  const chartData = aggregatedData.map(data => {return {time: data.datetime, value: data.total_liquidity}})
+  const chartData = aggregatedData.map(data => { return { time: data.datetime, value: data.total_liquidity } })
 
   return {
     chartData: filterHistoricalData(chartData, daysLookback)
   }
-}
-
-export const fetchTotalUsers = async ({ timeframe }: { timeframe: FilterTime }) => {
-  const chartData = [
-    {
-      time: '2022-03-01',
-      value: 35
-    },
-    {
-      time: '2022-03-02',
-      value: 55
-    },
-    {
-      time: '2022-03-03',
-      value: 90
-    },
-    {
-      time: '2022-03-04',
-      value: 185
-    },
-    {
-      time: '2022-03-05',
-      value: 235
-    },
-  ]
-  return { chartData }
 }
 
 export const fetchTotalVolume = async ({ timeframe }: { timeframe: FilterTime }) => {
@@ -177,40 +151,10 @@ export const fetchTotalVolume = async ({ timeframe }: { timeframe: FilterTime })
 
   const rawData = await fetchStatsData(interval)
   const aggregatedData = aggregatePoolData(rawData, interval)
-  const chartData = aggregatedData.map(data => {return {time: data.datetime, value: data.trading_volume}})
+  const chartData = aggregatedData.map(data => { return { time: data.datetime, value: data.trading_volume } })
 
   return {
     chartData: filterHistoricalData(chartData, daysLookback)
-  }
-}
-
-export const fetchTotalLiquidation = async ({ timeframe }: { timeframe: FilterTime }) => {
-  // @TODO: When we setup the liquidation bot.
-  const chartData = [
-    {
-      time: '2022-03-01',
-      value: 65
-    },
-    {
-      time: '2022-03-02',
-      value: 45
-    },
-    {
-      time: '2022-03-03',
-      value: 180
-    },
-    {
-      time: '2022-03-04',
-      value: 65
-    },
-    {
-      time: '2022-03-05',
-      value: 95
-    },
-  ]
-
-  return {
-    chartData,
   }
 }
 

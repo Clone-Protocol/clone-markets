@@ -7,7 +7,6 @@ export const TransactionStateProvider: FC = ({ children, ...props }) => {
     state: TransactionState.INIT,
     txHash: '',
   })
-  // const [showSnackbar, setShowSnackbar] = useState(true)
 
   return (
     <TransactionStateContext.Provider

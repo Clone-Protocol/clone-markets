@@ -11,7 +11,7 @@ import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 export const fetchBalance = async ({ program, userPubKey, index, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, index: number, setStartTimer: (start: boolean) => void }) => {
 	if (!userPubKey) return null
 
-	console.log('fetchBalance')
+	// console.log('fetchBalance')
 	// start timer in data-loading-indicator
 	setStartTimer(false);
 	setStartTimer(true);

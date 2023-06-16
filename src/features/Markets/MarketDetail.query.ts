@@ -2,7 +2,6 @@ import { QueryObserverOptions, useQuery } from 'react-query'
 import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
 import { assetMapping } from 'src/data/assets'
-import ethLogo from '/public/images/assets/ethereum-eth-logo.svg'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
@@ -53,7 +52,7 @@ export const fetchMarketDetailDefault = () => {
 		tickerName: 'Clone Euro',
 		tickerSymbol: 'onEUR',
 		pythSymbol: 'FX.EUR/USD',
-		tickerIcon: ethLogo,
+		tickerIcon: '',
 		price: 160.51,
 		volume: 12.4,
 		avgLiquidity: 50700000,

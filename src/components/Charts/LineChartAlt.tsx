@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, ReactNode } from 'react';
 import { styled } from '@mui/system'
 import { Card, Box } from '@mui/material'
-import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from 'recharts'
+import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from 'recharts'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -53,7 +53,6 @@ const LineChartAlt: React.FC<LineChartProps> = ({
       }
 
       const formattedTime = dayjs(payload[0].payload.time).format('MMM D, h:mm A')
-      console.log('form', formattedTime)
       // if (setLabel && label !== formattedTime) setLabel(formattedTime)
       return (
         <Box sx={{ fontSize: '12px', color: '#8988a3' }}>

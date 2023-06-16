@@ -1,6 +1,6 @@
 import { Box, styled, Dialog, DialogContent, Typography, Divider } from '@mui/material'
 import { FadeTransition } from '~/components/Common/Dialog'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import SearchInput from './SearchInput'
 import GridAssets from './GridAssets'
 

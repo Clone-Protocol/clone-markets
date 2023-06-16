@@ -48,21 +48,6 @@ const Wrapper = styled(Box)`
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.05);
 `
-
-const DetailValue = styled('div')`
-  font-size: 11px;
-  font-weight: 500;
-  color: #fff;
-  text-align: right;
-`
-
-const DetailComment = styled('div')`
-  color: #898989;
-  font-size: 10px; 
-  font-weight: 500;
-  text-align: right;
-`
-
 const PriceImpactValue = styled('div')`
   color: ${(props) => props.theme.basis.lightGreen};
   font-size: 12px; 

@@ -9,9 +9,6 @@ import Slide from '@mui/material/Slide';
 import 'animate.css'
 
 const getTxnURL = (txHash: string) => {
-  // NOTE: Was having issues setting up the URL for Solscan,
-  // using SolanaFM instead.
-
   let cluster = (() => {
     let network = process.env.NEXT_PUBLIC_USE_NETWORK;
     if (network === "DEV_NET") {

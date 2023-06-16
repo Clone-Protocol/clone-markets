@@ -34,8 +34,7 @@ const GNB: React.FC = () => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
 	// }, [pathname])
 
-	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
-
+	// const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 	// useEffect(() => {
 	// 	const path = GNB_ROUTES.find((route) => firstPathname === route.path)?.path
 	// 	if (path) setPath(path)

@@ -92,7 +92,7 @@ export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled =
 export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: InceptClient, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void }) => {
 	if (!userPubKey) return []
 
-	console.log('fetchUserBalance')
+	// console.log('fetchUserBalance')
 	// start timer in data-loading-indicator
 	setStartTimer(false);
 	setStartTimer(true);

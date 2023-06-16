@@ -1,4 +1,4 @@
-import { styled, Typography, Box, Divider } from '@mui/material'
+import { styled, Typography, Box } from '@mui/material'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Image from 'next/image'

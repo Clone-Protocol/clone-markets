@@ -1,3 +1,4 @@
+//@DEPRECATED
 import MuiDrawer from '@mui/material/Drawer'
 import { styled, List, ListItemButton, ListItemIcon, Box, Fade } from '@mui/material'
 import Link from 'next/link'

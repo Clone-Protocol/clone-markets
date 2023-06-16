@@ -65,7 +65,6 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
       '& .MuiDataGrid-row': {
         marginRight: '10px',
         paddingLeft: '10px',
-        // borderBottom: '1px solid #3f3f3f',
         cursor: 'pointer'
       },
       '& .MuiDataGrid-row:hover': {
@@ -93,8 +92,6 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         borderLeft: '1px solid #ed2525',
         borderRight: '1px solid #ed2525'
       }
-      // '.super-app-theme--row': {
-      // }
     }}
     components={{
       NoResultsOverlay: customNoResultsOverlay

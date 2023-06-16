@@ -18,7 +18,7 @@ const AssetPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Asset</title>
+				<title>Asset - Incept Markets</title>
 				<meta name="description" content="Asset - Incept Markets" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>

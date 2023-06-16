@@ -1,7 +1,8 @@
+//@DEPRECATED
 import { Box, Slider, styled } from '@mui/material'
 
 interface Props {
-  isBuy: boolean
+	isBuy: boolean
 	value: number
 	onChange?: (event: Event, newValue: number | number[]) => void
 }
@@ -12,7 +13,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 	padding: '13px 0',
 	marginTop: '13px',
 	'& .MuiSlider-thumb': {
-    zIndex: 30,
+		zIndex: 30,
 		height: 20,
 		width: 20,
 		backgroundColor: '#fff',
@@ -22,23 +23,23 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 		},
 	},
 	'& .MuiSlider-track': {
-    zIndex: 10,
+		zIndex: 10,
 		height: 3,
-    border: 'none',
-    background: 'linear-gradient(to left, #f00 -12%, #809cff 66%)'
+		border: 'none',
+		background: 'linear-gradient(to left, #f00 -12%, #809cff 66%)'
 	},
-  '& .MuiSlider-valueLabel': {
-    fontSize: '11px',
-    fontWeight: '600',
-    width: '51px',
-    padding: '4px 8px 4px 8px',
-    borderRadius: '10px',
-    border: 'solid 1px #00ff66',
-    backgroundColor: '#000',
-    '&:before': { display: 'none' },
-  },
+	'& .MuiSlider-valueLabel': {
+		fontSize: '11px',
+		fontWeight: '600',
+		width: '51px',
+		padding: '4px 8px 4px 8px',
+		borderRadius: '10px',
+		border: 'solid 1px #00ff66',
+		backgroundColor: '#000',
+		'&:before': { display: 'none' },
+	},
 	'& .MuiSlider-rail': {
-    zIndex: 10,
+		zIndex: 10,
 		color: '#444444',
 		height: 3,
 	},
@@ -54,10 +55,10 @@ const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 			sx={{
 				display: 'flex',
 			}}>
-			<ValueBox>{ value <= 100 ? valueLabelFormat(value) : '100%+'}</ValueBox>
+			<ValueBox>{value <= 100 ? valueLabelFormat(value) : '100%+'}</ValueBox>
 			<Box width="252px" sx={value === 0 ? { marginLeft: '12px' } : {}}>
 				<StyledSlider
-          sx={
+					sx={
 						value <= 100 ?
 							isBuy ? {
 								'& .MuiSlider-thumb': {
@@ -74,7 +75,7 @@ const ConvertSlider: React.FC<Props> = ({ isBuy, value, onChange }) => {
 									background: `#fb782e`
 								}
 							}
-						:
+							:
 							{
 								'& .MuiSlider-thumb': {
 									border: `1px solid #282828`,

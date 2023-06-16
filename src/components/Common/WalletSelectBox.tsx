@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Box, Typography, styled, Stack } from '@mui/material'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
@@ -41,12 +41,12 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   return balance ? (
     <WalletWrapper>
       <Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
-        <WalletAddress>
+        <Box lineHeight={1}>
           <Box><Typography variant='p' fontWeight={600} color='#fff'>{solBalance.toLocaleString()} SOL</Typography></Box>
           {publicKey && (
             <Box><Typography variant='p' color='#c5c7d9'>{shortenAddress(publicKey.toString())}</Typography></Box>
           )}
-        </WalletAddress>
+        </Box>
         <Stack direction='row' spacing={1}>
           <CopyToClipboard text={publicKey!!.toString()}
             onCopy={() => enqueueSnackbar('Copied address')}>
@@ -73,9 +73,6 @@ const WalletWrapper = styled(Stack)`
 	border-radius: 10px;
   border: solid 1px ${(props) => props.theme.basis.portGore};
 	z-index: 99;
-`
-const WalletAddress = styled(Box)`
-	line-height: 1;
 `
 const PopupButton = styled(Box)`
 	font-size: 10px;

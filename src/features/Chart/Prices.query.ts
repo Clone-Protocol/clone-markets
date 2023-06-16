@@ -1,3 +1,4 @@
+//@DEPRECATED
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { FilterTime } from '~/components/Charts/TimeTabs'
 
@@ -6,7 +7,7 @@ export interface ChartElem {
   value: number
 }
 
-export const fetchTotalPrices = async ({ timeframe, currentPrice } : { timeframe: FilterTime, currentPrice: number | undefined}) => {
+export const fetchTotalPrices = async ({ timeframe, currentPrice }: { timeframe: FilterTime, currentPrice: number | undefined }) => {
   const chartData = [
     {
       time: new Date().toISOString().slice(0, 10),
