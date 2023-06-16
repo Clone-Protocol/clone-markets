@@ -5,7 +5,6 @@ import { Grid, CellTicker, CustomNoOnAssetOverlay, CustomNoRowsOverlay } from '~
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { Balance } from '~/features/Portfolio/Balance.query'
-import Divider from '@mui/material/Divider';
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Collateral, collateralMapping } from '~/data/assets'
 import { useRecoilState } from 'recoil'
@@ -43,7 +42,6 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				<Box><Typography variant='p' color='#8988a3'>Stable Coin</Typography></Box>
 				<Box><Typography variant='h3' fontWeight={500}>${balance?.usdiVal.toFixed(2)}</Typography></Box>
 			</TopBox>
-			<Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
 			<Grid
 				headers={columns}
 				rows={assets || []}
@@ -72,7 +70,7 @@ let columns: GridColDef[] = [
 		flex: 2,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
-				<Stack>
+				<Stack width='78px' textAlign='right'>
 					<Box>
 						<Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
 					</Box>
@@ -108,10 +106,9 @@ let columns: GridColDef[] = [
 ]
 
 const TopBox = styled(Box)`
-	// background: ${(props) => props.theme.basis.darkPurple};
 	height: 87px;
-	border-top-left-radius: 8px;
-	border-top-right-radius: 8px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
 	border-left: solid 1px rgba(196, 181, 253, 0.25);
 	border-right: solid 1px rgba(196, 181, 253, 0.25);
 	border-top: solid 1px rgba(196, 181, 253, 0.25);

@@ -11,7 +11,6 @@ import withSuspense from '~/hocs/withSuspense'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
-import Divider from '@mui/material/Divider';
 import { useRouter } from 'next/router'
 import { useWallet } from '@solana/wallet-adapter-react'
 
@@ -39,7 +38,6 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
         <Box><Typography variant='p' color='#8988a3'>onAsset</Typography></Box>
         <Box><Typography variant='h3' fontWeight={500}>${totalAsset.toFixed(2)}</Typography></Box>
       </TopBox>
-      <Divider sx={{ backgroundColor: 'rgba(195, 153, 248, 0.25)' }} />
       <Grid
         headers={columns}
         rows={assets || []}
@@ -56,7 +54,7 @@ let columns: GridColDef[] = [
   {
     field: 'iAssets',
     headerName: 'Token',
-    flex: 1,
+    flex: 2,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -66,14 +64,15 @@ let columns: GridColDef[] = [
   {
     field: 'myBalance',
     headerName: 'Total Balance',
-    flex: 1,
+    headerClassName: 'balance--header',
+    flex: 2,
     renderCell(params: GridRenderCellParams<string>) {
       return (
-        <Stack lineHeight={1.2}>
+        <Stack lineHeight={1.2} width='120px' textAlign='right'>
           <Box display='flex' justifyContent='flex-end'>
             <Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           </Box>
-          <Box>
+          <Box display='flex' justifyContent='flex-end'>
             <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
           </Box>
         </Stack>
@@ -111,7 +110,7 @@ let columns: GridColDef[] = [
     field: 'iPortfolio',
     headerClassName: 'last--header',
     headerName: 'Portfolio %',
-    flex: 1,
+    flex: 2,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <Box mt='-15px'>
@@ -124,8 +123,8 @@ let columns: GridColDef[] = [
 
 const TopBox = styled(Box)`
   height: 87px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
   border-left: solid 1px rgba(196, 181, 253, 0.25);
   border-right: solid 1px rgba(196, 181, 253, 0.25);
   border-top: solid 1px rgba(196, 181, 253, 0.25);

@@ -2,7 +2,6 @@ import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
-import { BorderBottomRounded } from '@mui/icons-material'
 
 interface GridProps {
   headers: GridColDef[],
@@ -21,10 +20,10 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
       color: '#fff',
       minHeight: `${minHeight}px`,
       '& .MuiDataGrid-main': {
-        borderLeft: '1px solid rgba(195, 153, 248, 0.25)',
-        borderRight: '1px solid rgba(195, 153, 248, 0.25)',
-        borderBottom: '1px solid rgba(195, 153, 248, 0.25)',
-        borderTop: '1px solid rgba(195, 153, 248, 0.25)',
+        borderLeft: '1px solid rgba(196, 181, 253, 0.25)',
+        borderRight: '1px solid rgba(196, 181, 253, 0.25)',
+        borderBottom: '1px solid rgba(196, 181, 253, 0.25)',
+        borderTop: '1px solid rgba(196, 181, 253, 0.25)',
         borderBottomLeftRadius: '20px',
         borderBottomRightRadius: '20px',
         borderTopLeftRadius: isBorderTopRadius ? '20px' : '0',
@@ -41,6 +40,12 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         lineHeight: 1.33,
         marginLeft: '10px'
       },
+      '& .balance--header': {
+        '& .MuiDataGrid-columnHeaderTitleContainer': {
+          width: '120px',
+          marginLeft: '45px'
+        }
+      },
       '& .last--header': {
         '& .MuiDataGrid-columnHeaderTitleContainer': {
           display: 'flex',
@@ -49,7 +54,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         }
       },
       '& .MuiDataGrid-columnHeaders': {
-        borderBottom: '1px solid rgba(195, 153, 248, 0.25)',
+        borderBottom: '1px solid rgba(196, 181, 253, 0.25)',
       },
       '& .MuiDataGrid-columnHeader:focus': {
         outline: 'none',

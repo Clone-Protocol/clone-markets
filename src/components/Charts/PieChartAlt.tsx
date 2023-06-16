@@ -62,7 +62,9 @@ const PieChartAlt: React.FC<ChartProps> = ({
               onMouseDown={onPieEnter}
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} />
+                <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} style={{
+                  filter: `drop-shadow(0px 0px 5px ${FilterTypeColorMap[entry.key]}`
+                }} />
               ))}
             </Pie>
           ) : (
