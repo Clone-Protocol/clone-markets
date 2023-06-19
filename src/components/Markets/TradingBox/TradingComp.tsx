@@ -15,7 +15,6 @@ import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balance.query'
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
-import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
 import GetOnUSD from './GetOnUSD'
@@ -38,6 +37,7 @@ export interface TradingData {
 
 interface Props {
   assetIndex: number
+  slippage: number
   onShowOption: () => void
   onShowSearchAsset: () => void
 }
@@ -47,14 +47,13 @@ const round = (n: number, decimals: number) => {
   return Math.round(n * factor) / factor
 }
 
-const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAsset }) => {
+const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onShowSearchAsset }) => {
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setIsBuy] = useState(true)
   // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
-  const [slippage, _] = useLocalStorage("slippage", 0.5)
   const { setOpen } = useWalletDialog()
   const [restartTimer, setRestartTimer] = useState(false)
   const [isEnabledRestart, setIsEnabledRestart] = useState(true);

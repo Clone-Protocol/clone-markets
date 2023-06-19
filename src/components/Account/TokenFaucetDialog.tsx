@@ -53,12 +53,14 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
                 You need Devnet SOL in your wallet before you can claim Devnet onUSD.
               </Typography>
             </InfoBox>
-            <InfoBox sx={{ cursor: 'pointer' }}>
-              <Image src={infoOutlineIcon} alt="info" width='18px' />
-              <Typography variant='p' ml='12px' maxWidth='278px'>
-                The Solana Devnet is a safe playground for developers, users, and validators to test applications at no risk. Click this box to learn more.
-              </Typography>
-            </InfoBox>
+            <a href="https://www.alchemy.com/overviews/solana-devnet" target="_blank" rel="noreferrer">
+              <InfoSelectableBox sx={{ cursor: 'pointer' }}>
+                <Image src={infoOutlineIcon} alt="info" width='18px' />
+                <Typography variant='p' ml='12px' maxWidth='278px'>
+                  The Solana Devnet is a safe playground for developers, users, and validators to test applications at no risk. Click this box to learn more.
+                </Typography>
+              </InfoSelectableBox>
+            </a>
           </BoxWrapper>
         </DialogContent>
       </Dialog>
@@ -96,6 +98,8 @@ const InfoBox = styled(Box)`
   border-radius: 10px;
   border: solid 1px ${(props) => props.theme.basis.portGore};
   color: ${(props) => props.theme.basis.textRaven};
+`
+const InfoSelectableBox = styled(InfoBox)`
   &:hover {
     border: solid 1px ${(props) => props.theme.basis.melrose};
   }

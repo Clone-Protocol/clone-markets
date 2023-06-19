@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, styled, Dialog, DialogContent, Typography } from '@mui/material'
 import { FadeTransition } from '~/components/Common/Dialog'
 import Image from 'next/image'
@@ -7,6 +7,7 @@ import HomeIcon from 'public/images/mobile/home.svg'
 import TwitterIcon from 'public/images/mobile/twitter.svg'
 import DiscordIcon from 'public/images/mobile/discord.svg'
 import { Stack } from '@mui/system'
+import { DISCORD_URL, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
 
 const MobileWarningDialog = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
   return (
@@ -23,9 +24,9 @@ const MobileWarningDialog = ({ open, handleClose }: { open: boolean, handleClose
               </Typography>
             </Box>
             <Stack direction='row' justifyContent='center' gap={2} mt='30px' mb='15px'>
-              <Image src={HomeIcon} />
-              <Image src={TwitterIcon} />
-              <Image src={DiscordIcon} />
+              <a href={OFFICIAL_WEB} target="_blank" rel="noreferrer"><Image src={HomeIcon} /></a>
+              <a href={TWITTER_URL} target="_blank" rel="noreferrer"><Image src={TwitterIcon} /></a>
+              <a href={DISCORD_URL} target="_blank" rel="noreferrer"><Image src={DiscordIcon} /></a>
             </Stack>
           </BoxWrapper>
         </DialogContent>

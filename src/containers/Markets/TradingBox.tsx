@@ -5,6 +5,8 @@ import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSetti
 import withSuspense from '~/hocs/withSuspense'
 import { useRouter } from 'next/router'
 import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
+import useLocalStorage from '~/hooks/useLocalStorage'
+import { SLIPPAGE } from '~/data/localstorage'
 
 interface Props {
 	assetId: string
@@ -15,6 +17,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const router = useRouter()
 	const [showSearchAssetDlog, setShowSearchAssetDlog] = useState(false)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
+	const [slippage, setLocalSlippage] = useLocalStorage(SLIPPAGE, 0.5)
 	const assetIndex = parseInt(assetId)
 
 	const chooseAsset = (id: number) => {
@@ -23,10 +26,16 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 		router.push(`/trade/${id}/asset`)
 	}
 
+	const saveSetting = (slippage: number) => {
+		setLocalSlippage(slippage)
+		setShowOrderSetting(false)
+	}
+
 	return (
 		<StyledPaper>
 			<TradingComp
 				assetIndex={assetIndex}
+				slippage={slippage}
 				onShowOption={() => setShowOrderSetting(true)}
 				onShowSearchAsset={() => setShowSearchAssetDlog(true)}
 			/>
@@ -39,7 +48,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 
 			<SwapSettingDialog
 				open={showOrderSetting}
-				onHide={() => setShowOrderSetting(false)}
+				onSaveSetting={(slippage) => saveSetting(slippage)}
 			/>
 		</StyledPaper>
 	)

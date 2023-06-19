@@ -4,11 +4,12 @@ import useLocalStorage from '~/hooks/useLocalStorage'
 import { StyledTabs, StyledTab } from './OrderSettingSlippage'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 import { useEffect, useState } from 'react'
+import { SLIPPAGE } from '~/data/localstorage'
 
-const SwapSettingDialog = ({ open, onHide }: { open: boolean, onHide: () => void }) => {
+const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
   const [customSlippage, setCustomSlippage] = useState(NaN)
   const [slippage, setSlippage] = useState(0.5)
-  const [localSlippage, setLocalSlippage] = useLocalStorage("slippage", 0.5)
+  const [localSlippage, _] = useLocalStorage(SLIPPAGE, 0.5)
 
   useEffect(() => {
     if (localSlippage === 0.1 || localSlippage === 0.5 || localSlippage === 1) {
@@ -25,20 +26,21 @@ const SwapSettingDialog = ({ open, onHide }: { open: boolean, onHide: () => void
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newData = parseFloat(e.currentTarget.value)
+    console.log('n', e.currentTarget.value + "/" + newData)
     if (isNaN(newData)) {
       setCustomSlippage(NaN)
     } else if (newData <= 100) {
+      console.log('nn', newData)
       setCustomSlippage(parseFloat(newData.toFixed(2)))
     }
   }
 
   const onSave = () => {
     if (customSlippage > 0) {
-      setLocalSlippage(customSlippage)
+      onSaveSetting(customSlippage)
     } else {
-      setLocalSlippage(slippage)
+      onSaveSetting(slippage)
     }
-    onHide()
   }
 
   return (
@@ -60,7 +62,7 @@ const SwapSettingDialog = ({ open, onHide }: { open: boolean, onHide: () => void
                   <CustomSlippagePlaceholder>
                     <Typography variant='p_lg'>Custom</Typography>
                   </CustomSlippagePlaceholder>
-                  <InputAmount id="ip-amount" type="number" step=".1" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: '#adadad' }} value={Number(customSlippage).toString()} onChange={onChangeCustom} />
+                  <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: '#adadad' }} value={customSlippage} onChange={onChangeCustom} />
                 </FormStack>
               </FormControl>
             </SlippageStack>
@@ -104,6 +106,7 @@ const InputAmount = styled(`input`)`
   background-color: transparent;
 	border: 0px;
 	font-size: 14px;
+  padding-right: 5px;
   color: ${(props) => props.theme.basis.textRaven};
 `
 

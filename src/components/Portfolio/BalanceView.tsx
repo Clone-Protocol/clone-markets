@@ -57,7 +57,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 						<Stack key={item.key} direction='row' gap={1} style={selectedFilter === item.key ? { border: `solid 1px ${FilterTypeColorMap[item.key]}`, borderRadius: '15px' } : {}}>
 							<Box display="flex" alignItems='center' gap={2} width='130px' pl='5px'>
 								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[item.key] }} />
-								<Typography variant='p_lg' mt='3px'>{item.name}</Typography>
+								<Typography variant='p_lg' mt='2px'>{item.name}</Typography>
 							</Box>
 							<Box><Typography variant='p_lg' fontWeight={600}>{item.value.toFixed(0)}%</Typography></Box>
 						</Stack>
