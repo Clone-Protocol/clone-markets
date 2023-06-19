@@ -237,7 +237,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   const invalidMsg = () => {
-    if (amountUsdi === 0 || isNaN(amountUsdi) || !amountUsdi) {
+    if (amountUsdi == 0 || isNaN(amountUsdi) || !amountUsdi) {
       return 'Enter Amount'
     } else if (isBuy && amountUsdi > myBalance?.usdiVal!) {
       return 'Insufficient onUSD'
@@ -289,7 +289,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         ticker={fromPair.tickerSymbol}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const usdiAmt = parseFloat(event.currentTarget.value)
-                          field.onChange(usdiAmt)
+                          // console.log('d', event.currentTarget.value)
+                          field.onChange(event.currentTarget.value)
                           calculateTotalAmountByFrom(usdiAmt)
                         }}
                         onMax={(balance: number) => {
@@ -327,7 +328,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const iassetAmt = parseFloat(event.currentTarget.value)
-                          field.onChange(iassetAmt)
+                          field.onChange(event.currentTarget.value)
                           calculateTotalAmountByFrom(iassetAmt)
                         }}
                         onMax={(balance: number) => {

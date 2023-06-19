@@ -27,7 +27,7 @@ const OrderDetails: React.FC<Props> = ({ iassetPrice, iassetAmount, tickerSymbol
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title="Minimum received" color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
           <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(minReceived) ? '0' : minReceived?.toLocaleString()} {tickerSymbol}</Typography></Box>
-          <Box><Typography variant='p_sm'>Slippage tolerance: {slippage?.toFixed(1)}%</Typography></Box>
+          <Box><Typography variant='p_sm'>Slippage tolerance: {slippage?.toLocaleString()}%</Typography></Box>
         </div>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">

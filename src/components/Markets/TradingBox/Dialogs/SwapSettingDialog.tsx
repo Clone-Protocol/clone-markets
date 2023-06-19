@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { SLIPPAGE } from '~/data/localstorage'
 
 const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
+  const [customInputValue, setCustomInputValue] = useState('')
   const [customSlippage, setCustomSlippage] = useState(NaN)
   const [slippage, setSlippage] = useState(0.5)
   const [localSlippage, _] = useLocalStorage(SLIPPAGE, 0.5)
@@ -21,6 +22,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
 
   const handleSlippageChange = (event: React.SyntheticEvent, newValue: number) => {
     setSlippage(newValue)
+    setCustomInputValue('')
     setCustomSlippage(NaN)
   }
 
@@ -28,9 +30,11 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
     const newData = parseFloat(e.currentTarget.value)
     console.log('n', e.currentTarget.value + "/" + newData)
     if (isNaN(newData)) {
+      setCustomInputValue('')
       setCustomSlippage(NaN)
     } else if (newData <= 100) {
       console.log('nn', newData)
+      setCustomInputValue(e.currentTarget.value)
       setCustomSlippage(parseFloat(newData.toFixed(2)))
     }
   }
@@ -62,7 +66,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
                   <CustomSlippagePlaceholder>
                     <Typography variant='p_lg'>Custom</Typography>
                   </CustomSlippagePlaceholder>
-                  <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: '#adadad' }} value={customSlippage} onChange={onChangeCustom} />
+                  <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: '#adadad' }} value={customInputValue} onChange={onChangeCustom} />
                 </FormStack>
               </FormControl>
             </SlippageStack>
