@@ -1,12 +1,14 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
+import { CloneClient } from 'incept-protocol-sdk/sdk/src/clone'
 import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
+import { getPoolLiquidity } from 'incept-protocol-sdk/sdk/src/utils'
 import { assetMapping } from 'src/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
+import { getPythOraclePrice } from "~/utils/pyth" 
 
 export const fetchMarketDetail = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
 	// console.log('fetchMarketDetail', index)
@@ -27,14 +29,22 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 		{}
 	);
 	// @ts-ignore
-	const program = new InceptClient(network.incept, provider)
-	await program.loadManager()
+	const program = new CloneClient(network.clone, provider)
+	await program.loadClone()
 
 	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
 
 	const tokenData = await program.getTokenData();
 	const pool = tokenData.pools[index];
-	const price = toNumber(pool.usdiAmount) / toNumber(pool.iassetAmount)
+	const poolOnassetIld = toNumber(pool.onassetIld)
+	const poolOnusdIld = toNumber(pool.onusdIld)
+	const poolCommittedOnusd = toNumber(pool.committedOnusdLiquidity)
+	const liquidityTradingFee = toNumber(pool.liquidityTradingFee)
+	const treasuryTradingFee = toNumber(pool.treasuryTradingFee)
+	const pythInfo = await getPythOraclePrice(program.connection, pythSymbol)
+
+	const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
+	const price = poolOnusd / poolOnasset
 
 	return {
 		...(fetchMarketDetailDefault()),
@@ -43,6 +53,12 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 		tickerIcon,
 		pythSymbol,
 		price,
+		poolOnassetIld,
+		poolOnusdIld,
+		poolCommittedOnusd,
+		liquidityTradingFee,
+		treasuryTradingFee,
+		oraclePrice: pythInfo.price!
 	}
 }
 
@@ -54,6 +70,12 @@ export const fetchMarketDetailDefault = () => {
 		pythSymbol: 'FX.EUR/USD',
 		tickerIcon: '',
 		price: 160.51,
+		poolOnassetIld: 0.,
+		poolOnusdIld: 0.,
+		poolCommittedOnusd: 0.,
+		liquidityTradingFee: 0.,
+		treasuryTradingFee: 0.,
+		oraclePrice: 0.,
 		volume: 12.4,
 		avgLiquidity: 50700000,
 		maxOrderSize: 150,

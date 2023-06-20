@@ -29,7 +29,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				tickerIcon: onUSDInfo.collateralIcon,
 				tickerName: onUSDInfo.collateralName,
 				tickerSymbol: onUSDInfo.collateralSymbol,
-				usdiBalance: balance.usdiVal,
+				onusdBalance: balance.onusdVal,
 				price: 1.0,
 				setMintUsdi
 			}])
@@ -40,7 +40,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 		<>
 			<TopBox>
 				<Box><Typography variant='p' color='#8988a3'>Stable Coin</Typography></Box>
-				<Box><Typography variant='h3' fontWeight={500}>${balance?.usdiVal.toFixed(2)}</Typography></Box>
+				<Box><Typography variant='h3' fontWeight={500}>${balance?.onusdVal.toFixed(2)}</Typography></Box>
 			</TopBox>
 			<Grid
 				headers={columns}
@@ -72,7 +72,7 @@ let columns: GridColDef[] = [
 			return (
 				<Stack width='78px' textAlign='right'>
 					<Box>
-						<Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+						<Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
 					</Box>
 				</Stack>
 			)

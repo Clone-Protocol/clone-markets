@@ -37,21 +37,21 @@ const PortfolioView = () => {
 	})
 
 	useEffect(() => {
-		const usdiBalance = balance?.usdiVal!
+		const onusdBalance = balance?.onusdVal!
 		// only called when filter is all
 		if (assets && assets.length > 0 && selectedFilter === 'all') {
 			const result: ResultAsset[] = []
-			let totalBalance = usdiBalance
+			let totalBalance = onusdBalance
 			assets.forEach((asset) => {
 				if (result[asset.assetType]) {
-					result[asset.assetType].val += asset.usdiBalance
+					result[asset.assetType].val += asset.onusdBalance
 				} else {
 					result[asset.assetType] = {
 						id: asset.assetType,
-						val: asset.usdiBalance
+						val: asset.onusdBalance
 					}
 				}
-				totalBalance += asset.usdiBalance
+				totalBalance += asset.onusdBalance
 			})
 
 			const ordered = result.sort((a, b) => a.val < b.val ? 1 : -1)
@@ -59,17 +59,17 @@ const PortfolioView = () => {
 			let finalPie = ordered.map((item) => {
 				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
 				if (item.id === AssetType.Crypto) {
-					return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, onusdAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Stocks) {
-					return { key: 'onStock', name: FilterTypeMap.onStock, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onStock', name: FilterTypeMap.onStock, value: percentVal, onusdAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Fx) {
-					return { key: 'onFx', name: FilterTypeMap.onFx, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onFx', name: FilterTypeMap.onFx, value: percentVal, onusdAmount: item.val } as PieItem
 				} else {
-					return { key: 'onCommodity', name: FilterTypeMap.onCommodity, value: percentVal, usdiAmount: item.val } as PieItem
+					return { key: 'onCommodity', name: FilterTypeMap.onCommodity, value: percentVal, onusdAmount: item.val } as PieItem
 				}
 			})
 			finalPie.push(
-				{ key: 'stableCoin', name: FilterTypeMap.stableCoin, value: 100 * usdiBalance / totalBalance, usdiAmount: usdiBalance } as PieItem
+				{ key: 'stableCoin', name: FilterTypeMap.stableCoin, value: 100 * onusdBalance / totalBalance, onusdAmount: onusdBalance } as PieItem
 			)
 			console.log('f', finalPie)
 			setDataPie(finalPie)

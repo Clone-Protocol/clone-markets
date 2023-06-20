@@ -30,7 +30,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   ) => {
     router.push(`/markets/${params.row.id}/asset`)
   }
-  const totalAsset = assets.reduce((acc, item) => acc + item.usdiBalance, 0)
+  const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 
   return (
     <>
@@ -70,7 +70,7 @@ let columns: GridColDef[] = [
       return (
         <Stack lineHeight={1.2} width='120px' textAlign='right'>
           <Box display='flex' justifyContent='flex-end'>
-            <Typography variant='p_xlg'>${params.row.usdiBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+            <Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           </Box>
           <Box display='flex' justifyContent='flex-end'>
             <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>

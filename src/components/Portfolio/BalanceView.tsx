@@ -14,7 +14,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('Portfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
-	const [selectedUsdiAmount, setSelectedUsdiAmount] = useState(0)
+	const [selectedonusdAmount, setSelectedonusdAmount] = useState(0)
 
 	const newData = data.filter((item) => item !== undefined)
 
@@ -22,14 +22,14 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 		if (selectedFilter === 'all') {
 			setSelectedTitle('Portfolio')
 			setSelectedIdx(-1)
-			const totaliAsset = newData.reduce((acc, item) => acc + item.usdiAmount, 0)
-			setSelectedUsdiAmount(totaliAsset);
+			const totaliAsset = newData.reduce((acc, item) => acc + item.onusdAmount, 0)
+			setSelectedonusdAmount(totaliAsset);
 		} else {
 			newData.forEach((item, index) => {
 				if (item.key === selectedFilter) {
 					setSelectedTitle(item.name)
 					setSelectedIdx(index)
-					setSelectedUsdiAmount(item.usdiAmount)
+					setSelectedonusdAmount(item.onusdAmount)
 					return;
 				}
 			})
@@ -41,7 +41,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 			<Box width='200px' mb='40px'>
 				<Box><Typography variant='p_lg' color='#c4b5fd'>{selectedTitle}</Typography></Box>
 				<Box>
-					<Typography variant='h1' fontWeight={500}>${selectedUsdiAmount.toLocaleString()}</Typography>
+					<Typography variant='h1' fontWeight={500}>${selectedonusdAmount.toLocaleString()}</Typography>
 				</Box>
 			</Box>
 			<Box mb='-30px'>

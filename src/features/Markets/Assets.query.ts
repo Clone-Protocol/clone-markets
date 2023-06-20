@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
+import { CloneClient } from 'incept-protocol-sdk/sdk/src/clone'
 import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
@@ -28,8 +28,8 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 		{}
 	);
 	// @ts-ignore
-	const program = new InceptClient(network.incept, provider)
-	await program.loadManager()
+	const program = new CloneClient(network.clone, provider)
+	await program.loadClone()
 
 	const tokenData = await program.getTokenData();
 	const iassetInfos = getiAssetInfos(tokenData);

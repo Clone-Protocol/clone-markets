@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSetRecoilState } from 'recoil'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
-import { useIncept } from '~/hooks/useIncept'
+import { useClone } from '~/hooks/useClone'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { CreateAccountDialogStates } from '~/utils/constants'
 import { createAccountDialogState, isAlreadyInitializedAccountState } from '~/features/globalAtom'
@@ -9,7 +9,7 @@ import { PublicKey } from '@solana/web3.js'
 import { CURRENT_ACCOUNT } from '~/data/localstorage'
 
 export default function useInitialized(connected: boolean, publicKey: PublicKey | null, wallet: AnchorWallet | undefined) {
-	const { getInceptApp } = useIncept()
+	const { getCloneApp } = useClone()
 	const [localAccount, _] = useLocalStorage(CURRENT_ACCOUNT, '')
 	const setCreateAccountDialogState = useSetRecoilState(createAccountDialogState)
 	const setIsAlreadyInitializedAccountState = useSetRecoilState(isAlreadyInitializedAccountState)
@@ -28,8 +28,8 @@ export default function useInitialized(connected: boolean, publicKey: PublicKey 
 
 				try {
 					console.log('getUserAccount')
-					const program = getInceptApp(wallet)
-					await program.loadManager()
+					const program = getCloneApp(wallet)
+					await program.loadClone()
 					await program.getUserAccount()
 
 					setIsAlreadyInitializedAccountState(true);

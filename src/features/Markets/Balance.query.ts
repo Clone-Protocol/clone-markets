@@ -1,9 +1,9 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { InceptClient } from 'incept-protocol-sdk/sdk/src/incept'
-import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
+import { CloneClient } from 'incept-protocol-sdk/sdk/src/clone'
+import { getPoolLiquidity } from 'incept-protocol-sdk/sdk/src/utils'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
-import { getUSDiAccount, getTokenAccount } from '~/utils/token_accounts'
+import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
@@ -28,22 +28,22 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
     {}
   );
   // @ts-ignore
-  const program = new InceptClient(network.incept, provider)
-  await program.loadManager()
+  const program = new CloneClient(network.clone, provider)
+  await program.loadClone()
 
-  let usdiVal = 0.0
-  let iassetVal = 0.0
-  let ammIassetValue;
-  let ammUsdiValue;
+  let onusdVal = 0.0
+  let onassetVal = 0.0
+  let ammOnassetValue;
+  let ammOnusdValue;
 
-  const [tokenDataResult, usdiAtaResult] = await Promise.allSettled([
-    program.getTokenData(), getUSDiAccount(program)
+  const [tokenDataResult, onusdAtaResult] = await Promise.allSettled([
+    program.getTokenData(), getOnUSDAccount(program)
   ]);
 
   try {
-    if (usdiAtaResult.status === 'fulfilled' && usdiAtaResult.value !== undefined) {
-      const usdiBalance = await program.connection.getTokenAccountBalance(usdiAtaResult.value, "processed")
-      usdiVal = Number(usdiBalance.value.amount) / 100000000;
+    if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value !== undefined) {
+      const onusdBalance = await program.connection.getTokenAccountBalance(onusdAtaResult.value, "processed")
+      onusdVal = Number(onusdBalance.value.amount) / 100000000;
     }
   } catch (e) {
     console.error(e)
@@ -53,28 +53,29 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
     if (tokenDataResult.status === 'fulfilled') {
       const pool = tokenDataResult.value.pools[index]
       const associatedTokenAccount = await getTokenAccount(
-        pool.assetInfo.iassetMint,
+        pool.assetInfo.onassetMint,
         program.provider.publicKey!,
         program.provider.connection
       );
 
       if (associatedTokenAccount) {
-        const iassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
-        iassetVal = Number(iassetBalance.value.amount) / 100000000;
+        const onassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
+        onassetVal = Number(onassetBalance.value.amount) / 100000000;
       }
+      const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
 
-      ammIassetValue = toNumber(pool.iassetAmount)
-      ammUsdiValue = toNumber(pool.usdiAmount)
+      ammOnassetValue = poolOnasset
+      ammOnusdValue = poolOnusd
     }
   } catch (e) {
     console.error(e)
   }
 
   return {
-    usdiVal,
-    iassetVal,
-    ammIassetValue,
-    ammUsdiValue
+    onusdVal,
+    onassetVal,
+    ammOnassetValue,
+    ammOnusdValue
   }
 }
 
@@ -85,10 +86,10 @@ interface GetProps {
 }
 
 export interface Balance {
-  usdiVal: number
-  iassetVal: number
-  ammIassetValue: number
-  ammUsdiValue: number
+  onusdVal: number
+  onassetVal: number
+  ammOnassetValue: number
+  ammOnusdValue: number
 }
 
 export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetProps) {

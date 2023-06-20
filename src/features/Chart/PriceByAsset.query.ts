@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { Query, useQuery } from 'react-query'
 import { ChartElem } from './Liquidity.query'
-import { fetchPythPriceHistory } from '~/utils/pyth'
+import { fetchPythPriceHistory, Range } from '~/utils/pyth'
 import { FilterTime } from '~/components/Charts/TimeTabs'
 import { getDailyPoolPrices30Day, Interval } from '~/utils/assets'
 import { ASSETS } from '~/data/assets'
@@ -28,16 +28,16 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   let rateOfPrice
   let percentOfRate
 
-  const [daysLookback, interval] = (() => {
+  const range: Range = (() => {
     switch (timeframe) {
       case '1y':
-        return [365, 'day' as Interval]
+        return "1M"
       case '30d':
-        return [30, 'day' as Interval]
+        return "1M"
       case '7d':
-        return [7, 'hour' as Interval]
+        return "1W"
       case '24h':
-        return [1, 'hour' as Interval]
+        return "1D"
       default:
         throw new Error(`Unexpected timeframe: ${timeframe}`)
     }
@@ -52,11 +52,10 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
     throw new Error(`Couldn't find pool index for ${pythSymbol}`)
   })()
 
-  chartData = await getDailyPoolPrices30Day(
-    poolIndex,
-    interval
-  )
-  chartData = filterHistoricalData(chartData, daysLookback)
+  const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, "devnet", range)
+  chartData = pythHistoricalData.map((item) => {
+    return {time: item.timestamp, value: item.avg_price}
+  })
 
   const allValues = chartData.map(elem => elem.value!)
   const maxValue = Math.floor(Math.max(...allValues))

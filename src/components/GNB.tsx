@@ -9,18 +9,22 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
-import { useIncept } from '~/hooks/useIncept'
+import { useClone } from '~/hooks/useClone'
 import MoreMenu from '~/components/Common/MoreMenu';
 import TokenFaucetDialog from './Account/TokenFaucetDialog'
-import { getUSDiAccount } from '~/utils/token_accounts'
-import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token'
+import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
+import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
+import { BN } from "@coral-xyz/anchor"
 import { sendAndConfirm } from '~/utils/tx_helper'
 import { useTransactionState } from '~/hooks/useTransactionState'
 import { useRecoilState } from 'recoil'
+import { PROGRAM_ADDRESS as JUPITER_PROGRAM_ADDRESS, createMintUsdcInstruction, Jupiter } from 'incept-protocol-sdk/sdk/generated/jupiter-agg-mock/index'
 import NaviMenu from './NaviMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
 import MobileWarningDialog from './Common/MobileWarningDialog'
 import { mintUSDi } from '~/features/globalAtom'
+import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -81,7 +85,7 @@ const RightMenu: React.FC = () => {
 	const { connecting, connected, publicKey, connect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
-	const { getInceptApp } = useIncept()
+	const { getCloneApp } = useClone()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
 	const [mintUsdi, setMintUsdi] = useRecoilState(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -89,18 +93,53 @@ const RightMenu: React.FC = () => {
 	const { setTxState } = useTransactionState()
 
 	useEffect(() => {
-		async function userMintUsdi() {
+		async function userMintOnusd() {
+			const onusdToMint = 100;
 			if (connected && publicKey && mintUsdi && wallet) {
-				const program = getInceptApp(wallet)
-				await program.loadManager()
-				const usdiTokenAccount = await getUSDiAccount(program);
-				const ata = await getAssociatedTokenAddress(program.incept!.usdiMint, publicKey);
+				const program = getCloneApp(wallet)
+				await program.loadClone()
+				const usdiTokenAccount = await getOnUSDAccount(program);
+				const onusdAta = await getAssociatedTokenAddress(program.clone!.onusdMint, publicKey);
+
+				let [jupiterAddress, nonce] = PublicKey.findProgramAddressSync(
+					[Buffer.from("jupiter")],
+					new PublicKey(JUPITER_PROGRAM_ADDRESS)
+				  );
+				let jupiterAccount = await Jupiter.fromAccountAddress(program.connection, jupiterAddress)
+				const usdcTokenAccount = await getTokenAccount(jupiterAccount.usdcMint, publicKey, program.connection);
+				const usdcAta = await getAssociatedTokenAddress(jupiterAccount.usdcMint, publicKey);
+
 				let ixnCalls = []
 				try {
-					if (usdiTokenAccount === undefined) {
-						ixnCalls.push((async () => createAssociatedTokenAccountInstruction(publicKey, ata, publicKey, program.incept!.usdiMint))())
+					if (usdcTokenAccount === undefined) {
+						ixnCalls.push((async () => createAssociatedTokenAccountInstruction(publicKey, usdcAta, publicKey, jupiterAccount.usdcMint))())
 					}
-					ixnCalls.push(program.hackathonMintUsdiInstruction(ata, 10000000000))
+					if (usdiTokenAccount === undefined) {
+						ixnCalls.push((async () => createAssociatedTokenAccountInstruction(publicKey, onusdAta, publicKey, program.clone!.onusdMint))())
+					}
+
+					ixnCalls.push(
+						createMintUsdcInstruction(
+							{
+								usdcMint: jupiterAccount.usdcMint,
+								usdcTokenAccount: usdcAta,
+								jupiterAccount: jupiterAddress,
+								tokenProgram: TOKEN_PROGRAM_ID
+							}, {
+								nonce,
+								amount: new BN(onusdToMint * Math.pow(10, 7))
+							}
+						)
+					)
+
+					ixnCalls.push(
+						await program.mintOnusdInstruction(
+							new BN(onusdToMint * Math.pow(10, DEVNET_TOKEN_SCALE)),
+							onusdAta,
+							usdcAta
+						)
+					)
+
 					let ixns = await Promise.all(ixnCalls)
 					await sendAndConfirm(program.provider, ixns, setTxState)
 
@@ -109,7 +148,7 @@ const RightMenu: React.FC = () => {
 				}
 			}
 		}
-		userMintUsdi()
+		userMintOnusd()
 	}, [mintUsdi, connected, publicKey])
 
 	const handleWalletClick = () => {
