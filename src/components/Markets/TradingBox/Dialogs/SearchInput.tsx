@@ -29,7 +29,9 @@ const StyledBox = styled(Box)`
   border: solid 1px ${(props) => props.theme.basis.portGore};
   background-color: rgba(255, 255, 255, 0.05);
   &:hover {
-    border: 1px solid ${(props) => props.theme.gradients.light};
+    border: 1px solid transparent;
+    border-image: ${(props) => props.theme.gradients.light};
+    border-image-slice: 1;
   }
 `
 

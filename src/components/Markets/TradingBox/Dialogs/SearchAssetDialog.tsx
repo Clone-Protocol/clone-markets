@@ -19,10 +19,10 @@ const SearchAssetDialog = ({ open, onChooseAsset, onHide }: { open: boolean, onC
   return (
     <>
       <Dialog open={open} onClose={onHide} TransitionComponent={FadeTransition}>
-        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
+        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: '375px', padding: '0px' }}>
           <BoxWrapper>
-            <Box mb="19px"><Typography variant='h3' fontWeight={500}>Search onAsset</Typography></Box>
-            <Box mb='25px'>
+            <Box ml='25px' my='21px' mb="19px"><Typography variant='h3' fontWeight={500}>Search onAsset</Typography></Box>
+            <Box mb='25px' px='11px'>
               <SearchInput onChange={handleSearch} />
             </Box>
             <StyledDivider />
@@ -43,7 +43,6 @@ const BoxWrapper = styled(Box)`
 `
 const StyledDivider = styled(Divider)`
   background-color: ${(props) => props.theme.basis.portGore};
-  margin-bottom: 1px;
 `
 
 

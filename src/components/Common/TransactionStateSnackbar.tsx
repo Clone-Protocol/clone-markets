@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { TransactionState } from '~/hooks/useTransactionState'
 import Slide from '@mui/material/Slide';
 import 'animate.css'
+import { makeStyles } from '@mui/styles'
 
 const getTxnURL = (txHash: string) => {
   let cluster = (() => {
@@ -37,7 +38,14 @@ const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHa
   </Stack>)
 }
 
+const useCircleStyles = makeStyles(() => ({
+  circle: {
+    stroke: "url(#linearColors)",
+  },
+}));
+
 const ConfirmingWrapper = ({ txHash, isFocus }: { txHash: string, isFocus: boolean }) => {
+  const classes = useCircleStyles({});
   const [longTimeStatus, setLongTimeStatus] = useState<JSX.Element>()
   const StatusWrap = (<LongTimeStatus><Typography variant='p'>This transaction is taking longer than usual. Please check <br /> <a href='https://status.solana.com/' target='_blank' rel="noreferrer">Solana Network status</a></Typography></LongTimeStatus>)
   setTimeout(() => {
@@ -47,7 +55,15 @@ const ConfirmingWrapper = ({ txHash, isFocus }: { txHash: string, isFocus: boole
   return (
     <ConfirmBoxWrapper className={isFocus ? 'animate__animated animate__shakeX' : ''}>
       <Stack direction='row' spacing={2}>
-        <CircularProgress sx={{ color: '#ff6cdf' }} size={56} thickness={5} />
+        <Box display='flex' alignItems='center'>
+          <svg width="8" height="6">
+            <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="25%" stopColor="#ff6cdf" />
+              <stop offset="90%" stopColor="rgba(66,0,255, 0.0)" />
+            </linearGradient>
+          </svg>
+          <CircularProgress classes={{ circle: classes.circle }} size='56px' thickness={5} />
+        </Box>
         <Box>
           <Box><Typography variant='p_xlg'>Confirming transaction...</Typography></Box>
           <Box my='6px' lineHeight={1.3}>
