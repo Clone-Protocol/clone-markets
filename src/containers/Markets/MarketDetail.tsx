@@ -6,6 +6,8 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { formatDollarAmount } from '~/utils/numbers'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
+import { useEffect, useState } from 'react'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
@@ -14,6 +16,42 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 		refetchOnMount: "always",
 		enabled: true
 	})
+	const [myData, setMyData] = useState({
+		balance: 0,
+		value: 0,
+		portfolioValue: 0
+	})
+
+	const { data: myAssets } = useUserBalanceQuery({
+		userPubKey: publicKey,
+		filter: 'all',
+		refetchOnMount: 'always',
+		enabled: publicKey != null
+	})
+
+	useEffect(() => {
+		if (myAssets && myAssets.length > 0) {
+			let foundItem = false
+			myAssets.forEach((myAsset) => {
+				if (myAsset.id === parseInt(assetId)) {
+					setMyData({
+						balance: myAsset.assetBalance,
+						value: myAsset.usdiBalance,
+						portfolioValue: myAsset.percentVal!
+					})
+					foundItem = true
+					return;
+				}
+			})
+			if (!foundItem) {
+				setMyData({
+					balance: 0,
+					value: 0,
+					portfolioValue: 0
+				})
+			}
+		}
+	}, [myAssets, assetId])
 
 	return (
 		<>
@@ -67,19 +105,19 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 									<Box width='150px'>
 										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500}>{asset.myHolding.toLocaleString()} {asset.tickerSymbol}</Typography>
+											<Typography variant='h3' fontWeight={500}>{myData.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {asset.tickerSymbol}</Typography>
 										</Box>
 									</Box>
 									<Box width='150px'>
 										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500}>${asset.myNotionalVal.toLocaleString()} onUSD</Typography>
+											<Typography variant='h3' fontWeight={500}>${myData.value.toLocaleString()} onUSD</Typography>
 										</Box>
 									</Box>
 									<Box width='150px'>
 										<Box><Typography variant='p' color='#8988a3'>Portfolio %</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500}>{asset.myPortfolioPercentage.toFixed(2)}%</Typography>
+											<Typography variant='h3' fontWeight={500}>{myData.portfolioValue.toFixed(2)}%</Typography>
 										</Box>
 									</Box>
 								</Stack>
