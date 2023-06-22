@@ -1,4 +1,5 @@
-import { Paper, styled } from '@mui/material'
+import { Paper } from '@mui/material'
+import { styled } from '@mui/system'
 import { useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
 import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'

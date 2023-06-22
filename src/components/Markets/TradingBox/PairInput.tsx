@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormControl, Stack, Box, Button, styled, Typography } from '@mui/material'
+import { FormControl, Stack, Box, Button, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import Image from 'next/image'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 

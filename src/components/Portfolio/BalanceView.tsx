@@ -1,5 +1,6 @@
 import React from 'react';
-import { styled, Box, Paper, Typography, Stack } from '@mui/material'
+import { Box, Paper, Typography, Stack } from '@mui/material'
+import { styled } from '@mui/system'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'

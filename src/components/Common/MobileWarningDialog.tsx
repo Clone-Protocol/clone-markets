@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Box, styled, Dialog, DialogContent, Typography } from '@mui/material'
+import React from 'react'
+import { Box, Dialog, DialogContent, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import { FadeTransition } from '~/components/Common/Dialog'
 import Image from 'next/image'
 import OctagonIcon from 'public/images/alert-octagon-outline.svg'

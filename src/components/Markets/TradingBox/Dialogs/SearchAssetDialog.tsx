@@ -1,4 +1,5 @@
-import { Box, styled, Dialog, DialogContent, Typography, Divider } from '@mui/material'
+import { Box, Dialog, DialogContent, Typography, Divider } from '@mui/material'
+import { styled } from '@mui/system'
 import { FadeTransition } from '~/components/Common/Dialog'
 import { useCallback, useState } from 'react'
 import SearchInput from './SearchInput'

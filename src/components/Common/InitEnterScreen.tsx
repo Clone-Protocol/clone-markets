@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, styled, Typography, Button } from '@mui/material'
+import { Box, Typography, Button } from '@mui/material'
+import { styled } from '@mui/system'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT } from '~/data/localstorage'
 

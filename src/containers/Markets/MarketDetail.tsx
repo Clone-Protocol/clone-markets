@@ -1,4 +1,5 @@
-import { Box, Stack, Divider, styled, Typography } from '@mui/material'
+import { Box, Stack, Divider, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
 import { useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
