@@ -10,7 +10,7 @@ const NaviMenu = () => {
     <Fade in timeout={1500}>
       <List component="nav" sx={{ display: 'flex' }}>
         <Link href="/">
-          <StyledListItemButton className={router.asPath === '/' || router.asPath.startsWith('/markets') ? 'selected' : ''}>
+          <StyledListItemButton className={router.asPath === '/' ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Home</Typography></Box>
           </StyledListItemButton>
         </Link>

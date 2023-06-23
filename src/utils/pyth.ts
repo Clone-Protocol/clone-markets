@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { PythHttpClient, getPythProgramKeyForCluster } from '@pythnetwork/client';
+import { PublicKey, Connection } from '@solana/web3.js';
 
-type Network = "devnet" | "mainnet-beta" | "pythnet" | "testnet" | "pythtest";
-type Range = "1H" | "1D" | "1W" | "1M"
+export type Network = "devnet" | "mainnet-beta" | "pythnet" | "testnet" | "pythtest";
+export type Range = "1H" | "1D" | "1W" | "1M"
 
 export interface PythData {
     timestamp: string;
@@ -24,3 +26,15 @@ export const fetchPythPriceHistory = async (pythSymbol: string, network: Network
     );
     return result.data;
 }
+
+export const getPythOraclePrice = async (
+    connection: Connection,
+    pythSymbol: string
+  ) => {
+    // TODO: Set this up as an env variable.
+    const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
+    const data = await pythClient.getData();
+    return {
+        price: data.productPrice.get(pythSymbol)?.aggregate.price,
+    };
+  };

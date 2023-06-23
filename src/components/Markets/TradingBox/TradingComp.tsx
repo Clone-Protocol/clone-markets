@@ -17,14 +17,15 @@ import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balan
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
-import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/incept'
+import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
 import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
+import { calculateSwapExecution } from 'incept-protocol-sdk/sdk/src/utils'
 
 export enum ComponentEffect {
   iAssetAmount,
-  UsdiAmount,
+  onusdAmount,
   BarValue,
   TabIndex,
 }
@@ -52,9 +53,10 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
-  const [isBuy, setIsBuy] = useState(true)
+  const [isBuy, setisBuy] = useState(true)
   // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
+  const [estimatedFees, setEstimatedFees] = useState(0.0)
   const { setOpen } = useWalletDialog()
   const [restartTimer, setRestartTimer] = useState(false)
   const [isEnabledRestart, setIsEnabledRestart] = useState(true);
@@ -95,24 +97,24 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   } = useForm({
     mode: 'onChange',
     defaultValues: {
-      amountUsdi: NaN,
-      amountIasset: NaN,
+      amountOnusd: NaN,
+      amountOnasset: NaN,
     }
   })
 
-  const [amountUsdi, amountIasset] = watch([
-    'amountUsdi',
-    'amountIasset',
+  const [amountOnusd, amountOnasset] = watch([
+    'amountOnusd',
+    'amountOnasset',
   ])
 
   const initData = () => {
-    setValue('amountUsdi', NaN)
-    setValue('amountIasset', NaN)
+    setValue('amountOnusd', NaN)
+    setValue('amountOnasset', NaN)
     refetch()
   }
 
   const handleChangeOrderType = () => {
-    setIsBuy(!isBuy)
+    setisBuy(!isBuy)
     setOpenOrderDetails(false)
     initData()
     trigger()
@@ -120,7 +122,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
   useEffect(() => {
     if (assetIndex) {
-      setIsBuy(true)
+      setisBuy(true)
       setOpenOrderDetails(false)
       initData()
       trigger()
@@ -128,7 +130,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }, [assetIndex])
 
   // useEffect(() => {
-  //   if (!isNaN(amountUsdi)) {
+  //   if (!isNaN(amountOnusd)) {
   //     calculateTotalAmountByConvert(convertVal)
   //     console.log('c', convertVal)
   //     trigger()
@@ -146,41 +148,36 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   // }
 
   // const calculateTotalAmountByConvert = (convertRatio: number) => {
-  //   const ammUsdiValue = balance?.ammUsdiValue!
-  //   const ammIassetValue = balance?.ammIassetValue!
-  //   const invariant = ammIassetValue * ammUsdiValue
+  //   const ammOnusdValue = balance?.ammOnusdValue!
+  //   const ammOnassetValue = balance?.ammOnassetValue!
+  //   const invariant = ammOnassetValue * ammOnusdValue
   //   let usdi
   //   let iAsset
   //   // buy
   //   if (isBuy) {
-  //     usdi = balance?.usdiVal! * convertRatio / 100;
-  //     iAsset = ammIassetValue - invariant / (ammUsdiValue + amountUsdi)
+  //     usdi = balance?.onusdVal! * convertRatio / 100;
+  //     iAsset = ammOnassetValue - invariant / (ammOnusdValue + amountOnusd)
   //   } else {
   //     // sell
-  //     iAsset = balance?.iassetVal! * convertRatio / 100;
-  //     usdi = ammUsdiValue - invariant / (ammIassetValue + amountIasset)
+  //     iAsset = balance?.onassetVal! * convertRatio / 100;
+  //     usdi = ammOnusdValue - invariant / (ammOnassetValue + amountOnasset)
   //   }
-  //   setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
-  //   setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
+  //   setValue('amountOnusd', round(usdi, DEVNET_TOKEN_SCALE))
+  //   setValue('amountOnasset', round(iAsset, DEVNET_TOKEN_SCALE))
   // }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
-    const ammUsdiValue = balance?.ammUsdiValue!
-    const ammIassetValue = balance?.ammIassetValue!
-    const invariant = ammIassetValue * ammUsdiValue
-
+    const swapResult = calculateSwapExecution(
+      newValue, true, isBuy, assetData?.poolOnusdIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedOnusd!,
+      assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!
+    )
+    const resultVal = round(swapResult.result, DEVNET_TOKEN_SCALE)
     if (isBuy) {
-      // const convertRatio = newValue * 100 / balance?.usdiVal!
-      const iAsset = ammIassetValue - invariant / (ammUsdiValue + newValue)
-      // setConvertVal(convertRatio)
-      setValue('amountIasset', round(iAsset, DEVNET_TOKEN_SCALE))
+      setValue('amountOnasset', resultVal)
     } else {
-      // sell
-      // const convertRatio = newValue * 100 / balance?.iassetVal!
-      const usdi = ammUsdiValue - invariant / (ammIassetValue + newValue)
-      // setConvertVal(convertRatio)
-      setValue('amountUsdi', round(usdi, DEVNET_TOKEN_SCALE))
+      setValue('amountOnusd', resultVal)
     }
+    setEstimatedFees(swapResult.liquidityFeesPaid + swapResult.treasuryFeesPaid)
   }
 
   const onConfirm = async () => {
@@ -188,10 +185,12 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       setLoading(true)
       const data = await mutateAsync(
         {
-          amountUsdi,
-          amountIasset,
-          iassetIndex: assetIndex,
-          isBuy
+          quantity: isBuy ? amountOnusd : amountOnasset,
+          quantityIsOnusd: isBuy,
+          quantityIsInput: true,
+          poolIndex: assetIndex,
+          slippage: slippage / 100,
+          oraclePrice: assetData?.oraclePrice!
         }
       )
 
@@ -208,16 +207,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   const getDefaultPrice = () => {
-    const ammUsdiValue = balance?.ammUsdiValue!
-    const ammIassetValue = balance?.ammIassetValue!
-    const invariant = ammIassetValue * ammUsdiValue
-
-    const iAsset = ammIassetValue - invariant / (ammUsdiValue + 1)
-    return 1 / round(iAsset, DEVNET_TOKEN_SCALE)
+    const ammOnusdValue = balance?.ammOnusdValue!
+    const ammOnassetValue = balance?.ammOnassetValue!
+    return ammOnusdValue / ammOnassetValue
   }
 
   const getPrice = () => {
-    return amountUsdi / amountIasset
+    return amountOnusd / amountOnasset
   }
 
   const getPriceImpactPct = () => {
@@ -238,15 +234,19 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   const invalidMsg = () => {
-    if (amountUsdi == 0 || isNaN(amountUsdi) || !amountUsdi) {
+    if (amountOnusd == 0 || isNaN(amountOnusd) || !amountOnusd) {
       return 'Enter Amount'
-    } else if (isBuy && amountUsdi > myBalance?.usdiVal!) {
+    } else if (isBuy && amountOnusd > myBalance?.onusdVal!) {
       return 'Insufficient onUSD'
-    } else if (!isBuy && amountIasset > myBalance?.iassetVal!) {
+    } else if (!isBuy && amountOnasset > myBalance?.onassetVal!) {
       return `Insufficient ${assetData?.tickerSymbol}`
     } else {
       return ''
     }
+  }
+
+  const tradingFeePct = () => {
+    return assetData ? (assetData.liquidityTradingFee + assetData.treasuryTradingFee) * 100 : 0.3
   }
 
   const isValid = invalidMsg() === ''
@@ -272,13 +272,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               isBuy ?
                 <Box>
                   <Controller
-                    name="amountUsdi"
+                    name="amountOnusd"
                     control={control}
                     rules={{
                       validate(value) {
                         if (!value || isNaN(value) || value <= 0) {
                           return 'the amount should not empty'
-                        } else if (value > myBalance?.usdiVal!) {
+                        } else if (value > myBalance?.onusdVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
                       }
@@ -300,24 +300,24 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         }}
                         value={field.value}
                         dollarValue={field.value}
-                        balance={myBalance?.usdiVal}
+                        balance={myBalance?.onusdVal}
                         balanceDisabled={!publicKey}
-                        max={myBalance?.usdiVal}
+                        max={myBalance?.onusdVal}
                       />
                     )}
                   />
-                  {/* <FormHelperText error={!!errors.amountUsdi?.message}>{errors.amountUsdi?.message}</FormHelperText> */}
+                  {/* <FormHelperText error={!!errors.amountOnusd?.message}>{errors.amountOnusd?.message}</FormHelperText> */}
                 </Box>
                 :
                 <Box>
                   <Controller
-                    name="amountIasset"
+                    name="amountOnasset"
                     control={control}
                     rules={{
                       validate(value) {
                         if (!value || isNaN(value) || value <= 0) {
                           return 'the amount should not empty'
-                        } else if (value > myBalance?.iassetVal!) {
+                        } else if (value > myBalance?.onassetVal!) {
                           return 'The amount cannot exceed the balance.'
                         }
                       }
@@ -338,15 +338,15 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         }}
                         value={field.value}
                         dollarValue={field.value * getPrice()}
-                        balance={myBalance?.iassetVal}
+                        balance={myBalance?.onassetVal}
                         balanceDisabled={!publicKey}
                         tickerClickable
                         onTickerClick={onShowSearchAsset}
-                        max={myBalance?.iassetVal}
+                        max={myBalance?.onassetVal}
                       />
                     )}
                   />
-                  {/* <FormHelperText error={!!errors.amountIasset?.message}>{errors.amountIasset?.message}</FormHelperText> */}
+                  {/* <FormHelperText error={!!errors.amountOnasset?.message}>{errors.amountOnasset?.message}</FormHelperText> */}
                 </Box>
             }
           </Box>
@@ -361,8 +361,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               title="You Receive"
               tickerIcon={isBuy ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={isBuy ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
-              value={isBuy ? amountIasset : amountUsdi}
-              dollarValue={isBuy ? amountUsdi : amountUsdi}
+              value={isBuy ? amountOnasset : amountOnusd}
+              dollarValue={isBuy ? amountOnusd : amountOnusd}
               balanceDisabled={true}
               valueDisabled={true}
               tickerClickable={isBuy}
@@ -392,7 +392,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(getDefaultPrice(), 4)} onUSD</Typography>
               <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
-            {openOrderDetails && <OrderDetails iassetPrice={round(getPrice(), 4)} iassetAmount={amountIasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={0.15} />}
+            {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}
 
             {publicKey &&
               <Box mt='10px'>

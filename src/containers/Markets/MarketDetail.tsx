@@ -37,7 +37,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 				if (myAsset.id === parseInt(assetId)) {
 					setMyData({
 						balance: myAsset.assetBalance,
-						value: myAsset.usdiBalance,
+						value: myAsset.onusdBalance,
 						portfolioValue: myAsset.percentVal!
 					})
 					foundItem = true
@@ -75,19 +75,19 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 					<OverviewWrapper>
 						<Typography variant='h3' fontWeight={500}>Market Overview</Typography>
 						<Stack direction="row" justifyContent="flex-start" spacing={9} mt='25px'>
-							<Box width='150px'>
+							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500}>${asset.volume.toLocaleString()} {asset.tickerSymbol}</Typography>
 								</Box>
 							</Box>
-							<Box width='150px'>
+							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Current Liquidity (24h)</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} {asset.tickerSymbol}</Typography>
 								</Box>
 							</Box>
-							<Box width='150px'>
+							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Current Premium (24h)</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500}>{asset.avgPremium.toFixed(3)}%</Typography>
@@ -103,19 +103,19 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box padding='10px'>
 								<Typography variant='h3' fontWeight={500}>My {asset.tickerSymbol}</Typography>
 								<Stack direction="row" justifyContent="flex-start" spacing={9} mt='25px'>
-									<Box width='150px'>
+									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500}>{myData.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {asset.tickerSymbol}</Typography>
 										</Box>
 									</Box>
-									<Box width='150px'>
+									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500}>${myData.value.toLocaleString()} onUSD</Typography>
 										</Box>
 									</Box>
-									<Box width='150px'>
+									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Portfolio %</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500}>{myData.portfolioValue.toFixed(2)}%</Typography>

@@ -57,7 +57,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
         </Stack>
       </Stack>
       <AssetBox>
-        <Typography variant='h3'>${balance?.usdiVal.toLocaleString()}</Typography> <Typography variant='p_lg'>onUSD</Typography>
+        <Typography variant='h3'>${balance?.onusdVal.toLocaleString()}</Typography> <Typography variant='p_lg'>onUSD</Typography>
       </AssetBox>
     </WalletWrapper>
   ) : <></>
