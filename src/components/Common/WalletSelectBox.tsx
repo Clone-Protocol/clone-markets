@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { Box, Typography, styled, Stack } from '@mui/material'
+import { Box, Typography, Stack } from '@mui/material'
+import { styled } from '@mui/system'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 import { useWallet } from '@solana/wallet-adapter-react'

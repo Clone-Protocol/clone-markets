@@ -1,4 +1,5 @@
-import { styled, Box, Stack, Button, IconButton, Typography, CircularProgress } from '@mui/material'
+import { Box, Stack, Button, IconButton, Typography, CircularProgress } from '@mui/material'
+import { styled } from '@mui/system'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import Image from 'next/image'
@@ -15,7 +16,6 @@ import { useBalanceQuery } from '~/features/Markets/Balance.query'
 import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balance.query'
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
-import useLocalStorage from '~/hooks/useLocalStorage'
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
 import GetOnUSD from './GetOnUSD'
@@ -39,6 +39,7 @@ export interface TradingData {
 
 interface Props {
   assetIndex: number
+  slippage: number
   onShowOption: () => void
   onShowSearchAsset: () => void
 }
@@ -48,14 +49,13 @@ const round = (n: number, decimals: number) => {
   return Math.round(n * factor) / factor
 }
 
-const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAsset }) => {
+const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onShowSearchAsset }) => {
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setisBuy] = useState(true)
   // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
-  const [slippage, _] = useLocalStorage("slippage", 0.5)
   const [estimatedFees, setEstimatedFees] = useState(0.0)
   const { setOpen } = useWalletDialog()
   const [restartTimer, setRestartTimer] = useState(false)
@@ -290,7 +290,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                         ticker={fromPair.tickerSymbol}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const usdiAmt = parseFloat(event.currentTarget.value)
-                          field.onChange(usdiAmt)
+                          // console.log('d', event.currentTarget.value)
+                          field.onChange(event.currentTarget.value)
                           calculateTotalAmountByFrom(usdiAmt)
                         }}
                         onMax={(balance: number) => {
@@ -328,7 +329,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, onShowOption, onShowSearchAs
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const iassetAmt = parseFloat(event.currentTarget.value)
-                          field.onChange(iassetAmt)
+                          field.onChange(event.currentTarget.value)
                           calculateTotalAmountByFrom(iassetAmt)
                         }}
                         onMax={(balance: number) => {

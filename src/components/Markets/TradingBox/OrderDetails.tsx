@@ -29,13 +29,13 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
     <Wrapper>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Price Impact <InfoTooltip title="Price Impact" color='#8988a3' /></Typography>
-        <PriceImpactValue>&lt; {isNaN(priceImpact) ? '0' : priceImpact}%</PriceImpactValue>
+        <PriceImpactValue>{isNaN(priceImpact) || priceImpact < 0.1 ? '<' : '~'} {isNaN(priceImpact) ? '0.1' : Math.max(priceImpact, 0.1)}%</PriceImpactValue>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title="Minimum received" color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
           <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(minReceived) ? '0' : minReceived?.toLocaleString()} {outputSymbol}</Typography></Box>
-          <Box><Typography variant='p_sm'>Slippage tolerance: {slippage?.toFixed(1)}%</Typography></Box>
+          <Box><Typography variant='p_sm'>Slippage tolerance: {slippage?.toLocaleString()}%</Typography></Box>
         </div>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">

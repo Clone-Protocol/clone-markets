@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
-import { styled, List, ListItemButton, Box, Fade, Typography } from '@mui/material'
+import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import Link from 'next/link'
 
 const NaviMenu = () => {

@@ -46,8 +46,13 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 	const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
 	const price = poolOnusd / poolOnasset
 
+	//TODO: need to binding real data
+	const volume = 0
+	const avgLiquidity = 0
+	const avgPremium = 0
+	const detailOverview = ''
+
 	return {
-		...(fetchMarketDetailDefault()),
 		tickerName,
 		tickerSymbol,
 		tickerIcon,
@@ -58,13 +63,16 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 		poolCommittedOnusd,
 		liquidityTradingFee,
 		treasuryTradingFee,
-		oraclePrice: pythInfo.price!
+		oraclePrice: pythInfo.price!,
+		volume,
+		avgLiquidity,
+		avgPremium,
+		detailOverview
 	}
 }
 
 export const fetchMarketDetailDefault = () => {
 	return {
-		id: 1,
 		tickerName: 'Clone Euro',
 		tickerSymbol: 'onEUR',
 		pythSymbol: 'FX.EUR/USD',
@@ -78,13 +86,9 @@ export const fetchMarketDetailDefault = () => {
 		oraclePrice: 0.,
 		volume: 12.4,
 		avgLiquidity: 50700000,
-		maxOrderSize: 150,
 		avgPremium: 0.013,
 		detailOverview:
 			'iSOL, appreviated from iSolana, is a synthetic asset of Solana on Incept. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.',
-		myHolding: 5.234,
-		myNotionalVal: 840.11,
-		myPortfolioPercentage: 31.64,
 	}
 }
 

@@ -1,4 +1,5 @@
-import { styled, Theme } from '@mui/material'
+import { Theme } from '@mui/material'
+import { styled } from '@mui/system'
 import { Wallet } from '@solana/wallet-adapter-react'
 import React, { DetailedHTMLProps, FC, ImgHTMLAttributes } from 'react'
 

@@ -1,11 +1,17 @@
-import { styled, Typography, Box } from '@mui/material'
+import { Typography, Box } from '@mui/material'
+import { styled } from '@mui/system'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Image from 'next/image'
 import HomeIcon from 'public/images/more/home.svg'
 import TwitterIcon from 'public/images/more/twitter.svg'
 import DiscordIcon from 'public/images/more/discord.svg'
+import HomeHoverIcon from 'public/images/more/home-hover.svg'
+import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
+import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
 import { Stack } from '@mui/system';
+import { useState } from 'react'
+import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
 
 interface Props {
   anchorEl: null | HTMLElement
@@ -13,6 +19,11 @@ interface Props {
   onClose?: () => void
 }
 
+const MenuIcon = ({ srcImage, hoverImage, alt }: { srcImage: string, hoverImage: string, alt: string }) => {
+  const [isHovering, setIsHovering] = useState(false)
+
+  return <Box sx={{ cursor: 'pointer' }}><Image src={isHovering ? hoverImage : srcImage} alt={alt} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)} /></Box>
+}
 const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => {
   const open = Boolean(anchorEl);
 
@@ -29,7 +40,8 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         mt: 1.5,
         background: '#080018',
         color: '#fff',
-        border: '1px solid #414166'
+        border: '1px solid #414166',
+        borderRadius: '10px'
       },
     }}
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
@@ -43,23 +55,27 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         </Box>
       </HoverStack>
     </StyledMenuItem>
-    <StyledMenuItem>
-      <HoverStack direction='row' alignItems='center'>
-        <Box width='144px'>
-          <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography></Stack>
-          <Box><Typography variant='p_sm' color='#8988a3'>Learn about Clone Markets</Typography></Box>
-        </Box>
-      </HoverStack>
-    </StyledMenuItem>
-    <StyledMenuItem>
-      <HoverStack direction='row' alignItems='center'>
-        <Box width='144px'>
-          <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Liquidity</Typography></Stack>
-          <Box><Typography variant='p_sm' color='#8988a3'>Provide Liquidity on Clone Protocol</Typography></Box>
-        </Box>
-      </HoverStack>
-    </StyledMenuItem>
-    <a href={`https://join-incept.super.site/`} target='_blank' rel="noreferrer">
+    <a href={DOCS_URL} target='_blank' rel="noreferrer">
+      <StyledMenuItem>
+        <HoverStack direction='row' alignItems='center'>
+          <Box width='144px'>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography></Stack>
+            <Box><Typography variant='p_sm' color='#8988a3'>Learn about Clone Markets</Typography></Box>
+          </Box>
+        </HoverStack>
+      </StyledMenuItem>
+    </a>
+    <a href={LIQUIDITY_APP} target='_blank' rel="noreferrer">
+      <StyledMenuItem>
+        <HoverStack direction='row' alignItems='center'>
+          <Box width='144px'>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Liquidity</Typography></Stack>
+            <Box><Typography variant='p_sm' color='#8988a3'>Provide Liquidity on Clone Protocol</Typography></Box>
+          </Box>
+        </HoverStack>
+      </StyledMenuItem>
+    </a>
+    <a href={CAREER_URL} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
           <Box width='144px'>
@@ -69,12 +85,12 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         </HoverStack>
       </StyledMenuItem>
     </a>
-    <Stack direction='row' gap={1} justifyContent='center' mt='15px' mb='10px'>
-      <Image src={HomeIcon} alt="home" />
-      <Image src={TwitterIcon} alt="twitter" />
-      <Image src={DiscordIcon} alt="discord" />
+    <Stack direction='row' gap={2} justifyContent='center' mt='15px' mb='10px'>
+      <a href={OFFICIAL_WEB} target="_blank" rel="noreferrer"><MenuIcon srcImage={HomeIcon} hoverImage={HomeHoverIcon} alt="home" /></a>
+      <a href={TWITTER_URL} target="_blank" rel="noreferrer"><MenuIcon srcImage={TwitterIcon} hoverImage={TwitterHoverIcon} alt="twitter" /></a>
+      <a href={DISCORD_URL} target="_blank" rel="noreferrer"><MenuIcon srcImage={DiscordIcon} hoverImage={DiscordHoverIcon} alt="discord" /></a>
     </Stack>
-  </Menu >
+  </Menu>
 }
 
 const StyledMenuItem = styled(MenuItem)`
@@ -84,12 +100,15 @@ const StyledMenuItem = styled(MenuItem)`
   line-height: 12px;
   color: #fff;
   margin-bottom: 10px;
-  padding: 8px 12px;
+  padding: 0;
 `
 const HoverStack = styled(Stack)`
-  padding: 6px;
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px 6px 12px;
+  line-height: 0.7;
   &:hover {
-    background-color: #2d2d2d;
+    background-color: rgba(255, 255, 255, 0.05);
   }
 `
 

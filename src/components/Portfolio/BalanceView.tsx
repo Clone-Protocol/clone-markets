@@ -1,5 +1,6 @@
 import React from 'react';
-import { styled, Box, Paper, Typography, Stack } from '@mui/material'
+import { Box, Paper, Typography, Stack } from '@mui/material'
+import { styled } from '@mui/system'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useRecoilState } from 'recoil'
 import { filterState } from '~/features/Portfolio/filterAtom'
@@ -54,10 +55,10 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 				</Stack>
 				{newData.length > 0 ?
 					newData.map(item => (
-						<Stack key={item.key} direction='row' gap={1} style={selectedFilter === item.key ? { border: `solid 1px ${FilterTypeColorMap[item.key]}`, borderRadius: '15px' } : {}}>
+						<Stack key={item.key} direction='row' gap={1} height='26px' style={selectedFilter === item.key ? { boxShadow: `0 0 0 1px ${FilterTypeColorMap[item.key]} inset`, borderRadius: '15px' } : {}}>
 							<Box display="flex" alignItems='center' gap={2} width='130px' pl='5px'>
 								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[item.key] }} />
-								<Typography variant='p_lg' mt='3px'>{item.name}</Typography>
+								<Typography variant='p_lg' mt='2px'>{item.name}</Typography>
 							</Box>
 							<Box><Typography variant='p_lg' fontWeight={600}>{item.value.toFixed(0)}%</Typography></Box>
 						</Stack>

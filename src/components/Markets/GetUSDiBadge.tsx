@@ -1,4 +1,5 @@
-import { styled, Typography, Stack, Box, Button } from '@mui/material'
+import { Typography, Stack, Box, Button } from '@mui/material'
+import { styled } from '@mui/system'
 import Image from 'next/image'
 import PrimaryIcon from 'public/images/icons-badge.svg'
 import { useSetRecoilState } from 'recoil'
