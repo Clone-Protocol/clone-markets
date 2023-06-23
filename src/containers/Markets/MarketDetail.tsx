@@ -37,7 +37,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 				if (myAsset.id === parseInt(assetId)) {
 					setMyData({
 						balance: myAsset.assetBalance,
-						value: myAsset.usdiBalance,
+						value: myAsset.onusdBalance,
 						portfolioValue: myAsset.percentVal!
 					})
 					foundItem = true
