@@ -131,13 +131,12 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 	typography: {
 		fontFamily: [
 			'Inter',
-			'Pretendard',
+			'"Helvetica Neue"',
+			'Arial',
 			'-apple-system',
 			'BlinkMacSystemFont',
 			'"Segoe UI"',
 			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
 			'sans-serif',
 			'"Apple Color Emoji"',
 			'"Segoe UI Emoji"',
