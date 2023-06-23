@@ -28,7 +28,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const handleRowClick: GridEventListener<'rowClick'> = (
     params
   ) => {
-    router.push(`/markets/${params.row.id}/asset`)
+    router.push(`/trade/${params.row.id}/asset`)
   }
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 

@@ -111,7 +111,7 @@ const InputAmount = styled(`input`)`
   background-color: transparent;
 	border: 0px;
 	font-size: 14px;
-  padding-right: 5px;
+  padding-right: 15px;
   color: ${(props) => props.theme.basis.textRaven};
 `
 

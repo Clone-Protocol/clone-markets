@@ -234,7 +234,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   const invalidMsg = () => {
-    if (amountOnusd === 0 || isNaN(amountOnusd) || !amountOnusd) {
+    if (amountOnusd == 0 || isNaN(amountOnusd) || !amountOnusd) {
       return 'Enter Amount'
     } else if (isBuy && amountOnusd > myBalance?.onusdVal!) {
       return 'Insufficient onUSD'
@@ -244,7 +244,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       return ''
     }
   }
-  
+
   const tradingFeePct = () => {
     return assetData ? (assetData.liquidityTradingFee + assetData.treasuryTradingFee) * 100 : 0.3
   }
