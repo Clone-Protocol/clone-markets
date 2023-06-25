@@ -22,7 +22,7 @@ export const callTrading = async ({
 }: CallTradingProps) => {
 	if (!userPubKey) throw new Error('no user public key')
 
-	const {
+	let {
 		quantity,
 		quantityIsOnusd,
 		quantityIsInput,
@@ -30,6 +30,7 @@ export const callTrading = async ({
 		slippage,
 		oraclePrice
 	} = data
+	quantity = Number(quantity)
 
 	console.log('input data', data)
 
