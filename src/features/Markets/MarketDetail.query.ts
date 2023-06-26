@@ -8,7 +8,8 @@ import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { getPythOraclePrice } from "~/utils/pyth" 
+import { getPythOraclePrice } from "~/utils/pyth"
+import { ASSETS_DESC } from '~/data/assets_desc'
 
 export const fetchMarketDetail = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
 	// console.log('fetchMarketDetail', index)
@@ -45,12 +46,12 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 
 	const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
 	const price = poolOnusd / poolOnasset
+	const detailOverview = ASSETS_DESC[index].desc
 
 	//TODO: need to binding real data
 	const volume = 0
 	const avgLiquidity = 0
 	const avgPremium = 0
-	const detailOverview = ''
 
 	return {
 		tickerName,
