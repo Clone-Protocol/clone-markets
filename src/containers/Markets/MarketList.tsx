@@ -104,7 +104,7 @@ let columns: GridColDef[] = [
 					<Image src={ArrowUpward} />
 				</Box>
 				: <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
-					<Typography variant='p_xlg'>-{params.row.change24h.toFixed(2)}%</Typography>
+					<Typography variant='p_xlg'>{params.row.change24h.toFixed(2)}%</Typography>
 					<Image src={ArrowDownward} />
 				</Box>
 		},
