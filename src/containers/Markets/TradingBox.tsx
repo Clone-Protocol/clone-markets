@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { SLIPPAGE } from '~/data/localstorage'
+import { ASSETS } from '~/data/assets'
 
 interface Props {
 	assetId: string
@@ -24,7 +25,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const chooseAsset = (id: number) => {
 		onSelectAssetId(id)
 		setShowSearchAssetDlog(false)
-		router.push(`/trade/${id}/asset`)
+		router.push(`/trade/${ASSETS[id].ticker}`)
 	}
 
 	const saveSetting = (slippage: number) => {

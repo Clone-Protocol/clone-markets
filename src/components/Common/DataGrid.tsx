@@ -128,7 +128,7 @@ export const CustomNoOnAssetOverlay = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px', zIndex: '999', position: 'relative' }}>
       <Typography variant='p_lg'>No onAsset to display. </Typography>
-      <Link href="/trade/0/asset"><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Start Trading!</Typography></Link>
+      <Link href="/trade/euro"><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Start Trading!</Typography></Link>
     </Box>
   )
 }
@@ -143,7 +143,7 @@ export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, ticke
   <Box display="flex" justifyContent="flex-start">
     {tickerIcon && <Image src={tickerIcon} width="27px" height="27px" layout="fixed" />}
     <Box display='flex' alignItems='center' ml='10px'>
-      <Box sx={{ maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+      <Box sx={{ maxWidth: '200px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
         <Typography variant='p_xlg'>{tickerName}</Typography>
       </Box>
       <Box sx={{ color: '#989898' }} ml='10px'>

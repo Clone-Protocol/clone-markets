@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -6,10 +6,25 @@ import { styled } from '@mui/system'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
 import { Box, Stack } from '@mui/material'
+import { AssetTickers } from '~/data/assets'
 
 const AssetPage: NextPage = () => {
 	const router = useRouter()
-	const [assetId, setAssetId] = useState(router.query.assetId || 0)
+	const [assetId, setAssetId] = useState(0)
+	const { assetTicker } = router.query
+
+	useEffect(() => {
+		if (assetTicker) {
+			console.log('assetId', AssetTickers[assetTicker as keyof typeof AssetTickers])
+
+			if (AssetTickers[assetTicker as keyof typeof AssetTickers]) {
+				setAssetId(AssetTickers[assetTicker as keyof typeof AssetTickers])
+			} else {
+				setAssetId(AssetTickers.euro)
+				router.replace('/trade/euro')
+			}
+		}
+	}, [assetTicker])
 
 	const handleSelectAssetId = (id: number) => {
 		setAssetId(id)

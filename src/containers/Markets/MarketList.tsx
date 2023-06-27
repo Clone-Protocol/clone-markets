@@ -13,6 +13,7 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Image from 'next/image'
 import { formatDollarAmount } from '~/utils/numbers'
+import { ASSETS } from '~/data/assets'
 
 const MarketList = () => {
 	const router = useRouter()
@@ -41,7 +42,7 @@ const MarketList = () => {
 	const handleRowClick: GridEventListener<'rowClick'> = (
 		params
 	) => {
-		router.push(`/trade/${params.row.id}/asset`)
+		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
 	}
 
 	return (
@@ -73,7 +74,7 @@ let columns: GridColDef[] = [
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
 		headerName: 'onAsset',
-		flex: 4,
+		flex: 5,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />

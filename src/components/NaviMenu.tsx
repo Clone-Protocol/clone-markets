@@ -19,7 +19,7 @@ const NaviMenu = () => {
             <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
           </StyledListItemButton>
         </Link>
-        <Link href="/trade/0/asset">
+        <Link href="/trade/euro">
           <StyledListItemButton className={router.asPath.startsWith('/trade') ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Trade</Typography></Box>
           </StyledListItemButton>

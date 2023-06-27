@@ -13,6 +13,7 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import { useRouter } from 'next/router'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { ASSETS } from '~/data/assets'
 
 interface Props {
   assets: BalanceList[]
@@ -28,7 +29,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const handleRowClick: GridEventListener<'rowClick'> = (
     params
   ) => {
-    router.push(`/trade/${params.row.id}/asset`)
+    router.push(`/trade/${ASSETS[params.row.id].ticker}`)
   }
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 
