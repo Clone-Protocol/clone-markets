@@ -88,7 +88,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 								</Box>
 							</Box>
 							<Box width='160px'>
-								<Box><Typography variant='p' color='#8988a3'>Current Premium (24h)</Typography></Box>
+								<Box><Typography variant='p' color='#8988a3'>Current Premium</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500}>{asset.avgPremium.toFixed(3)}%</Typography>
 								</Box>
