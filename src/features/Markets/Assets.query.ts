@@ -4,10 +4,11 @@ import { assetMapping, AssetType } from '~/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
-import { AggregatedStats, getAggregatedPoolStats, getiAssetInfos } from '~/utils/assets';
+import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
+import { fetchPythPriceHistory } from '~/utils/pyth'
 
 export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: boolean) => void }) => {
 	console.log('fetchAssets')
@@ -34,18 +35,29 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 	const tokenData = await program.getTokenData();
 	const iassetInfos = getiAssetInfos(tokenData);
 
-	let poolStats: AggregatedStats[] = []
-	try {
-		poolStats = await getAggregatedPoolStats(tokenData)
-	} catch (e) {
-		console.error(e)
-	}
+	const dailyVolumeStats = await fetch24hourVolume()
+
+	// Fetch Pyth
+	let pythData = await Promise.all(
+		iassetInfos.map((info) => {
+			let { pythSymbol } = assetMapping(info.poolIndex)
+			return fetchPythPriceHistory(
+				pythSymbol, 'devnet', '1D'
+			)
+		})
+	)
 
 	const result: AssetList[] = []
 
-	for (const info of iassetInfos) {
+	for (let i=0; i< iassetInfos.length; i++) {
+		const info = iassetInfos[i]
 		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
-		const stats = poolStats[info.poolIndex]
+
+		const priceData = pythData[i]
+		const openPrice = Number(priceData[0].avg_price)
+		const closePrice = Number(priceData.at(-1)!.avg_price)
+		const change24h = (closePrice / openPrice - 1) * 100
+
 		result.push({
 			id: info.poolIndex,
 			tickerName,
@@ -54,9 +66,9 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 			price: info.poolPrice,
 			assetType,
 			liquidity: parseInt(info.liquidity.toString()),
-			volume24h: stats?.volumeUSD,
-			change24h: 0, // @TODO need to set
-			feeRevenue24h: stats?.fees
+			volume24h: dailyVolumeStats.get(info.poolIndex) ?? 0,
+			change24h,
+			feeRevenue24h: 0 // We don't use this on the markets app.
 		})
 	}
 	return result

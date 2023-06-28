@@ -41,7 +41,7 @@
     "axios": "^1.3.4",
     "dayjs": "^1.11.0",
     "google-spreadsheet": "^3.3.0",
-    "incept-protocol-sdk": "git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#core-547",
+    "incept-protocol-sdk": "git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#public-beta",
     "moment": "^2.29.4",
     "next": "^12.1.0",
     "notistack": "^2.0.3",

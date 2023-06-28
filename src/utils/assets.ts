@@ -119,6 +119,7 @@ export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<Aggr
 
 type OHLCVResponse = {
   time_interval: string,
+  pool_index: string,
   open: string,
   high: string,
   low: string,
@@ -172,4 +173,31 @@ export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour
   }
 
   return prices
+}
+
+export const fetch24hourVolume = async () => {
+  let url = `${process.env.NEXT_PUBLIC_CLONE_INDEX_ENDPOINT}/ohlcv?interval=hour&filter=week`
+
+  const authorization = process.env.NEXT_PUBLIC_CLONE_API_KEY!
+
+  let response = await axios.get(url, {
+    headers: { 'Authorization': authorization }
+  })
+
+  let data: OHLCVResponse[] = response.data?.body
+
+  let result: Map<number, number> = new Map()
+  const now = new Date()
+  const isWithin24hrs = (date: Date) => {
+    return (date.getTime() >= (now.getTime() - 86400000))
+  }
+  const conversion = Math.pow(10, -DEVNET_TOKEN_SCALE)
+  data.forEach((response) => {
+    if (!isWithin24hrs(new Date(response.time_interval))) {
+      return;
+    }
+    const poolIndex = Number(response.pool_index)
+    result.set(poolIndex, (result.get(poolIndex) ?? 0) + Number(response.volume) * conversion)
+  })
+  return result
 }

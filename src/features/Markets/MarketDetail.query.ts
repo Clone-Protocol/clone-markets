@@ -10,6 +10,7 @@ import { PublicKey, Connection } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getPythOraclePrice } from "~/utils/pyth"
 import { ASSETS_DESC } from '~/data/assets_desc'
+import { fetch24hourVolume } from '~/utils/assets'
 
 export const fetchMarketDetail = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
 	// console.log('fetchMarketDetail', index)
@@ -43,15 +44,16 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 	const liquidityTradingFee = toNumber(pool.liquidityTradingFee)
 	const treasuryTradingFee = toNumber(pool.treasuryTradingFee)
 	const pythInfo = await getPythOraclePrice(program.connection, pythSymbol)
+	const oraclePrice = pythInfo.price!
 
 	const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
 	const price = poolOnusd / poolOnasset
 	const detailOverview = ASSETS_DESC[index].desc
 
-	//TODO: need to binding real data
-	const volume = 0
-	const avgLiquidity = 0
-	const avgPremium = 0
+	const dailyVolumeStats = await fetch24hourVolume()
+	const volume = dailyVolumeStats.get(index) ?? 0
+	const avgLiquidity = poolCommittedOnusd * 2
+	const avgPremium = 100 * (price / oraclePrice - 1)
 
 	return {
 		tickerName,
