@@ -23,8 +23,8 @@ const Drawer: React.FC = () => {
 							<StyledListItemText>Markets</StyledListItemText>
 						</StyledListItemButton>
 					</Link>
-					<Link href="/iportfolio">
-						<StyledListItemButton className={router.asPath.startsWith('/iportfolio') ? 'selected' : ''}>
+					<Link href="/onportfolio">
+						<StyledListItemButton className={router.asPath.startsWith('/onportfolio') ? 'selected' : ''}>
 							<ListItemIcon sx={{ marginLeft: '20px' }}>
 								<Image src={menuPortfolioIcon} alt="portfolio" />
 							</ListItemIcon>
