@@ -1,9 +1,11 @@
 import { TokenData } from "incept-protocol-sdk/sdk/src/interfaces";
 import { toNumber } from "incept-protocol-sdk/sdk/src/decimal";
 import { DEVNET_TOKEN_SCALE } from "incept-protocol-sdk/sdk/src/clone"
+import { fetchFromCloneIndex } from "./indexing";
 import axios from "axios";
 
 export type Interval = 'day' | 'hour';
+export type Filter = 'day' | 'week' | 'month' | 'year';
 
 export type ResponseValue = {
   datetime: string;
@@ -35,22 +37,12 @@ export const generateDates = (start: Date, interval: Interval): Date[] => {
   return dates;
 }
 
-export const fetchStatsData = async (interval: Interval, poolIndex?: number): Promise<ResponseValue[]> => {
+export const fetchStatsData = async (filter: Filter, interval: Interval): Promise<ResponseValue[]> => {
 
-  const baseUrl = process.env.NEXT_PUBLIC_CLONE_INDEX_ENDPOINT!
-  let url = `${baseUrl}/stats?interval=${interval}`
-  if (poolIndex !== undefined) {
-    url = `${url}&pool=${poolIndex}`
-  }
-  const authorization = process.env.NEXT_PUBLIC_CLONE_API_KEY!
-  const headers = {
-    'Authorization': authorization,
-  }
-
-  let response = await axios.get(url, { headers })
-
-  return response.data?.body
+  let response = await fetchFromCloneIndex('stats', {interval, filter})
+  return response.data as ResponseValue[]
 }
+
 
 export const getiAssetInfos = (tokenData: TokenData): { poolIndex: number, poolPrice: number, liquidity: number }[] => {
   const iassetInfo = [];
@@ -80,42 +72,42 @@ const convertToNumber = (val: string) => {
   return Number(val) * Math.pow(10, -DEVNET_TOKEN_SCALE)
 }
 
-export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<AggregatedStats[]> => {
+// export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<AggregatedStats[]> => {
 
-  let result: AggregatedStats[] = [];
-  for (let i = 0; i < tokenData.numPools.toNumber(); i++) {
-    result.push({ volumeUSD: 0, fees: 0, previousVolumeUSD: 0, previousFees: 0, liquidityUSD: 0, previousLiquidity: 0 })
-  }
+//   let result: AggregatedStats[] = [];
+//   for (let i = 0; i < tokenData.numPools.toNumber(); i++) {
+//     result.push({ volumeUSD: 0, fees: 0, previousVolumeUSD: 0, previousFees: 0, liquidityUSD: 0, previousLiquidity: 0 })
+//   }
 
-  const statsData = await fetchStatsData('hour')
-  const now = (new Date()).getTime(); // Get current timestamp
+//   const statsData = await fetchStatsData('hour')
+//   const now = (new Date()).getTime(); // Get current timestamp
 
-  statsData.forEach((item) => {
-    const dt = new Date(item.datetime)
-    const hoursDifference = (now - dt.getTime()) / 3600000
-    const poolIndex = Number(item.pool_index)
+//   statsData.forEach((item) => {
+//     const dt = new Date(item.datetime)
+//     const hoursDifference = (now - dt.getTime()) / 3600000
+//     const poolIndex = Number(item.pool_index)
 
-    if (poolIndex >= tokenData.numPools.toNumber()) {
-      return;
-    }
-    const tradingVolume = convertToNumber(item.trading_volume)
-    const tradingFees = convertToNumber(item.total_trading_fees)
-    const liquidity = convertToNumber(item.total_liquidity)
-    if (hoursDifference <= 24) {
-      result[poolIndex].volumeUSD += tradingVolume
-      result[poolIndex].liquidityUSD = liquidity
-      result[poolIndex].fees += tradingFees
-    } else if (hoursDifference <= 48 && hoursDifference > 24) {
-      result[poolIndex].previousVolumeUSD += tradingVolume
-      result[poolIndex].previousLiquidity = liquidity
-      result[poolIndex].previousFees += tradingFees
-    } else {
-      result[poolIndex].liquidityUSD = liquidity
-      result[poolIndex].previousLiquidity = liquidity
-    }
-  })
-  return result
-}
+//     if (poolIndex >= tokenData.numPools.toNumber()) {
+//       return;
+//     }
+//     const tradingVolume = convertToNumber(item.trading_volume)
+//     const tradingFees = convertToNumber(item.total_trading_fees)
+//     const liquidity = convertToNumber(item.total_liquidity)
+//     if (hoursDifference <= 24) {
+//       result[poolIndex].volumeUSD += tradingVolume
+//       result[poolIndex].liquidityUSD = liquidity
+//       result[poolIndex].fees += tradingFees
+//     } else if (hoursDifference <= 48 && hoursDifference > 24) {
+//       result[poolIndex].previousVolumeUSD += tradingVolume
+//       result[poolIndex].previousLiquidity = liquidity
+//       result[poolIndex].previousFees += tradingFees
+//     } else {
+//       result[poolIndex].liquidityUSD = liquidity
+//       result[poolIndex].previousLiquidity = liquidity
+//     }
+//   })
+//   return result
+// }
 
 type OHLCVResponse = {
   time_interval: string,
@@ -129,21 +121,14 @@ type OHLCVResponse = {
 }
 
 const fetch30DayOHLCV = async (poolIndex: number, interval: 'hour' | 'day') => {
-  const url = `${process.env.NEXT_PUBLIC_CLONE_INDEX_ENDPOINT}/ohlcv?interval=${interval}&pool=${poolIndex}&filter=month`
-  const authorization = process.env.NEXT_PUBLIC_CLONE_API_KEY!
 
-  let response = await axios.get(url, {
-    data: { interval },
-    headers: { 'Authorization': authorization }
-  })
-
-  let result: OHLCVResponse[] = response.data?.body
+  let response = await fetchFromCloneIndex('ohlcv', {interval, pool: poolIndex, filter: 'month'})
+  let result: OHLCVResponse[] = response.data
   return result
 }
 
 export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour' | 'day') => {
   const requestResult = await fetch30DayOHLCV(poolIndex, interval)
-  console.log("RESULT:", requestResult)
   const now = new Date()
   const lookback30Day = new Date(now.getTime() - 30 * 86400 * 1000)
 
@@ -176,15 +161,9 @@ export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour
 }
 
 export const fetch24hourVolume = async () => {
-  let url = `${process.env.NEXT_PUBLIC_CLONE_INDEX_ENDPOINT}/ohlcv?interval=hour&filter=week`
 
-  const authorization = process.env.NEXT_PUBLIC_CLONE_API_KEY!
-
-  let response = await axios.get(url, {
-    headers: { 'Authorization': authorization }
-  })
-
-  let data: OHLCVResponse[] = response.data?.body
+  let response = await fetchFromCloneIndex('ohlcv', {interval: 'hour', filter: 'week'})
+  let data: OHLCVResponse[] = response.data
 
   let result: Map<number, number> = new Map()
   const now = new Date()

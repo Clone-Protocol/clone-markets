@@ -1,7 +1,7 @@
 import { Query, useQuery } from 'react-query'
 import { FilterTime } from '~/components/Charts/TimeTabs'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
-import { fetchStatsData, Interval, ResponseValue, generateDates } from 'src/utils/assets'
+import { fetchStatsData, Interval, ResponseValue, generateDates, Filter } from 'src/utils/assets'
 
 export interface ChartElem {
   time: string
@@ -109,23 +109,23 @@ const aggregatePoolData = (poolDataArray: ResponseValue[], interval: Interval): 
 
 export const fetchTotalLiquidity = async ({ timeframe }: { timeframe: FilterTime }) => {
 
-  const [daysLookback, interval] = (() => {
+  const [daysLookback, filter, interval] = (() => {
     switch (timeframe) {
       case '1y':
-        return [365, 'day' as Interval]
+        return [365, 'year', 'day']
       case '30d':
-        return [30, 'day' as Interval]
+        return [30, 'month', 'day']
       case '7d':
-        return [7, 'hour' as Interval]
+        return [7, 'week', 'hour']
       case '24h':
-        return [1, 'hour' as Interval]
+        return [1, 'day', 'hour']
       default:
         throw new Error(`Unexpected timeframe: ${timeframe}`)
     }
   })()
 
-  const rawData = await fetchStatsData(interval)
-  const aggregatedData = aggregatePoolData(rawData, interval)
+  const rawData = await fetchStatsData(filter as Filter, interval as Interval)
+  const aggregatedData = aggregatePoolData(rawData, interval as Interval)
   const chartData = aggregatedData.map(data => { return { time: data.datetime, value: data.total_liquidity } })
 
   return {
@@ -134,23 +134,23 @@ export const fetchTotalLiquidity = async ({ timeframe }: { timeframe: FilterTime
 }
 
 export const fetchTotalVolume = async ({ timeframe }: { timeframe: FilterTime }) => {
-  const [daysLookback, interval] = (() => {
+  const [daysLookback, filter, interval] = (() => {
     switch (timeframe) {
       case '1y':
-        return [365, 'day' as Interval]
+        return [365, 'year', 'day']
       case '30d':
-        return [30, 'day' as Interval]
+        return [30, 'month', 'day']
       case '7d':
-        return [7, 'hour' as Interval]
+        return [7, 'week', 'hour']
       case '24h':
-        return [1, 'hour' as Interval]
+        return [1, 'day', 'hour']
       default:
         throw new Error(`Unexpected timeframe: ${timeframe}`)
     }
   })()
 
-  const rawData = await fetchStatsData(interval)
-  const aggregatedData = aggregatePoolData(rawData, interval)
+  const rawData = await fetchStatsData(filter as Filter, interval as Interval)
+  const aggregatedData = aggregatePoolData(rawData, interval as Interval)
   const chartData = aggregatedData.map(data => { return { time: data.datetime, value: data.trading_volume } })
 
   return {
