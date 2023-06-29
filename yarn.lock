@@ -4413,9 +4413,9 @@ imurmurhash@^0.1.4:
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==
 
-"incept-protocol-sdk@git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#public-beta":
+"incept-protocol-sdk@git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#1f75c31":
   version "0.1.0"
-  resolved "git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#4fc75d25c059ecbb9e2525ce5dba68333bb1a85d"
+  resolved "git+https://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:x-oauth-basic@github.com/Incept-Protocol/incept-protocol.git#1f75c312e5f42441e8694327433bcde8f2e3bf5d"
   dependencies:
     "@aws-sdk/client-secrets-manager" "^3.342.0"
     "@coral-xyz/anchor" "^0.27.0"
@@ -4424,7 +4424,6 @@ imurmurhash@^0.1.4:
     "@solana/buffer-layout" "^4.0.0"
     "@solana/spl-token" "^0.2.0"
     axios "^1.4.0"
-    google-spreadsheet "^3.3.0"
     toml "^3.0.0"
 
 indent-string@^4.0.0:
