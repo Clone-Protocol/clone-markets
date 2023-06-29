@@ -37,10 +37,29 @@ const PieChartAlt: React.FC<ChartProps> = ({
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
+          style={{ filter: `drop-shadow(0px 0px 5px ${fill})` }}
         />
       </g>
     );
   };
+
+  // const renderInactiveShape = (props) => {
+  //   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+
+  //   return (
+  //     <g>
+  //       <Sector
+  //         cx={cx}
+  //         cy={cy}
+  //         innerRadius={innerRadius}
+  //         outerRadius={outerRadius}
+  //         startAngle={startAngle}
+  //         endAngle={endAngle}
+  //         fill="#363636"
+  //       />
+  //     </g>
+  //   );
+  // }
 
   return (
     <Wrapper>
@@ -59,12 +78,11 @@ const PieChartAlt: React.FC<ChartProps> = ({
               activeIndex={selectedIdx}
               cursor="pointer"
               activeShape={renderActiveShape}
+              // inactiveShape={renderInactiveShape}
               onMouseDown={onPieEnter}
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} style={{
-                  filter: `drop-shadow(0px 0px 5px ${FilterTypeColorMap[entry.key]}`
-                }} />
+                <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} />
               ))}
             </Pie>
           ) : (
