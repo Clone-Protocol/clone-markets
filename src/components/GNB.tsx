@@ -58,7 +58,7 @@ const GNB: React.FC = () => {
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
-						<Image src={logoIcon} width={255} alt="incept" />
+						<Image src={logoIcon} width={255} alt="clone" />
 						<Box><NaviMenu /></Box>
 						<RightMenu />
 
@@ -105,7 +105,7 @@ const RightMenu: React.FC = () => {
 				let [jupiterAddress, nonce] = PublicKey.findProgramAddressSync(
 					[Buffer.from("jupiter")],
 					new PublicKey(JUPITER_PROGRAM_ADDRESS)
-				  );
+				);
 				let jupiterAccount = await Jupiter.fromAccountAddress(program.connection, jupiterAddress)
 				const usdcTokenAccount = await getTokenAccount(jupiterAccount.usdcMint, publicKey, program.connection);
 				const usdcAta = await getAssociatedTokenAddress(jupiterAccount.usdcMint, publicKey);
@@ -127,9 +127,9 @@ const RightMenu: React.FC = () => {
 								jupiterAccount: jupiterAddress,
 								tokenProgram: TOKEN_PROGRAM_ID
 							}, {
-								nonce,
-								amount: new BN(onusdToMint * Math.pow(10, 7))
-							}
+							nonce,
+							amount: new BN(onusdToMint * Math.pow(10, 7))
+						}
 						)
 					)
 

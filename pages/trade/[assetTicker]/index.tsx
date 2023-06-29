@@ -33,8 +33,8 @@ const AssetPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Asset - Incept Markets</title>
-				<meta name="description" content="Asset - Incept Markets" />
+				<title>Asset - Clone Markets</title>
+				<meta name="description" content="Asset - Clone Markets" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>

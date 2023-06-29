@@ -13,8 +13,8 @@ const Home: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Incept Markets - Beta</title>
-				<meta name="description" content="Incept Markets - Beta" />
+				<title>Clone Markets - Beta</title>
+				<meta name="description" content="Clone Markets - Beta" />
 				<link rel="icon" href="/favicon.ico" />
 				<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet' />
 			</Head>
