@@ -78,7 +78,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500}>${asset.volume.toLocaleString()} onUSD</Typography>
+									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${asset.volume.toLocaleString()} onUSD</Typography>
 								</Box>
 							</Box>
 							<Box width='160px'>
@@ -90,7 +90,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Current Premium</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500}>{asset.avgPremium.toFixed(3)}%</Typography>
+									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{asset.avgPremium.toFixed(3)}%</Typography>
 								</Box>
 							</Box>
 						</Stack>
@@ -106,19 +106,19 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500}>{myData.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {asset.tickerSymbol}</Typography>
+											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{myData.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {asset.tickerSymbol}</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500}>${myData.value.toLocaleString()} onUSD</Typography>
+											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${myData.value.toLocaleString()} onUSD</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>onAsset Portfolio %</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500}>{myData.portfolioValue.toFixed(2)}%</Typography>
+											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{myData.portfolioValue.toFixed(2)}%</Typography>
 										</Box>
 									</Box>
 								</Stack>
@@ -131,7 +131,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 					<Box marginBottom='40px' padding='10px'>
 						<Typography variant='h3' fontWeight={500}>About {asset.tickerSymbol}</Typography>
 						<Box lineHeight={1.14} mt='8px'><Typography variant='p_lg'>{asset.detailOverview}</Typography></Box>
-						<Typography variant='p_lg' color='#c4b5fd'>...read more</Typography>
+						<a href={`https://docs.clone.so/devnet-guide/onassets/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#c4b5fd'>...read more</Typography></a>
 					</Box>
 				</Stack>
 			) : (
