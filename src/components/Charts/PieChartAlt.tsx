@@ -37,6 +37,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
+          strokeWidth={0}
           style={{ filter: `drop-shadow(0px 0px 5px ${fill})` }}
         />
       </g>
@@ -130,5 +131,6 @@ const CloseWrapper = styled(Box)`
     background: rgba(196, 181, 253, 0.05);
   }
 `
+
 
 export default withCsrOnly(PieChartAlt)
