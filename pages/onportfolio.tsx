@@ -8,9 +8,10 @@ const IportfolioPage: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Portfolio - Clone Protocol</title>
-				<meta name="description" content="Portfolio - Clone Markets" />
-				<link rel="icon" href="/favicon.ico" />
+				<title>Clone Markets - The Most Efficient Trading on Solana</title>
+				<meta name="description" content="Clone Markets allows users to trade onAssets, our synthetic derivatives that bring supercharged liquidity and rapid scalability to trading on Solana." />
+				<link rel="icon" href="/favicon.png" />
+				<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet' />
 			</Head>
 			<main>
 				<StyledSection>
