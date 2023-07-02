@@ -39,7 +39,7 @@ export const generateDates = (start: Date, interval: Interval): Date[] => {
 
 export const fetchStatsData = async (filter: Filter, interval: Interval): Promise<ResponseValue[]> => {
 
-  let response = await fetchFromCloneIndex('stats', {interval, filter})
+  let response = await fetchFromCloneIndex('stats', { interval, filter })
   return response.data as ResponseValue[]
 }
 
@@ -122,7 +122,7 @@ type OHLCVResponse = {
 
 const fetch30DayOHLCV = async (poolIndex: number, interval: 'hour' | 'day') => {
 
-  let response = await fetchFromCloneIndex('ohlcv', {interval, pool: poolIndex, filter: 'month'})
+  let response = await fetchFromCloneIndex('ohlcv', { interval, pool: poolIndex, filter: 'month' })
   let result: OHLCVResponse[] = response.data
   return result
 }
@@ -162,7 +162,7 @@ export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour
 
 export const fetch24hourVolume = async () => {
 
-  let response = await fetchFromCloneIndex('ohlcv', {interval: 'hour', filter: 'week'})
+  let response = await fetchFromCloneIndex('ohlcv', { interval: 'hour', filter: 'week' })
   let data: OHLCVResponse[] = response.data
 
   let result: Map<number, number> = new Map()

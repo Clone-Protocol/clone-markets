@@ -31,7 +31,6 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 	// @ts-ignore
 	const program = new CloneClient(network.clone, provider)
 	await program.loadClone()
-
 	const tokenData = await program.getTokenData();
 	const iassetInfos = getiAssetInfos(tokenData);
 
@@ -49,14 +48,14 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 
 	const result: AssetList[] = []
 
-	for (let i=0; i< iassetInfos.length; i++) {
+	for (let i = 0; i < iassetInfos.length; i++) {
 		const info = iassetInfos[i]
 		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
 
 		const priceData = pythData[i]
-		const openPrice = Number(priceData[0].avg_price)
-		const closePrice = Number(priceData.at(-1)!.avg_price)
-		const change24h = (closePrice / openPrice - 1) * 100
+		const openPrice = priceData[0] ? Number(priceData[0].avg_price) : 0
+		const closePrice = priceData[0] ? Number(priceData.at(-1)!.avg_price) : 0
+		const change24h = priceData[0] ? (closePrice / openPrice - 1) * 100 : 0
 
 		result.push({
 			id: info.poolIndex,
