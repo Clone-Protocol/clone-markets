@@ -13,11 +13,13 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Image from 'next/image'
 import { formatDollarAmount } from '~/utils/numbers'
-import { ASSETS } from '~/data/assets'
+import { ASSETS, AssetTickers } from '~/data/assets'
+import { useSnackbar } from 'notistack'
 
 const MarketList = () => {
 	const router = useRouter()
 	const [filter, setFilter] = useState<FilterType>('all')
+	const { enqueueSnackbar } = useSnackbar()
 
 	const { data: assets } = useAssetsQuery({
 		filter,
@@ -42,7 +44,12 @@ const MarketList = () => {
 	const handleRowClick: GridEventListener<'rowClick'> = (
 		params
 	) => {
-		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+		// temporary disabled
+		if (params.row.id === AssetTickers.gold) {
+			enqueueSnackbar('temporarily unavailable due to oracle error')
+		} else {
+			router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+		}
 	}
 
 	return (

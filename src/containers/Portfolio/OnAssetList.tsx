@@ -13,7 +13,8 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import { useRouter } from 'next/router'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { ASSETS } from '~/data/assets'
+import { ASSETS, AssetTickers } from '~/data/assets'
+import { useSnackbar } from 'notistack'
 
 interface Props {
   assets: BalanceList[]
@@ -22,6 +23,7 @@ interface Props {
 
 const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const { publicKey } = useWallet()
+  const { enqueueSnackbar } = useSnackbar()
   // const [selectedFilter, setFilterState] = useRecoilState(filterState)
 
   // const pieitemsKeys = pieitems.map((item) => item.key)
@@ -29,7 +31,12 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const handleRowClick: GridEventListener<'rowClick'> = (
     params
   ) => {
-    router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+    // temporary disabled
+    if (params.row.id === AssetTickers.gold) {
+      enqueueSnackbar('temporarily unavailable due to oracle error')
+    } else {
+      router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+    }
   }
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 
