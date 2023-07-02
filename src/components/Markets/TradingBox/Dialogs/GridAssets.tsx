@@ -5,6 +5,8 @@ import withSuspense from '~/hocs/withSuspense'
 import Image from 'next/image'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
+import { AssetTickers } from '~/data/assets'
+import { useSnackbar } from 'notistack'
 
 interface Props {
 	onChoose: (id: number) => void
@@ -18,10 +20,16 @@ const GridAssets: React.FC<Props> = ({ onChoose, searchTerm }) => {
 		searchTerm: searchTerm || '',
 		enabled: true
 	})
+	const { enqueueSnackbar } = useSnackbar()
 
 	const handleChoose = (params: GridRowParams) => {
 		const id = params.row.id
-		onChoose && onChoose(id)
+		// temporary disabled
+		if (params.row.id === AssetTickers.gold) {
+			enqueueSnackbar('temporarily unavailable due to oracle error')
+		} else {
+			onChoose && onChoose(id)
+		}
 	}
 
 	return (
