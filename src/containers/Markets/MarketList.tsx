@@ -19,7 +19,7 @@ import { useSnackbar } from 'notistack'
 const MarketList = () => {
 	const router = useRouter()
 	const [filter, setFilter] = useState<FilterType>('all')
-	const { enqueueSnackbar } = useSnackbar()
+	// const { enqueueSnackbar } = useSnackbar()
 
 	const { data: assets } = useAssetsQuery({
 		filter,
@@ -45,11 +45,11 @@ const MarketList = () => {
 		params
 	) => {
 		// temporary disabled
-		if (params.row.id === AssetTickers.gold) {
-			enqueueSnackbar('temporarily unavailable due to oracle error')
-		} else {
-			router.push(`/trade/${ASSETS[params.row.id].ticker}`)
-		}
+		// if (params.row.id === AssetTickers.gold) {
+		// 	enqueueSnackbar('temporarily unavailable due to oracle error')
+		// } else {
+		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+		// }
 	}
 
 	return (

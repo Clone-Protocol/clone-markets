@@ -23,20 +23,18 @@ interface Props {
 
 const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const { publicKey } = useWallet()
-  const { enqueueSnackbar } = useSnackbar()
-  // const [selectedFilter, setFilterState] = useRecoilState(filterState)
+  // const { enqueueSnackbar } = useSnackbar()
 
-  // const pieitemsKeys = pieitems.map((item) => item.key)
   const router = useRouter()
   const handleRowClick: GridEventListener<'rowClick'> = (
     params
   ) => {
     // temporary disabled
-    if (params.row.id === AssetTickers.gold) {
-      enqueueSnackbar('temporarily unavailable due to oracle error')
-    } else {
-      router.push(`/trade/${ASSETS[params.row.id].ticker}`)
-    }
+    // if (params.row.id === AssetTickers.gold) {
+    //   enqueueSnackbar('temporarily unavailable due to oracle error')
+    // } else {
+    router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+    // }
   }
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 
