@@ -1,24 +1,22 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { Query, useQuery } from 'react-query'
 import { ChartElem } from './Liquidity.query'
 import { fetchPythPriceHistory, Range } from '~/utils/pyth'
 import { FilterTime } from '~/components/Charts/TimeTabs'
-import { getDailyPoolPrices30Day, Interval } from '~/utils/assets'
-import { ASSETS } from '~/data/assets'
 
-type TimeSeriesValue = { time: string, value: number }
-const filterHistoricalData = (data: TimeSeriesValue[], numDays: number): TimeSeriesValue[] => {
-  const today = new Date(); // get the current date
-  const numMilliseconds = numDays * 86400 * 1000; // calculate the number of milliseconds in the specified number of days
-  const historicalDate = new Date(today.getTime() - numMilliseconds); // calculate the historical date
+// type TimeSeriesValue = { time: string, value: number }
+// const filterHistoricalData = (data: TimeSeriesValue[], numDays: number): TimeSeriesValue[] => {
+//   const today = new Date(); // get the current date
+//   const numMilliseconds = numDays * 86400 * 1000; // calculate the number of milliseconds in the specified number of days
+//   const historicalDate = new Date(today.getTime() - numMilliseconds); // calculate the historical date
 
-  const filteredData = data.filter(({ time }) => {
-    const currentDatetime = new Date(time);
-    return currentDatetime >= historicalDate; // include values within the historical range
-  });
+//   const filteredData = data.filter(({ time }) => {
+//     const currentDatetime = new Date(time);
+//     return currentDatetime >= historicalDate; // include values within the historical range
+//   });
 
-  return filteredData;
-};
+//   return filteredData;
+// };
 
 export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timeframe: FilterTime, pythSymbol: string | undefined }) => {
   if (!pythSymbol) return null
@@ -43,18 +41,18 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
     }
   })()
 
-  let poolIndex = (() => {
-    for (let i = 0; i < ASSETS.length; i++) {
-      if (ASSETS[i].pythSymbol === pythSymbol) {
-        return i;
-      }
-    }
-    throw new Error(`Couldn't find pool index for ${pythSymbol}`)
-  })()
+  // let poolIndex = (() => {
+  //   for (let i = 0; i < ASSETS.length; i++) {
+  //     if (ASSETS[i].pythSymbol === pythSymbol) {
+  //       return i;
+  //     }
+  //   }
+  //   throw new Error(`Couldn't find pool index for ${pythSymbol}`)
+  // })()
 
   const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, "devnet", range)
   chartData = pythHistoricalData.map((item) => {
-    return {time: item.timestamp, value: item.avg_price}
+    return { time: item.timestamp, value: item.avg_price }
   })
 
   const allValues = chartData.map(elem => elem.value!)
@@ -62,10 +60,10 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   const minValue = Math.floor(Math.min(...allValues))
 
   const lastEntry = chartData[chartData.length - 1];
-  const previous24hrDatetime = moment(lastEntry.time).utc().subtract(1, 'days');
+  const previous24hrDatetime = dayjs(lastEntry.time).utc().subtract(1, 'days');
   let previous24hrPrice = lastEntry.value;
   for (let { time, value } of chartData) {
-    const entryTime = moment(time).utc()
+    const entryTime = dayjs(time).utc()
     if (entryTime > previous24hrDatetime) {
       break;
     }

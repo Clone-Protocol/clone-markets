@@ -23,9 +23,10 @@ import { useRecoilState } from 'recoil'
 import { PROGRAM_ADDRESS as JUPITER_PROGRAM_ADDRESS, createMintUsdcInstruction, Jupiter } from 'incept-protocol-sdk/sdk/generated/jupiter-agg-mock/index'
 import NaviMenu from './NaviMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
-import MobileWarningDialog from './Common/MobileWarningDialog'
+// import MobileWarningDialog from './Common/MobileWarningDialog'
 import { mintUSDi } from '~/features/globalAtom'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
+import dynamic from 'next/dynamic'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -34,6 +35,8 @@ const GNB: React.FC = () => {
 	const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	const { scrolled } = useScroll()
+
+	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
