@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { styled } from '@mui/system'
@@ -20,9 +20,35 @@ const PieChartAlt: React.FC<ChartProps> = ({
   onSelect
 }) => {
   const [_, setSelectedFilter] = useRecoilState(filterState)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const [isClicked, setIsClicked] = useState(false)
+
   const onPieEnter = (_, index: number) => {
+    setActiveIndex(index)
+  }
+  const onPieClick = (_, index: number) => {
+    setIsClicked(true)
     onSelect(index)
   }
+
+  const renderHoverShape = (props) => {
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+
+    return (
+      <g>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius - 8}
+          outerRadius={outerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+          strokeWidth={0}
+        />
+      </g>
+    );
+  };
 
   const renderActiveShape = (props) => {
     const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
@@ -44,23 +70,30 @@ const PieChartAlt: React.FC<ChartProps> = ({
     );
   };
 
-  // const renderInactiveShape = (props) => {
-  //   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+  const renderInactiveShape = (props) => {
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
 
-  //   return (
-  //     <g>
-  //       <Sector
-  //         cx={cx}
-  //         cy={cy}
-  //         innerRadius={innerRadius}
-  //         outerRadius={outerRadius}
-  //         startAngle={startAngle}
-  //         endAngle={endAngle}
-  //         fill="#363636"
-  //       />
-  //     </g>
-  //   );
-  // }
+    return (
+      <g>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+          opacity={0.3}
+        />
+      </g>
+    );
+  }
+
+  const clearPie = () => {
+    setIsClicked(false);
+    setActiveIndex(-1);
+    setSelectedFilter('all');
+  }
 
   return (
     <Wrapper>
@@ -76,11 +109,12 @@ const PieChartAlt: React.FC<ChartProps> = ({
               fill="#8884d8"
               paddingAngle={0}
               dataKey="value"
-              activeIndex={selectedIdx}
+              activeIndex={activeIndex}
               cursor="pointer"
-              activeShape={renderActiveShape}
-              // inactiveShape={renderInactiveShape}
-              onMouseDown={onPieEnter}
+              activeShape={isClicked ? renderActiveShape : renderHoverShape}
+              inactiveShape={isClicked ? renderInactiveShape : null}
+              onMouseDown={onPieClick}
+              onMouseEnter={onPieEnter}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} />
@@ -104,7 +138,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
         </PieChart>
       </Box>
       {selectedIdx >= 0 &&
-        <CloseWrapper onClick={() => setSelectedFilter('all')}>
+        <CloseWrapper onClick={() => clearPie()}>
           <CloseIcon fontSize='large' sx={{ color: `${FilterTypeColorMap[data[selectedIdx].key]}` }} />
         </CloseWrapper>
       }
