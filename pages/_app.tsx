@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [isCompleteInit, _] = useLocalStorage(IS_COMPLETE_INIT, false)
   const [isOpenInit, setIsOpenInit] = useState(false)
   const InitEnterScreen = dynamic(() => import('~/components/Common/InitEnterScreen'), { ssr: false })
+  const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'), { ssr: false })
 
   useEffect(() => {
     if (!isCompleteInit) {
@@ -54,7 +55,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
                       {getLayout(<Component {...pageProps} />)}
                     </Box>
                     {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
-                    {/* <TempWarningMsg>currently unavailable due to RPC issues. We are fixing at the moment</TempWarningMsg> */}
+                    <TempWarningMsg />
                   </Box>
                 </DataLoadingIndicatorProvider>
               </TransactionStateProvider>
