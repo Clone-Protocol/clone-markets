@@ -1,18 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.svg'
 import walletIcon from 'public/images/gnb-wallet.svg'
 import { Button, Toolbar, Container, Box, AppBar, Theme, useMediaQuery, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 // import { GNB_ROUTES } from '~/routes'
-import { useScroll } from '~/hooks/useScroll'
+// import { useScroll } from '~/hooks/useScroll'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useClone } from '~/hooks/useClone'
-import MoreMenu from '~/components/Common/MoreMenu';
-import TokenFaucetDialog from './Account/TokenFaucetDialog'
+// import MoreMenu from '~/components/Common/MoreMenu';
+// import TokenFaucetDialog from './Account/TokenFaucetDialog'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
@@ -22,18 +22,21 @@ import { useTransactionState } from '~/hooks/useTransactionState'
 import { useRecoilState } from 'recoil'
 import { PROGRAM_ADDRESS as JUPITER_PROGRAM_ADDRESS, createMintUsdcInstruction, Jupiter } from 'incept-protocol-sdk/sdk/generated/jupiter-agg-mock/index'
 import NaviMenu from './NaviMenu'
-import WalletSelectBox from './Common/WalletSelectBox'
-import MobileWarningDialog from './Common/MobileWarningDialog'
+// import WalletSelectBox from './Common/WalletSelectBox'
+// import MobileWarningDialog from './Common/MobileWarningDialog'
 import { mintUSDi } from '~/features/globalAtom'
 import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
+import dynamic from 'next/dynamic'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
 	// const { pathname } = router
 	// const [path, setPath] = useState<string>('/')
-	const [mobileNavToggle, setMobileNavToggle] = useState(false)
+	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-	const { scrolled } = useScroll()
+	// const { scrolled } = useScroll()
+
+	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
@@ -45,16 +48,16 @@ const GNB: React.FC = () => {
 	// 	if (path) setPath(path)
 	// }, [firstPathname])
 
-	const navClassName = useMemo(() => {
-		let className = mobileNavToggle ? 'mobile-on' : ''
-		className += scrolled ? ' scrolled' : ''
-		return className
-	}, [mobileNavToggle, scrolled])
+	// const navClassName = useMemo(() => {
+	// 	let className = mobileNavToggle ? 'mobile-on' : ''
+	// 	className += scrolled ? ' scrolled' : ''
+	// 	return className
+	// }, [mobileNavToggle, scrolled])
 
 	return (
 		<>
 			<NavPlaceholder />
-			<StyledAppBar className={navClassName} position="static">
+			<StyledAppBar position="static">
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
@@ -92,6 +95,10 @@ const RightMenu: React.FC = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	const { setTxState } = useTransactionState()
+
+	const MoreMenu = dynamic(() => import('./Common/MoreMenu'))
+	const WalletSelectBox = dynamic(() => import('./Common/WalletSelectBox'))
+	const TokenFaucetDialog = dynamic(() => import('./Account/TokenFaucetDialog'))
 
 	useEffect(() => {
 		async function userMintOnusd() {
@@ -169,13 +176,13 @@ const RightMenu: React.FC = () => {
 		}
 	}
 
-	const handleGetUsdiClick = () => {
+	const handleGetUsdiClick = useCallback(() => {
 		setMintUsdi(true)
-	}
+	}, [setMintUsdi])
 
-	const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
+	const handleMoreClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
-	}
+	}, [])
 
 	return (
 		<>

@@ -9,7 +9,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Collateral, collateralMapping } from '~/data/assets'
 import { useRecoilState } from 'recoil'
 import { mintUSDi } from '~/features/globalAtom'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
 	balance: Balance
@@ -17,12 +17,11 @@ interface Props {
 
 const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const { publicKey } = useWallet()
-
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
 	const [assets, setAssets] = useState<any>([])
 	const [_, setMintUsdi] = useRecoilState(mintUSDi)
 
-	useEffect(() => {
+	useMemo(() => {
 		if (publicKey && balance) {
 			setAssets([{
 				id: onUSDInfo.collateralType,

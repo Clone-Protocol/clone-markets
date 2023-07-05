@@ -5,8 +5,9 @@ import withSuspense from '~/hocs/withSuspense'
 import Image from 'next/image'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
-import { AssetTickers } from '~/data/assets'
-import { useSnackbar } from 'notistack'
+import { useCallback } from 'react'
+// import { AssetTickers } from '~/data/assets'
+// import { useSnackbar } from 'notistack'
 
 interface Props {
 	onChoose: (id: number) => void
@@ -16,13 +17,13 @@ interface Props {
 const GridAssets: React.FC<Props> = ({ onChoose, searchTerm }) => {
 	const { data: assets } = useAssetsQuery({
 		filter: 'all',
-		refetchOnMount: "always",
+		refetchOnMount: true,
 		searchTerm: searchTerm || '',
 		enabled: true
 	})
 	// const { enqueueSnackbar } = useSnackbar()
 
-	const handleChoose = (params: GridRowParams) => {
+	const handleChoose = useCallback((params: GridRowParams) => {
 		const id = params.row.id
 		// temporary disabled
 		// if (params.row.id === AssetTickers.gold) {
@@ -30,7 +31,7 @@ const GridAssets: React.FC<Props> = ({ onChoose, searchTerm }) => {
 		// } else {
 		onChoose && onChoose(id)
 		// }
-	}
+	}, [])
 
 	return (
 		<Grid

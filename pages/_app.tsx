@@ -15,14 +15,16 @@ import { RecoilRoot } from 'recoil'
 import { TransactionStateProvider } from '~/hocs/TransactionStateProvider'
 import './styles.css'
 import { IS_COMPLETE_INIT } from '~/data/localstorage'
-import InitEnterScreen from '~/components/Common/InitEnterScreen'
+// import InitEnterScreen from '~/components/Common/InitEnterScreen'
 import useLocalStorage from '~/hooks/useLocalStorage'
+import dynamic from 'next/dynamic'
 // import TempWarningMsg from '~/components/Common/TempWarningMsg'
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
   const [isCompleteInit, _] = useLocalStorage(IS_COMPLETE_INIT, false)
   const [isOpenInit, setIsOpenInit] = useState(false)
+  const InitEnterScreen = dynamic(() => import('~/components/Common/InitEnterScreen'), { ssr: false })
 
   useEffect(() => {
     if (!isCompleteInit) {

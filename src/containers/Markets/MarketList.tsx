@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useState } from 'react'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType } from '~/data/filter'
 import { LoadingProgress } from '~/components/Common/Loading'
@@ -14,11 +13,13 @@ import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Image from 'next/image'
 import { formatDollarAmount } from '~/utils/numbers'
 import { ASSETS, AssetTickers } from '~/data/assets'
-import { useSnackbar } from 'notistack'
+import { useCallback } from 'react'
+// import { useSnackbar } from 'notistack'
 
 const MarketList = () => {
 	const router = useRouter()
-	const [filter, setFilter] = useState<FilterType>('all')
+	// const [filter, setFilter] = useState<FilterType>('all')
+	const filter: FilterType = 'all'
 	// const { enqueueSnackbar } = useSnackbar()
 
 	const { data: assets } = useAssetsQuery({
@@ -41,7 +42,7 @@ const MarketList = () => {
 	// 	}
 	// }, [searchTerm])
 
-	const handleRowClick: GridEventListener<'rowClick'> = (
+	const handleRowClick: GridEventListener<'rowClick'> = useCallback((
 		params
 	) => {
 		// temporary disabled
@@ -50,7 +51,7 @@ const MarketList = () => {
 		// } else {
 		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
 		// }
-	}
+	}, [])
 
 	return (
 		<Box
