@@ -1,14 +1,15 @@
 import { Paper } from '@mui/material'
 import { styled } from '@mui/system'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
-import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'
+// import SwapSettingDialog from '~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'
+// import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
 import withSuspense from '~/hocs/withSuspense'
 import { useRouter } from 'next/router'
-import SearchAssetDialog from '~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { SLIPPAGE } from '~/data/localstorage'
 import { ASSETS } from '~/data/assets'
+import dynamic from 'next/dynamic'
 
 interface Props {
 	assetId: string
@@ -22,11 +23,14 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const [slippage, setLocalSlippage] = useLocalStorage(SLIPPAGE, 0.5)
 	const assetIndex = parseInt(assetId)
 
-	const chooseAsset = (id: number) => {
+	const SearchAssetDialog = dynamic(() => import('~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'), { ssr: false })
+	const SwapSettingDialog = dynamic(() => import('~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'), { ssr: false })
+
+	const chooseAsset = useCallback((id: number) => {
 		onSelectAssetId(id)
 		setShowSearchAssetDlog(false)
 		router.push(`/trade/${ASSETS[id].ticker}`)
-	}
+	}, [onSelectAssetId])
 
 	const saveSetting = (slippage: number) => {
 		setLocalSlippage(slippage)

@@ -14,7 +14,8 @@ import ArrowDownward from 'public/images/arrow-down-red.svg'
 import { useRouter } from 'next/router'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ASSETS, AssetTickers } from '~/data/assets'
-import { useSnackbar } from 'notistack'
+import { useCallback } from 'react'
+// import { useSnackbar } from 'notistack'
 
 interface Props {
   assets: BalanceList[]
@@ -26,7 +27,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   // const { enqueueSnackbar } = useSnackbar()
 
   const router = useRouter()
-  const handleRowClick: GridEventListener<'rowClick'> = (
+  const handleRowClick: GridEventListener<'rowClick'> = useCallback((
     params
   ) => {
     // temporary disabled
@@ -35,7 +36,7 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
     // } else {
     router.push(`/trade/${ASSETS[params.row.id].ticker}`)
     // }
-  }
+  }, [])
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -13,7 +13,7 @@ const AssetPage: NextPage = () => {
 	const [assetId, setAssetId] = useState(0)
 	const { assetTicker } = router.query
 
-	useEffect(() => {
+	useMemo(() => {
 		if (assetTicker) {
 			console.log('assetId', AssetTickers[assetTicker as keyof typeof AssetTickers])
 
@@ -26,9 +26,9 @@ const AssetPage: NextPage = () => {
 		}
 	}, [assetTicker])
 
-	const handleSelectAssetId = (id: number) => {
+	const handleSelectAssetId = useCallback((id: number) => {
 		setAssetId(id)
-	}
+	}, [assetId])
 
 	return (
 		<div>

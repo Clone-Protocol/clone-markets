@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import { TimeTabs, TimeTab, FilterTimeMap, FilterTime } from '~/components/Charts/TimeTabs'
 import LineChartAlt from '~/components/Charts/LineChartAlt'
@@ -25,17 +25,17 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
   //   refetchOnMount: "always",
   //   enabled: true
   // })
-  const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterTime) => {
+  const handleFilterChange = useCallback((event: React.SyntheticEvent, newValue: FilterTime) => {
     setFilterTime(newValue)
-  }
+  }, [filterTime])
 
-  useEffect(() => {
+  useMemo(() => {
     if (priceHistory) {
       setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
     }
   }, [priceHistory])
 
-  useEffect(() => {
+  useMemo(() => {
     if (chartHover === undefined && priceHistory) {
       setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
     }
@@ -84,6 +84,5 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
       </> : <></>
   )
 }
-
 
 export default Chart
