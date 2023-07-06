@@ -31,12 +31,14 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
 
   useMemo(() => {
     if (priceHistory) {
-      setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
+      if (priceHistory?.chartData.length > 0) {
+        setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
+      }
     }
   }, [priceHistory])
 
   useMemo(() => {
-    if (chartHover === undefined && priceHistory) {
+    if (chartHover === undefined && priceHistory && priceHistory?.chartData.length > 0) {
       setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
     }
   }, [chartHover, priceHistory])
