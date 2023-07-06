@@ -20,11 +20,17 @@ export interface PythData {
 
 export const fetchPythPriceHistory = async (pythSymbol: string, network: Network, range: Range): Promise<PythData[]> => {
 
+    let result: PythData[] = []
     const url = `https://web-api.pyth.network/history?symbol=${pythSymbol}&range=${range}&cluster=${network}`
-    const result = await axios.get(
-        url
-    );
-    return result.data;
+
+    axios.get(
+        url, {timeout: 5000}
+    ).then((response) => {
+        result = response.data;
+    }).catch((error) => {
+        console.log(error)
+    })
+    return result
 }
 
 export const getPythOraclePrice = async (
