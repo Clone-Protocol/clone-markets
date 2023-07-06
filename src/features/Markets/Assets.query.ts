@@ -9,8 +9,10 @@ import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { fetchPythPriceHistory } from '~/utils/pyth'
+import { useSetRecoilState } from 'recoil'
+import { showPythBanner } from '~/features/globalAtom'
 
-export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: boolean) => void }) => {
+export const fetchAssets = async ({ setStartTimer, setShowPythBanner }: { setStartTimer: (start: boolean) => void, setShowPythBanner: (show: boolean) => void }) => {
 	console.log('fetchAssets')
 	// start timer in data-loading-indicator
 	setStartTimer(false);
@@ -37,14 +39,20 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 	const dailyVolumeStats = await fetch24hourVolume()
 
 	// Fetch Pyth
-	let pythData = await Promise.all(
-		iassetInfos.map((info) => {
-			let { pythSymbol } = assetMapping(info.poolIndex)
-			return fetchPythPriceHistory(
-				pythSymbol, 'devnet', '1D'
-			)
-		})
-	)
+	let pythData
+	try {
+		pythData = await Promise.all(
+			iassetInfos.map((info) => {
+				let { pythSymbol } = assetMapping(info.poolIndex)
+				return fetchPythPriceHistory(
+					pythSymbol, 'devnet', '1D'
+				)
+			})
+		)
+	} catch (e) {
+		console.error(e)
+		setShowPythBanner(true)
+	}
 
 	const result: AssetList[] = []
 
@@ -52,10 +60,13 @@ export const fetchAssets = async ({ setStartTimer }: { setStartTimer: (start: bo
 		const info = iassetInfos[i]
 		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
 
-		const priceData = pythData[i]
-		const openPrice = priceData[0] ? Number(priceData[0].avg_price) : 0
-		const closePrice = priceData[0] ? Number(priceData.at(-1)!.avg_price) : 0
-		const change24h = priceData[0] ? (closePrice / openPrice - 1) * 100 : 0
+		let change24h = 0
+		if (pythData) {
+			const priceData = pythData[i]
+			const openPrice = priceData[0] ? Number(priceData[0].avg_price) : 0
+			const closePrice = priceData[0] ? Number(priceData.at(-1)!.avg_price) : 0
+			change24h = priceData[0] ? (closePrice / openPrice - 1) * 100 : 0
+		}
 
 		result.push({
 			id: info.poolIndex,
@@ -95,10 +106,11 @@ export interface AssetList {
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const { setStartTimer } = useDataLoading()
+	const setShowPythBanner = useSetRecoilState(showPythBanner)
 
 	let queryFunc
 	try {
-		queryFunc = () => fetchAssets({ setStartTimer })
+		queryFunc = () => fetchAssets({ setStartTimer, setShowPythBanner })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => []
