@@ -23,13 +23,13 @@ export const fetchPythPriceHistory = async (pythSymbol: string, network: Network
     let result: PythData[] = []
     const url = `https://web-api.pyth.network/history?symbol=${pythSymbol}&range=${range}&cluster=${network}`
 
-    axios.get(
-        url, { timeout: 5000 }
-    ).then((response) => {
-        result = response.data;
-    }).catch((error) => {
-        console.log(error)
-    })
+    try {
+        let response = await axios.get(url, {timeout: 5000})
+        result = response.data
+    } catch (err) {
+        console.log(err)
+    }
+
     return result
 }
 
