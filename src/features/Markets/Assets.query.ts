@@ -61,8 +61,9 @@ export const fetchAssets = async ({ setStartTimer, setShowPythBanner }: { setSta
 		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
 
 		let change24h = 0
-		if (pythData) {
+		if (pythData && pythData.length > 0) {
 			const priceData = pythData[i]
+
 			const openPrice = priceData[0] ? Number(priceData[0].avg_price) : 0
 			const closePrice = priceData[0] ? Number(priceData.at(-1)!.avg_price) : 0
 			change24h = priceData[0] ? (closePrice / openPrice - 1) * 100 : 0

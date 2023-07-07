@@ -51,8 +51,19 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   // })()
 
   const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, "devnet", range)
+  if (pythHistoricalData.length === 0) {
+    return {
+      chartData: [],
+      currentPrice: 0,
+      rateOfPrice: 0,
+      percentOfRate: 0,
+      maxValue: 0,
+      minValue: 0
+    }
+  }
+
   chartData = pythHistoricalData.map((item) => {
-    return { time: item.timestamp, value: item.avg_price }
+    return { time: item.timestamp, value: item.close_price }
   })
 
   const allValues = chartData.map(elem => elem.value!)
