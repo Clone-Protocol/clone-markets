@@ -37,6 +37,7 @@ const GNB: React.FC = () => {
 	// const { scrolled } = useScroll()
 
 	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
+	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'), { ssr: false })
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
@@ -59,6 +60,7 @@ const GNB: React.FC = () => {
 			<NavPlaceholder />
 			<StyledAppBar position="static">
 				<Container maxWidth={false}>
+					<TempWarningMsg />
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
 						<Image src={logoIcon} width={255} alt="clone" />
@@ -223,7 +225,7 @@ const RightMenu: React.FC = () => {
 const StyledAppBar = styled(AppBar)`
 	z-index: 900;
 	background-color: #000;
-	height: 60px;
+	// height: 60px;
 	position: fixed;
 	top: 0px;
 	left: 0px;
@@ -245,9 +247,9 @@ const StyledAppBar = styled(AppBar)`
 		backdrop-filter: blur(20px);
 		border-radius: 20px;
 	}
-	.MuiToolbar-root {
-		height: 100%;
-	}
+	// .MuiToolbar-root {
+	// 	height: 100%;
+	// }
 `
 const NavPlaceholder = styled('div')`
 	${(props) => props.theme.breakpoints.up('md')} {
