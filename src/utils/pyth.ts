@@ -29,17 +29,18 @@ export const fetchPythPriceHistory = async (pythSymbol: string, network: Network
     } catch (err) {
         console.log(err)
     }
+
     return result
 }
 
 export const getPythOraclePrice = async (
     connection: Connection,
     pythSymbol: string
-  ) => {
+) => {
     // TODO: Set this up as an env variable.
     const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
     const data = await pythClient.getData();
     return {
         price: data.productPrice.get(pythSymbol)?.aggregate.price,
     };
-  };
+};
