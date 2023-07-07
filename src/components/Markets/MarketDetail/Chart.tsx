@@ -15,16 +15,10 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
   const { data: priceHistory } = usePriceHistoryQuery({
     timeframe: filterTime,
     pythSymbol: pythSymbol,
-    refetchOnMount: "always",
+    refetchOnMount: true,
     enabled: pythSymbol != null
   })
 
-  // const { data: totalPrices } = useTotalPriceQuery({
-  //   timeframe: filterTime,
-  //   currentPrice: price,
-  //   refetchOnMount: "always",
-  //   enabled: true
-  // })
   const handleFilterChange = useCallback((event: React.SyntheticEvent, newValue: FilterTime) => {
     setFilterTime(newValue)
   }, [filterTime])

@@ -14,7 +14,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
 	const { data: asset } = useMarketDetailQuery({
 		index: parseInt(assetId),
-		refetchOnMount: "always",
+		refetchOnMount: true,
 		enabled: true
 	})
 	const [myData, setMyData] = useState({

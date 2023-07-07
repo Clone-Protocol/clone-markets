@@ -70,7 +70,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
   const { data: balance, refetch } = useBalanceQuery({
     index: assetIndex,
-    refetchOnMount: "always",
+    refetchOnMount: true,
     enabled: true
   });
 
