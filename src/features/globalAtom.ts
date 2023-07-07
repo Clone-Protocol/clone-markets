@@ -1,6 +1,11 @@
 import { atom } from 'recoil'
 import { CreateAccountDialogStates } from '~/utils/constants'
 
+export const showPythBanner = atom({
+  key: 'showPythBanner',
+  default: false
+})
+
 export const mintUSDi = atom({
   key: 'mintUSDi',
   default: false

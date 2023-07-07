@@ -24,7 +24,7 @@ export const fetchPythPriceHistory = async (pythSymbol: string, network: Network
     const url = `https://web-api.pyth.network/history?symbol=${pythSymbol}&range=${range}&cluster=${network}`
 
     axios.get(
-        url, {timeout: 5000}
+        url, { timeout: 5000 }
     ).then((response) => {
         result = response.data;
     }).catch((error) => {
@@ -36,11 +36,11 @@ export const fetchPythPriceHistory = async (pythSymbol: string, network: Network
 export const getPythOraclePrice = async (
     connection: Connection,
     pythSymbol: string
-  ) => {
+) => {
     // TODO: Set this up as an env variable.
     const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
     const data = await pythClient.getData();
     return {
         price: data.productPrice.get(pythSymbol)?.aggregate.price,
     };
-  };
+};

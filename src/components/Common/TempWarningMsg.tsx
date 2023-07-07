@@ -4,8 +4,11 @@ import { styled } from '@mui/system'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import CloseIcon from 'public/images/close.svg'
+import { useRecoilState } from 'recoil'
+import { showPythBanner } from '~/features/globalAtom'
 
 const TempWarningMsg: React.FC = () => {
+  const [showPythBannerStatus, _] = useRecoilState(showPythBanner)
   const [isShowGeneralMsg, setIsShowGeneralMsg] = useState(false)
   const [isShowWarnMsg, setIsShowWarnMsg] = useState(false)
   const [message, setMessage] = useState('')
@@ -37,6 +40,13 @@ const TempWarningMsg: React.FC = () => {
     }
     getNoticeMsg()
   }, [])
+
+  useEffect(() => {
+    if (showPythBannerStatus) {
+      setMessage('temporarily unavailable due to oracle error')
+      setIsShowWarnMsg(true)
+    }
+  }, [showPythBannerStatus])
 
   return (
     <StackWrapper direction='column'>
