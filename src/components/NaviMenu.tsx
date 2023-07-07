@@ -8,7 +8,7 @@ const NaviMenu = () => {
 
   return (
     <Fade in timeout={1500}>
-      <List component="nav" sx={{ display: 'flex' }}>
+      <List component="nav" sx={{ display: 'flex', padding: 0 }}>
         <Link href="/">
           <StyledListItemButton className={router.asPath === '/' ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Home</Typography></Box>
