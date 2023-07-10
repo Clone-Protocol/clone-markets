@@ -59,10 +59,9 @@ const GNB: React.FC = () => {
 		<>
 			<NavPlaceholder />
 			<StyledAppBar position="static">
+				<TempWarningMsg />
 				<Container maxWidth={false}>
-					<TempWarningMsg />
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-
 						<Image src={logoIcon} width={255} alt="clone" />
 						<Box><NaviMenu /></Box>
 						<RightMenu />
