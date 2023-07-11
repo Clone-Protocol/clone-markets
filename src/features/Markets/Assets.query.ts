@@ -125,18 +125,19 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = t
 		select: (assets) => {
 			let filteredAssets = assets
 
-			filteredAssets = assets.filter((asset) => {
-				if (filter === 'onCrypto') {
-					return asset.assetType === AssetType.Crypto
-				} else if (filter === 'onFx') {
-					return asset.assetType === AssetType.Fx
-				} else if (filter === 'onCommodity') {
-					return asset.assetType === AssetType.Commodities
-				} else if (filter === 'onStock') {
-					return asset.assetType === AssetType.Stocks
-				}
-				return true;
-			})
+			// MEMO: deprecated now
+			// filteredAssets = assets.filter((asset) => {
+			// 	if (filter === 'onCrypto') {
+			// 		return asset.assetType === AssetType.Crypto
+			// 	} else if (filter === 'onFx') {
+			// 		return asset.assetType === AssetType.Fx
+			// 	} else if (filter === 'onCommodity') {
+			// 		return asset.assetType === AssetType.Commodities
+			// 	} else if (filter === 'onStock') {
+			// 		return asset.assetType === AssetType.Stocks
+			// 	}
+			// 	return true;
+			// })
 
 			if (searchTerm && searchTerm.length > 0) {
 				filteredAssets = filteredAssets.filter((asset) => asset.tickerName.toLowerCase().includes(searchTerm.toLowerCase()) || asset.tickerSymbol.toLowerCase().includes(searchTerm.toLowerCase()))

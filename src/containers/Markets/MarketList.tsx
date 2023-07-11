@@ -12,7 +12,7 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Image from 'next/image'
 import { formatDollarAmount } from '~/utils/numbers'
-import { ASSETS, AssetTickers } from '~/data/assets'
+import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
 // import { useSnackbar } from 'notistack'
 
