@@ -1,11 +1,11 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { CloneClient } from 'incept-protocol-sdk/sdk/src/clone'
-import { toNumber } from 'incept-protocol-sdk/sdk/src/decimal'
-import { getPoolLiquidity } from 'incept-protocol-sdk/sdk/src/utils'
+import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
+import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
+import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
 import { assetMapping } from 'src/data/assets'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
-import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
+import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getPythOraclePrice } from "~/utils/pyth"
@@ -91,7 +91,7 @@ export const fetchMarketDetailDefault = () => {
 		avgLiquidity: 50700000,
 		avgPremium: 0.013,
 		detailOverview:
-			'iSOL, appreviated from iSolana, is a synthetic asset of Solana on Incept. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.',
+			'iSOL, appreviated from iSolana, is a synthetic asset of Solana on Clone. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.',
 	}
 }
 

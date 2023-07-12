@@ -1,11 +1,11 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
-import { CloneClient } from 'incept-protocol-sdk/sdk/src/clone'
-import { getPoolLiquidity } from 'incept-protocol-sdk/sdk/src/utils'
+import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
+import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { getNetworkDetailsFromEnv } from 'incept-protocol-sdk/sdk/src/network'
+import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 
 export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {

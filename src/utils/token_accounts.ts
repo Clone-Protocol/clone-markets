@@ -5,7 +5,7 @@ import {
   TokenAccountNotFoundError,
 } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { CloneClient } from "incept-protocol-sdk/sdk/src/clone";
+import { CloneClient } from "clone-protocol-sdk/sdk/src/clone";
 
 export const getTokenAccount = async (mint: PublicKey, owner: PublicKey, connection: Connection): Promise<PublicKey | undefined> => {
   const associatedToken = await getAssociatedTokenAddress(

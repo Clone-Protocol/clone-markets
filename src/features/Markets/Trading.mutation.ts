@@ -1,6 +1,6 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { CloneClient, toDevnetScale } from 'incept-protocol-sdk/sdk/src/clone'
-import { toNumber } from "incept-protocol-sdk/sdk/src/decimal"
+import { CloneClient, toDevnetScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { toNumber } from "clone-protocol-sdk/sdk/src/decimal"
 import { useMutation } from 'react-query'
 import { useClone } from '~/hooks/useClone'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
@@ -11,7 +11,7 @@ import {
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
-import { calculateSwapExecution } from 'incept-protocol-sdk/sdk/src/utils'
+import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
 import { sendAndConfirm } from '~/utils/tx_helper'
 
 export const callTrading = async ({

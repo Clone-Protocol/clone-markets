@@ -1,6 +1,6 @@
-import { TokenData } from "incept-protocol-sdk/sdk/src/interfaces";
-import { toNumber } from "incept-protocol-sdk/sdk/src/decimal";
-import { DEVNET_TOKEN_SCALE } from "incept-protocol-sdk/sdk/src/clone"
+import { TokenData } from "clone-protocol-sdk/sdk/src/interfaces";
+import { toNumber } from "clone-protocol-sdk/sdk/src/decimal";
+import { DEVNET_TOKEN_SCALE } from "clone-protocol-sdk/sdk/src/clone"
 import { fetchFromCloneIndex } from "./indexing";
 import axios from "axios";
 
