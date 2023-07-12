@@ -29,7 +29,7 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   const range: Range = (() => {
     switch (timeframe) {
       case '1y':
-        return "1M"
+        return "1Y"
       case '30d':
         return "1M"
       case '7d':
@@ -41,16 +41,7 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
     }
   })()
 
-  // let poolIndex = (() => {
-  //   for (let i = 0; i < ASSETS.length; i++) {
-  //     if (ASSETS[i].pythSymbol === pythSymbol) {
-  //       return i;
-  //     }
-  //   }
-  //   throw new Error(`Couldn't find pool index for ${pythSymbol}`)
-  // })()
-
-  const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, "devnet", range)
+  const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, range)
   if (pythHistoricalData.length === 0) {
     return {
       chartData: [],
@@ -63,7 +54,7 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   }
 
   chartData = pythHistoricalData.map((item) => {
-    return { time: item.timestamp, value: item.close_price }
+    return { time: item.timestamp, value: item.price }
   })
 
   const allValues = chartData.map(elem => elem.value!)
