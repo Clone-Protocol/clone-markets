@@ -13,6 +13,7 @@ import NaviMenu from './NaviMenu'
 import { mintUSDi } from '~/features/globalAtom'
 import dynamic from 'next/dynamic'
 import useFaucet from '~/hooks/useFaucet'
+import TokenFaucetDialog from './Account/TokenFaucetDialog'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -84,7 +85,6 @@ const RightMenu: React.FC = () => {
 
 	const MoreMenu = dynamic(() => import('./Common/MoreMenu'))
 	const WalletSelectBox = dynamic(() => import('./Common/WalletSelectBox'))
-	const TokenFaucetDialog = dynamic(() => import('./Account/TokenFaucetDialog'))
 
 	const handleWalletClick = () => {
 		try {

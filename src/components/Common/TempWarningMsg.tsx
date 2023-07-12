@@ -26,8 +26,6 @@ const TempWarningMsg: React.FC = () => {
           .eq('channel', 'markets')
           .eq('show', true)
 
-        console.log('data', data)
-
         data?.forEach((item) => {
           if (item.is_general) {
             setIsShowGeneralMsg(true)
