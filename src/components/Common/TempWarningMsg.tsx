@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js'
 import { Typography, Box, Stack, IconButton } from '@mui/material'
 import { styled } from '@mui/system'
 import { useEffect, useState } from 'react';
@@ -7,6 +6,12 @@ import CloseIcon from 'public/images/close.svg'
 import { useRecoilState } from 'recoil'
 import { showPythBanner } from '~/features/globalAtom'
 import { Info, Warning } from '@mui/icons-material';
+import { fetchFromSupabaseNotice } from '~/utils/fetch_netlify';
+
+interface NoticeItem {
+  is_general: boolean
+  message: string
+}
 
 const TempWarningMsg: React.FC = () => {
   const [showPythBannerStatus, _] = useRecoilState(showPythBanner)
@@ -17,27 +22,17 @@ const TempWarningMsg: React.FC = () => {
 
   useEffect(() => {
     const getNoticeMsg = async () => {
-      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-
-      try {
-        const { data, error } = await supabase
-          .from('notices')
-          .select()
-          .eq('channel', 'markets')
-          .eq('show', true)
-
-        data?.forEach((item) => {
-          if (item.is_general) {
-            setIsShowGeneralMsg(true)
-            setGeneralMsg(item.message)
-          } else {
-            setIsShowWarnMsg(true)
-            setWarnMsg(item.message)
-          }
-        })
-      } catch (e) {
-        console.error(e)
-      }
+      const response = await fetchFromSupabaseNotice()
+      const data = response.data
+      data?.forEach((item: NoticeItem) => {
+        if (item.is_general) {
+          setIsShowGeneralMsg(true)
+          setGeneralMsg(item.message)
+        } else {
+          setIsShowWarnMsg(true)
+          setWarnMsg(item.message)
+        }
+      })
     }
     getNoticeMsg()
   }, [])
@@ -113,7 +108,7 @@ const InfoStack = styled(Box)`
   }
 `
 const WarningStack = styled(InfoStack)`
-background-color: ${(props) => props.theme.palette.warning.main};
+  background-color: ${(props) => props.theme.palette.warning.main};
 `
 
 export default TempWarningMsg

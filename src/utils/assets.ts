@@ -1,8 +1,7 @@
 import { TokenData } from "clone-protocol-sdk/sdk/src/interfaces";
 import { toNumber } from "clone-protocol-sdk/sdk/src/decimal";
 import { DEVNET_TOKEN_SCALE } from "clone-protocol-sdk/sdk/src/clone"
-import { fetchFromCloneIndex } from "./indexing";
-import axios from "axios";
+import { fetchFromCloneIndex } from "./fetch_netlify";
 
 export type Interval = 'day' | 'hour';
 export type Filter = 'day' | 'week' | 'month' | 'year';
@@ -66,10 +65,6 @@ export type AggregatedStats = {
   previousFees: number,
   liquidityUSD: number,
   previousLiquidity: number
-}
-
-const convertToNumber = (val: string) => {
-  return Number(val) * Math.pow(10, -DEVNET_TOKEN_SCALE)
 }
 
 // export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<AggregatedStats[]> => {
