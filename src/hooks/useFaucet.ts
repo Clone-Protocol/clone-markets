@@ -2,7 +2,8 @@ import { mintUSDi } from '~/features/globalAtom'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useEffect } from 'react'
 import { useClone } from './useClone';
-import { useRecoilState } from 'recoil';
+// import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
@@ -16,7 +17,7 @@ export default function useFaucet() {
   const { connected, publicKey } = useWallet()
   const wallet = useAnchorWallet()
   const { getCloneApp } = useClone()
-  const [mintUsdi, setMintUsdi] = useRecoilState(mintUSDi)
+  const [mintUsdi, setMintUsdi] = useAtom(mintUSDi)
   const { setTxState } = useTransactionState()
 
   useEffect(() => {

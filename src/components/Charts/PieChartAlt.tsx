@@ -6,7 +6,8 @@ import { Box } from '@mui/material'
 import { FilterTypeColorMap, PieItem } from '~/data/filter'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import CloseIcon from '@mui/icons-material/Close';
-import { useRecoilState } from 'recoil'
+// import { useRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
 export type ChartProps = {
   data: PieItem[]
@@ -19,7 +20,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
   selectedIdx,
   onSelect
 }) => {
-  const [_, setSelectedFilter] = useRecoilState(filterState)
+  const setSelectedFilter = useSetAtom(filterState)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [isClicked, setIsClicked] = useState(false)
 

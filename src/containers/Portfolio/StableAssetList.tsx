@@ -7,9 +7,10 @@ import withSuspense from '~/hocs/withSuspense'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Collateral, collateralMapping } from '~/data/assets'
-import { useRecoilState } from 'recoil'
+// import { useRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 interface Props {
 	balance: Balance
@@ -19,7 +20,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const { publicKey } = useWallet()
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
 	const [assets, setAssets] = useState<any>([])
-	const [_, setMintUsdi] = useRecoilState(mintUSDi)
+	const setMintUsdi = useSetAtom(mintUSDi)
 
 	useMemo(() => {
 		if (publicKey && balance) {

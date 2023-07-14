@@ -30,5 +30,6 @@
             },
             "icons"
         ],
+        "jotai/babel/plugin-react-refresh"
     ]
 }

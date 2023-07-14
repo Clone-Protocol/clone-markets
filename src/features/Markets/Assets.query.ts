@@ -9,7 +9,8 @@ import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { fetchPythPriceHistory } from '~/utils/pyth'
-import { useSetRecoilState } from 'recoil'
+// import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 import { showPythBanner } from '~/features/globalAtom'
 
 export const fetchAssets = async ({ setStartTimer, setShowPythBanner }: { setStartTimer: (start: boolean) => void, setShowPythBanner: (show: boolean) => void }) => {
@@ -107,7 +108,7 @@ export interface AssetList {
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const { setStartTimer } = useDataLoading()
-	const setShowPythBanner = useSetRecoilState(showPythBanner)
+	const setShowPythBanner = useSetAtom(showPythBanner)
 
 	let queryFunc
 	try {
