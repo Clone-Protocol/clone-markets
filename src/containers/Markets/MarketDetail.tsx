@@ -8,7 +8,7 @@ import withSuspense from '~/hocs/withSuspense'
 import { formatDollarAmount } from '~/utils/numbers'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
@@ -30,7 +30,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 		enabled: publicKey != null
 	})
 
-	useMemo(() => {
+	useEffect(() => {
 		if (myAssets && myAssets.length > 0) {
 			let foundItem = false
 			myAssets.forEach((myAsset) => {
@@ -96,7 +96,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Stack>
 					</OverviewWrapper>
 
-					{publicKey &&
+					{publicKey && myData &&
 						<Box>
 							<StyledDivider />
 

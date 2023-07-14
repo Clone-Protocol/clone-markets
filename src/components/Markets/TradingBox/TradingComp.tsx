@@ -17,11 +17,11 @@ import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balan
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
-import { DEVNET_TOKEN_SCALE } from 'incept-protocol-sdk/sdk/src/clone'
+import { DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
-import { calculateSwapExecution } from 'incept-protocol-sdk/sdk/src/utils'
+import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
 
 export enum ComponentEffect {
   iAssetAmount,
