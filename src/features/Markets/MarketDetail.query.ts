@@ -45,8 +45,11 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 	const treasuryTradingFee = toNumber(pool.treasuryTradingFee)
 	const pythInfo = await getPythOraclePrice(program.connection, pythSymbol)
 	const oraclePrice = pythInfo.price!
-
-	const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
+	const poolOnusd =
+    	toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
+  	const poolOnasset =
+		toNumber(pool.committedOnusdLiquidity) / oraclePrice -
+		toNumber(pool.onassetIld);
 	const price = poolOnusd / poolOnasset
 	const detailOverview = ASSETS_DESC[index].desc
 
