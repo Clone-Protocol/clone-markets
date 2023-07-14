@@ -1,36 +1,54 @@
 import axios from 'axios';
 import { PythHttpClient, getPythProgramKeyForCluster } from '@pythnetwork/client';
 import { PublicKey, Connection } from '@solana/web3.js';
+import { ASSETS, assetMapping } from '~/data/assets';
 
 export type Network = "devnet" | "mainnet-beta" | "pythnet" | "testnet" | "pythtest";
-export type Range = "1H" | "1D" | "1W" | "1M"
+export type Range = "1H" | "1D" | "1W" | "1M" | "1Y"
 
 export interface PythData {
     timestamp: string;
-    open_price: number;
-    low_price: number;
-    high_price: number;
-    close_price: number;
-    avg_price: number;
-    avg_confidence: number;
-    avg_emaPrice: number;
-    start_slot: number;
-    end_slot: number;
+    price: number;
 }
 
-export const fetchPythPriceHistory = async (pythSymbol: string, network: Network, range: Range): Promise<PythData[]> => {
+export const convertPythSymbolToSupabaseSymbol = (pythSymbol: string): string => {
 
-    let result: PythData[] = []
-    const url = `https://web-api.pyth.network/history?symbol=${pythSymbol}&range=${range}&cluster=${network}`
-
-    try {
-        let response = await axios.get(url, {timeout: 5000})
-        result = response.data
-    } catch (err) {
-        console.log(err)
+    for (let i = 0; i < ASSETS.length; i++) {
+        const mapping = assetMapping(i)
+        if (pythSymbol === mapping.pythSymbol)
+            return mapping.supabaseSymbol
     }
+    throw new Error(`Couldn't find pyth symbol: ${pythSymbol}`)
+}
 
-    return result
+export const fetchPythPriceHistory = async (pythSymbol: string, range: Range): Promise<PythData[]> => {
+
+    const symbol = convertPythSymbolToSupabaseSymbol(pythSymbol)
+    const currentTimestamp = Math.floor((new Date()).getTime() / 1000)
+    const [from, filterDaily] = (() => {
+        switch (range) {
+            case "1H":
+                return [currentTimestamp - 3600, false]
+            case "1D":
+                return [currentTimestamp - 86400, false]
+            case "1W":
+                return [currentTimestamp - 7 * 86400, false]
+            case "1M":
+                return [currentTimestamp - 30 * 86400, true]
+            case "1Y":
+                return [currentTimestamp - 365 * 86400, true]
+            default:
+                throw new Error("Unknown range", range)
+        }
+    })()
+
+    let queryString = `symbol=${symbol}&from=${from}`
+    if (filterDaily)
+        queryString = queryString.concat('&dailyClose=true')
+
+    let response = await axios.get(`/.netlify/functions/pyth-data-fetch?${queryString}`)
+
+    return response.data
 }
 
 export const getPythOraclePrice = async (
