@@ -10,7 +10,8 @@ import OnAssetList from './OnAssetList'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
-import { useRecoilState } from 'recoil'
+// import { useRecoilState } from 'recoil'
+import { useAtom } from 'jotai'
 import { filterState } from '~/features/Portfolio/filterAtom'
 
 interface ResultAsset {
@@ -20,7 +21,7 @@ interface ResultAsset {
 
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
-	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
+	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 
 	const { data: balance } = useBalanceQuery({

@@ -3,7 +3,8 @@ import { styled } from '@mui/system'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import CloseIcon from 'public/images/close.svg'
-import { useRecoilState } from 'recoil'
+// import { useRecoilState } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { showPythBanner } from '~/features/globalAtom'
 import { Info, Warning } from '@mui/icons-material';
 import { fetchFromSupabaseNotice } from '~/utils/fetch_netlify';
@@ -14,7 +15,7 @@ interface NoticeItem {
 }
 
 const TempWarningMsg: React.FC = () => {
-  const [showPythBannerStatus, _] = useRecoilState(showPythBanner)
+  const showPythBannerStatus = useAtomValue(showPythBanner)
   const [isShowGeneralMsg, setIsShowGeneralMsg] = useState(false)
   const [isShowWarnMsg, setIsShowWarnMsg] = useState(false)
   const [generalMsg, setGeneralMsg] = useState('')

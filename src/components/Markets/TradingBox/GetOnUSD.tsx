@@ -2,11 +2,12 @@ import { Button, Box, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import PrimaryIcon from 'public/images/icons-badge.svg'
 import Image from 'next/image'
-import { useSetRecoilState } from 'recoil'
+// import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
 
 const GetOnUSD: React.FC = () => {
-  const setMintUsdi = useSetRecoilState(mintUSDi)
+  const setMintUsdi = useSetAtom(mintUSDi)
   return (
     <Wrapper>
       <Box display='flex' gap={1} alignItems='center'>

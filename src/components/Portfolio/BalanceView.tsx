@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, Paper, Typography, Stack } from '@mui/material'
 import { styled } from '@mui/system'
 import PieChartAlt from '../Charts/PieChartAlt'
-import { useRecoilState } from 'recoil'
+// import { useRecoilState } from 'recoil'
+import { useAtom } from 'jotai'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import { useEffect, useState } from 'react'
 import { FilterTypeColorMap, FilterTypeMap, PieItem } from '~/data/filter'
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const BalanceView: React.FC<Props> = ({ data }) => {
-	const [selectedFilter, setSelectedFilter] = useRecoilState(filterState)
+	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('Portfolio')
 	const [selectedIdx, setSelectedIdx] = useState(0)
 	const [selectedonusdAmount, setSelectedonusdAmount] = useState(0)

@@ -8,7 +8,8 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
-import { useSetRecoilState } from 'recoil'
+// import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 import NaviMenu from './NaviMenu'
 import { mintUSDi } from '~/features/globalAtom'
 import dynamic from 'next/dynamic'
@@ -78,7 +79,7 @@ const RightMenu: React.FC = () => {
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
-	const setMintUsdi = useSetRecoilState(mintUSDi)
+	const setMintUsdi = useSetAtom(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	useFaucet()
