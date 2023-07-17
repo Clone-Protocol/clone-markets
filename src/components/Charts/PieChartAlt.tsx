@@ -6,7 +6,6 @@ import { Box } from '@mui/material'
 import { FilterTypeColorMap, PieItem } from '~/data/filter'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import CloseIcon from '@mui/icons-material/Close';
-// import { useRecoilState } from 'recoil'
 import { useSetAtom } from 'jotai'
 
 export type ChartProps = {
@@ -46,6 +45,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
           endAngle={endAngle}
           fill={fill}
           strokeWidth={0}
+          style={{ cursor: 'pointer' }}
         />
       </g>
     );

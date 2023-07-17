@@ -9,7 +9,6 @@ import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { fetchPythPriceHistory } from '~/utils/pyth'
-// import { useSetRecoilState } from 'recoil'
 import { useSetAtom } from 'jotai'
 import { showPythBanner } from '~/features/globalAtom'
 
