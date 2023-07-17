@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-// import { useSetRecoilState } from 'recoil'
 import { useSetAtom } from 'jotai'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { useClone } from '~/hooks/useClone'

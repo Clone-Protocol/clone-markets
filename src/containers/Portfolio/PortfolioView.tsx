@@ -10,7 +10,6 @@ import OnAssetList from './OnAssetList'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
-// import { useRecoilState } from 'recoil'
 import { useAtom } from 'jotai'
 import { filterState } from '~/features/Portfolio/filterAtom'
 

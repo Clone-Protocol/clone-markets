@@ -11,12 +11,10 @@ import { SnackbarProvider } from 'notistack'
 import { NextPage } from 'next'
 import ClientWalletProvider from '~/hocs/ClientWalletProvider'
 import { DataLoadingIndicatorProvider } from '~/hocs/DataLoadingIndicatorProvider'
-// import { RecoilRoot } from 'recoil'
 import { Provider as JotaiProvider } from 'jotai'
 import { TransactionStateProvider } from '~/hocs/TransactionStateProvider'
 import './styles.css'
 import { IS_COMPLETE_INIT } from '~/data/localstorage'
-// import InitEnterScreen from '~/components/Common/InitEnterScreen'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import dynamic from 'next/dynamic'
 
@@ -35,7 +33,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <QueryProvider>
       <JotaiProvider>
-        {/* <RecoilRoot> */}
         <ThemeProvider theme={theme}>
           <SnackbarProvider maxSnack={3}>
             <ClientWalletProvider>
@@ -61,7 +58,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             </ClientWalletProvider>
           </SnackbarProvider>
         </ThemeProvider>
-        {/* </RecoilRoot> */}
       </JotaiProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryProvider>

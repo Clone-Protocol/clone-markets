@@ -3,7 +3,6 @@ import { styled } from '@mui/system'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import CloseIcon from 'public/images/close.svg'
-// import { useRecoilState } from 'recoil'
 import { useAtomValue } from 'jotai'
 import { showPythBanner } from '~/features/globalAtom'
 import { Info, Warning } from '@mui/icons-material';
