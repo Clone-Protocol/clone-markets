@@ -34,7 +34,7 @@ export const fetchAssets = async ({ setStartTimer, setShowPythBanner }: { setSta
 	const program = new CloneClient(network.clone, provider)
 	await program.loadClone()
 	const tokenData = await program.getTokenData();
-	const iassetInfos = getiAssetInfos(tokenData);
+	const iassetInfos = await getiAssetInfos(new_connection, tokenData);
 
 	const dailyVolumeStats = await fetch24hourVolume()
 
