@@ -8,7 +8,7 @@ import withSuspense from '~/hocs/withSuspense'
 import { formatDollarAmount } from '~/utils/numbers'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
@@ -70,7 +70,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						</Box>
 					</Box>
 
-					<Chart pythSymbol={asset.pythSymbol} price={asset.price} />
+					<Chart pythSymbol={asset.pythSymbol} />
 
 					<OverviewWrapper>
 						<Typography variant='h3' fontWeight={500}>Market Overview</Typography>
