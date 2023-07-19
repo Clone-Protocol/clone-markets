@@ -62,18 +62,11 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   const minValue = Math.floor(Math.min(...allValues))
 
   const lastEntry = chartData[chartData.length - 1];
-  const previous24hrDatetime = dayjs(lastEntry.time).utc().subtract(1, 'days');
-  let previous24hrPrice = lastEntry.value;
-  for (let { time, value } of chartData) {
-    const entryTime = dayjs(time).utc()
-    if (entryTime > previous24hrDatetime) {
-      break;
-    }
-    previous24hrPrice = value;
-  }
+
+  let previousPrice = chartData[0].value
   currentPrice = lastEntry.value;
-  rateOfPrice = currentPrice - previous24hrPrice
-  percentOfRate = 100 * rateOfPrice / previous24hrPrice
+  rateOfPrice = currentPrice - previousPrice
+  percentOfRate = 100 * rateOfPrice / previousPrice
 
   return {
     chartData,

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import { TimeTabs, TimeTab, FilterTimeMap, FilterTime } from '~/components/Charts/TimeTabs'
 import LineChartAlt from '~/components/Charts/LineChartAlt'
@@ -9,9 +9,10 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import { usePriceHistoryQuery } from '~/features/Chart/PriceByAsset.query'
 
-const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => {
+const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
   const [filterTime, setFilterTime] = useState<FilterTime>('7d')
   const [chartHover, setChartHover] = useState<number | undefined>()
+  const [percentOfRateHover, setPercentOfRateHover] = useState<number>(0)
   const { data: priceHistory } = usePriceHistoryQuery({
     timeframe: filterTime,
     pythSymbol: pythSymbol,
@@ -24,16 +25,19 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
   }, [filterTime])
 
   useMemo(() => {
-    if (priceHistory) {
-      if (priceHistory?.chartData.length > 0) {
-        setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
-      }
+    if (priceHistory && priceHistory?.chartData.length > 0) {
+      setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
+      setPercentOfRateHover(priceHistory.percentOfRate)
     }
   }, [priceHistory])
 
   useMemo(() => {
     if (chartHover === undefined && priceHistory && priceHistory?.chartData.length > 0) {
       setChartHover(priceHistory?.chartData[priceHistory?.chartData.length - 1].value)
+    } else if (chartHover !== undefined && priceHistory && priceHistory?.chartData.length > 0) {
+      const previousPrice = priceHistory?.chartData[0].value
+      const percentOfRate = 100 * (chartHover - previousPrice) / previousPrice
+      setPercentOfRateHover(percentOfRate)
     }
   }, [chartHover, priceHistory])
 
@@ -54,13 +58,13 @@ const Chart = ({ pythSymbol, price }: { pythSymbol: string, price: number }) => 
                 <Typography variant='p_xlg' ml='8px'>onUSD</Typography>
               </Box>
               <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
-                {priceHistory.percentOfRate >= 0 ?
+                {percentOfRateHover >= 0 ?
                   <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
-                    <Typography variant='p_xlg'>+{priceHistory.percentOfRate?.toFixed(2)}%</Typography>
+                    <Typography variant='p_xlg'>+{percentOfRateHover?.toFixed(2)}%</Typography>
                     <Image src={ArrowUpward} />
                   </Box>
                   : <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
-                    <Typography variant='p_xlg'>{priceHistory.percentOfRate?.toFixed(2)}%</Typography>
+                    <Typography variant='p_xlg'>{percentOfRateHover?.toFixed(2)}%</Typography>
                     <Image src={ArrowDownward} />
                   </Box>
                 }
