@@ -28,7 +28,7 @@ const getTxnURL = (txHash: string) => {
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
   const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
   return (<Stack direction='row' alignItems='center' gap={2}>
-    <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} width={65} height={65} /></Box>
+    <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} width={65} height={65} alt='icStatus' /></Box>
     <Box lineHeight={1.3}>
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
       {!isSuccess && <Box mt='6px'><Typography variant='p' color='#8988a3'>Something went wrong. Please try again.</Typography></Box>}
@@ -91,13 +91,13 @@ const TransactionStateSnackbar = ({ txState, txHash, open, handleClose }: { txSt
           <Box>
             {txState === TransactionState.SUCCESS &&
               <BoxWrapper sx={{ border: '1px solid #00ff99' }}>
-                <CloseButton onClick={handleClose}><Image src={CloseIcon} /></CloseButton>
+                <CloseButton onClick={handleClose}><Image src={CloseIcon} alt='close' /></CloseButton>
                 <SuccessFailureWrapper isSuccess={true} txHash={txHash} />
               </BoxWrapper>
             }
             {txState === TransactionState.FAIL &&
               <BoxWrapper sx={{ border: '1px solid #ff0084' }}>
-                <CloseButton onClick={handleClose}><Image src={CloseIcon} /></CloseButton>
+                <CloseButton onClick={handleClose}><Image src={CloseIcon} alt='close' /></CloseButton>
                 <SuccessFailureWrapper isSuccess={false} txHash={txHash} />
               </BoxWrapper>
             }

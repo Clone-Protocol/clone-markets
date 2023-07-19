@@ -16,7 +16,7 @@ const MobileWarningDialog = ({ open, handleClose }: { open: boolean, handleClose
       <Dialog open={open} onClose={handleClose} TransitionComponent={FadeTransition}>
         <DialogContent sx={{ backgroundColor: '#040414', width: '398px', padding: '15px', border: '1px solid #414166', borderRadius: '15px' }}>
           <BoxWrapper>
-            <Image src={OctagonIcon} width="55px" height="55px" />
+            <Image src={OctagonIcon} width={55} height={55} alt='octagon' />
 
             <Box maxWidth='270px' lineHeight={1} margin='0 auto' mt='15px'><Typography variant='p_lg'>Unleash the power of Clone Markets beta app from larger screen</Typography></Box>
             <Box width='288px' lineHeight={0.9} margin='0 auto' mt='15px' textAlign='center'>
@@ -25,9 +25,9 @@ const MobileWarningDialog = ({ open, handleClose }: { open: boolean, handleClose
               </Typography>
             </Box>
             <Stack direction='row' justifyContent='center' gap={2} mt='30px' mb='15px'>
-              <a href={OFFICIAL_WEB} target="_blank" rel="noreferrer"><Image src={HomeIcon} /></a>
-              <a href={TWITTER_URL} target="_blank" rel="noreferrer"><Image src={TwitterIcon} /></a>
-              <a href={DISCORD_URL} target="_blank" rel="noreferrer"><Image src={DiscordIcon} /></a>
+              <a href={OFFICIAL_WEB} target="_blank" rel="noreferrer"><Image src={HomeIcon} alt='home' /></a>
+              <a href={TWITTER_URL} target="_blank" rel="noreferrer"><Image src={TwitterIcon} alt='twitter' /></a>
+              <a href={DISCORD_URL} target="_blank" rel="noreferrer"><Image src={DiscordIcon} alt='discord' /></a>
             </Stack>
           </BoxWrapper>
         </DialogContent>

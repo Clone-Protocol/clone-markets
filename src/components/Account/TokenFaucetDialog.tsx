@@ -19,17 +19,17 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
               <LinkBox>
                 <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                   <Stack direction='row' spacing={2} alignItems='center'>
-                    <Image src={'/images/assets/on-sol.svg'} width="27px" height="27px" />
+                    <Image src={'/images/assets/on-sol.svg'} width={27} height={27} alt='sol' />
                     <Typography variant='p_lg'>Devnet SOL</Typography>
                   </Stack>
-                  <Image src={ArrowOutwardIcon} />
+                  <Image src={ArrowOutwardIcon} alt='arrowOut' />
                 </Stack>
               </LinkBox>
             </a>
             <LinkBox mt="11px" mb="17px" onClick={onGetUsdiClick}>
               <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Stack direction='row' spacing={2} alignItems='center'>
-                  <Image src={'/images/assets/on-usd.svg'} width="27px" height="27px" />
+                  <Image src={'/images/assets/on-usd.svg'} width={27} height={27} alt='usd' />
                   <Typography variant='p_lg' color={isConnect ? '#fff' : '#8988a3'}>Devnet onUSD ($100)</Typography>
                 </Stack>
                 <Box>
@@ -49,14 +49,14 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
               </Stack>
             </LinkBox>
             <InfoBox mb="8px">
-              <Image src={infoOutlineIcon} alt="info" width='18px' />
+              <Image src={infoOutlineIcon} alt="info" width={18} />
               <Typography variant='p' ml='12px' maxWidth='278px'>
                 You need Devnet SOL in your wallet before you can claim Devnet onUSD.
               </Typography>
             </InfoBox>
             <a href="https://www.alchemy.com/overviews/solana-devnet" target="_blank" rel="noreferrer">
               <InfoSelectableBox sx={{ cursor: 'pointer' }}>
-                <Image src={infoOutlineIcon} alt="info" width='18px' />
+                <Image src={infoOutlineIcon} alt="info" width={18} />
                 <Typography variant='p' ml='12px' maxWidth='278px'>
                   The Solana Devnet is a safe playground for developers, users, and validators to test applications at no risk. Click this box to learn more.
                 </Typography>

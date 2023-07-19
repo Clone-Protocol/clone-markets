@@ -49,7 +49,7 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={255} alt="clone" />
+						<Image src={logoIcon} width={255} height={32} alt="clone" />
 						<Box><NaviMenu /></Box>
 						<RightMenu />
 

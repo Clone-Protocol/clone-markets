@@ -61,11 +61,11 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
                 {percentOfRateHover >= 0 ?
                   <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
                     <Typography variant='p_xlg'>+{percentOfRateHover?.toFixed(2)}%</Typography>
-                    <Image src={ArrowUpward} />
+                    <Image src={ArrowUpward} alt='arrowUp' />
                   </Box>
                   : <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
                     <Typography variant='p_xlg'>{percentOfRateHover?.toFixed(2)}%</Typography>
-                    <Image src={ArrowDownward} />
+                    <Image src={ArrowDownward} alt='arrowDown' />
                   </Box>
                 }
               </Box>

@@ -11,7 +11,7 @@ const SearchInput: React.FC<Props> = ({ onChange }) => {
     <Box>
       <StyledBox>
         <Box sx={{ position: 'relative', left: '0px', top: '-6px' }}>
-          <Image src={SearchIcon} />
+          <Image src={SearchIcon} alt='search' />
         </Box>
         <StyledInput placeholder="Search onAssets" disableUnderline onChange={onChange} />
       </StyledBox>

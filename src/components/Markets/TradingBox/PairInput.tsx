@@ -37,14 +37,14 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 
 				{!tickerClickable ?
 					<TickerBox>
-						{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
+						{tickerIcon && <Image src={tickerIcon} width={22} height={22} alt={''} />}
 						<Box mx='4px' display='flex' alignItems='center'>
 							<Typography variant='h4' color='#fff'>{ticker}</Typography>
 						</Box>
 					</TickerBox>
 					:
 					<SelectTickerButton onClick={onTickerClick}>
-						{tickerIcon && <Image src={tickerIcon} width="22px" height="22px" />}
+						{tickerIcon && <Image src={tickerIcon} width={22} height={22} alt={''} />}
 						<Box mx='4px' display='flex' alignItems='center'>
 							<Typography variant='h4' color='#fff'>{ticker}</Typography>
 							<ExpandMoreOutlinedIcon />
