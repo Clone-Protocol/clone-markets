@@ -2,6 +2,9 @@ import { TokenData } from "clone-protocol-sdk/sdk/src/interfaces";
 import { toNumber } from "clone-protocol-sdk/sdk/src/decimal";
 import { DEVNET_TOKEN_SCALE } from "clone-protocol-sdk/sdk/src/clone"
 import { fetchFromCloneIndex } from "./fetch_netlify";
+import { assetMapping } from "~/data/assets";
+import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
+import { Connection, PublicKey } from "@solana/web3.js"
 
 export type Interval = 'day' | 'hour';
 export type Filter = 'day' | 'week' | 'month' | 'year';
@@ -43,14 +46,19 @@ export const fetchStatsData = async (filter: Filter, interval: Interval): Promis
 }
 
 
-export const getiAssetInfos = (tokenData: TokenData): { poolIndex: number, poolPrice: number, liquidity: number }[] => {
+export const getiAssetInfos = async (connection: Connection, tokenData: TokenData): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
+  
+  const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
+  const data = await pythClient.getData();
+  
   const iassetInfo = [];
   for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
     let pool = tokenData.pools[poolIndex];
     let committedOnusd = toNumber(pool.committedOnusdLiquidity)
     let poolOnusdIld = toNumber(pool.onusdIld)
     let poolOnassetIld = toNumber(pool.onassetIld)
-    let oraclePrice = toNumber(pool.assetInfo.price)
+    let { pythSymbol } = assetMapping(poolIndex)
+    let oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? toNumber(pool.assetInfo.price)
     let poolPrice = (committedOnusd - poolOnusdIld) / (committedOnusd / oraclePrice - poolOnassetIld)
     let liquidity = committedOnusd * 2;
     iassetInfo.push({ poolIndex, poolPrice, liquidity });

@@ -1,12 +1,14 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
-import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
+import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
+import { getPythOraclePrice } from "~/utils/pyth"
+import { assetMapping } from '~/data/assets'
 
 export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
 
@@ -62,7 +64,14 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
         const onassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
         onassetVal = Number(onassetBalance.value.amount) / 100000000;
       }
-      const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
+      const { pythSymbol } = assetMapping(index)
+      const { price } = await getPythOraclePrice(new_connection, pythSymbol)
+      const oraclePrice = price ?? toNumber(pool.assetInfo.price)
+      const poolOnusd =
+        toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
+      const poolOnasset =
+        toNumber(pool.committedOnusdLiquidity) / oraclePrice -
+        toNumber(pool.onassetIld);
 
       ammOnassetValue = poolOnasset
       ammOnusdValue = poolOnusd
