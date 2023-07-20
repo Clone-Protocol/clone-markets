@@ -1,26 +1,26 @@
-import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import Link from 'next/link'
 
 const NaviMenu = () => {
-  const router = useRouter()
+  const pathname = usePathname()
 
   return (
     <Fade in timeout={1500}>
       <List component="nav" sx={{ display: 'flex', padding: 0 }}>
         <Link href="/">
-          <StyledListItemButton className={router.asPath === '/' ? 'selected' : ''}>
+          <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Home</Typography></Box>
           </StyledListItemButton>
         </Link>
         <Link href="/onportfolio">
-          <StyledListItemButton className={router.asPath.startsWith('/onportfolio') ? 'selected' : ''}>
+          <StyledListItemButton className={pathname?.startsWith('/onportfolio') ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
           </StyledListItemButton>
         </Link>
         <Link href="/trade/euro">
-          <StyledListItemButton className={router.asPath.startsWith('/trade') ? 'selected' : ''}>
+          <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Trade</Typography></Box>
           </StyledListItemButton>
         </Link>

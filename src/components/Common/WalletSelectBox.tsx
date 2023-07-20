@@ -6,7 +6,7 @@ import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useSnackbar } from 'notistack'
 import withSuspense from '~/hocs/withSuspense'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { shortenAddress } from '~/utils/address'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getSolInBalance } from '~/utils/address';

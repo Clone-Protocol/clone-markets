@@ -1,3 +1,4 @@
+'use client'
 import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.svg'
