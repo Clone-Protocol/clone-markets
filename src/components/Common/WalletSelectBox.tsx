@@ -26,8 +26,12 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   useMemo(() => {
     const getBalance = async () => {
       if (publicKey) {
-        const balance = await getSolInBalance(publicKey)
-        setSolBalance(balance)
+        try {
+          const balance = await getSolInBalance(publicKey)
+          setSolBalance(balance)
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
     getBalance()

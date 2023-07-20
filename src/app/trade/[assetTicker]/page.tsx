@@ -32,27 +32,19 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
 
   return (
     <div>
-      <Head>
-        <title>Clone Markets - The Most Efficient Trading on Solana</title>
-        <meta name="description" content="Clone Markets allows users to trade onAssets, our synthetic derivatives that bring supercharged liquidity and rapid scalability to trading on Solana." />
-        <link rel="icon" href="/favicon.png" />
-        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet' />
-      </Head>
-      <main>
-        <StyledSection
-          sx={{
-            backgroundColor: '#000',
-          }}>
-          <Stack direction='row' gap={1} justifyContent="center">
-            <Box minWidth='750px'>
-              <MarketDetail assetId={assetId} />
-            </Box>
-            <Box width='360px'>
-              <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />
-            </Box>
-          </Stack>
-        </StyledSection>
-      </main>
+      <StyledSection
+        sx={{
+          backgroundColor: '#000',
+        }}>
+        <Stack direction='row' gap={1} justifyContent="center">
+          <Box minWidth='750px'>
+            <MarketDetail assetId={assetId} />
+          </Box>
+          <Box width='360px'>
+            <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />
+          </Box>
+        </Stack>
+      </StyledSection>
     </div>
   )
 }
