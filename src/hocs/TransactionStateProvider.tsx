@@ -1,3 +1,4 @@
+'use client'
 import React, { FC, useState } from 'react'
 import { TransactionStateContext, TransactionState } from '~/hooks/useTransactionState'
 import TransactionStateSnackbar from '~/components/Common/TransactionStateSnackbar'

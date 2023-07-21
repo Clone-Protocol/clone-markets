@@ -1,3 +1,4 @@
+'use client'
 import React, { FC, ReactNode, useState } from 'react'
 import { WalletDialogContext } from '~/hooks/useWalletDialog'
 import { WalletDialog, WalletDialogProps } from '~/components/Wallet/WalletDialog'

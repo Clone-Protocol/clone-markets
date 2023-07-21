@@ -1,3 +1,4 @@
+'use client'
 import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.svg'
@@ -24,7 +25,7 @@ const GNB: React.FC = () => {
 	// const { scrolled } = useScroll()
 
 	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
-	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'), { ssr: false })
+	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
@@ -49,7 +50,7 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={255} alt="clone" />
+						<Image src={logoIcon} width={255} height={32} alt="clone" />
 						<Box><NaviMenu /></Box>
 						<RightMenu />
 

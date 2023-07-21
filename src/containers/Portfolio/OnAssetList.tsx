@@ -11,7 +11,7 @@ import withSuspense from '~/hocs/withSuspense'
 import PercentSlider from '~/components/Portfolio/PercentSlider'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ASSETS, AssetTickers } from '~/data/assets'
 import { useCallback } from 'react'
@@ -100,13 +100,13 @@ let columns: GridColDef[] = [
           {percent >= 0 ? (
             <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
               <Typography variant='p_lg'>+{percent.toFixed(2)}%</Typography>
-              <Image src={ArrowUpward} />
+              <Image src={ArrowUpward} alt='arrowUp' />
             </Box>
           )
             :
             (<Box color='#ff0084' display='flex' alignItems='center' gap={1}>
               <Typography variant='p_lg'>-{percent.toFixed(2)}%</Typography>
-              <Image src={ArrowDownward} />
+              <Image src={ArrowDownward} alt='arrowDown' />
             </Box>
             )}
         </Stack>

@@ -1,3 +1,4 @@
+'use client'
 import { createContext, useContext } from 'react'
 import { CloneClient } from "clone-protocol-sdk/sdk/src/clone"
 import { AnchorWallet } from '@solana/wallet-adapter-react'

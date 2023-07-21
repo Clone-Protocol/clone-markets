@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react'
 import { CircularProgress, Box } from '@mui/material'
 import { styled } from '@mui/system'

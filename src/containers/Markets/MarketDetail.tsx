@@ -60,7 +60,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 				<Stack mb={2} direction="column" paddingLeft={5} paddingY={1} maxWidth='750px'>
 					<Box>
 						<Box display="inline-flex" alignItems="center">
-							<Image src={asset.tickerIcon} width="30px" height="30px" alt={asset.tickerSymbol} />
+							<Image src={asset.tickerIcon} width={30} height={30} alt={asset.tickerSymbol} />
 							<Box ml='8px'>
 								<Typography variant="h3" fontWeight={500}>{asset.tickerName}</Typography>
 							</Box>

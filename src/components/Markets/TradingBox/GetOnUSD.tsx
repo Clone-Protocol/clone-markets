@@ -10,7 +10,7 @@ const GetOnUSD: React.FC = () => {
   return (
     <Wrapper>
       <Box display='flex' gap={1} alignItems='center'>
-        <Image src={PrimaryIcon} width='19px' />
+        <Image src={PrimaryIcon} width={19} alt='primary' />
         <Box><Typography variant='p_lg' color='#9b79fc'>Need onUSD?</Typography></Box>
       </Box>
       <Box lineHeight={1}><Typography variant='p' color='#8988a3'>Devnet onUSD is needed for you to trade on Devnet Clone Markets app.</Typography></Box>

@@ -8,7 +8,7 @@ import { mintUSDi } from '~/features/globalAtom'
 const GetUSDiBadge: React.FC = () => {
   const setMintUsdi = useSetAtom(mintUSDi)
   return <StyledStack direction='row' justifyContent='center' alignItems='center' spacing={2}>
-    <Image src={PrimaryIcon} />
+    <Image src={PrimaryIcon} alt='primary' />
     <Box>
       <Typography variant='p_lg'>Get onUSD from the faucet to start trading on Devnet. On mainnet, you can acquire onUSD through 1:1 swap with USDC.</Typography>
     </Box>
