@@ -25,7 +25,7 @@ const GNB: React.FC = () => {
 	// const { scrolled } = useScroll()
 
 	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
-	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'), { ssr: false })
+	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')

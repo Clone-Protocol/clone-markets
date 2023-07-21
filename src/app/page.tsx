@@ -1,6 +1,6 @@
 'use client'
+
 import * as React from 'react'
-import Head from 'next/head'
 import { styled, Box } from '@mui/system'
 import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
