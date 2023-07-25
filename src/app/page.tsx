@@ -1,5 +1,4 @@
 'use client'
-
 import * as React from 'react'
 import { styled, Box } from '@mui/system'
 import Container from '@mui/material/Container'
@@ -31,7 +30,7 @@ const Home = () => {
   )
 }
 
-const StyledSection = styled('section')`
+export const StyledSection = styled('section')`
 	max-width: 1085px;
 	margin: 0 auto;
 	${(props) => props.theme.breakpoints.up('md')} {

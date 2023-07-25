@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import Head from 'next/head'
 import { styled } from '@mui/system'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
