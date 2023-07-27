@@ -4,8 +4,7 @@ import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
 import { useClone } from '~/hooks/useClone'
 import { assetMapping, AssetType } from '~/data/assets'
-import { useDataLoading } from '~/hooks/useDataLoading'
-import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
+import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { FilterType } from '~/data/filter'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
@@ -23,13 +22,10 @@ const fetchOnassetBalance = async (onassetMint: PublicKey, program: CloneClient)
 	}
 }
 
-export const fetchUserTotalBalance = async ({ program, userPubKey, setStartTimer }: { program: CloneClient, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void }) => {
+export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: CloneClient, userPubKey: PublicKey | null }) => {
 	if (!userPubKey) return []
 
 	console.log('fetchUserTotalBalance')
-	// start timer in data-loading-indicator
-	setStartTimer(false);
-	setStartTimer(true);
 
 	await program.loadClone()
 
@@ -75,10 +71,9 @@ export const fetchUserTotalBalance = async ({ program, userPubKey, setStartTimer
 export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const wallet = useAnchorWallet()
 	const { getCloneApp } = useClone()
-	const { setStartTimer } = useDataLoading()
 
 	if (wallet) {
-		return useQuery(['userTotalBalance', wallet, userPubKey], () => fetchUserTotalBalance({ program: getCloneApp(wallet), userPubKey, setStartTimer }), {
+		return useQuery(['userTotalBalance', wallet, userPubKey], () => fetchUserTotalBalance({ program: getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,
@@ -90,14 +85,10 @@ export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled =
 }
 
 
-export const fetchUserBalance = async ({ program, userPubKey, setStartTimer }: { program: CloneClient, userPubKey: PublicKey | null, setStartTimer: (start: boolean) => void }) => {
+export const fetchUserBalance = async ({ program, userPubKey }: { program: CloneClient, userPubKey: PublicKey | null }) => {
 	if (!userPubKey) return []
 
 	// console.log('fetchUserBalance')
-	// start timer in data-loading-indicator
-	setStartTimer(false);
-	setStartTimer(true);
-
 	await program.loadClone()
 	const tokenData = await program.getTokenData();
 
@@ -170,10 +161,9 @@ export interface BalanceList {
 export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const wallet = useAnchorWallet()
 	const { getCloneApp } = useClone()
-	const { setStartTimer } = useDataLoading()
 
 	if (wallet) {
-		return useQuery(['userBalance', wallet, userPubKey], () => fetchUserBalance({ program: getCloneApp(wallet), userPubKey, setStartTimer }), {
+		return useQuery(['userBalance', wallet, userPubKey], () => fetchUserBalance({ program: getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,

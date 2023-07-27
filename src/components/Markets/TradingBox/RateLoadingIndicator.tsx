@@ -8,9 +8,9 @@ export const REFETCH_CYCLE = 60000
 const RateLoadingIndicator = ({ restartTimer }: { restartTimer: boolean }) => {
   const { startTimer } = useDataLoading()
   const [progress, setProgress] = useState(0);
-  let timer: any = null
 
   useEffect(() => {
+    let timer: any = null
     if (startTimer) {
       console.log('start Timer')
       timer = setInterval(() => {
@@ -27,13 +27,14 @@ const RateLoadingIndicator = ({ restartTimer }: { restartTimer: boolean }) => {
   }, [startTimer]);
 
   useEffect(() => {
+    let timer: any = null
     console.log('restartTimer', restartTimer)
 
     setProgress(0)
     clearInterval(timer)
     timer = setInterval(() => {
       setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
-    }, 3000);
+    }, 6000);
 
     return () => {
       clearInterval(timer)

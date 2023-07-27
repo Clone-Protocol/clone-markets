@@ -1,10 +1,8 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
-import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
 import { assetMapping } from 'src/data/assets'
-import { useDataLoading } from '~/hooks/useDataLoading'
-import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
+import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
@@ -12,12 +10,7 @@ import { getPythOraclePrice } from "~/utils/pyth"
 import { ASSETS_DESC } from '~/data/assets_desc'
 import { fetch24hourVolume } from '~/utils/assets'
 
-export const fetchMarketDetail = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
-	// console.log('fetchMarketDetail', index)
-	// start timer in data-loading-indicator
-	setStartTimer(false);
-	setStartTimer(true);
-
+export const fetchMarketDetail = async ({ index }: { index: number }) => {
 	// MEMO: to support provider without wallet adapter
 	const network = getNetworkDetailsFromEnv()
 	const new_connection = new Connection(network.endpoint)
@@ -46,8 +39,8 @@ export const fetchMarketDetail = async ({ index, setStartTimer }: { index: numbe
 	const pythInfo = await getPythOraclePrice(program.connection, pythSymbol)
 	const oraclePrice = pythInfo.price!
 	const poolOnusd =
-    	toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
-  	const poolOnasset =
+		toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
+	const poolOnasset =
 		toNumber(pool.committedOnusdLiquidity) / oraclePrice -
 		toNumber(pool.onassetIld);
 	const price = poolOnusd / poolOnasset
@@ -111,11 +104,9 @@ export interface PairData {
 }
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
-	const { setStartTimer } = useDataLoading()
-
 	let queryFunc
 	try {
-		queryFunc = () => fetchMarketDetail({ index, setStartTimer })
+		queryFunc = () => fetchMarketDetail({ index })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => fetchMarketDetailDefault()

@@ -1,8 +1,6 @@
 import { QueryObserverOptions, useQuery } from 'react-query'
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { assetMapping } from '~/data/assets'
-import { useDataLoading } from '~/hooks/useDataLoading'
-import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
 import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { AnchorProvider } from "@coral-xyz/anchor";
@@ -11,12 +9,10 @@ import { PublicKey, Connection } from "@solana/web3.js";
 import { fetchPythPriceHistory } from '~/utils/pyth'
 import { useSetAtom } from 'jotai'
 import { showPythBanner } from '~/features/globalAtom'
+import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator';
 
-export const fetchAssets = async ({ setStartTimer, setShowPythBanner }: { setStartTimer: (start: boolean) => void, setShowPythBanner: (show: boolean) => void }) => {
+export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (show: boolean) => void }) => {
 	console.log('fetchAssets')
-	// start timer in data-loading-indicator
-	setStartTimer(false);
-	setStartTimer(true);
 
 	// MEMO: to support provider without wallet adapter
 	const network = getNetworkDetailsFromEnv()
@@ -106,12 +102,11 @@ export interface AssetList {
 }
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
-	const { setStartTimer } = useDataLoading()
 	const setShowPythBanner = useSetAtom(showPythBanner)
 
 	let queryFunc
 	try {
-		queryFunc = () => fetchAssets({ setStartTimer, setShowPythBanner })
+		queryFunc = () => fetchAssets({ setShowPythBanner })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => []

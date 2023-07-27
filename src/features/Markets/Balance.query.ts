@@ -2,7 +2,7 @@ import { QueryObserverOptions, useQuery } from 'react-query'
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
 import { useDataLoading } from '~/hooks/useDataLoading'
-import { REFETCH_CYCLE } from '~/components/Common/DataLoadingIndicator'
+import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
