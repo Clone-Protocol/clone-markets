@@ -1,7 +1,7 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { CloneClient, toDevnetScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { toNumber } from "clone-protocol-sdk/sdk/src/decimal"
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import {
