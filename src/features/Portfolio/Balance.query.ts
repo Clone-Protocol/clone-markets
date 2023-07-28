@@ -1,4 +1,4 @@
-import { QueryObserverOptions, useQuery } from 'react-query'
+import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { CloneClient, DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import { PublicKey } from '@solana/web3.js'
 import { useClone } from '~/hooks/useClone'

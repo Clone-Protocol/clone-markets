@@ -1,4 +1,4 @@
-import { QueryObserverOptions, useQuery } from 'react-query'
+import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
 import { useDataLoading } from '~/hooks/useDataLoading'
