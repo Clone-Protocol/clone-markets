@@ -14,7 +14,7 @@ import {
 	Theme,
 	Typography,
 } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import { WalletName } from '@solana/wallet-adapter-base'
 import { useWallet } from '@solana/wallet-adapter-react'
 import React, { FC, ReactElement, SyntheticEvent, useCallback, useMemo, useState } from 'react'

@@ -1,5 +1,5 @@
 import { Box, Dialog, DialogContent, Stack, Typography } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import { FadeTransition } from '~/components/Common/Dialog'
 import Image from 'next/image'
 import ConnectWalletIcon from 'public/images/icons-connect-wallet.svg'

@@ -1,5 +1,5 @@
-import { styled } from '@mui/system'
 import { Box, Input } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import Image from 'next/image'
 import SearchIcon from 'public/images/search-icon.svg'
 

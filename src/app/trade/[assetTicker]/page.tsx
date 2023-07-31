@@ -1,10 +1,10 @@
 'use client'
 import React, { useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { styled } from '@mui/system'
+import { Box, Stack } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
-import { Box, Stack } from '@mui/material'
 import { AssetTickers } from '~/data/assets'
 
 const AssetPage = ({ params }: { params: { assetTicker: string } }) => {

@@ -1,5 +1,6 @@
 import React from 'react'
-import { CircularProgress, Modal, styled, Typography } from '@mui/material'
+import { CircularProgress, Modal, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 
 const LoadingIndicator = ({ open, msg, inline }: Props) => {
 	if (inline)

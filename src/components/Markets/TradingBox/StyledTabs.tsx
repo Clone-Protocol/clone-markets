@@ -1,5 +1,5 @@
-import { styled } from '@mui/system'
 import { Tabs, Tab, Box } from '@mui/material'
+import { styled } from '@mui/material/styles'
 
 export interface TabPanelProps {
 	children?: React.ReactNode
@@ -32,17 +32,17 @@ export const StyledTabs = styled((props: StyledTabsProps) => (
 
 export const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple {...props} />)(({ theme }) => ({
 	width: '87px',
-  height: '39px',
-  textTransform: 'none',
+	height: '39px',
+	textTransform: 'none',
 	fontWeight: '600',
 	fontSize: '16px',
 	color: '#737373',
 	'&.Mui-selected': {
-    background: '#000',
+		background: '#000',
 		color: '#fff',
-    borderRadius: '10px',
-    boxShadow: '0px',
-    border: '1px solid #fff'
+		borderRadius: '10px',
+		boxShadow: '0px',
+		border: '1px solid #fff'
 	}
 }))
 

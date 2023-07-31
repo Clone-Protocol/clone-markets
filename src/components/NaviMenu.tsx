@@ -1,6 +1,6 @@
 import { usePathname } from 'next/navigation'
 import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 
 const NaviMenu = () => {

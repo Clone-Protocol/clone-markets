@@ -1,5 +1,5 @@
 import { Box, Stack, Button, IconButton, Typography, CircularProgress } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
 import Image from 'next/image'

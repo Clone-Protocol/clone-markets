@@ -1,5 +1,5 @@
-import { styled } from '@mui/system'
 import { Tabs, Tab } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { ReactElement } from 'react'
 
 export interface TabPanelProps {

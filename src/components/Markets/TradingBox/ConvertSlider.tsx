@@ -1,5 +1,6 @@
 //@DEPRECATED
-import { Box, Slider, styled } from '@mui/material'
+import { Box, Slider } from '@mui/material'
+import { styled } from '@mui/material/styles'
 
 interface Props {
 	isBuy: boolean

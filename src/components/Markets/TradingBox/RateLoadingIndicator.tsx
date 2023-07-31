@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { CircularProgress, Box } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import { useDataLoading } from '~/hooks/useDataLoading'
 
 export const REFETCH_CYCLE = 60000

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Stack, Typography, Snackbar, CircularProgress } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import SuccessIcon from 'public/images/check-mark-icon.svg'
 import FailureIcon from 'public/images/failure-mark-icon.svg'
 import CloseIcon from 'public/images/close-round.svg'

@@ -1,5 +1,5 @@
-import { Typography, Box } from '@mui/material'
-import { styled } from '@mui/system'
+import { Typography, Box, Stack } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Image from 'next/image'
@@ -9,7 +9,6 @@ import DiscordIcon from 'public/images/more/discord.svg'
 import HomeHoverIcon from 'public/images/more/home-hover.svg'
 import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
 import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
-import { Stack } from '@mui/system';
 import { useState } from 'react'
 import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
 

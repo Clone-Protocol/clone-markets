@@ -1,6 +1,7 @@
 'use client'
 import * as React from 'react'
-import { styled, Box } from '@mui/system'
+import { Box } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
 import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
