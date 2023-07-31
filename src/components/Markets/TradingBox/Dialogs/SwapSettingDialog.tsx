@@ -1,5 +1,5 @@
 import { Box, Dialog, DialogContent, FormControl, Stack, Typography } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import { FadeTransition } from '~/components/Common/Dialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { StyledTabs, StyledTab } from './OrderSettingSlippage'

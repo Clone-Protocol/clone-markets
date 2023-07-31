@@ -1,6 +1,9 @@
 'use client'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { cache } from 'react'
+
+export const getQueryClient = cache(() => new QueryClient())
 
 export const queryClient = new QueryClient({
 	defaultOptions: {
@@ -11,7 +14,7 @@ export const queryClient = new QueryClient({
 	},
 })
 
-const QueryProvider: React.FC = ({ children }) => {
+const QueryProvider = ({ children }: { children: any }) => {
 	return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }
 

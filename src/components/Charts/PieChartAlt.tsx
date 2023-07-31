@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { withCsrOnly } from '~/hocs/CsrOnly'
-import { styled } from '@mui/system'
 import { Box } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { FilterTypeColorMap, PieItem } from '~/data/filter'
 import { filterState } from '~/features/Portfolio/filterAtom'
 import CloseIcon from '@mui/icons-material/Close';

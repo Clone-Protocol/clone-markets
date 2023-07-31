@@ -1,5 +1,5 @@
 import { Typography, Stack, Box, Button } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import Image from 'next/image'
 import PrimaryIcon from 'public/images/icons-badge.svg'
 import { useSetAtom } from 'jotai'

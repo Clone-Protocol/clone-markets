@@ -1,13 +1,12 @@
 import React from 'react'
-import { Box, Dialog, DialogContent, Typography } from '@mui/material'
-import { styled } from '@mui/system'
+import { Box, Dialog, DialogContent, Typography, Stack } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { FadeTransition } from '~/components/Common/Dialog'
 import Image from 'next/image'
 import OctagonIcon from 'public/images/alert-octagon-outline.svg'
 import HomeIcon from 'public/images/mobile/home.svg'
 import TwitterIcon from 'public/images/mobile/twitter.svg'
 import DiscordIcon from 'public/images/mobile/discord.svg'
-import { Stack } from '@mui/system'
 import { DISCORD_URL, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
 
 const MobileWarningDialog = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {

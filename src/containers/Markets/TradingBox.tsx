@@ -1,5 +1,5 @@
 import { Paper } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material/styles'
 import { useCallback, useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'

@@ -1,13 +1,17 @@
 import React, { Dispatch, SetStateAction, ReactNode } from 'react';
-import { styled } from '@mui/system'
 import { Card, Box } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from 'recharts'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { darken } from 'polished'
-import { ChartElem } from '~/features/Chart/Prices.query';
 dayjs.extend(utc)
+
+interface ChartElem {
+  time: string
+  value: number
+}
 
 export type LineChartProps = {
   data: ChartElem[]
