@@ -11,7 +11,6 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 	if (!userPubKey) return null
 
 	// console.log('fetchBalance')
-	await program.loadClone()
 
 	let onusdVal = 0.0
 	let onassetVal = 0.0
@@ -58,7 +57,7 @@ export function useBalanceQuery({ userPubKey, index = -1, refetchOnMount, enable
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['portfolioBalance', wallet, userPubKey, index], () => fetchBalance({ program: getCloneApp(wallet), userPubKey, index }), {
+		return useQuery(['portfolioBalance', wallet, userPubKey, index], async () => fetchBalance({ program: await getCloneApp(wallet), userPubKey, index }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,

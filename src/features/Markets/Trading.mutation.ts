@@ -186,7 +186,7 @@ export function useTradingMutation(userPubKey: PublicKey | null) {
 	const { setTxState } = useTransactionState()
 
 	if (wallet) {
-		return useMutation((data: FormData) => callTrading({ program: getCloneApp(wallet), userPubKey, setTxState, data }))
+		return useMutation(async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data }))
 	} else {
 		return useMutation((_: FormData) => funcNoWallet())
 	}

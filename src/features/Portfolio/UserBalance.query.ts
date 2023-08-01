@@ -27,8 +27,6 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 
 	console.log('fetchUserTotalBalance')
 
-	await program.loadClone()
-
 	let onusdVal = 0.0
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
@@ -73,7 +71,7 @@ export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled =
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['userTotalBalance', wallet, userPubKey], () => fetchUserTotalBalance({ program: getCloneApp(wallet), userPubKey }), {
+		return useQuery(['userTotalBalance', wallet, userPubKey], async () => fetchUserTotalBalance({ program: await getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,
@@ -163,7 +161,7 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['userBalance', wallet, userPubKey], () => fetchUserBalance({ program: getCloneApp(wallet), userPubKey }), {
+		return useQuery(['userBalance', wallet, userPubKey], async () => fetchUserBalance({ program: await getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,

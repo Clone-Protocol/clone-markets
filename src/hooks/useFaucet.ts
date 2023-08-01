@@ -23,8 +23,8 @@ export default function useFaucet() {
     async function userMintOnusd() {
       const onusdToMint = 100;
       if (connected && publicKey && mintUsdi && wallet) {
-        const program = getCloneApp(wallet)
-        await program.loadClone()
+        const program = await getCloneApp(wallet)
+
         const usdiTokenAccount = await getOnUSDAccount(program);
         const onusdAta = await getAssociatedTokenAddress(program.clone!.onusdMint, publicKey);
 
