@@ -1,6 +1,6 @@
 import { Query, useQuery } from '@tanstack/react-query'
 import { FilterTime } from '~/components/Charts/TimeTabs'
-import { DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
+import { CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import { fetchStatsData, Interval, ResponseValue, generateDates, Filter } from 'src/utils/assets'
 
 export interface ChartElem {
@@ -47,7 +47,7 @@ const aggregatePoolData = (poolDataArray: ResponseValue[], interval: Interval): 
     return dt.toISOString();
   }
   const convertToNumber = (val: string) => {
-    return Number(val) * Math.pow(10, -DEVNET_TOKEN_SCALE)
+    return Number(val) * Math.pow(10, -CLONE_TOKEN_SCALE)
   }
 
   const poolIndices: Set<string> = new Set()

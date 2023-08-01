@@ -25,7 +25,6 @@ export const fetchMarketDetail = async ({ index }: { index: number }) => {
 	);
 	// @ts-ignore
 	const program = new CloneClient(network.clone, provider)
-	await program.loadClone()
 
 	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
 

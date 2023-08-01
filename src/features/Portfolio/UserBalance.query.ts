@@ -87,7 +87,6 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	if (!userPubKey) return []
 
 	// console.log('fetchUserBalance')
-	await program.loadClone()
 	const tokenData = await program.getTokenData();
 
 	const balanceQueries = [];

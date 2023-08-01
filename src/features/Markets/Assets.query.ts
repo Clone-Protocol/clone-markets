@@ -28,7 +28,7 @@ export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (s
 	);
 	// @ts-ignore
 	const program = new CloneClient(network.clone, provider)
-	await program.loadClone()
+
 	const tokenData = await program.getTokenData();
 	const iassetInfos = await getiAssetInfos(new_connection, tokenData);
 

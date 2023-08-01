@@ -7,7 +7,7 @@ import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { PROGRAM_ADDRESS as JUPITER_PROGRAM_ADDRESS, createMintUsdcInstruction, Jupiter } from 'clone-protocol-sdk/sdk/generated/jupiter-agg-mock/index'
-import { DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
+import { CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import { BN } from "@coral-xyz/anchor"
 import { sendAndConfirm } from '~/utils/tx_helper'
 import { useTransactionState } from './useTransactionState';
@@ -61,7 +61,7 @@ export default function useFaucet() {
 
           ixnCalls.push(
             await program.mintOnusdInstruction(
-              new BN(onusdToMint * Math.pow(10, DEVNET_TOKEN_SCALE)),
+              new BN(onusdToMint * Math.pow(10, CLONE_TOKEN_SCALE)),
               onusdAta,
               usdcAta
             )

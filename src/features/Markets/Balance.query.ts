@@ -31,7 +31,6 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   );
   // @ts-ignore
   const program = new CloneClient(network.clone, provider)
-  await program.loadClone()
 
   let onusdVal = 0.0
   let onassetVal = 0.0

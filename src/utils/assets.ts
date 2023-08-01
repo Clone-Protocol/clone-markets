@@ -1,6 +1,6 @@
 import { TokenData } from "clone-protocol-sdk/sdk/src/interfaces";
 import { toNumber } from "clone-protocol-sdk/sdk/src/decimal";
-import { DEVNET_TOKEN_SCALE } from "clone-protocol-sdk/sdk/src/clone"
+import { CLONE_TOKEN_SCALE } from "clone-protocol-sdk/sdk/src/clone"
 import { fetchFromCloneIndex } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
@@ -47,10 +47,10 @@ export const fetchStatsData = async (filter: Filter, interval: Interval): Promis
 
 
 export const getiAssetInfos = async (connection: Connection, tokenData: TokenData): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
-  
+
   const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
   const data = await pythClient.getData();
-  
+
   const iassetInfo = [];
   for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
     let pool = tokenData.pools[poolIndex];
@@ -173,7 +173,7 @@ export const fetch24hourVolume = async () => {
   const isWithin24hrs = (date: Date) => {
     return (date.getTime() >= (now.getTime() - 86400000))
   }
-  const conversion = Math.pow(10, -DEVNET_TOKEN_SCALE)
+  const conversion = Math.pow(10, -CLONE_TOKEN_SCALE)
   data.forEach((response) => {
     if (!isWithin24hrs(new Date(response.time_interval))) {
       return;

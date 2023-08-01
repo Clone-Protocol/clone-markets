@@ -17,7 +17,7 @@ import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balan
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
-import { DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
+import { CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
@@ -162,8 +162,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   //     iAsset = balance?.onassetVal! * convertRatio / 100;
   //     usdi = ammOnusdValue - invariant / (ammOnassetValue + amountOnasset)
   //   }
-  //   setValue('amountOnusd', round(usdi, DEVNET_TOKEN_SCALE))
-  //   setValue('amountOnasset', round(iAsset, DEVNET_TOKEN_SCALE))
+  //   setValue('amountOnusd', round(usdi, CLONE_TOKEN_SCALE))
+  //   setValue('amountOnasset', round(iAsset, CLONE_TOKEN_SCALE))
   // }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
@@ -171,7 +171,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       newValue, true, isBuy, assetData?.poolOnusdIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedOnusd!,
       assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!
     )
-    const resultVal = round(swapResult.result, DEVNET_TOKEN_SCALE)
+    const resultVal = round(swapResult.result, CLONE_TOKEN_SCALE)
     if (isBuy) {
       setValue('amountOnasset', resultVal)
     } else {

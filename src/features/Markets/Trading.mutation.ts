@@ -34,8 +34,6 @@ export const callTrading = async ({
 
 	console.log('input data', data)
 
-	await program.loadClone()
-
 	const tokenData = await program.getTokenData();
 	const pool = tokenData.pools[poolIndex]
 	const assetInfo = pool.assetInfo

@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient, DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import { PublicKey } from '@solana/web3.js'
 import { useClone } from '~/hooks/useClone'
 import { getOnUSDAccount } from "~/utils/token_accounts"
@@ -14,7 +14,7 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 
 	let onusdVal = 0.0
 	let onassetVal = 0.0
-	const devnetConversionFactor = Math.pow(10, -DEVNET_TOKEN_SCALE)
+	const devnetConversionFactor = Math.pow(10, -CLONE_TOKEN_SCALE)
 
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
