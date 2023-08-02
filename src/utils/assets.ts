@@ -1,6 +1,5 @@
-import { TokenData } from "clone-protocol-sdk/sdk/src/interfaces";
-import { toNumber } from "clone-protocol-sdk/sdk/src/decimal";
-import { CLONE_TOKEN_SCALE } from "clone-protocol-sdk/sdk/src/clone"
+import { TokenDataArgs } from "clone-protocol-sdk/sdk/generated/clone";
+import { CLONE_TOKEN_SCALE, fromCloneScale } from "clone-protocol-sdk/sdk/src/clone"
 import { fetchFromCloneIndex } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
@@ -46,7 +45,7 @@ export const fetchStatsData = async (filter: Filter, interval: Interval): Promis
 }
 
 
-export const getiAssetInfos = async (connection: Connection, tokenData: TokenData): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
+export const getiAssetInfos = async (connection: Connection, tokenData: TokenDataArgs): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
 
   const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
   const data = await pythClient.getData();
@@ -54,11 +53,11 @@ export const getiAssetInfos = async (connection: Connection, tokenData: TokenDat
   const iassetInfo = [];
   for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
     let pool = tokenData.pools[poolIndex];
-    let committedOnusd = toNumber(pool.committedOnusdLiquidity)
-    let poolOnusdIld = toNumber(pool.onusdIld)
-    let poolOnassetIld = toNumber(pool.onassetIld)
+    let committedOnusd = fromCloneScale(pool.committedOnusdLiquidity)
+    let poolOnusdIld = fromCloneScale(pool.onusdIld)
+    let poolOnassetIld = fromCloneScale(pool.onassetIld)
     let { pythSymbol } = assetMapping(poolIndex)
-    let oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? toNumber(pool.assetInfo.price)
+    let oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? fromCloneScale(pool.assetInfo.price)
     let poolPrice = (committedOnusd - poolOnusdIld) / (committedOnusd / oraclePrice - poolOnassetIld)
     let liquidity = committedOnusd * 2;
     iassetInfo.push({ poolIndex, poolPrice, liquidity });
@@ -74,43 +73,6 @@ export type AggregatedStats = {
   liquidityUSD: number,
   previousLiquidity: number
 }
-
-// export const getAggregatedPoolStats = async (tokenData: TokenData): Promise<AggregatedStats[]> => {
-
-//   let result: AggregatedStats[] = [];
-//   for (let i = 0; i < tokenData.numPools.toNumber(); i++) {
-//     result.push({ volumeUSD: 0, fees: 0, previousVolumeUSD: 0, previousFees: 0, liquidityUSD: 0, previousLiquidity: 0 })
-//   }
-
-//   const statsData = await fetchStatsData('hour')
-//   const now = (new Date()).getTime(); // Get current timestamp
-
-//   statsData.forEach((item) => {
-//     const dt = new Date(item.datetime)
-//     const hoursDifference = (now - dt.getTime()) / 3600000
-//     const poolIndex = Number(item.pool_index)
-
-//     if (poolIndex >= tokenData.numPools.toNumber()) {
-//       return;
-//     }
-//     const tradingVolume = convertToNumber(item.trading_volume)
-//     const tradingFees = convertToNumber(item.total_trading_fees)
-//     const liquidity = convertToNumber(item.total_liquidity)
-//     if (hoursDifference <= 24) {
-//       result[poolIndex].volumeUSD += tradingVolume
-//       result[poolIndex].liquidityUSD = liquidity
-//       result[poolIndex].fees += tradingFees
-//     } else if (hoursDifference <= 48 && hoursDifference > 24) {
-//       result[poolIndex].previousVolumeUSD += tradingVolume
-//       result[poolIndex].previousLiquidity = liquidity
-//       result[poolIndex].previousFees += tradingFees
-//     } else {
-//       result[poolIndex].liquidityUSD = liquidity
-//       result[poolIndex].previousLiquidity = liquidity
-//     }
-//   })
-//   return result
-// }
 
 type OHLCVResponse = {
   time_interval: string,

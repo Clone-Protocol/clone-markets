@@ -1,6 +1,6 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { PublicKey } from '@solana/web3.js'
-import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
 import { useClone } from '~/hooks/useClone'
 import { assetMapping, AssetType } from '~/data/assets'
@@ -30,7 +30,7 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	let onusdVal = 0.0
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
-		const onusdBalance = await program.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
 		onusdVal = Number(onusdBalance.value.amount) / 100000000;
 	}
 
@@ -47,7 +47,8 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	const result = []
 	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		const pool = tokenData.pools[i]
-		const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
+		const oracle = tokenData.oracles[Number(pool.assetInfo.oracleInfoIndex)]
+		const { poolOnusd, poolOnasset } = getPoolLiquidity(pool, fromScale(oracle.price, oracle.expo))
 		const price = poolOnusd / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
@@ -102,7 +103,8 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
 		const pool = tokenData.pools[i]
-		const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
+		const oracle = tokenData.oracles[Number(pool.assetInfo.oracleInfoIndex)]
+		const { poolOnusd, poolOnasset } = getPoolLiquidity(pool, fromScale(oracle.price, oracle.expo))
 		const price = poolOnusd / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;

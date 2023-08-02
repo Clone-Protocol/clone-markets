@@ -1,6 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { CloneClient, toDevnetScale } from 'clone-protocol-sdk/sdk/src/clone'
-import { toNumber } from "clone-protocol-sdk/sdk/src/decimal"
+import { CloneClient, fromCloneScale, fromScale, toCloneScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useMutation } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
@@ -126,11 +125,11 @@ export const callTrading = async ({
 		quantity,
 		quantityIsInput,
 		quantityIsOnusd,
-		toNumber(pool.onusdIld),
-		toNumber(pool.onassetIld),
-		toNumber(pool.committedOnusdLiquidity),
-		toNumber(pool.liquidityTradingFee),
-		toNumber(pool.treasuryTradingFee),
+		fromCloneScale(pool.onusdIld),
+		fromCloneScale(pool.onassetIld),
+		fromCloneScale(pool.committedOnusdLiquidity),
+		fromScale(pool.liquidityTradingFee, 4),
+		fromScale(pool.treasuryTradingFee, 4),
 		oraclePrice
 	)
 	const slippageMultiplier = (() => {
@@ -144,10 +143,10 @@ export const callTrading = async ({
 	ixnCalls.push(
 		program.swapInstruction(
 			poolIndex,
-			toDevnetScale(quantity),
+			toCloneScale(quantity),
 			quantityIsInput,
 			quantityIsOnusd,
-			toDevnetScale(executionEstimate.result * slippageMultiplier),
+			toCloneScale(executionEstimate.result * slippageMultiplier),
 			assetInfo.onassetMint,
 			onusdAssociatedTokenAddress,
 			onassetAssociatedTokenAddress,

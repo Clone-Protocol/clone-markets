@@ -18,7 +18,7 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
-		const onusdBalance = await program.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
 		onusdVal = Number(onusdBalance.value.amount) * devnetConversionFactor;
 	}
 
@@ -27,9 +27,9 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 		const tokenData = await program.getTokenData();
 
 		const pool = tokenData.pools[index];
-		const onassetTokenAccountAddress = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.connection);
+		const onassetTokenAccountAddress = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
 		if (onassetTokenAccountAddress !== undefined) {
-			const iassetBalance = await program.connection.getTokenAccountBalance(onassetTokenAccountAddress, "processed");
+			const iassetBalance = await program.provider.connection.getTokenAccountBalance(onassetTokenAccountAddress, "processed");
 			onassetVal = Number(iassetBalance.value.amount) * devnetConversionFactor;
 		}
 	}

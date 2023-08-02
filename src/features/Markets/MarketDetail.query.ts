@@ -1,6 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
-import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
+import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { assetMapping } from 'src/data/assets'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
@@ -30,18 +29,18 @@ export const fetchMarketDetail = async ({ index }: { index: number }) => {
 
 	const tokenData = await program.getTokenData();
 	const pool = tokenData.pools[index];
-	const poolOnassetIld = toNumber(pool.onassetIld)
-	const poolOnusdIld = toNumber(pool.onusdIld)
-	const poolCommittedOnusd = toNumber(pool.committedOnusdLiquidity)
-	const liquidityTradingFee = toNumber(pool.liquidityTradingFee)
-	const treasuryTradingFee = toNumber(pool.treasuryTradingFee)
-	const pythInfo = await getPythOraclePrice(program.connection, pythSymbol)
+	const poolOnassetIld = fromCloneScale(pool.onassetIld)
+	const poolOnusdIld = fromCloneScale(pool.onusdIld)
+	const poolCommittedOnusd = fromCloneScale(pool.committedOnusdLiquidity)
+	const liquidityTradingFee = fromScale(pool.liquidityTradingFee, 4)
+	const treasuryTradingFee = fromScale(pool.treasuryTradingFee, 4)
+	const pythInfo = await getPythOraclePrice(program.provider.connection, pythSymbol)
 	const oraclePrice = pythInfo.price!
 	const poolOnusd =
-		toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
+		fromCloneScale(pool.committedOnusdLiquidity) - fromCloneScale(pool.onusdIld);
 	const poolOnasset =
-		toNumber(pool.committedOnusdLiquidity) / oraclePrice -
-		toNumber(pool.onassetIld);
+		fromCloneScale(pool.committedOnusdLiquidity) / oraclePrice -
+		fromCloneScale(pool.onassetIld);
 	const price = poolOnusd / poolOnasset
 	const detailOverview = ASSETS_DESC[index].desc
 

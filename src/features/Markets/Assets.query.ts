@@ -5,6 +5,7 @@ import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
+import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { PublicKey, Connection } from "@solana/web3.js";
 import { fetchPythPriceHistory } from '~/utils/pyth'
 import { useSetAtom } from 'jotai'
@@ -26,8 +27,17 @@ export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (s
 		},
 		{}
 	);
-	// @ts-ignore
-	const program = new CloneClient(network.clone, provider)
+
+	const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
+		[Buffer.from("clone")],
+		network.clone
+	);
+	const account = await CloneAccount.fromAccountAddress(
+		provider.connection,
+		cloneAccountAddress
+	);
+
+	const program = new CloneClient(provider, account, network.clone)
 
 	const tokenData = await program.getTokenData();
 	const iassetInfos = await getiAssetInfos(new_connection, tokenData);

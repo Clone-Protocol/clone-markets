@@ -24,16 +24,16 @@ export default function useFaucet() {
       const onusdToMint = 100;
       if (connected && publicKey && mintUsdi && wallet) {
         const program = await getCloneApp(wallet)
-
+        const tokenData = await program.getTokenData();
         const usdiTokenAccount = await getOnUSDAccount(program);
         const onusdAta = await getAssociatedTokenAddress(program.clone!.onusdMint, publicKey);
 
-        let [jupiterAddress, nonce] = PublicKey.findProgramAddressSync(
+        let [jupiterAddress] = PublicKey.findProgramAddressSync(
           [Buffer.from("jupiter")],
           new PublicKey(JUPITER_PROGRAM_ADDRESS)
         );
-        let jupiterAccount = await Jupiter.fromAccountAddress(program.connection, jupiterAddress)
-        const usdcTokenAccount = await getTokenAccount(jupiterAccount.usdcMint, publicKey, program.connection);
+        let jupiterAccount = await Jupiter.fromAccountAddress(program.provider.connection, jupiterAddress)
+        const usdcTokenAccount = await getTokenAccount(jupiterAccount.usdcMint, publicKey, program.provider.connection);
         const usdcAta = await getAssociatedTokenAddress(jupiterAccount.usdcMint, publicKey);
 
         let ixnCalls = []
@@ -53,7 +53,6 @@ export default function useFaucet() {
                 jupiterAccount: jupiterAddress,
                 tokenProgram: TOKEN_PROGRAM_ID
               }, {
-              nonce,
               amount: new BN(onusdToMint * Math.pow(10, 7))
             }
             )
@@ -61,6 +60,7 @@ export default function useFaucet() {
 
           ixnCalls.push(
             await program.mintOnusdInstruction(
+              tokenData,
               new BN(onusdToMint * Math.pow(10, CLONE_TOKEN_SCALE)),
               onusdAta,
               usdcAta

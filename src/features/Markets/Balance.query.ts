@@ -1,6 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
-import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
+import { CloneClient, fromCloneScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
@@ -11,7 +10,6 @@ import { getPythOraclePrice } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
 
 export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
-
   console.log('fetchBalance')
   // start timer in data-loading-indicator
   setStartTimer(false);
@@ -43,7 +41,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
 
   try {
     if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value !== undefined) {
-      const onusdBalance = await program.connection.getTokenAccountBalance(onusdAtaResult.value, "processed")
+      const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAtaResult.value, "processed")
       onusdVal = Number(onusdBalance.value.amount) / 100000000;
     }
   } catch (e) {
@@ -60,17 +58,17 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
       );
 
       if (associatedTokenAccount) {
-        const onassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
+        const onassetBalance = await program.provider.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
         onassetVal = Number(onassetBalance.value.amount) / 100000000;
       }
       const { pythSymbol } = assetMapping(index)
       const { price } = await getPythOraclePrice(new_connection, pythSymbol)
-      const oraclePrice = price ?? toNumber(pool.assetInfo.price)
+      const oraclePrice = price ?? fromCloneScale(pool.assetInfo.price)
       const poolOnusd =
-        toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
+        fromCloneScale(pool.committedOnusdLiquidity) - fromCloneScale(pool.onusdIld);
       const poolOnasset =
-        toNumber(pool.committedOnusdLiquidity) / oraclePrice -
-        toNumber(pool.onassetIld);
+        fromCloneScale(pool.committedOnusdLiquidity) / oraclePrice -
+        fromCloneScale(pool.onassetIld);
 
       ammOnassetValue = poolOnasset
       ammOnusdValue = poolOnusd
