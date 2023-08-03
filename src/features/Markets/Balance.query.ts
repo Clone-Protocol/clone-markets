@@ -1,5 +1,6 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient, fromCloneScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
@@ -27,8 +28,17 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
     },
     {}
   );
-  // @ts-ignore
-  const program = new CloneClient(network.clone, provider)
+
+  const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
+    [Buffer.from("clone")],
+    network.clone
+  );
+  const account = await CloneAccount.fromAccountAddress(
+    provider.connection,
+    cloneAccountAddress
+  );
+
+  const program = new CloneClient(provider, account, network.clone)
 
   let onusdVal = 0.0
   let onassetVal = 0.0
@@ -51,6 +61,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   try {
     if (tokenDataResult.status === 'fulfilled') {
       const pool = tokenDataResult.value.pools[index]
+      const oracle = tokenDataResult.value.oracles[Number(pool.assetInfo.oracleInfoIndex)];
       const associatedTokenAccount = await getTokenAccount(
         pool.assetInfo.onassetMint,
         program.provider.publicKey!,
@@ -63,7 +74,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
       }
       const { pythSymbol } = assetMapping(index)
       const { price } = await getPythOraclePrice(new_connection, pythSymbol)
-      const oraclePrice = price ?? fromCloneScale(pool.assetInfo.price)
+      const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
       const poolOnusd =
         fromCloneScale(pool.committedOnusdLiquidity) - fromCloneScale(pool.onusdIld);
       const poolOnasset =

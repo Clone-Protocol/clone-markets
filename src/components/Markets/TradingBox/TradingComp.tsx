@@ -52,7 +52,6 @@ const round = (n: number, decimals: number) => {
 const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onShowSearchAsset }) => {
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
-  // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setisBuy] = useState(true)
   // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
@@ -190,7 +189,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
           quantityIsInput: true,
           poolIndex: assetIndex,
           slippage: slippage / 100,
-          oraclePrice: assetData?.oraclePrice!
         }
       )
 

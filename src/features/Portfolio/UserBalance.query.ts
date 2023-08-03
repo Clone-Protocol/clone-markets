@@ -35,7 +35,6 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	}
 
 	const tokenData = await program.getTokenData();
-
 	const balanceQueries = [];
 	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		balanceQueries.push(
@@ -89,7 +88,6 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 
 	// console.log('fetchUserBalance')
 	const tokenData = await program.getTokenData();
-
 	const balanceQueries = [];
 	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		balanceQueries.push(
@@ -97,9 +95,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 		)
 	}
 	const onassetBalancesResult = await Promise.allSettled(balanceQueries);
-
 	const result: BalanceList[] = []
-
 	for (let i = 0; i < Number(tokenData.numPools); i++) {
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
 		const pool = tokenData.pools[i]

@@ -1,5 +1,6 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { assetMapping } from 'src/data/assets'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
@@ -22,11 +23,18 @@ export const fetchMarketDetail = async ({ index }: { index: number }) => {
 		},
 		{}
 	);
-	// @ts-ignore
-	const program = new CloneClient(network.clone, provider)
 
+	const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
+		[Buffer.from("clone")],
+		network.clone
+	);
+	const account = await CloneAccount.fromAccountAddress(
+		provider.connection,
+		cloneAccountAddress
+	);
+
+	const program = new CloneClient(provider, account, network.clone)
 	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
-
 	const tokenData = await program.getTokenData();
 	const pool = tokenData.pools[index];
 	const poolOnassetIld = fromCloneScale(pool.onassetIld)

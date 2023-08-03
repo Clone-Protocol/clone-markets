@@ -38,10 +38,8 @@ export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (s
 	);
 
 	const program = new CloneClient(provider, account, network.clone)
-
 	const tokenData = await program.getTokenData();
 	const iassetInfos = await getiAssetInfos(new_connection, tokenData);
-
 	const dailyVolumeStats = await fetch24hourVolume()
 
 	// Fetch Pyth
@@ -64,7 +62,7 @@ export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (s
 
 	for (let i = 0; i < iassetInfos.length; i++) {
 		const info = iassetInfos[i]
-		let { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
+		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
 
 		let change24h = 0
 		if (pythData && pythData.length > 0) {

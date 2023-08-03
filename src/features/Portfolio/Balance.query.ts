@@ -10,12 +10,9 @@ import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndica
 export const fetchBalance = async ({ program, userPubKey, index }: { program: CloneClient, userPubKey: PublicKey | null, index: number }) => {
 	if (!userPubKey) return null
 
-	// console.log('fetchBalance')
-
 	let onusdVal = 0.0
 	let onassetVal = 0.0
 	const devnetConversionFactor = Math.pow(10, -CLONE_TOKEN_SCALE)
-
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
 		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
@@ -25,7 +22,6 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 	// if not default index
 	if (index !== -1) {
 		const tokenData = await program.getTokenData();
-
 		const pool = tokenData.pools[index];
 		const onassetTokenAccountAddress = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
 		if (onassetTokenAccountAddress !== undefined) {

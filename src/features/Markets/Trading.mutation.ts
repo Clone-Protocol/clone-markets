@@ -6,6 +6,8 @@ import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
 import {
 	getAssociatedTokenAddress,
 	createAssociatedTokenAccountInstruction,
+	TOKEN_PROGRAM_ID,
+	ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
@@ -27,7 +29,6 @@ export const callTrading = async ({
 		quantityIsInput,
 		poolIndex,
 		slippage,
-		oraclePrice
 	} = data
 	quantity = Number(quantity)
 
@@ -35,6 +36,7 @@ export const callTrading = async ({
 
 	const tokenData = await program.getTokenData();
 	const pool = tokenData.pools[poolIndex]
+	const oracle = tokenData.oracles[Number(pool.assetInfo.oracleInfoIndex)];
 	const assetInfo = pool.assetInfo
 
 	let onusdAssociatedTokenAddress = await getOnUSDAccount(program);
@@ -50,26 +52,29 @@ export const callTrading = async ({
 		program.provider.connection
 	);
 
-	let ixnCalls: Promise<TransactionInstruction>[] = [
-		program.updatePricesInstruction()
+	let ixnCalls: TransactionInstruction[] = [
+		await program.updatePricesInstruction(tokenData)
 	]
 
 	if (!onusdAssociatedTokenAddress) {
 		const onusdAssociatedToken = await getAssociatedTokenAddress(
 			program.clone!.onusdMint,
 			userPubKey,
+			false,
+			TOKEN_PROGRAM_ID,
+			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
 		onusdAssociatedTokenAddress = onusdAssociatedToken;
 		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
 			treasuryOnusdAddress = onusdAssociatedToken
 		}
 		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
+			await createAssociatedTokenAccountInstruction(
 				userPubKey,
 				onusdAssociatedToken,
 				userPubKey,
 				program.clone!.onusdMint,
-			))()
+			)
 		)
 	}
 
@@ -77,48 +82,57 @@ export const callTrading = async ({
 		const onassetAssociatedToken = await getAssociatedTokenAddress(
 			assetInfo.onassetMint,
 			userPubKey,
+			false,
+			TOKEN_PROGRAM_ID,
+			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
 		onassetAssociatedTokenAddress = onassetAssociatedToken;
 		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
 			treasuryOnassetAddress = onassetAssociatedToken
 		}
 		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
+			await createAssociatedTokenAccountInstruction(
 				userPubKey,
 				onassetAssociatedToken,
 				userPubKey,
 				assetInfo.onassetMint,
-			))()
+			)
 		)
 	}
 	if (!treasuryOnusdAddress) {
 		const treasuryOnusdTokenAddress = await getAssociatedTokenAddress(
 			program.clone!.onusdMint,
 			program.clone!.treasuryAddress,
+			false,
+			TOKEN_PROGRAM_ID,
+			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
 		treasuryOnusdAddress = treasuryOnusdTokenAddress;
 		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
+			await createAssociatedTokenAccountInstruction(
 				userPubKey,
 				treasuryOnusdTokenAddress,
 				program.clone!.treasuryAddress,
 				program.clone!.onusdMint,
-			))()
+			)
 		);
 	}
 	if (!treasuryOnassetAddress) {
 		const treasuryOnassetTokenAddress = await getAssociatedTokenAddress(
 			assetInfo.onassetMint,
 			program.clone!.treasuryAddress,
+			false,
+			TOKEN_PROGRAM_ID,
+			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
 		treasuryOnassetAddress = treasuryOnassetTokenAddress;
 		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
+			await createAssociatedTokenAccountInstruction(
 				userPubKey,
 				treasuryOnassetTokenAddress,
 				program.clone!.treasuryAddress,
 				assetInfo.onassetMint,
-			))()
+			)
 		);
 	}
 	const executionEstimate = calculateSwapExecution(
@@ -130,7 +144,7 @@ export const callTrading = async ({
 		fromCloneScale(pool.committedOnusdLiquidity),
 		fromScale(pool.liquidityTradingFee, 4),
 		fromScale(pool.treasuryTradingFee, 4),
-		oraclePrice
+		fromScale(oracle.price, oracle.expo)
 	)
 	const slippageMultiplier = (() => {
 		if (quantityIsInput) {
@@ -141,7 +155,7 @@ export const callTrading = async ({
 	})()
 
 	ixnCalls.push(
-		program.swapInstruction(
+		await program.swapInstruction(
 			poolIndex,
 			toCloneScale(quantity),
 			quantityIsInput,
@@ -169,7 +183,6 @@ type FormData = {
 	quantityIsInput: boolean,
 	poolIndex: number,
 	slippage: number,
-	oraclePrice: number
 }
 interface CallTradingProps {
 	program: CloneClient

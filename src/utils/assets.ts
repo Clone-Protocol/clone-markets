@@ -1,5 +1,5 @@
 import { TokenDataArgs } from "clone-protocol-sdk/sdk/generated/clone";
-import { CLONE_TOKEN_SCALE, fromCloneScale } from "clone-protocol-sdk/sdk/src/clone"
+import { CLONE_TOKEN_SCALE, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
 import { fetchFromCloneIndex } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
@@ -52,14 +52,15 @@ export const getiAssetInfos = async (connection: Connection, tokenData: TokenDat
 
   const iassetInfo = [];
   for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
-    let pool = tokenData.pools[poolIndex];
-    let committedOnusd = fromCloneScale(pool.committedOnusdLiquidity)
-    let poolOnusdIld = fromCloneScale(pool.onusdIld)
-    let poolOnassetIld = fromCloneScale(pool.onassetIld)
-    let { pythSymbol } = assetMapping(poolIndex)
-    let oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? fromCloneScale(pool.assetInfo.price)
-    let poolPrice = (committedOnusd - poolOnusdIld) / (committedOnusd / oraclePrice - poolOnassetIld)
-    let liquidity = committedOnusd * 2;
+    const pool = tokenData.pools[poolIndex];
+    const oracle = tokenData.oracles[Number(pool.assetInfo.oracleInfoIndex)];
+    const committedOnusd = fromCloneScale(pool.committedOnusdLiquidity)
+    const poolOnusdIld = fromCloneScale(pool.onusdIld)
+    const poolOnassetIld = fromCloneScale(pool.onassetIld)
+    const { pythSymbol } = assetMapping(poolIndex)
+    const oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? fromScale(oracle.price, oracle.expo);
+    const poolPrice = (committedOnusd - poolOnusdIld) / (committedOnusd / oraclePrice - poolOnassetIld)
+    const liquidity = committedOnusd * 2;
     iassetInfo.push({ poolIndex, poolPrice, liquidity });
   }
   return iassetInfo;
