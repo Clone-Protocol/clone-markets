@@ -5,6 +5,8 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useSnackbar } from 'notistack'
+import { useSetAtom } from 'jotai'
+import { cloneClient } from '~/features/globalAtom'
 import withSuspense from '~/hocs/withSuspense'
 import { useRouter } from 'next/navigation'
 import { shortenAddress } from '~/utils/address'
@@ -15,6 +17,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
   const { publicKey, disconnect } = useWallet()
+  const setCloneClient = useSetAtom(cloneClient)
   const [solBalance, setSolBalance] = useState(0)
 
   const { data: balance } = useBalanceQuery({
@@ -38,6 +41,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   }, [publicKey])
 
   const handleDisconnect = () => {
+    setCloneClient(null)
     disconnect()
     onHide()
     router.replace('/')
