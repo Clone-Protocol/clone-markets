@@ -41,9 +41,7 @@ export const CloneProvider: FC<CloneProviderProps> = ({ children, ...props }) =>
 				preflightCommitment: "processed" as Commitment,
 			}
 			const network = getNetworkDetailsFromEnv()
-			// console.log('network', network)
 			const new_connection = new Connection(network.endpoint)
-
 			const provider = new AnchorProvider(new_connection, wallet!, opts)
 
 			const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
@@ -57,8 +55,6 @@ export const CloneProvider: FC<CloneProviderProps> = ({ children, ...props }) =>
 
 			clone = new CloneClient(provider, cAccount, network.clone)
 			setMainCloneClient(clone)
-
-			console.log('set global state')
 		} else {
 			clone = mainCloneClient
 		}
