@@ -9,6 +9,7 @@ import { formatDollarAmount } from '~/utils/numbers'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
 import { useEffect, useState } from 'react'
+import { ON_USD } from '~/utils/constants'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
@@ -78,13 +79,13 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${asset.volume.toLocaleString()} onUSD</Typography>
+									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${asset.volume.toLocaleString()} {ON_USD}</Typography>
 								</Box>
 							</Box>
 							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Current Liquidity (24h)</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} onUSD</Typography>
+									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} {ON_USD}</Typography>
 								</Box>
 							</Box>
 							<Box width='160px'>
@@ -112,7 +113,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${myData.value.toLocaleString()} onUSD</Typography>
+											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${myData.value.toLocaleString()} {ON_USD}</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>

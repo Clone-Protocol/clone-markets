@@ -15,6 +15,7 @@ import Image from 'next/image'
 import { formatDollarAmount } from '~/utils/numbers'
 import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
+import { ON_USD } from '~/utils/constants'
 // import { useSnackbar } from 'notistack'
 
 const MarketList = () => {
@@ -94,7 +95,7 @@ let columns: GridColDef[] = [
 		field: 'price',
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
-		headerName: 'Price (onUSD)',
+		headerName: `Price (${ON_USD})`,
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>

@@ -1,3 +1,5 @@
+import { ON_USD } from "~/utils/constants"
+
 export enum Collateral {
     onUSD,
     mockUSDC,
@@ -224,7 +226,7 @@ export const collateralMapping = (index: number) => {
         case Collateral.onUSD:
             collateralName = 'Clone USD'
             collateralType = Collateral.onUSD
-            collateralSymbol = 'onUSD'
+            collateralSymbol = ON_USD
             collateralIcon = '/images/assets/on-usd.svg'
             break
         case Collateral.mockUSDC:

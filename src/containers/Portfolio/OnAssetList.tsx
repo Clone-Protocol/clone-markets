@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ASSETS, AssetTickers } from '~/data/assets'
 import { useCallback } from 'react'
+import { ON_USD } from '~/utils/constants'
 // import { useSnackbar } from 'notistack'
 
 interface Props {
@@ -88,7 +89,7 @@ let columns: GridColDef[] = [
   },
   {
     field: 'price',
-    headerName: 'Price (onUSD)',
+    headerName: `Price (${ON_USD})`,
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       const percent = parseFloat(params.row.changePercent)
