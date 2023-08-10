@@ -1,9 +1,10 @@
 import { styled } from '@mui/material/styles'
+import { ON_USD } from '~/utils/constants'
 
 const BackdropPartMsg = ({ isUsdi, tickerSymbol }: { isUsdi: boolean, tickerSymbol: string | undefined }) => {
   return (
     <Wrapper>
-      <TitleMsg>{isUsdi ? 'Clone Markets are traded using onUSD. Please obtain onUSD.' : `Your ${tickerSymbol} balance is zero, therefore sell is disabled.`}</TitleMsg>
+      <TitleMsg>{isUsdi ? `Clone Markets are traded using devnet USD. Please obtain ${ON_USD}.` : `Your ${tickerSymbol} balance is zero, therefore sell is disabled.`}</TitleMsg>
     </Wrapper>
   )
 }

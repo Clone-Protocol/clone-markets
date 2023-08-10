@@ -30,7 +30,7 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
               <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Stack direction='row' spacing={2} alignItems='center'>
                   <Image src={'/images/assets/on-usd.svg'} width={27} height={27} alt='usd' />
-                  <Typography variant='p_lg' color={isConnect ? '#fff' : '#8988a3'}>Devnet onUSD ($100)</Typography>
+                  <Typography variant='p_lg' color={isConnect ? '#fff' : '#8988a3'}>Devnet USD ($100)</Typography>
                 </Stack>
                 <Box>
                   {
@@ -51,7 +51,7 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
             <InfoBox mb="8px">
               <Image src={infoOutlineIcon} alt="info" width={18} />
               <Typography variant='p' ml='12px' maxWidth='278px'>
-                You need Devnet SOL in your wallet before you can claim Devnet onUSD.
+                You need Devnet SOL in your wallet before you can claim Devnet USD.
               </Typography>
             </InfoBox>
             <a href="https://www.alchemy.com/overviews/solana-devnet" target="_blank" rel="noreferrer">
