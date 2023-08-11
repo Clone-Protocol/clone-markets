@@ -119,7 +119,7 @@ const TopBox = styled(Box)`
 `
 
 const GetUSDButton = styled(Button)`
-	width: 108px;
+	width: 120px;
 	height: 29px;
 	border-radius: 100px;
 	border: solid 1px rgba(104, 0, 237, 0.5);

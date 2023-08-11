@@ -224,7 +224,7 @@ export const collateralMapping = (index: number) => {
     let collateralType: number
     switch (index) {
         case Collateral.onUSD:
-            collateralName = 'Clone USD'
+            collateralName = 'Devnet USD'
             collateralType = Collateral.onUSD
             collateralSymbol = ON_USD
             collateralIcon = '/images/assets/on-usd.svg'
