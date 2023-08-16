@@ -16,13 +16,11 @@ import { formatDollarAmount } from '~/utils/numbers'
 import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
 import { ON_USD } from '~/utils/constants'
-// import { useSnackbar } from 'notistack'
 
 const MarketList = () => {
 	const router = useRouter()
 	// const [filter, setFilter] = useState<FilterType>('all')
 	const filter: FilterType = 'all'
-	// const { enqueueSnackbar } = useSnackbar()
 
 	const { data: assets } = useAssetsQuery({
 		filter,
@@ -47,12 +45,7 @@ const MarketList = () => {
 	const handleRowClick: GridEventListener<'rowClick'> = useCallback((
 		params
 	) => {
-		// temporary disabled
-		// if (params.row.id === AssetTickers.gold) {
-		// 	enqueueSnackbar('temporarily unavailable due to oracle error')
-		// } else {
 		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
-		// }
 	}, [])
 
 	return (

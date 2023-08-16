@@ -16,6 +16,8 @@ import './styles.css'
 import { IS_COMPLETE_INIT } from '~/data/localstorage'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import dynamic from 'next/dynamic'
+import ErrorBoundary from '~/components/ErrorBoundary'
+import GlobalError from './global-error'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isCompleteInit, _] = useLocalStorage(IS_COMPLETE_INIT, false)
@@ -34,7 +36,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <title>Clone Markets - The Most Efficient Trading on Solana</title>
         <meta name="description" content="Clone Markets allows users to trade onAssets, our synthetic derivatives that bring supercharged liquidity and rapid scalability to trading on Solana." />
         <link rel="icon" href="/favicon.png" />
-        {/* <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet' /> */}
       </head>
       <body>
         <QueryProvider>
@@ -44,21 +45,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ClientWalletProvider>
                   <TransactionStateProvider>
                     <DataLoadingIndicatorProvider>
-                      <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
-                        <CssBaseline />
-                        <GNB />
+                      <ErrorBoundary fallback={<GlobalError />}>
+                        <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
+                          <CssBaseline />
+                          <GNB />
 
-                        <Box
-                          component="main"
-                          sx={{
-                            flexGrow: 1,
-                            height: '100vh',
-                            overflow: 'auto',
-                          }}>
-                          {children}
+                          <Box
+                            component="main"
+                            sx={{
+                              flexGrow: 1,
+                              height: '100vh',
+                              overflow: 'auto',
+                            }}>
+                            {children}
+                          </Box>
+                          {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
                         </Box>
-                        {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
-                      </Box>
+                      </ErrorBoundary>
                     </DataLoadingIndicatorProvider>
                   </TransactionStateProvider>
                 </ClientWalletProvider>
