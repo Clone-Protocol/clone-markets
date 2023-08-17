@@ -1,5 +1,4 @@
-import { TokenDataArgs } from "clone-protocol-sdk/sdk/generated/clone";
-import { CLONE_TOKEN_SCALE, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
+import { CLONE_TOKEN_SCALE, CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
 import { fetchFromCloneIndex } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
@@ -45,22 +44,24 @@ export const fetchStatsData = async (filter: Filter, interval: Interval): Promis
 }
 
 
-export const getiAssetInfos = async (connection: Connection, tokenData: TokenDataArgs): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
+export const getiAssetInfos = async (connection: Connection, program: CloneClient): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
 
   const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
   const data = await pythClient.getData();
+  const pools = await program.getPools();
+  const oracles = await program.getOracles();
 
   const iassetInfo = [];
-  for (let poolIndex = 0; poolIndex < Number(tokenData.numPools); poolIndex++) {
-    const pool = tokenData.pools[poolIndex];
-    const oracle = tokenData.oracles[Number(pool.assetInfo.oracleInfoIndex)];
-    const committedOnusd = fromCloneScale(pool.committedOnusdLiquidity)
-    const poolOnusdIld = fromCloneScale(pool.onusdIld)
+  for (let poolIndex = 0; poolIndex < Number(pools.pools.length); poolIndex++) {
+    const pool = pools.pools[poolIndex];
+    const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)];
+    const committedCollateral = fromCloneScale(pool.committedCollateralLiquidity)
+    const poolCollateralIld = fromCloneScale(pool.collateralIld)
     const poolOnassetIld = fromCloneScale(pool.onassetIld)
     const { pythSymbol } = assetMapping(poolIndex)
     const oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? fromScale(oracle.price, oracle.expo);
-    const poolPrice = (committedOnusd - poolOnusdIld) / (committedOnusd / oraclePrice - poolOnassetIld)
-    const liquidity = committedOnusd * 2;
+    const poolPrice = (committedCollateral - poolCollateralIld) / (committedCollateral / oraclePrice - poolOnassetIld)
+    const liquidity = committedCollateral * 2;
     iassetInfo.push({ poolIndex, poolPrice, liquidity });
   }
   return iassetInfo;

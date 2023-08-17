@@ -22,6 +22,7 @@ import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
+import { ON_USD } from '~/utils/constants'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -167,8 +168,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
   const calculateTotalAmountByFrom = (newValue: number) => {
     const swapResult = calculateSwapExecution(
-      newValue, true, isBuy, assetData?.poolOnusdIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedOnusd!,
-      assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!
+      newValue, true, isBuy, assetData?.poolCollateralIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedCollateral!,
+      assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!, assetData?.collateral!
     )
     const resultVal = round(swapResult.result, CLONE_TOKEN_SCALE)
     if (isBuy) {
@@ -235,7 +236,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     if (amountOnusd == 0 || isNaN(amountOnusd) || !amountOnusd) {
       return 'Enter Amount'
     } else if (isBuy && amountOnusd > myBalance?.onusdVal!) {
-      return 'Insufficient onUSD'
+      return `Insufficient ${ON_USD}`
     } else if (!isBuy && amountOnasset > myBalance?.onassetVal!) {
       return `Insufficient ${assetData?.tickerSymbol}`
     } else {
@@ -387,7 +388,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
               <RateLoadingIndicator restartTimer={restartTimer} />
-              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} onUSD</Typography>
+              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
               <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}

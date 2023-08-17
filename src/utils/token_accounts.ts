@@ -35,7 +35,7 @@ export const getTokenAccount = async (mint: PublicKey, owner: PublicKey, connect
 
 export const getOnUSDAccount = async (clone: CloneClient): Promise<PublicKey | undefined> => {
   const onusdTokenAccount = await getTokenAccount(
-    clone.clone!.onusdMint,
+    clone.clone!.collateral.mint,
     clone.provider.publicKey!,
     clone.provider.connection
   );

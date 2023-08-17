@@ -45,8 +45,8 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   let ammOnassetValue;
   let ammOnusdValue;
 
-  const [tokenDataResult, onusdAtaResult] = await Promise.allSettled([
-    program.getTokenData(), getOnUSDAccount(program)
+  const [pools, oracles, onusdAtaResult] = await Promise.allSettled([
+    program.getPools(), program.getOracles(), getOnUSDAccount(program)
   ]);
 
   try {
@@ -59,9 +59,9 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   }
 
   try {
-    if (tokenDataResult.status === 'fulfilled') {
-      const pool = tokenDataResult.value.pools[index]
-      const oracle = tokenDataResult.value.oracles[Number(pool.assetInfo.oracleInfoIndex)];
+    if (pools.status === 'fulfilled' && oracles.status === 'fulfilled') {
+      const pool = pools.value.pools[index]
+      const oracle = oracles.value.oracles[Number(pool.assetInfo.oracleInfoIndex)];
       const associatedTokenAccount = await getTokenAccount(
         pool.assetInfo.onassetMint,
         program.provider.publicKey!,
@@ -76,10 +76,10 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
       const { price } = await getPythOraclePrice(new_connection, pythSymbol)
       const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
       const poolOnusd =
-        fromCloneScale(pool.committedOnusdLiquidity) - fromCloneScale(pool.onusdIld);
+        fromScale(pool.committedCollateralLiquidity, 7) - fromScale(pool.collateralIld, 7);
       const poolOnasset =
-        fromCloneScale(pool.committedOnusdLiquidity) / oraclePrice -
-        fromCloneScale(pool.onassetIld);
+        fromScale(pool.committedCollateralLiquidity, 7) / oraclePrice -
+        fromScale(pool.collateralIld, 7);
 
       ammOnassetValue = poolOnasset
       ammOnusdValue = poolOnusd

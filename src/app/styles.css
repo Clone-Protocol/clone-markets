@@ -6,10 +6,6 @@ body {
 	margin: 0;
 	font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 	background-color: #000;
-	/* background-image: linear-gradient(141deg, #8d7ba4 20%, #6d1597 128%);
-	background-size: 370px 100%;
-	background-position: 50% 100px;
-	background-repeat: no-repeat; */
 	overflow-y: hidden;
 	overflow-x: hidden;
 	font-stretch: normal;

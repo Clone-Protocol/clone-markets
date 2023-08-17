@@ -38,8 +38,7 @@ export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (s
 	);
 
 	const program = new CloneClient(provider, account, network.clone)
-	const tokenData = await program.getTokenData();
-	const iassetInfos = await getiAssetInfos(new_connection, tokenData);
+	const iassetInfos = await getiAssetInfos(new_connection, program);
 	const dailyVolumeStats = await fetch24hourVolume()
 
 	// Fetch Pyth

@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import InfoTooltip from '~/components/Common/InfoTooltip'
+import { ON_USD } from '~/utils/constants';
 
 interface Props {
   isBuy: boolean,
@@ -21,7 +22,7 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
     if (isBuy) {
       return [slippageMultiplier * onassetAmount, tickerSymbol, estimatedFees * onassetPrice]
     } else {
-      return [slippageMultiplier * onusdAmount, "onUSD", estimatedFees]
+      return [slippageMultiplier * onusdAmount, ON_USD, estimatedFees]
     }
   })()
 

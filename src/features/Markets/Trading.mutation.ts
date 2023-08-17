@@ -34,15 +34,16 @@ export const callTrading = async ({
 
 	console.log('input data', data)
 
-	const tokenData = await program.getTokenData();
-	const pool = tokenData.pools[poolIndex]
-	const oracle = tokenData.oracles[Number(pool.assetInfo.oracleInfoIndex)];
+	const pools = await program.getPools();
+	const oracles = await program.getOracles();
+	const pool = pools.pools[poolIndex]
+	const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)];
 	const assetInfo = pool.assetInfo
 
-	let onusdAssociatedTokenAddress = await getOnUSDAccount(program);
+	let collateralAssociatedTokenAddress = await getOnUSDAccount(program);
 	let onassetAssociatedTokenAddress = await getTokenAccount(assetInfo.onassetMint, userPubKey, program.provider.connection);
-	let treasuryOnusdAddress = await getTokenAccount(
-		program.clone!.onusdMint,
+	let treasuryCollateralAddress = await getTokenAccount(
+		program.clone!.collateral.mint,
 		program.clone!.treasuryAddress,
 		program.provider.connection
 	);
@@ -53,67 +54,67 @@ export const callTrading = async ({
 	);
 
 	let ixnCalls: TransactionInstruction[] = [
-		await program.updatePricesInstruction(tokenData)
+		await program.updatePricesInstruction(oracles)
 	]
 
-	if (!onusdAssociatedTokenAddress) {
-		const onusdAssociatedToken = await getAssociatedTokenAddress(
-			program.clone!.onusdMint,
+	if (!collateralAssociatedTokenAddress) {
+		const collateralAssociatedToken = await getAssociatedTokenAddress(
+			program.clone!.collateral.mint,
 			userPubKey,
 			false,
 			TOKEN_PROGRAM_ID,
 			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
-		onusdAssociatedTokenAddress = onusdAssociatedToken;
+		collateralAssociatedTokenAddress = collateralAssociatedToken;
 		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
-			treasuryOnusdAddress = onusdAssociatedToken
+			treasuryCollateralAddress = collateralAssociatedToken
 		}
 		ixnCalls.push(
 			await createAssociatedTokenAccountInstruction(
 				userPubKey,
-				onusdAssociatedToken,
+				collateralAssociatedToken,
 				userPubKey,
-				program.clone!.onusdMint,
+				program.clone!.collateral.mint,
 			)
 		)
 	}
 
 	if (!onassetAssociatedTokenAddress) {
-		const onassetAssociatedToken = await getAssociatedTokenAddress(
+		const collateralAssociatedToken = await getAssociatedTokenAddress(
 			assetInfo.onassetMint,
 			userPubKey,
 			false,
 			TOKEN_PROGRAM_ID,
 			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
-		onassetAssociatedTokenAddress = onassetAssociatedToken;
+		onassetAssociatedTokenAddress = collateralAssociatedToken;
 		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
-			treasuryOnassetAddress = onassetAssociatedToken
+			treasuryOnassetAddress = collateralAssociatedToken
 		}
 		ixnCalls.push(
 			await createAssociatedTokenAccountInstruction(
 				userPubKey,
-				onassetAssociatedToken,
+				collateralAssociatedToken,
 				userPubKey,
 				assetInfo.onassetMint,
 			)
 		)
 	}
-	if (!treasuryOnusdAddress) {
-		const treasuryOnusdTokenAddress = await getAssociatedTokenAddress(
-			program.clone!.onusdMint,
+	if (!treasuryCollateralAddress) {
+		const treasuryCollateralTokenAddress = await getAssociatedTokenAddress(
+			program.clone!.collateral.mint,
 			program.clone!.treasuryAddress,
 			false,
 			TOKEN_PROGRAM_ID,
 			ASSOCIATED_TOKEN_PROGRAM_ID
 		);
-		treasuryOnusdAddress = treasuryOnusdTokenAddress;
+		treasuryCollateralAddress = treasuryCollateralTokenAddress;
 		ixnCalls.push(
 			await createAssociatedTokenAccountInstruction(
 				userPubKey,
-				treasuryOnusdTokenAddress,
+				treasuryCollateralTokenAddress,
 				program.clone!.treasuryAddress,
-				program.clone!.onusdMint,
+				program.clone!.collateral.mint,
 			)
 		);
 	}
@@ -139,12 +140,13 @@ export const callTrading = async ({
 		quantity,
 		quantityIsInput,
 		quantityIsOnusd,
-		fromCloneScale(pool.onusdIld),
+		fromScale(pool.collateralIld, 7),
 		fromCloneScale(pool.onassetIld),
-		fromCloneScale(pool.committedOnusdLiquidity),
-		fromScale(pool.liquidityTradingFee, 4),
-		fromScale(pool.treasuryTradingFee, 4),
-		fromScale(oracle.price, oracle.expo)
+		fromScale(pool.committedCollateralLiquidity, 7),
+		fromScale(pool.liquidityTradingFeeBps, 4),
+		fromScale(pool.treasuryTradingFeeBps, 4),
+		fromScale(oracle.price, oracle.expo),
+		program.clone.collateral
 	)
 	const slippageMultiplier = (() => {
 		if (quantityIsInput) {
@@ -162,9 +164,9 @@ export const callTrading = async ({
 			quantityIsOnusd,
 			toCloneScale(executionEstimate.result * slippageMultiplier),
 			assetInfo.onassetMint,
-			onusdAssociatedTokenAddress,
+			collateralAssociatedTokenAddress,
 			onassetAssociatedTokenAddress,
-			treasuryOnusdAddress,
+			treasuryCollateralAddress,
 			treasuryOnassetAddress,
 		)
 	)

@@ -21,8 +21,8 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 
 	// if not default index
 	if (index !== -1) {
-		const tokenData = await program.getTokenData();
-		const pool = tokenData.pools[index];
+		const pools = await program.getPools();
+		const pool = pools.pools[index];
 		const onassetTokenAccountAddress = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
 		if (onassetTokenAccountAddress !== undefined) {
 			const iassetBalance = await program.provider.connection.getTokenAccountBalance(onassetTokenAccountAddress, "processed");
