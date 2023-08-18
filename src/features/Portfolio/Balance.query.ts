@@ -12,7 +12,7 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 
 	let onusdVal = 0.0
 	let onassetVal = 0.0
-	const devnetConversionFactor = Math.pow(10, -CLONE_TOKEN_SCALE)
+	const devnetConversionFactor = Math.pow(10, -7)
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
 		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");

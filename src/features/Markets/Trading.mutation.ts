@@ -1,5 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { CloneClient, fromCloneScale, fromScale, toCloneScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromCloneScale, fromScale, toCloneScale, toScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useMutation } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
 import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
@@ -8,12 +8,14 @@ import {
 	createAssociatedTokenAccountInstruction,
 	TOKEN_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
+	getAccount,
 } from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
 import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
 import { sendAndConfirm } from '~/utils/tx_helper'
+import { getOrCreateAssociatedTokenAccount } from 'clone-protocol-sdk/sdk/src/utils';
 
 export const callTrading = async ({
 	program,
@@ -40,102 +42,131 @@ export const callTrading = async ({
 	const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)];
 	const assetInfo = pool.assetInfo
 
-	let collateralAssociatedTokenAddress = await getOnUSDAccount(program);
-	let onassetAssociatedTokenAddress = await getTokenAccount(assetInfo.onassetMint, userPubKey, program.provider.connection);
-	let treasuryCollateralAddress = await getTokenAccount(
-		program.clone!.collateral.mint,
-		program.clone!.treasuryAddress,
-		program.provider.connection
+	// let collateralAssociatedTokenAddress = await getOnUSDAccount(program);
+	// let onassetAssociatedTokenAddress = await getTokenAccount(assetInfo.onassetMint, userPubKey, program.provider.connection);
+	// let treasuryCollateralAddress = await getTokenAccount(
+	// 	program.clone!.collateral.mint,
+	// 	program.clone!.treasuryAddress,
+	// 	program.provider.connection
+	// );
+	// let treasuryOnassetAddress = await getTokenAccount(
+	// 	assetInfo.onassetMint,
+	// 	program.clone!.treasuryAddress,
+	// 	program.provider.connection
+	// );
+
+	let ixnCalls: TransactionInstruction[] = []
+
+	const collateralTokenAccountInfo = await getOrCreateAssociatedTokenAccount(
+		program.provider,
+		program.clone.collateral.mint
 	);
-	let treasuryOnassetAddress = await getTokenAccount(
+	const onassetTokenAccountInfo = await getOrCreateAssociatedTokenAccount(
+		program.provider,
+		pool.assetInfo.onassetMint
+	);
+
+	// if (!collateralAssociatedTokenAddress) {
+	// 	const collateralAssociatedToken = await getAssociatedTokenAddress(
+	// 		program.clone!.collateral.mint,
+	// 		userPubKey,
+	// 		false,
+	// 		TOKEN_PROGRAM_ID,
+	// 		ASSOCIATED_TOKEN_PROGRAM_ID
+	// 	);
+	// 	collateralAssociatedTokenAddress = collateralAssociatedToken;
+	// 	if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
+	// 		treasuryCollateralAddress = collateralAssociatedToken
+	// 	}
+	// 	ixnCalls.push(
+	// 		await createAssociatedTokenAccountInstruction(
+	// 			userPubKey,
+	// 			collateralAssociatedToken,
+	// 			userPubKey,
+	// 			program.clone!.collateral.mint,
+	// 			TOKEN_PROGRAM_ID,
+	// 			ASSOCIATED_TOKEN_PROGRAM_ID
+	// 		)
+	// 	)
+	// }
+
+	// if (!onassetAssociatedTokenAddress) {
+	// 	const collateralAssociatedToken = await getAssociatedTokenAddress(
+	// 		assetInfo.onassetMint,
+	// 		userPubKey,
+	// 		false,
+	// 		TOKEN_PROGRAM_ID,
+	// 		ASSOCIATED_TOKEN_PROGRAM_ID
+	// 	);
+	// 	onassetAssociatedTokenAddress = collateralAssociatedToken;
+	// 	if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
+	// 		treasuryOnassetAddress = collateralAssociatedToken
+	// 	}
+	// 	ixnCalls.push(
+	// 		await createAssociatedTokenAccountInstruction(
+	// 			userPubKey,
+	// 			collateralAssociatedToken,
+	// 			userPubKey,
+	// 			assetInfo.onassetMint,
+	// 			TOKEN_PROGRAM_ID,
+	// 			ASSOCIATED_TOKEN_PROGRAM_ID
+	// 		)
+	// 	)
+	// }
+
+	// if (!treasuryOnassetAddress) {
+	const treasuryOnassetTokenAddress = await getAssociatedTokenAddress(
 		assetInfo.onassetMint,
 		program.clone!.treasuryAddress,
-		program.provider.connection
+		false,
+		TOKEN_PROGRAM_ID,
+		ASSOCIATED_TOKEN_PROGRAM_ID
+	);
+	// treasuryOnassetAddress = treasuryOnassetTokenAddress;
+	ixnCalls.push(
+		await createAssociatedTokenAccountInstruction(
+			userPubKey,
+			treasuryOnassetTokenAddress,
+			program.clone!.treasuryAddress,
+			assetInfo.onassetMint,
+			TOKEN_PROGRAM_ID,
+			ASSOCIATED_TOKEN_PROGRAM_ID
+		)
+	);
+	// }
+
+	// if (!treasuryCollateralAddress) {
+	const treasuryCollateralTokenAddress = await getAssociatedTokenAddress(
+		program.clone!.collateral.mint,
+		program.clone!.treasuryAddress,
+		false,
+		TOKEN_PROGRAM_ID,
+		ASSOCIATED_TOKEN_PROGRAM_ID
+	);
+	// treasuryCollateralAddress = treasuryCollateralTokenAddress;
+	ixnCalls.push(
+		await createAssociatedTokenAccountInstruction(
+			userPubKey,
+			treasuryCollateralTokenAddress,
+			program.clone!.treasuryAddress,
+			program.clone!.collateral.mint,
+			TOKEN_PROGRAM_ID,
+			ASSOCIATED_TOKEN_PROGRAM_ID
+		)
+	);
+	// }
+
+	const treasuryOnassetTokenAccount = await getAccount(
+		program.provider.connection,
+		treasuryOnassetTokenAddress,
+		"recent"
+	);
+	const treasuryCollateralTokenAccount = await getAccount(
+		program.provider.connection,
+		treasuryCollateralTokenAddress,
+		"recent"
 	);
 
-	let ixnCalls: TransactionInstruction[] = [
-		await program.updatePricesInstruction(oracles)
-	]
-
-	if (!collateralAssociatedTokenAddress) {
-		const collateralAssociatedToken = await getAssociatedTokenAddress(
-			program.clone!.collateral.mint,
-			userPubKey,
-			false,
-			TOKEN_PROGRAM_ID,
-			ASSOCIATED_TOKEN_PROGRAM_ID
-		);
-		collateralAssociatedTokenAddress = collateralAssociatedToken;
-		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
-			treasuryCollateralAddress = collateralAssociatedToken
-		}
-		ixnCalls.push(
-			await createAssociatedTokenAccountInstruction(
-				userPubKey,
-				collateralAssociatedToken,
-				userPubKey,
-				program.clone!.collateral.mint,
-			)
-		)
-	}
-
-	if (!onassetAssociatedTokenAddress) {
-		const collateralAssociatedToken = await getAssociatedTokenAddress(
-			assetInfo.onassetMint,
-			userPubKey,
-			false,
-			TOKEN_PROGRAM_ID,
-			ASSOCIATED_TOKEN_PROGRAM_ID
-		);
-		onassetAssociatedTokenAddress = collateralAssociatedToken;
-		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
-			treasuryOnassetAddress = collateralAssociatedToken
-		}
-		ixnCalls.push(
-			await createAssociatedTokenAccountInstruction(
-				userPubKey,
-				collateralAssociatedToken,
-				userPubKey,
-				assetInfo.onassetMint,
-			)
-		)
-	}
-	if (!treasuryCollateralAddress) {
-		const treasuryCollateralTokenAddress = await getAssociatedTokenAddress(
-			program.clone!.collateral.mint,
-			program.clone!.treasuryAddress,
-			false,
-			TOKEN_PROGRAM_ID,
-			ASSOCIATED_TOKEN_PROGRAM_ID
-		);
-		treasuryCollateralAddress = treasuryCollateralTokenAddress;
-		ixnCalls.push(
-			await createAssociatedTokenAccountInstruction(
-				userPubKey,
-				treasuryCollateralTokenAddress,
-				program.clone!.treasuryAddress,
-				program.clone!.collateral.mint,
-			)
-		);
-	}
-	if (!treasuryOnassetAddress) {
-		const treasuryOnassetTokenAddress = await getAssociatedTokenAddress(
-			assetInfo.onassetMint,
-			program.clone!.treasuryAddress,
-			false,
-			TOKEN_PROGRAM_ID,
-			ASSOCIATED_TOKEN_PROGRAM_ID
-		);
-		treasuryOnassetAddress = treasuryOnassetTokenAddress;
-		ixnCalls.push(
-			await createAssociatedTokenAccountInstruction(
-				userPubKey,
-				treasuryOnassetTokenAddress,
-				program.clone!.treasuryAddress,
-				assetInfo.onassetMint,
-			)
-		);
-	}
 	const executionEstimate = calculateSwapExecution(
 		quantity,
 		quantityIsInput,
@@ -156,20 +187,23 @@ export const callTrading = async ({
 		}
 	})()
 
-	ixnCalls.push(
-		await program.swapInstruction(
-			poolIndex,
-			toCloneScale(quantity),
-			quantityIsInput,
-			quantityIsOnusd,
-			toCloneScale(executionEstimate.result * slippageMultiplier),
-			assetInfo.onassetMint,
-			collateralAssociatedTokenAddress,
-			onassetAssociatedTokenAddress,
-			treasuryCollateralAddress,
-			treasuryOnassetAddress,
-		)
+	const updatePriceIx = await program.updatePricesInstruction(oracles)
+
+	const buyIx = await program.swapInstruction(
+		poolIndex,
+		toCloneScale(quantity),
+		quantityIsInput,
+		quantityIsOnusd,
+		toScale(executionEstimate.result * slippageMultiplier, 7),
+		assetInfo.onassetMint,
+		collateralTokenAccountInfo.address,
+		onassetTokenAccountInfo.address,
+		treasuryCollateralTokenAccount.address,
+		treasuryOnassetTokenAccount.address,
 	)
+
+	ixnCalls.push(updatePriceIx)
+	ixnCalls.push(buyIx)
 
 	const ixns = await Promise.all(ixnCalls)
 	console.log("IXs:", ixns.length)

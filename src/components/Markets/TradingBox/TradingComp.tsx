@@ -54,7 +54,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
   const [isBuy, setisBuy] = useState(true)
-  // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [estimatedFees, setEstimatedFees] = useState(0.0)
   const { setOpen } = useWalletDialog()
@@ -68,7 +67,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     tickerSymbol: onUSDInfo.collateralSymbol,
   }
 
-  const { data: balance, refetch } = useBalanceQuery({
+  const { data: balance } = useBalanceQuery({
     index: assetIndex,
     refetchOnMount: true,
     enabled: true
@@ -80,7 +79,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     enabled: true
   })
 
-  const { data: myBalance } = useMyBalanceQuery({
+  const { data: myBalance, refetch } = useMyBalanceQuery({
     userPubKey: publicKey,
     index: assetIndex,
     refetchOnMount: 'always',
@@ -129,42 +128,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     }
   }, [assetIndex])
 
-  // useEffect(() => {
-  //   if (!isNaN(amountOnusd)) {
-  //     calculateTotalAmountByConvert(convertVal)
-  //     console.log('c', convertVal)
-  //     trigger()
-  //   }
-  // }, [isBuy])
-
   const { mutateAsync } = useTradingMutation(publicKey)
-
-  // const handleChangeConvert = (event: Event, newValue: number | number[]) => {
-  //   if (typeof newValue === 'number') {
-  //     setConvertVal(newValue)
-  //     calculateTotalAmountByConvert(newValue)
-  //     trigger()
-  //   }
-  // }
-
-  // const calculateTotalAmountByConvert = (convertRatio: number) => {
-  //   const ammOnusdValue = balance?.ammOnusdValue!
-  //   const ammOnassetValue = balance?.ammOnassetValue!
-  //   const invariant = ammOnassetValue * ammOnusdValue
-  //   let usdi
-  //   let iAsset
-  //   // buy
-  //   if (isBuy) {
-  //     usdi = balance?.onusdVal! * convertRatio / 100;
-  //     iAsset = ammOnassetValue - invariant / (ammOnusdValue + amountOnusd)
-  //   } else {
-  //     // sell
-  //     iAsset = balance?.onassetVal! * convertRatio / 100;
-  //     usdi = ammOnusdValue - invariant / (ammOnassetValue + amountOnasset)
-  //   }
-  //   setValue('amountOnusd', round(usdi, CLONE_TOKEN_SCALE))
-  //   setValue('amountOnasset', round(iAsset, CLONE_TOKEN_SCALE))
-  // }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
     const swapResult = calculateSwapExecution(
@@ -352,7 +316,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
           <Box height='100%'>
             <SwapButton onClick={handleChangeOrderType}>
-              {/* <ConvertSlider isBuy={isBuy} value={convertVal} onChange={handleChangeConvert} /> */}
               <Image src={swapChangeIcon} alt="swap" />
             </SwapButton>
 

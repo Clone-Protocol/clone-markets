@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
