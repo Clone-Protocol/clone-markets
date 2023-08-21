@@ -52,7 +52,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   try {
     if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value !== undefined) {
       const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAtaResult.value, "processed")
-      onusdVal = Number(onusdBalance.value.amount) / 100000000;
+      onusdVal = Number(onusdBalance.value.amount) / 10000000;
     }
   } catch (e) {
     console.error(e)
@@ -70,7 +70,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
 
       if (associatedTokenAccount) {
         const onassetBalance = await program.provider.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
-        onassetVal = Number(onassetBalance.value.amount) / 100000000;
+        onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
       const { price } = await getPythOraclePrice(new_connection, pythSymbol)

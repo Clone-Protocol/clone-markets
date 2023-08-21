@@ -30,7 +30,7 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
 	if (onusdAssociatedTokenAccount) {
 		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
-		onusdVal = Number(onusdBalance.value.amount) / 100000000;
+		onusdVal = Number(onusdBalance.value.amount) / 10000000;
 	}
 
 	const pools = await program.getPools();

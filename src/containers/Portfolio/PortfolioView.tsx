@@ -38,11 +38,12 @@ const PortfolioView = () => {
 
 	useEffect(() => {
 		const onusdBalance = balance?.onusdVal!
+		console.log('on', onusdBalance)
 		// only called when filter is all
-		if (assets && assets.length > 0 && selectedFilter === 'all') {
+		if (selectedFilter === 'all') {
 			const result: ResultAsset[] = []
 			let totalBalance = onusdBalance
-			assets.forEach((asset) => {
+			assets?.forEach((asset) => {
 				if (result[asset.assetType]) {
 					result[asset.assetType].val += asset.onusdBalance
 				} else {

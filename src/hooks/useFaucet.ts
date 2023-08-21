@@ -24,16 +24,10 @@ export default function useFaucet() {
       if (connected && publicKey && mintUsdi && wallet) {
         const program = await getCloneApp(wallet)
 
-        // const usdiTokenAccount = await getOnUSDAccount(program);
-        // const onusdAta = await getAssociatedTokenAddress(program.clone!.collateral.mint, publicKey);
-
-        let [faucetAddress] = PublicKey.findProgramAddressSync(
+        const [faucetAddress] = PublicKey.findProgramAddressSync(
           [Buffer.from("faucet")],
           new PublicKey(MOCK_FAUCET_PROGRAM_ID)
         );
-
-        // const usdcTokenAccount = await getTokenAccount(jupiterAccount.usdcMint, publicKey, program.provider.connection);
-        // const usdcAta = await getAssociatedTokenAddress(jupiterAccount.usdcMint, publicKey);
 
         const usdcAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
           program.provider,
@@ -42,34 +36,6 @@ export default function useFaucet() {
 
         let ixnCalls = []
         try {
-          // if (usdcTokenAccount === undefined) {
-          //   ixnCalls.push((async () => createAssociatedTokenAccountInstruction(publicKey, usdcAta, publicKey, jupiterAccount.usdcMint))())
-          // }
-          // if (usdiTokenAccount === undefined) {
-          //   ixnCalls.push((async () => createAssociatedTokenAccountInstruction(publicKey, onusdAta, publicKey, program.clone!.collateral.mint))())
-          // }
-
-          // ixnCalls.push(
-          //   createMintUsdcInstruction(
-          //     {
-          //       usdcMint: jupiterAccount.usdcMint,
-          //       usdcTokenAccount: usdcAta,
-          //       jupiterAccount: jupiterAddress,
-          //       tokenProgram: TOKEN_PROGRAM_ID
-          //     }, {
-          //     amount: new BN(onusdToMint * Math.pow(10, 7))
-          //   }
-          //   )
-          // )
-
-          // ixnCalls.push(
-          //   await program.mintOnusdInstruction(
-          //     tokenData,
-          //     new BN(onusdToMint * Math.pow(10, CLONE_TOKEN_SCALE)),
-          //     onusdAta,
-          //     usdcAta
-          //   )
-          // )
           ixnCalls.push(
             await createMintAssetInstruction({
               minter: publicKey,
@@ -81,7 +47,6 @@ export default function useFaucet() {
 
           let ixns = await Promise.all(ixnCalls)
           await sendAndConfirm(program.provider, ixns, setTxState)
-
         } finally {
           setMintUsdi(false)
         }
