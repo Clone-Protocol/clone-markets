@@ -3,7 +3,7 @@ import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
-import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
+import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
 import { PublicKey, Connection } from "@solana/web3.js";
@@ -46,12 +46,12 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   let ammOnusdValue;
 
   const [pools, oracles, onusdAtaResult] = await Promise.allSettled([
-    program.getPools(), program.getOracles(), getOnUSDAccount(program)
+    program.getPools(), program.getOracles(), getCollateralAccount(program)
   ]);
 
   try {
-    if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value !== undefined) {
-      const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAtaResult.value, "processed")
+    if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value.isInitialized) {
+      const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAtaResult.value.address, "processed")
       onusdVal = Number(onusdBalance.value.amount) / 10000000;
     }
   } catch (e) {
@@ -62,14 +62,14 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
     if (pools.status === 'fulfilled' && oracles.status === 'fulfilled') {
       const pool = pools.value.pools[index]
       const oracle = oracles.value.oracles[Number(pool.assetInfo.oracleInfoIndex)];
-      const associatedTokenAccount = await getTokenAccount(
+      const associatedTokenAccountInfo = await getTokenAccount(
         pool.assetInfo.onassetMint,
         program.provider.publicKey!,
         program.provider.connection
       );
 
-      if (associatedTokenAccount) {
-        const onassetBalance = await program.provider.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
+      if (associatedTokenAccountInfo.isInitialized) {
+        const onassetBalance = await program.provider.connection.getTokenAccountBalance(associatedTokenAccountInfo.address, "processed")
         onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)

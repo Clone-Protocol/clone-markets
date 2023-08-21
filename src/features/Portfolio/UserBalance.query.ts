@@ -7,14 +7,14 @@ import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndica
 import { FilterType } from '~/data/filter'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
-import { getOnUSDAccount } from "~/utils/token_accounts"
+import { getCollateralAccount } from "~/utils/token_accounts"
 
 const fetchOnassetBalance = async (onassetMint: PublicKey, program: CloneClient) => {
 	const onassetAssociatedTokenAccount = await getTokenAccount(
 		onassetMint, program.provider.publicKey!, program.provider.connection
 	);
-	if (onassetAssociatedTokenAccount) {
-		const balance = await program.provider.connection.getTokenAccountBalance(onassetAssociatedTokenAccount, "processed");
+	if (onassetAssociatedTokenAccount.isInitialized) {
+		const balance = await program.provider.connection.getTokenAccountBalance(onassetAssociatedTokenAccount.address, "processed");
 		return balance.value.uiAmount!;
 	} else {
 		return 0;
@@ -27,9 +27,9 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	console.log('fetchUserTotalBalance')
 
 	let onusdVal = 0.0
-	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
-	if (onusdAssociatedTokenAccount) {
-		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
+	const onusdAssociatedTokenAccount = await getCollateralAccount(program);
+	if (onusdAssociatedTokenAccount.isInitialized) {
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount.address, "processed");
 		onusdVal = Number(onusdBalance.value.amount) / 10000000;
 	}
 

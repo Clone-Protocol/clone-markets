@@ -150,7 +150,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       const data = await mutateAsync(
         {
           quantity: isBuy ? amountOnusd : amountOnasset,
-          quantityIsOnusd: isBuy,
+          quantityIsCollateral: isBuy,
           quantityIsInput: true,
           poolIndex: assetIndex,
           slippage: slippage / 100,

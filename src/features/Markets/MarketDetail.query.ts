@@ -32,20 +32,23 @@ export const fetchMarketDetail = async ({ index }: { index: number }) => {
 		provider.connection,
 		cloneAccountAddress
 	);
+	const fromCollateralScale = (n: any) => {
+		return fromScale(n, account.collateral.scale)
+	}
 
 	const program = new CloneClient(provider, account, network.clone)
 	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
 	const pools = await program.getPools();
 	const pool = pools.pools[index];
 	const poolOnassetIld = fromCloneScale(pool.onassetIld)
-	const poolCollateralIld = fromCloneScale(pool.collateralIld)
-	const poolCommittedCollateral = fromCloneScale(pool.committedCollateralLiquidity)
+	const poolCollateralIld = fromCollateralScale(pool.collateralIld)
+	const poolCommittedCollateral = fromCollateralScale(pool.committedCollateralLiquidity)
 	const liquidityTradingFee = fromScale(pool.liquidityTradingFeeBps, 4)
 	const treasuryTradingFee = fromScale(pool.treasuryTradingFeeBps, 4)
 	const pythInfo = await getPythOraclePrice(program.provider.connection, pythSymbol)
 	const oraclePrice = pythInfo.price!
 	const poolCollateral =
-		fromCloneScale(pool.committedCollateralLiquidity) - fromCloneScale(pool.collateralIld);
+	    fromCollateralScale(pool.committedCollateralLiquidity) - fromCollateralScale(pool.collateralIld);
 	const poolOnasset =
 		fromCloneScale(pool.committedCollateralLiquidity) / oraclePrice -
 		fromCloneScale(pool.onassetIld);
