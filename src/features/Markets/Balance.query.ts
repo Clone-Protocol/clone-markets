@@ -1,14 +1,11 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
-import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
+import { fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
-import { AnchorProvider } from "@coral-xyz/anchor";
-import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
-import { PublicKey, Connection } from "@solana/web3.js";
 import { getPythOraclePrice } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
+import { getCloneClient } from '../baseQuery'
 
 export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
   console.log('fetchBalance')
@@ -16,42 +13,20 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
   setStartTimer(false);
   setStartTimer(true);
 
-  // MEMO: to support provider without wallet adapter
-  const network = getNetworkDetailsFromEnv()
-  const new_connection = new Connection(network.endpoint)
-  const provider = new AnchorProvider(
-    new_connection,
-    {
-      signTransaction: () => Promise.reject(),
-      signAllTransactions: () => Promise.reject(),
-      publicKey: PublicKey.default, // MEMO: dummy pubkey
-    },
-    {}
-  );
-
-  const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
-    [Buffer.from("clone")],
-    network.clone
-  );
-  const account = await CloneAccount.fromAccountAddress(
-    provider.connection,
-    cloneAccountAddress
-  );
-
-  const program = new CloneClient(provider, account, network.clone)
+  const { cloneClient: program, connection } = await getCloneClient()
 
   let onusdVal = 0.0
   let onassetVal = 0.0
   let ammOnassetValue;
-  let ammOnusdValue;
+  let ammCollateralValue;
 
-  const [pools, oracles, onusdAtaResult] = await Promise.allSettled([
+  const [pools, oracles, collateralAtaResult] = await Promise.allSettled([
     program.getPools(), program.getOracles(), getCollateralAccount(program)
   ]);
 
   try {
-    if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value.isInitialized) {
-      const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAtaResult.value.address, "processed")
+    if (collateralAtaResult.status === 'fulfilled' && collateralAtaResult.value.isInitialized) {
+      const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAtaResult.value.address, "processed")
       onusdVal = Number(onusdBalance.value.amount) / 10000000;
     }
   } catch (e) {
@@ -67,22 +42,23 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
         program.provider.publicKey!,
         program.provider.connection
       );
+      const collateralScale = program.clone.collateral.scale
 
       if (associatedTokenAccountInfo.isInitialized) {
         const onassetBalance = await program.provider.connection.getTokenAccountBalance(associatedTokenAccountInfo.address, "processed")
         onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
-      const { price } = await getPythOraclePrice(new_connection, pythSymbol)
+      const { price } = await getPythOraclePrice(connection, pythSymbol)
       const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
-      const poolOnusd =
-        fromScale(pool.committedCollateralLiquidity, 7) - fromScale(pool.collateralIld, 7);
+      const poolCollateral =
+        fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
       const poolOnasset =
-        fromScale(pool.committedCollateralLiquidity, 7) / oraclePrice -
-        fromScale(pool.collateralIld, 7);
+        fromScale(pool.committedCollateralLiquidity, collateralScale) / oraclePrice -
+        fromScale(pool.collateralIld, collateralScale);
 
       ammOnassetValue = poolOnasset
-      ammOnusdValue = poolOnusd
+      ammCollateralValue = poolCollateral
     }
   } catch (e) {
     console.error(e)
@@ -92,7 +68,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
     onusdVal,
     onassetVal,
     ammOnassetValue,
-    ammOnusdValue
+    ammCollateralValue
   }
 }
 
@@ -106,7 +82,7 @@ export interface Balance {
   onusdVal: number
   onassetVal: number
   ammOnassetValue: number
-  ammOnusdValue: number
+  ammCollateralValue: number
 }
 
 export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetProps) {

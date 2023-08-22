@@ -27,9 +27,9 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	console.log('fetchUserTotalBalance')
 
 	let onusdVal = 0.0
-	const onusdAssociatedTokenAccount = await getCollateralAccount(program);
-	if (onusdAssociatedTokenAccount.isInitialized) {
-		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccount.address, "processed");
+	const collateralAssociatedTokenAccount = await getCollateralAccount(program);
+	if (collateralAssociatedTokenAccount.isInitialized) {
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccount.address, "processed");
 		onusdVal = Number(onusdBalance.value.amount) / 10000000;
 	}
 
@@ -45,15 +45,16 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 
 	const onassetBalancesResult = await Promise.allSettled(balanceQueries);
 	const result = []
+	const collateralScale = program.clone.collateral.scale
 	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const pool = pools.pools[i]
 		const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)]
-		const poolOnusd =
-			fromScale(pool.committedCollateralLiquidity, 7) - fromScale(pool.collateralIld, 7);
+		const poolCollateral =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
 		const poolOnasset =
-			fromScale(pool.committedCollateralLiquidity, 7) / fromScale(oracle.price, oracle.expo) -
-			fromScale(pool.collateralIld, 7);
-		const price = poolOnusd / poolOnasset
+			fromScale(pool.committedCollateralLiquidity, collateralScale) / fromScale(oracle.price, oracle.expo) -
+			fromScale(pool.collateralIld, collateralScale);
+		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
 		if (assetBalance > 0) {
@@ -103,16 +104,17 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	}
 	const onassetBalancesResult = await Promise.allSettled(balanceQueries);
 	const result: BalanceList[] = []
+	const collateralScale = program.clone.collateral.scale
 	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
 		const pool = pools.pools[i]
 		const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)]
-		const poolOnusd =
-			fromScale(pool.committedCollateralLiquidity, 7) - fromScale(pool.collateralIld, 7);
+		const poolCollateral =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
 		const poolOnasset =
-			fromScale(pool.committedCollateralLiquidity, 7) / fromScale(oracle.price, oracle.expo) -
-			fromScale(pool.collateralIld, 7);
-		const price = poolOnusd / poolOnasset
+			fromScale(pool.committedCollateralLiquidity, collateralScale) / fromScale(oracle.price, oracle.expo) -
+			fromScale(pool.collateralIld, collateralScale);
+		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
 		if (assetBalance > 0) {

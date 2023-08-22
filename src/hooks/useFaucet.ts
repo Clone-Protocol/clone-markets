@@ -42,7 +42,7 @@ export default function useFaucet() {
               faucet: faucetAddress,
               mint: program.clone.collateral.mint,
               tokenAccount: usdcAssociatedTokenAccount.address,
-            }, { amount: toScale(onusdToMint, 7) })
+            }, { amount: toScale(onusdToMint, program.clone.collateral.scale) })
           )
 
           let ixns = await Promise.all(ixnCalls)

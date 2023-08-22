@@ -170,9 +170,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   const getDefaultPrice = () => {
-    const ammOnusdValue = balance?.ammOnusdValue!
+    const ammCollateralValue = balance?.ammCollateralValue!
     const ammOnassetValue = balance?.ammOnassetValue!
-    return ammOnusdValue / ammOnassetValue
+    return ammCollateralValue / ammOnassetValue
   }
 
   const getPrice = () => {

@@ -1,15 +1,12 @@
 import React, { FC, ReactNode } from 'react'
-import { AnchorProvider } from '@coral-xyz/anchor'
-import { Connection, PublicKey, Commitment } from '@solana/web3.js'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { CloneContext } from '~/hooks/useClone'
 import { CloneClient } from "clone-protocol-sdk/sdk/src/clone"
-import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { useAtomValue, useAtom } from 'jotai'
 import { cloneClient, connectedPubKey } from '~/features/globalAtom'
 import { CreateAccountDialogStates } from '~/utils/constants'
 import { createAccountDialogState } from '~/features/globalAtom'
-import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
+import { getCloneClient } from '~/features/baseQuery'
 
 export interface CloneProviderProps {
 	children: ReactNode
@@ -37,31 +34,14 @@ export const CloneProvider: FC<CloneProviderProps> = ({ children, ...props }) =>
 
 		let clone
 		if (!mainCloneClient || isChangePubKey) {
-			const opts = {
-				preflightCommitment: "processed" as Commitment,
-			}
-			const network = getNetworkDetailsFromEnv()
-			const new_connection = new Connection(network.endpoint)
-			const provider = new AnchorProvider(new_connection, wallet!, opts)
-
-			const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
-				[Buffer.from("clone")],
-				network.clone
-			);
-			const cAccount = await CloneAccount.fromAccountAddress(
-				provider.connection,
-				cloneAccountAddress
-			);
-
-			clone = new CloneClient(provider, cAccount, network.clone)
+			const { cloneClient } = await getCloneClient(wallet)
+			clone = cloneClient
 			setMainCloneClient(clone)
 		} else {
 			clone = mainCloneClient
 		}
-
 		return clone
 	}
-
 
 	return (
 		<CloneContext.Provider
