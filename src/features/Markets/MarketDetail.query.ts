@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { Collateral } from 'clone-protocol-sdk/sdk/generated/clone'
 import { assetMapping } from 'src/data/assets'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
@@ -7,14 +7,23 @@ import { getPythOraclePrice } from "~/utils/pyth"
 import { ASSETS_DESC } from '~/data/assets_desc'
 import { fetch24hourVolume } from '~/utils/assets'
 import { getCloneClient } from '../baseQuery'
+import { useAtomValue } from 'jotai'
+import { cloneClient } from '../globalAtom'
 
-export const fetchMarketDetail = async ({ index }: { index: number }) => {
+export const fetchMarketDetail = async ({ index, mainCloneClient }: { index: number, mainCloneClient?: CloneClient | null }) => {
+
+	let program: CloneClient
+	if (mainCloneClient) {
+		program = mainCloneClient
+	} else {
+		const { cloneClient: cloneProgram } = await getCloneClient()
+		program = cloneProgram
+	}
 
 	const fromCollateralScale = (n: any) => {
 		return fromScale(n, program.clone.collateral.scale)
 	}
 
-	const { cloneClient: program } = await getCloneClient()
 	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
 	const pools = await program.getPools();
 	const pool = pools.pools[index];
@@ -114,9 +123,10 @@ export interface PairData {
 }
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
+	const mainCloneClient = useAtomValue(cloneClient)
 	let queryFunc
 	try {
-		queryFunc = () => fetchMarketDetail({ index })
+		queryFunc = () => fetchMarketDetail({ index, mainCloneClient })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => fetchMarketDetailDefault()

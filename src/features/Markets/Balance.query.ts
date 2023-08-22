@@ -1,19 +1,28 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { fromScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getPythOraclePrice } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
 import { getCloneClient } from '../baseQuery'
+import { useAtomValue } from 'jotai'
+import { cloneClient } from '~/features/globalAtom'
+import { Clone } from 'clone-protocol-sdk/sdk/generated/clone'
 
-export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
+export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { index: number, setStartTimer: (start: boolean) => void, mainCloneClient?: CloneClient | null }) => {
   console.log('fetchBalance')
   // start timer in data-loading-indicator
   setStartTimer(false);
   setStartTimer(true);
 
-  const { cloneClient: program, connection } = await getCloneClient()
+  let program
+  if (mainCloneClient) {
+    program = mainCloneClient
+  } else {
+    const { cloneClient: cloneProgram } = await getCloneClient()
+    program = cloneProgram
+  }
 
   let onusdVal = 0.0
   let onassetVal = 0.0
@@ -49,7 +58,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
         onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
-      const { price } = await getPythOraclePrice(connection, pythSymbol)
+      const { price } = await getPythOraclePrice(program.provider.connection, pythSymbol)
       const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
       const poolCollateral =
         fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
@@ -87,8 +96,9 @@ export interface Balance {
 
 export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const { setStartTimer } = useDataLoading()
+  const mainCloneClient = useAtomValue(cloneClient)
 
-  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer }), {
+  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer, mainCloneClient }), {
     refetchOnMount,
     refetchInterval: REFETCH_CYCLE,
     refetchIntervalInBackground: true,

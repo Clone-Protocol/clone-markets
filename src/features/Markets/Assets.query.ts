@@ -3,16 +3,24 @@ import { assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
-import { useSetAtom } from 'jotai'
-import { showPythBanner } from '~/features/globalAtom'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { cloneClient, showPythBanner } from '~/features/globalAtom'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator';
 import { getCloneClient } from '../baseQuery';
+import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
 
-export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (show: boolean) => void }) => {
+export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null }) => {
 	console.log('fetchAssets')
 
-	const { connection, cloneClient } = await getCloneClient()
-	const iassetInfos = await getiAssetInfos(connection, cloneClient);
+	let program
+	if (mainCloneClient) {
+		program = mainCloneClient
+	} else {
+		const { cloneClient: cloneProgram } = await getCloneClient()
+		program = cloneProgram
+	}
+
+	const iassetInfos = await getiAssetInfos(program.provider.connection, program);
 	const dailyVolumeStats = await fetch24hourVolume()
 
 	// Fetch Pyth
@@ -84,10 +92,11 @@ export interface AssetList {
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const setShowPythBanner = useSetAtom(showPythBanner)
+	const mainCloneClient = useAtomValue(cloneClient)
 
 	let queryFunc
 	try {
-		queryFunc = () => fetchAssets({ setShowPythBanner })
+		queryFunc = () => fetchAssets({ setShowPythBanner, mainCloneClient })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => []
