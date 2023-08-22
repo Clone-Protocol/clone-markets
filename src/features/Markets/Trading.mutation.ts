@@ -44,8 +44,6 @@ export const callTrading = async ({
 
 	let collateralTokenAccountInfo = await getCollateralAccount(program);
 	let onassetTokenAccountInfo = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
-	let onassetAccount = await getAccount(program.provider.connection, onassetTokenAccountInfo.address, "recent")
-	console.log("BALANCE:", onassetAccount.amount.toString())
 	let treasuryCollateralAssociatedTokenInfo = await getTokenAccount(
 		program.clone.collateral.mint,
 		program.clone.treasuryAddress,
@@ -126,9 +124,7 @@ export const callTrading = async ({
 	})()
 
 	const scaledQuantity = quantityIsCollateral ? toScale(quantity, collateralScale): toCloneScale(quantity)
-	console.log("QTY:", scaledQuantity.toString());
 	const scaledThreshold = (quantityIsCollateral && quantityIsInput) || (!quantityIsCollateral && !quantityIsInput) ? toCloneScale(executionEstimate.result * slippageMultiplier): toScale(executionEstimate.result * slippageMultiplier, collateralScale)
-	console.log("Threshold:", scaledThreshold.toString());
 
 	ixns.push(program.updatePricesInstruction(oracles))
 	ixns.push(program.swapInstruction(
