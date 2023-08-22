@@ -14,9 +14,9 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 	let onassetVal = 0.0
 	const devnetConversionFactor = Math.pow(10, -program.clone.collateral.scale)
 	const cloneConversionFactor = Math.pow(10, -CLONE_TOKEN_SCALE)
-	const onusdAssociatedTokenAccountInfo = await getCollateralAccount(program);
-	if (onusdAssociatedTokenAccountInfo.isInitialized) {
-		const onusdBalance = await program.provider.connection.getTokenAccountBalance(onusdAssociatedTokenAccountInfo.address, "processed");
+	const collateralAssociatedTokenAccountInfo = await getCollateralAccount(program);
+	if (collateralAssociatedTokenAccountInfo.isInitialized) {
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccountInfo.address, "processed");
 		onusdVal = Number(onusdBalance.value.amount) * devnetConversionFactor;
 	}
 

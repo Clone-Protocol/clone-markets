@@ -1,42 +1,29 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
-import { Clone as CloneAccount, Collateral } from 'clone-protocol-sdk/sdk/generated/clone'
+import { Collateral } from 'clone-protocol-sdk/sdk/generated/clone'
 import { assetMapping } from 'src/data/assets'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
-import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
-import { PublicKey, Connection } from "@solana/web3.js";
-import { AnchorProvider } from "@coral-xyz/anchor";
 import { getPythOraclePrice } from "~/utils/pyth"
 import { ASSETS_DESC } from '~/data/assets_desc'
 import { fetch24hourVolume } from '~/utils/assets'
+import { getCloneClient } from '../baseQuery'
+import { useAtomValue } from 'jotai'
+import { cloneClient } from '../globalAtom'
 
-export const fetchMarketDetail = async ({ index }: { index: number }) => {
-	// MEMO: to support provider without wallet adapter
-	const network = getNetworkDetailsFromEnv()
-	const new_connection = new Connection(network.endpoint)
-	const provider = new AnchorProvider(
-		new_connection,
-		{
-			signTransaction: () => Promise.reject(),
-			signAllTransactions: () => Promise.reject(),
-			publicKey: PublicKey.default, // MEMO: dummy pubkey
-		},
-		{}
-	);
+export const fetchMarketDetail = async ({ index, mainCloneClient }: { index: number, mainCloneClient?: CloneClient | null }) => {
 
-	const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
-		[Buffer.from("clone")],
-		network.clone
-	);
-	const account = await CloneAccount.fromAccountAddress(
-		provider.connection,
-		cloneAccountAddress
-	);
-	const fromCollateralScale = (n: any) => {
-		return fromScale(n, account.collateral.scale)
+	let program: CloneClient
+	if (mainCloneClient) {
+		program = mainCloneClient
+	} else {
+		const { cloneClient: cloneProgram } = await getCloneClient()
+		program = cloneProgram
 	}
 
-	const program = new CloneClient(provider, account, network.clone)
+	const fromCollateralScale = (n: any) => {
+		return fromScale(n, program.clone.collateral.scale)
+	}
+
 	const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
 	const pools = await program.getPools();
 	const pool = pools.pools[index];
@@ -48,7 +35,7 @@ export const fetchMarketDetail = async ({ index }: { index: number }) => {
 	const pythInfo = await getPythOraclePrice(program.provider.connection, pythSymbol)
 	const oraclePrice = pythInfo.price!
 	const poolCollateral =
-	    fromCollateralScale(pool.committedCollateralLiquidity) - fromCollateralScale(pool.collateralIld);
+		fromCollateralScale(pool.committedCollateralLiquidity) - fromCollateralScale(pool.collateralIld);
 	const poolOnasset =
 		fromCloneScale(pool.committedCollateralLiquidity) / oraclePrice -
 		fromCloneScale(pool.onassetIld);
@@ -136,9 +123,10 @@ export interface PairData {
 }
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
+	const mainCloneClient = useAtomValue(cloneClient)
 	let queryFunc
 	try {
-		queryFunc = () => fetchMarketDetail({ index })
+		queryFunc = () => fetchMarketDetail({ index, mainCloneClient })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => fetchMarketDetailDefault()

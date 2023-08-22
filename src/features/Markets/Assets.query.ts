@@ -1,44 +1,26 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
-import { AnchorProvider } from "@coral-xyz/anchor";
-import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
-import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
-import { PublicKey, Connection } from "@solana/web3.js";
 import { fetchPythPriceHistory } from '~/utils/pyth'
-import { useSetAtom } from 'jotai'
-import { showPythBanner } from '~/features/globalAtom'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { cloneClient, showPythBanner } from '~/features/globalAtom'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator';
+import { getCloneClient } from '../baseQuery';
+import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
 
-export const fetchAssets = async ({ setShowPythBanner }: { setShowPythBanner: (show: boolean) => void }) => {
+export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null }) => {
 	console.log('fetchAssets')
 
-	// MEMO: to support provider without wallet adapter
-	const network = getNetworkDetailsFromEnv()
-	const new_connection = new Connection(network.endpoint)
-	const provider = new AnchorProvider(
-		new_connection,
-		{
-			signTransaction: () => Promise.reject(),
-			signAllTransactions: () => Promise.reject(),
-			publicKey: PublicKey.default, // MEMO: dummy pubkey
-		},
-		{}
-	);
+	let program
+	if (mainCloneClient) {
+		program = mainCloneClient
+	} else {
+		const { cloneClient: cloneProgram } = await getCloneClient()
+		program = cloneProgram
+	}
 
-	const [cloneAccountAddress, _] = PublicKey.findProgramAddressSync(
-		[Buffer.from("clone")],
-		network.clone
-	);
-	const account = await CloneAccount.fromAccountAddress(
-		provider.connection,
-		cloneAccountAddress
-	);
-
-	const program = new CloneClient(provider, account, network.clone)
-	const iassetInfos = await getiAssetInfos(new_connection, program);
+	const iassetInfos = await getiAssetInfos(program.provider.connection, program);
 	const dailyVolumeStats = await fetch24hourVolume()
 
 	// Fetch Pyth
@@ -110,10 +92,11 @@ export interface AssetList {
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const setShowPythBanner = useSetAtom(showPythBanner)
+	const mainCloneClient = useAtomValue(cloneClient)
 
 	let queryFunc
 	try {
-		queryFunc = () => fetchAssets({ setShowPythBanner })
+		queryFunc = () => fetchAssets({ setShowPythBanner, mainCloneClient })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => []
