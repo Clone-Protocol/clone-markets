@@ -4,6 +4,7 @@ import PrimaryIcon from 'public/images/icons-badge.svg'
 import Image from 'next/image'
 import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
+import { ON_USD } from '~/utils/constants'
 
 const GetOnUSD: React.FC = () => {
   const setMintUsdi = useSetAtom(mintUSDi)
@@ -11,10 +12,10 @@ const GetOnUSD: React.FC = () => {
     <Wrapper>
       <Box display='flex' gap={1} alignItems='center'>
         <Image src={PrimaryIcon} width={19} alt='primary' />
-        <Box><Typography variant='p_lg' color='#9b79fc'>Need onUSD?</Typography></Box>
+        <Box><Typography variant='p_lg' color='#9b79fc'>Need {ON_USD}?</Typography></Box>
       </Box>
-      <Box lineHeight={1}><Typography variant='p' color='#8988a3'>Devnet onUSD is needed for you to trade on Devnet Clone Markets app.</Typography></Box>
-      <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet onUSD</Typography></GetButton>
+      <Box lineHeight={1}><Typography variant='p' color='#8988a3'>Devnet USD is needed for you to trade on Devnet Clone Markets app.</Typography></Box>
+      <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
     </Wrapper>
   )
 }

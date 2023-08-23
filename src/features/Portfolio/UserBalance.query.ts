@@ -1,21 +1,20 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { PublicKey } from '@solana/web3.js'
-import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
-import { getPoolLiquidity } from 'clone-protocol-sdk/sdk/src/utils'
+import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useClone } from '~/hooks/useClone'
 import { assetMapping, AssetType } from '~/data/assets'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { FilterType } from '~/data/filter'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
-import { getOnUSDAccount } from "~/utils/token_accounts"
+import { getCollateralAccount } from "~/utils/token_accounts"
 
 const fetchOnassetBalance = async (onassetMint: PublicKey, program: CloneClient) => {
 	const onassetAssociatedTokenAccount = await getTokenAccount(
 		onassetMint, program.provider.publicKey!, program.provider.connection
 	);
-	if (onassetAssociatedTokenAccount) {
-		const balance = await program.provider.connection.getTokenAccountBalance(onassetAssociatedTokenAccount, "processed");
+	if (onassetAssociatedTokenAccount.isInitialized) {
+		const balance = await program.provider.connection.getTokenAccountBalance(onassetAssociatedTokenAccount.address, "processed");
 		return balance.value.uiAmount!;
 	} else {
 		return 0;
@@ -27,30 +26,35 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 
 	console.log('fetchUserTotalBalance')
 
-	await program.loadClone()
-
 	let onusdVal = 0.0
-	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
-	if (onusdAssociatedTokenAccount) {
-		const onusdBalance = await program.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
-		onusdVal = Number(onusdBalance.value.amount) / 100000000;
+	const collateralAssociatedTokenAccount = await getCollateralAccount(program);
+	if (collateralAssociatedTokenAccount.isInitialized) {
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccount.address, "processed");
+		onusdVal = Number(onusdBalance.value.amount) / 10000000;
 	}
 
-	const tokenData = await program.getTokenData();
+	const pools = await program.getPools();
+	const oracles = await program.getOracles();
 
 	const balanceQueries = [];
-	for (let i = 0; i < Number(tokenData.numPools); i++) {
+	for (let i = 0; i < Number(pools.pools.length); i++) {
 		balanceQueries.push(
-			fetchOnassetBalance(tokenData.pools[i].assetInfo.onassetMint, program)
+			fetchOnassetBalance(pools.pools[i].assetInfo.onassetMint, program)
 		)
 	}
 
 	const onassetBalancesResult = await Promise.allSettled(balanceQueries);
 	const result = []
-	for (let i = 0; i < Number(tokenData.numPools); i++) {
-		const pool = tokenData.pools[i]
-		const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
-		const price = poolOnusd / poolOnasset
+	const collateralScale = program.clone.collateral.scale
+	for (let i = 0; i < Number(pools.pools.length); i++) {
+		const pool = pools.pools[i]
+		const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)]
+		const poolCollateral =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
+		const poolOnasset =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) / fromScale(oracle.price, oracle.expo) -
+			fromScale(pool.collateralIld, collateralScale);
+		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
 		if (assetBalance > 0) {
@@ -73,7 +77,7 @@ export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled =
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['userTotalBalance', wallet, userPubKey], () => fetchUserTotalBalance({ program: getCloneApp(wallet), userPubKey }), {
+		return useQuery(['userTotalBalance', wallet, userPubKey], async () => fetchUserTotalBalance({ program: await getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,
@@ -89,24 +93,28 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	if (!userPubKey) return []
 
 	// console.log('fetchUserBalance')
-	await program.loadClone()
-	const tokenData = await program.getTokenData();
+	const pools = await program.getPools();
+	const oracles = await program.getOracles();
 
 	const balanceQueries = [];
-	for (let i = 0; i < Number(tokenData.numPools); i++) {
+	for (let i = 0; i < Number(pools.pools.length); i++) {
 		balanceQueries.push(
-			fetchOnassetBalance(tokenData.pools[i].assetInfo.onassetMint, program)
+			fetchOnassetBalance(pools.pools[i].assetInfo.onassetMint, program)
 		)
 	}
 	const onassetBalancesResult = await Promise.allSettled(balanceQueries);
-
 	const result: BalanceList[] = []
-
-	for (let i = 0; i < Number(tokenData.numPools); i++) {
+	const collateralScale = program.clone.collateral.scale
+	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
-		const pool = tokenData.pools[i]
-		const { poolOnusd, poolOnasset } = getPoolLiquidity(pool)
-		const price = poolOnusd / poolOnasset
+		const pool = pools.pools[i]
+		const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)]
+		const poolCollateral =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
+		const poolOnasset =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) / fromScale(oracle.price, oracle.expo) -
+			fromScale(pool.collateralIld, collateralScale);
+		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
 		if (assetBalance > 0) {
@@ -163,7 +171,7 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['userBalance', wallet, userPubKey], () => fetchUserBalance({ program: getCloneApp(wallet), userPubKey }), {
+		return useQuery(['userBalance', wallet, userPubKey], async () => fetchUserBalance({ program: await getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,

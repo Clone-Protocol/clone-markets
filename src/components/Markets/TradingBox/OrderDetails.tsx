@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import InfoTooltip from '~/components/Common/InfoTooltip'
+import { ON_USD } from '~/utils/constants';
 
 interface Props {
   isBuy: boolean,
@@ -21,7 +22,7 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
     if (isBuy) {
       return [slippageMultiplier * onassetAmount, tickerSymbol, estimatedFees * onassetPrice]
     } else {
-      return [slippageMultiplier * onusdAmount, "onUSD", estimatedFees]
+      return [slippageMultiplier * onusdAmount, ON_USD, estimatedFees]
     }
   })()
 
@@ -42,7 +43,7 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Trade Fees <InfoTooltip title="Trade fees" color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
           <Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(estimatedFees) ? '0' : estimatedFees?.toFixed(6)} {outputSymbol}</Typography>
-          <Box><Typography variant='p_sm'>{tradeFee}% (${isNaN(tradeFeeDollar) ? '0' : tradeFeeDollar?.toFixed(6)})</Typography></Box>
+          <Box><Typography variant='p_sm'>{tradeFee.toFixed(2)}% (${isNaN(tradeFeeDollar) ? '0' : tradeFeeDollar?.toFixed(6)})</Typography></Box>
         </div>
       </Stack>
     </Wrapper>

@@ -13,9 +13,9 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import { useRouter } from 'next/navigation'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { ASSETS, AssetTickers } from '~/data/assets'
+import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
-// import { useSnackbar } from 'notistack'
+import { ON_USD } from '~/utils/constants'
 
 interface Props {
   assets: BalanceList[]
@@ -24,18 +24,12 @@ interface Props {
 
 const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   const { publicKey } = useWallet()
-  // const { enqueueSnackbar } = useSnackbar()
 
   const router = useRouter()
   const handleRowClick: GridEventListener<'rowClick'> = useCallback((
     params
   ) => {
-    // temporary disabled
-    // if (params.row.id === AssetTickers.gold) {
-    //   enqueueSnackbar('temporarily unavailable due to oracle error')
-    // } else {
     router.push(`/trade/${ASSETS[params.row.id].ticker}`)
-    // }
   }, [])
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
 
@@ -88,7 +82,7 @@ let columns: GridColDef[] = [
   },
   {
     field: 'price',
-    headerName: 'Price (onUSD)',
+    headerName: `Price (${ON_USD})`,
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       const percent = parseFloat(params.row.changePercent)

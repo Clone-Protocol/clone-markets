@@ -17,11 +17,12 @@ import { useBalanceQuery as useMyBalanceQuery } from '~/features/Portfolio/Balan
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
-import { DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
+import { CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
+import { ON_USD } from '~/utils/constants'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -52,9 +53,7 @@ const round = (n: number, decimals: number) => {
 const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onShowSearchAsset }) => {
   const [loading, setLoading] = useState(false)
   const { publicKey } = useWallet()
-  // const [tabIdx, setTabIdx] = useState(0)
   const [isBuy, setisBuy] = useState(true)
-  // const [convertVal, setConvertVal] = useState(0)
   const [openOrderDetails, setOpenOrderDetails] = useState(false)
   const [estimatedFees, setEstimatedFees] = useState(0.0)
   const { setOpen } = useWalletDialog()
@@ -68,7 +67,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     tickerSymbol: onUSDInfo.collateralSymbol,
   }
 
-  const { data: balance, refetch } = useBalanceQuery({
+  const { data: balance } = useBalanceQuery({
     index: assetIndex,
     refetchOnMount: true,
     enabled: true
@@ -80,7 +79,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     enabled: true
   })
 
-  const { data: myBalance } = useMyBalanceQuery({
+  const { data: myBalance, refetch } = useMyBalanceQuery({
     userPubKey: publicKey,
     index: assetIndex,
     refetchOnMount: 'always',
@@ -129,49 +128,14 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     }
   }, [assetIndex])
 
-  // useEffect(() => {
-  //   if (!isNaN(amountOnusd)) {
-  //     calculateTotalAmountByConvert(convertVal)
-  //     console.log('c', convertVal)
-  //     trigger()
-  //   }
-  // }, [isBuy])
-
   const { mutateAsync } = useTradingMutation(publicKey)
-
-  // const handleChangeConvert = (event: Event, newValue: number | number[]) => {
-  //   if (typeof newValue === 'number') {
-  //     setConvertVal(newValue)
-  //     calculateTotalAmountByConvert(newValue)
-  //     trigger()
-  //   }
-  // }
-
-  // const calculateTotalAmountByConvert = (convertRatio: number) => {
-  //   const ammOnusdValue = balance?.ammOnusdValue!
-  //   const ammOnassetValue = balance?.ammOnassetValue!
-  //   const invariant = ammOnassetValue * ammOnusdValue
-  //   let usdi
-  //   let iAsset
-  //   // buy
-  //   if (isBuy) {
-  //     usdi = balance?.onusdVal! * convertRatio / 100;
-  //     iAsset = ammOnassetValue - invariant / (ammOnusdValue + amountOnusd)
-  //   } else {
-  //     // sell
-  //     iAsset = balance?.onassetVal! * convertRatio / 100;
-  //     usdi = ammOnusdValue - invariant / (ammOnassetValue + amountOnasset)
-  //   }
-  //   setValue('amountOnusd', round(usdi, DEVNET_TOKEN_SCALE))
-  //   setValue('amountOnasset', round(iAsset, DEVNET_TOKEN_SCALE))
-  // }
 
   const calculateTotalAmountByFrom = (newValue: number) => {
     const swapResult = calculateSwapExecution(
-      newValue, true, isBuy, assetData?.poolOnusdIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedOnusd!,
-      assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!
+      newValue, true, isBuy, assetData?.poolCollateralIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedCollateral!,
+      assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!, assetData?.collateral!
     )
-    const resultVal = round(swapResult.result, DEVNET_TOKEN_SCALE)
+    const resultVal = round(swapResult.result, CLONE_TOKEN_SCALE)
     if (isBuy) {
       setValue('amountOnasset', resultVal)
     } else {
@@ -186,11 +150,10 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       const data = await mutateAsync(
         {
           quantity: isBuy ? amountOnusd : amountOnasset,
-          quantityIsOnusd: isBuy,
+          quantityIsCollateral: isBuy,
           quantityIsInput: true,
           poolIndex: assetIndex,
           slippage: slippage / 100,
-          oraclePrice: assetData?.oraclePrice!
         }
       )
 
@@ -207,9 +170,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   const getDefaultPrice = () => {
-    const ammOnusdValue = balance?.ammOnusdValue!
+    const ammCollateralValue = balance?.ammCollateralValue!
     const ammOnassetValue = balance?.ammOnassetValue!
-    return ammOnusdValue / ammOnassetValue
+    return ammCollateralValue / ammOnassetValue
   }
 
   const getPrice = () => {
@@ -237,7 +200,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     if (amountOnusd == 0 || isNaN(amountOnusd) || !amountOnusd) {
       return 'Enter Amount'
     } else if (isBuy && amountOnusd > myBalance?.onusdVal!) {
-      return 'Insufficient onUSD'
+      return `Insufficient ${ON_USD}`
     } else if (!isBuy && amountOnasset > myBalance?.onassetVal!) {
       return `Insufficient ${assetData?.tickerSymbol}`
     } else {
@@ -353,7 +316,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
           <Box height='100%'>
             <SwapButton onClick={handleChangeOrderType}>
-              {/* <ConvertSlider isBuy={isBuy} value={convertVal} onChange={handleChangeConvert} /> */}
               <Image src={swapChangeIcon} alt="swap" />
             </SwapButton>
 
@@ -389,7 +351,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
               <RateLoadingIndicator restartTimer={restartTimer} />
-              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} onUSD</Typography>
+              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
               <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}

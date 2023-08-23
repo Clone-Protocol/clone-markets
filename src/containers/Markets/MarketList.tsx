@@ -15,13 +15,12 @@ import Image from 'next/image'
 import { formatDollarAmount } from '~/utils/numbers'
 import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
-// import { useSnackbar } from 'notistack'
+import { ON_USD } from '~/utils/constants'
 
 const MarketList = () => {
 	const router = useRouter()
 	// const [filter, setFilter] = useState<FilterType>('all')
 	const filter: FilterType = 'all'
-	// const { enqueueSnackbar } = useSnackbar()
 
 	const { data: assets } = useAssetsQuery({
 		filter,
@@ -46,12 +45,7 @@ const MarketList = () => {
 	const handleRowClick: GridEventListener<'rowClick'> = useCallback((
 		params
 	) => {
-		// temporary disabled
-		// if (params.row.id === AssetTickers.gold) {
-		// 	enqueueSnackbar('temporarily unavailable due to oracle error')
-		// } else {
 		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
-		// }
 	}, [])
 
 	return (
@@ -94,7 +88,7 @@ let columns: GridColDef[] = [
 		field: 'price',
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
-		headerName: 'Price (onUSD)',
+		headerName: `Price (${ON_USD})`,
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
 			return <Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>

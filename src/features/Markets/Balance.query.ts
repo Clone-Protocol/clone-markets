@@ -1,80 +1,73 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
-import { toNumber } from 'clone-protocol-sdk/sdk/src/decimal'
+import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
-import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
-import { AnchorProvider } from "@coral-xyz/anchor";
-import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
-import { PublicKey, Connection } from "@solana/web3.js";
+import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
 import { getPythOraclePrice } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
+import { getCloneClient } from '../baseQuery'
+import { useAtomValue } from 'jotai'
+import { cloneClient } from '~/features/globalAtom'
+import { Clone } from 'clone-protocol-sdk/sdk/generated/clone'
 
-export const fetchBalance = async ({ index, setStartTimer }: { index: number, setStartTimer: (start: boolean) => void }) => {
-
+export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { index: number, setStartTimer: (start: boolean) => void, mainCloneClient?: CloneClient | null }) => {
   console.log('fetchBalance')
   // start timer in data-loading-indicator
   setStartTimer(false);
   setStartTimer(true);
 
-  // MEMO: to support provider without wallet adapter
-  const network = getNetworkDetailsFromEnv()
-  const new_connection = new Connection(network.endpoint)
-  const provider = new AnchorProvider(
-    new_connection,
-    {
-      signTransaction: () => Promise.reject(),
-      signAllTransactions: () => Promise.reject(),
-      publicKey: PublicKey.default, // MEMO: dummy pubkey
-    },
-    {}
-  );
-  // @ts-ignore
-  const program = new CloneClient(network.clone, provider)
-  await program.loadClone()
+  let program
+  if (mainCloneClient) {
+    program = mainCloneClient
+  } else {
+    const { cloneClient: cloneProgram } = await getCloneClient()
+    program = cloneProgram
+  }
 
   let onusdVal = 0.0
   let onassetVal = 0.0
   let ammOnassetValue;
-  let ammOnusdValue;
+  let ammCollateralValue;
 
-  const [tokenDataResult, onusdAtaResult] = await Promise.allSettled([
-    program.getTokenData(), getOnUSDAccount(program)
+  const [pools, oracles, collateralAtaResult] = await Promise.allSettled([
+    program.getPools(), program.getOracles(), getCollateralAccount(program)
   ]);
 
   try {
-    if (onusdAtaResult.status === 'fulfilled' && onusdAtaResult.value !== undefined) {
-      const onusdBalance = await program.connection.getTokenAccountBalance(onusdAtaResult.value, "processed")
-      onusdVal = Number(onusdBalance.value.amount) / 100000000;
+    if (collateralAtaResult.status === 'fulfilled' && collateralAtaResult.value.isInitialized) {
+      const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAtaResult.value.address, "processed")
+      onusdVal = Number(onusdBalance.value.amount) / 10000000;
     }
   } catch (e) {
     console.error(e)
   }
 
   try {
-    if (tokenDataResult.status === 'fulfilled') {
-      const pool = tokenDataResult.value.pools[index]
-      const associatedTokenAccount = await getTokenAccount(
+    if (pools.status === 'fulfilled' && oracles.status === 'fulfilled') {
+      const pool = pools.value.pools[index]
+      const oracle = oracles.value.oracles[Number(pool.assetInfo.oracleInfoIndex)];
+      const associatedTokenAccountInfo = await getTokenAccount(
         pool.assetInfo.onassetMint,
         program.provider.publicKey!,
         program.provider.connection
       );
+      const collateralScale = program.clone.collateral.scale
 
-      if (associatedTokenAccount) {
-        const onassetBalance = await program.connection.getTokenAccountBalance(associatedTokenAccount, "processed")
-        onassetVal = Number(onassetBalance.value.amount) / 100000000;
+      if (associatedTokenAccountInfo.isInitialized) {
+        const onassetBalance = await program.provider.connection.getTokenAccountBalance(associatedTokenAccountInfo.address, "processed")
+        onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
-      const { price } = await getPythOraclePrice(new_connection, pythSymbol)
-      const oraclePrice = price ?? toNumber(pool.assetInfo.price)
-      const poolOnusd =
-        toNumber(pool.committedOnusdLiquidity) - toNumber(pool.onusdIld);
+      const { price } = await getPythOraclePrice(program.provider.connection, pythSymbol)
+      const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
+      const poolCollateral =
+        fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
       const poolOnasset =
-        toNumber(pool.committedOnusdLiquidity) / oraclePrice -
-        toNumber(pool.onassetIld);
+        fromScale(pool.committedCollateralLiquidity, collateralScale) / oraclePrice -
+        fromScale(pool.collateralIld, collateralScale);
 
       ammOnassetValue = poolOnasset
-      ammOnusdValue = poolOnusd
+      ammCollateralValue = poolCollateral
     }
   } catch (e) {
     console.error(e)
@@ -84,7 +77,7 @@ export const fetchBalance = async ({ index, setStartTimer }: { index: number, se
     onusdVal,
     onassetVal,
     ammOnassetValue,
-    ammOnusdValue
+    ammCollateralValue
   }
 }
 
@@ -98,13 +91,14 @@ export interface Balance {
   onusdVal: number
   onassetVal: number
   ammOnassetValue: number
-  ammOnusdValue: number
+  ammCollateralValue: number
 }
 
 export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const { setStartTimer } = useDataLoading()
+  const mainCloneClient = useAtomValue(cloneClient)
 
-  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer }), {
+  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer, mainCloneClient }), {
     refetchOnMount,
     refetchInterval: REFETCH_CYCLE,
     refetchIntervalInBackground: true,

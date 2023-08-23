@@ -151,7 +151,6 @@ const RightMenu: React.FC = () => {
 const StyledAppBar = styled(AppBar)`
 	z-index: 900;
 	background-color: #000;
-	// height: 60px;
 	position: fixed;
 	top: 0px;
 	left: 0px;
@@ -173,9 +172,6 @@ const StyledAppBar = styled(AppBar)`
 		backdrop-filter: blur(20px);
 		border-radius: 20px;
 	}
-	// .MuiToolbar-root {
-	// 	height: 100%;
-	// }
 `
 const NavPlaceholder = styled('div')`
 	${(props) => props.theme.breakpoints.up('md')} {

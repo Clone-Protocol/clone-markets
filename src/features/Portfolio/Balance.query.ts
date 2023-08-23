@@ -1,8 +1,8 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient, DEVNET_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
 import { PublicKey } from '@solana/web3.js'
 import { useClone } from '~/hooks/useClone'
-import { getOnUSDAccount } from "~/utils/token_accounts"
+import { getCollateralAccount } from "~/utils/token_accounts"
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { getTokenAccount } from '~/utils/token_accounts'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
@@ -10,28 +10,24 @@ import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndica
 export const fetchBalance = async ({ program, userPubKey, index }: { program: CloneClient, userPubKey: PublicKey | null, index: number }) => {
 	if (!userPubKey) return null
 
-	// console.log('fetchBalance')
-	await program.loadClone()
-
 	let onusdVal = 0.0
 	let onassetVal = 0.0
-	const devnetConversionFactor = Math.pow(10, -DEVNET_TOKEN_SCALE)
-
-	const onusdAssociatedTokenAccount = await getOnUSDAccount(program);
-	if (onusdAssociatedTokenAccount) {
-		const onusdBalance = await program.connection.getTokenAccountBalance(onusdAssociatedTokenAccount, "processed");
+	const devnetConversionFactor = Math.pow(10, -program.clone.collateral.scale)
+	const cloneConversionFactor = Math.pow(10, -CLONE_TOKEN_SCALE)
+	const collateralAssociatedTokenAccountInfo = await getCollateralAccount(program);
+	if (collateralAssociatedTokenAccountInfo.isInitialized) {
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccountInfo.address, "processed");
 		onusdVal = Number(onusdBalance.value.amount) * devnetConversionFactor;
 	}
 
 	// if not default index
 	if (index !== -1) {
-		const tokenData = await program.getTokenData();
-
-		const pool = tokenData.pools[index];
-		const onassetTokenAccountAddress = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.connection);
-		if (onassetTokenAccountAddress !== undefined) {
-			const iassetBalance = await program.connection.getTokenAccountBalance(onassetTokenAccountAddress, "processed");
-			onassetVal = Number(iassetBalance.value.amount) * devnetConversionFactor;
+		const pools = await program.getPools();
+		const pool = pools.pools[index];
+		const onassetTokenAccountInfo = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
+		if (onassetTokenAccountInfo.isInitialized) {
+			const iassetBalance = await program.provider.connection.getTokenAccountBalance(onassetTokenAccountInfo.address, "processed");
+			onassetVal = Number(iassetBalance.value.amount) * cloneConversionFactor;
 		}
 	}
 
@@ -58,7 +54,7 @@ export function useBalanceQuery({ userPubKey, index = -1, refetchOnMount, enable
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['portfolioBalance', wallet, userPubKey, index], () => fetchBalance({ program: getCloneApp(wallet), userPubKey, index }), {
+		return useQuery(['portfolioBalance', wallet, userPubKey, index], async () => fetchBalance({ program: await getCloneApp(wallet), userPubKey, index }), {
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,

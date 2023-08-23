@@ -1,8 +1,8 @@
 'use client'
-import React, { FC, useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import { DataLoadingContext } from '~/hooks/useDataLoading'
 
-export const DataLoadingIndicatorProvider: FC = ({ children, ...props }) => {
+export const DataLoadingIndicatorProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const [startTimer, setStartTimer] = useState(false)
 
 	return (

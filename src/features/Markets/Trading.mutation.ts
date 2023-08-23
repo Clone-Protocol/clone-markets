@@ -1,12 +1,11 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { CloneClient, toDevnetScale } from 'clone-protocol-sdk/sdk/src/clone'
-import { toNumber } from "clone-protocol-sdk/sdk/src/decimal"
+import { CloneClient, fromCloneScale, fromScale, toCloneScale, toScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useMutation } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
-import { getOnUSDAccount, getTokenAccount } from '~/utils/token_accounts'
+import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
 import {
-	getAssociatedTokenAddress,
 	createAssociatedTokenAccountInstruction,
+	getAccount,
 } from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
@@ -24,116 +23,94 @@ export const callTrading = async ({
 
 	let {
 		quantity,
-		quantityIsOnusd,
+		quantityIsCollateral,
 		quantityIsInput,
 		poolIndex,
 		slippage,
-		oraclePrice
 	} = data
 	quantity = Number(quantity)
 
 	console.log('input data', data)
 
-	await program.loadClone()
+	const pools = await program.getPools();
+	const oracles = await program.getOracles();
+	const pool = pools.pools[poolIndex]
+	const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)];
 
-	const tokenData = await program.getTokenData();
-	const pool = tokenData.pools[poolIndex]
-	const assetInfo = pool.assetInfo
+	let ixns: TransactionInstruction[] = []
 
-	let onusdAssociatedTokenAddress = await getOnUSDAccount(program);
-	let onassetAssociatedTokenAddress = await getTokenAccount(assetInfo.onassetMint, userPubKey, program.provider.connection);
-	let treasuryOnusdAddress = await getTokenAccount(
-		program.clone!.onusdMint,
-		program.clone!.treasuryAddress,
+	let collateralTokenAccountInfo = await getCollateralAccount(program);
+	let onassetTokenAccountInfo = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
+	let treasuryCollateralAssociatedTokenInfo = await getTokenAccount(
+		program.clone.collateral.mint,
+		program.clone.treasuryAddress,
 		program.provider.connection
 	);
-	let treasuryOnassetAddress = await getTokenAccount(
-		assetInfo.onassetMint,
-		program.clone!.treasuryAddress,
+	let treasuryOnassetAssociatedTokenInfo = await getTokenAccount(
+		pool.assetInfo.onassetMint,
+		program.clone.treasuryAddress,
 		program.provider.connection
 	);
 
-	let ixnCalls: Promise<TransactionInstruction>[] = [
-		program.updatePricesInstruction()
-	]
+	const userIsTreasury = program.clone.treasuryAddress.equals(userPubKey);
 
-	if (!onusdAssociatedTokenAddress) {
-		const onusdAssociatedToken = await getAssociatedTokenAddress(
-			program.clone!.onusdMint,
-			userPubKey,
-		);
-		onusdAssociatedTokenAddress = onusdAssociatedToken;
-		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
-			treasuryOnusdAddress = onusdAssociatedToken
+	// If user is the treasury, skip the checks for associated token accounts
+	if (!userIsTreasury) {
+		if (!collateralTokenAccountInfo.isInitialized) {
+			ixns.push(
+				createAssociatedTokenAccountInstruction(
+					userPubKey,
+					collateralTokenAccountInfo.address,
+					userPubKey,
+					program.clone.collateral.mint,
+				)
+			)
 		}
-		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
+		if (!onassetTokenAccountInfo.isInitialized) {
+			ixns.push(
+				createAssociatedTokenAccountInstruction(
+					userPubKey,
+					onassetTokenAccountInfo.address,
+					userPubKey,
+					pool.assetInfo.onassetMint,
+				)
+			)
+		}
+	}
+	// If treasury doesn't have associated token accounts, create them
+	if (!treasuryCollateralAssociatedTokenInfo.isInitialized) {
+		ixns.push(
+			createAssociatedTokenAccountInstruction(
 				userPubKey,
-				onusdAssociatedToken,
+				treasuryCollateralAssociatedTokenInfo.address,
+				program.clone.treasuryAddress,
+				program.clone.collateral.mint,
+			)
+		);
+	}
+	if (!treasuryOnassetAssociatedTokenInfo.isInitialized) {
+		ixns.push(
+			createAssociatedTokenAccountInstruction(
 				userPubKey,
-				program.clone!.onusdMint,
-			))()
-		)
+				treasuryOnassetAssociatedTokenInfo.address,
+				program.clone.treasuryAddress,
+				pool.assetInfo.onassetMint,
+			)
+		);
 	}
 
-	if (!onassetAssociatedTokenAddress) {
-		const onassetAssociatedToken = await getAssociatedTokenAddress(
-			assetInfo.onassetMint,
-			userPubKey,
-		);
-		onassetAssociatedTokenAddress = onassetAssociatedToken;
-		if (program.clone!.treasuryAddress.equals(program.provider.publicKey!)) {
-			treasuryOnassetAddress = onassetAssociatedToken
-		}
-		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
-				userPubKey,
-				onassetAssociatedToken,
-				userPubKey,
-				assetInfo.onassetMint,
-			))()
-		)
-	}
-	if (!treasuryOnusdAddress) {
-		const treasuryOnusdTokenAddress = await getAssociatedTokenAddress(
-			program.clone!.onusdMint,
-			program.clone!.treasuryAddress,
-		);
-		treasuryOnusdAddress = treasuryOnusdTokenAddress;
-		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
-				userPubKey,
-				treasuryOnusdTokenAddress,
-				program.clone!.treasuryAddress,
-				program.clone!.onusdMint,
-			))()
-		);
-	}
-	if (!treasuryOnassetAddress) {
-		const treasuryOnassetTokenAddress = await getAssociatedTokenAddress(
-			assetInfo.onassetMint,
-			program.clone!.treasuryAddress,
-		);
-		treasuryOnassetAddress = treasuryOnassetTokenAddress;
-		ixnCalls.push(
-			(async () => createAssociatedTokenAccountInstruction(
-				userPubKey,
-				treasuryOnassetTokenAddress,
-				program.clone!.treasuryAddress,
-				assetInfo.onassetMint,
-			))()
-		);
-	}
+	const collateralScale = program.clone.collateral.scale
 	const executionEstimate = calculateSwapExecution(
 		quantity,
 		quantityIsInput,
-		quantityIsOnusd,
-		toNumber(pool.onusdIld),
-		toNumber(pool.onassetIld),
-		toNumber(pool.committedOnusdLiquidity),
-		toNumber(pool.liquidityTradingFee),
-		toNumber(pool.treasuryTradingFee),
-		oraclePrice
+		quantityIsCollateral,
+		fromScale(pool.collateralIld, collateralScale),
+		fromCloneScale(pool.onassetIld),
+		fromScale(pool.committedCollateralLiquidity, collateralScale),
+		fromScale(pool.liquidityTradingFeeBps, 4),
+		fromScale(pool.treasuryTradingFeeBps, 4),
+		fromScale(oracle.price, oracle.expo),
+		program.clone.collateral
 	)
 	const slippageMultiplier = (() => {
 		if (quantityIsInput) {
@@ -143,23 +120,23 @@ export const callTrading = async ({
 		}
 	})()
 
-	ixnCalls.push(
-		program.swapInstruction(
-			poolIndex,
-			toDevnetScale(quantity),
-			quantityIsInput,
-			quantityIsOnusd,
-			toDevnetScale(executionEstimate.result * slippageMultiplier),
-			assetInfo.onassetMint,
-			onusdAssociatedTokenAddress,
-			onassetAssociatedTokenAddress,
-			treasuryOnusdAddress,
-			treasuryOnassetAddress,
-		)
-	)
+	const scaledQuantity = quantityIsCollateral ? toScale(quantity, collateralScale): toCloneScale(quantity)
+	const scaledThreshold = (quantityIsCollateral && quantityIsInput) || (!quantityIsCollateral && !quantityIsInput) ? toCloneScale(executionEstimate.result * slippageMultiplier): toScale(executionEstimate.result * slippageMultiplier, collateralScale)
 
-	const ixns = await Promise.all(ixnCalls)
-	console.log("IXs:", ixns.length)
+	ixns.push(program.updatePricesInstruction(oracles))
+	ixns.push(program.swapInstruction(
+		poolIndex,
+		scaledQuantity,
+		quantityIsInput,
+		quantityIsCollateral,
+		scaledThreshold,
+		pool.assetInfo.onassetMint,
+		collateralTokenAccountInfo.address,
+		onassetTokenAccountInfo.address,
+		treasuryCollateralAssociatedTokenInfo.address,
+		treasuryOnassetAssociatedTokenInfo.address,
+	))
+
 	await sendAndConfirm(program.provider, ixns, setTxState)
 	return {
 		result: true
@@ -168,11 +145,10 @@ export const callTrading = async ({
 
 type FormData = {
 	quantity: number,
-	quantityIsOnusd: boolean,
+	quantityIsCollateral: boolean,
 	quantityIsInput: boolean,
 	poolIndex: number,
 	slippage: number,
-	oraclePrice: number
 }
 interface CallTradingProps {
 	program: CloneClient
@@ -186,7 +162,7 @@ export function useTradingMutation(userPubKey: PublicKey | null) {
 	const { setTxState } = useTransactionState()
 
 	if (wallet) {
-		return useMutation((data: FormData) => callTrading({ program: getCloneApp(wallet), userPubKey, setTxState, data }))
+		return useMutation(async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data }))
 	} else {
 		return useMutation((_: FormData) => funcNoWallet())
 	}

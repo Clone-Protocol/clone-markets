@@ -5,16 +5,20 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useSnackbar } from 'notistack'
+import { useSetAtom } from 'jotai'
+import { cloneClient } from '~/features/globalAtom'
 import withSuspense from '~/hocs/withSuspense'
 import { useRouter } from 'next/navigation'
 import { shortenAddress } from '~/utils/address'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getSolInBalance } from '~/utils/address';
+import { ON_USD } from '~/utils/constants';
 
 const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
   const { publicKey, disconnect } = useWallet()
+  const setCloneClient = useSetAtom(cloneClient)
   const [solBalance, setSolBalance] = useState(0)
 
   const { data: balance } = useBalanceQuery({
@@ -38,6 +42,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
   }, [publicKey])
 
   const handleDisconnect = () => {
+    setCloneClient(null)
     disconnect()
     onHide()
     router.replace('/')
@@ -61,7 +66,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
         </Stack>
       </Stack>
       <AssetBox>
-        <Typography variant='h3'>${balance?.onusdVal.toLocaleString()}</Typography> <Typography variant='p_lg'>onUSD</Typography>
+        <Typography variant='h3'>${balance?.onusdVal.toLocaleString()}</Typography> <Typography variant='p_lg'>{ON_USD}</Typography>
       </AssetBox>
     </WalletWrapper>
   ) : <></>

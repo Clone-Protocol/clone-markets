@@ -1,14 +1,12 @@
 import React, { FC, ReactNode } from 'react'
-import { AnchorProvider } from '@coral-xyz/anchor'
-import { Connection } from '@solana/web3.js'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { CloneContext } from '~/hooks/useClone'
 import { CloneClient } from "clone-protocol-sdk/sdk/src/clone"
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useAtom } from 'jotai'
+import { cloneClient, connectedPubKey } from '~/features/globalAtom'
 import { CreateAccountDialogStates } from '~/utils/constants'
 import { createAccountDialogState } from '~/features/globalAtom'
-import { getNetworkDetailsFromEnv } from 'clone-protocol-sdk/sdk/src/network'
-import { Commitment } from '@solana/web3.js'
+import { getCloneClient } from '~/features/baseQuery'
 
 export interface CloneProviderProps {
 	children: ReactNode
@@ -16,7 +14,10 @@ export interface CloneProviderProps {
 
 export const CloneProvider: FC<CloneProviderProps> = ({ children, ...props }) => {
 	const createAccountStatus = useAtomValue(createAccountDialogState)
-	const getCloneApp = (wallet: AnchorWallet | undefined, force?: boolean): CloneClient => {
+	const [mainCloneClient, setMainCloneClient] = useAtom(cloneClient)
+	const [mainConnectedPubKey, setMainConnectedPubKey] = useAtom(connectedPubKey)
+	const getCloneApp = async (wallet: AnchorWallet | undefined, force?: boolean): Promise<CloneClient> => {
+		let isChangePubKey = false
 		if (!force) {
 			if (!wallet) {
 				throw Error('not detect wallet')
@@ -24,20 +25,23 @@ export const CloneProvider: FC<CloneProviderProps> = ({ children, ...props }) =>
 			if (createAccountStatus !== CreateAccountDialogStates.Closed) {
 				throw Error('the account is not initialized')
 			}
+
+			if (wallet.publicKey.toString() !== mainConnectedPubKey) {
+				isChangePubKey = true
+				setMainConnectedPubKey(wallet.publicKey.toString())
+			}
 		}
 
-		const opts = {
-			preflightCommitment: "processed" as Commitment,
+		let clone
+		if (!mainCloneClient || isChangePubKey) {
+			const { cloneClient } = await getCloneClient(wallet)
+			clone = cloneClient
+			setMainCloneClient(clone)
+		} else {
+			clone = mainCloneClient
 		}
-		const network = getNetworkDetailsFromEnv()
-		// console.log('network', network)
-		const new_connection = new Connection(network.endpoint)
-
-		const provider = new AnchorProvider(new_connection, wallet!, opts)
-		const clone = new CloneClient(network.clone, provider)
 		return clone
 	}
-
 
 	return (
 		<CloneContext.Provider

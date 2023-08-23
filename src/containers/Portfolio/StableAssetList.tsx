@@ -10,6 +10,7 @@ import { Collateral, collateralMapping } from '~/data/assets'
 import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
 import { useMemo, useState } from 'react'
+import { ON_USD } from '~/utils/constants'
 
 interface Props {
 	balance: Balance
@@ -98,7 +99,7 @@ let columns: GridColDef[] = [
 		renderCell(params: GridRenderCellParams<string>) {
 
 			return (
-				<GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get more onUSD</Typography></GetUSDButton>
+				<GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get more {ON_USD}</Typography></GetUSDButton>
 			)
 		},
 	},
@@ -118,7 +119,7 @@ const TopBox = styled(Box)`
 `
 
 const GetUSDButton = styled(Button)`
-	width: 108px;
+	width: 120px;
 	height: 29px;
 	border-radius: 100px;
 	border: solid 1px rgba(104, 0, 237, 0.5);
