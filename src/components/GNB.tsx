@@ -15,13 +15,14 @@ import { mintUSDi } from '~/features/globalAtom'
 import dynamic from 'next/dynamic'
 import useFaucet from '~/hooks/useFaucet'
 import TokenFaucetDialog from './Account/TokenFaucetDialog'
+import { isMobile } from 'react-device-detect';
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
 	// const { pathname } = router
 	// const [path, setPath] = useState<string>('/')
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	// const { scrolled } = useScroll()
 
 	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
@@ -66,7 +67,7 @@ const GNB: React.FC = () => {
 						</Box> */}
 					</Toolbar>
 				</Container>
-				<MobileWarningDialog open={isMobile} handleClose={() => { return null }} />
+				<MobileWarningDialog open={isMobile || isMobileOnSize} handleClose={() => { return null }} />
 			</StyledAppBar>
 		</>
 	)

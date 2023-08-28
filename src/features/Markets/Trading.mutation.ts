@@ -3,10 +3,7 @@ import { CloneClient, fromCloneScale, fromScale, toCloneScale, toScale } from 'c
 import { useMutation } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
-import {
-	createAssociatedTokenAccountInstruction,
-	getAccount,
-} from "@solana/spl-token";
+import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
@@ -120,8 +117,8 @@ export const callTrading = async ({
 		}
 	})()
 
-	const scaledQuantity = quantityIsCollateral ? toScale(quantity, collateralScale): toCloneScale(quantity)
-	const scaledThreshold = (quantityIsCollateral && quantityIsInput) || (!quantityIsCollateral && !quantityIsInput) ? toCloneScale(executionEstimate.result * slippageMultiplier): toScale(executionEstimate.result * slippageMultiplier, collateralScale)
+	const scaledQuantity = quantityIsCollateral ? toScale(quantity, collateralScale) : toCloneScale(quantity)
+	const scaledThreshold = (quantityIsCollateral && quantityIsInput) || (!quantityIsCollateral && !quantityIsInput) ? toCloneScale(executionEstimate.result * slippageMultiplier) : toScale(executionEstimate.result * slippageMultiplier, collateralScale)
 
 	ixns.push(program.updatePricesInstruction(oracles))
 	ixns.push(program.swapInstruction(

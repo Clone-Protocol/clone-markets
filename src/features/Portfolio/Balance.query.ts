@@ -26,8 +26,8 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 		const pool = pools.pools[index];
 		const onassetTokenAccountInfo = await getTokenAccount(pool.assetInfo.onassetMint, userPubKey, program.provider.connection);
 		if (onassetTokenAccountInfo.isInitialized) {
-			const iassetBalance = await program.provider.connection.getTokenAccountBalance(onassetTokenAccountInfo.address, "processed");
-			onassetVal = Number(iassetBalance.value.amount) * cloneConversionFactor;
+			const onassetBalance = await program.provider.connection.getTokenAccountBalance(onassetTokenAccountInfo.address, "processed");
+			onassetVal = Number(onassetBalance.value.amount) * cloneConversionFactor;
 		}
 	}
 

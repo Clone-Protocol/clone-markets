@@ -17,9 +17,9 @@ export type ResponseValue = {
 };
 
 export const generateDates = (start: Date, interval: Interval): Date[] => {
-  let currentDate = new Date(start.getTime()); // Create a new date object to avoid mutating the original
-  let dates = [new Date(currentDate)]; // Include the start date in the array
-  let now = new Date(); // Get current timestamp
+  const currentDate = new Date(start.getTime()); // Create a new date object to avoid mutating the original
+  const dates = [new Date(currentDate)]; // Include the start date in the array
+  const now = new Date(); // Get current timestamp
 
   while (currentDate < now) {
     if (interval === 'hour') {
@@ -38,14 +38,12 @@ export const generateDates = (start: Date, interval: Interval): Date[] => {
 }
 
 export const fetchStatsData = async (filter: Filter, interval: Interval): Promise<ResponseValue[]> => {
-
-  let response = await fetchFromCloneIndex('stats', { interval, filter })
+  const response = await fetchFromCloneIndex('stats', { interval, filter })
   return response.data as ResponseValue[]
 }
 
 
 export const getiAssetInfos = async (connection: Connection, program: CloneClient): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
-
   const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
   const data = await pythClient.getData();
   const pools = await program.getPools();
@@ -88,9 +86,8 @@ type OHLCVResponse = {
 }
 
 const fetch30DayOHLCV = async (poolIndex: number, interval: 'hour' | 'day') => {
-
-  let response = await fetchFromCloneIndex('ohlcv', { interval, pool: poolIndex, filter: 'month' })
-  let result: OHLCVResponse[] = response.data
+  const response = await fetchFromCloneIndex('ohlcv', { interval, pool: poolIndex, filter: 'month' })
+  const result: OHLCVResponse[] = response.data
   return result
 }
 
@@ -100,7 +97,7 @@ export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour
   const lookback30Day = new Date(now.getTime() - 30 * 86400 * 1000)
 
   const dates = generateDates(lookback30Day, interval)
-  let prices = []
+  const prices = []
 
   let resultIndex = 0
   let datesIndex = 0;
@@ -129,10 +126,10 @@ export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour
 
 export const fetch24hourVolume = async () => {
 
-  let response = await fetchFromCloneIndex('ohlcv', { interval: 'hour', filter: 'week' })
-  let data: OHLCVResponse[] = response.data
+  const response = await fetchFromCloneIndex('ohlcv', { interval: 'hour', filter: 'week' })
+  const data: OHLCVResponse[] = response.data
 
-  let result: Map<number, number> = new Map()
+  const result: Map<number, number> = new Map()
   const now = new Date()
   const isWithin24hrs = (date: Date) => {
     return (date.getTime() >= (now.getTime() - 86400000))
