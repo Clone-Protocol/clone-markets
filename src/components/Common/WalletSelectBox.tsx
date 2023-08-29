@@ -45,7 +45,10 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
     setCloneClient(null)
     disconnect()
     onHide()
-    router.replace('/')
+    // refresh page by force
+    setTimeout(() => {
+      location.reload()
+    }, 1000)
   }
 
   return balance ? (
