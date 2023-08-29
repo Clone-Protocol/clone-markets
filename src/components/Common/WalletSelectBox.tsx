@@ -41,12 +41,12 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
     getBalance()
   }, [publicKey])
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
     setCloneClient(null)
-    disconnect()
+    await disconnect()
     onHide()
     // refresh page by force
-    setTimeout(() => {
+    await setTimeout(() => {
       location.reload()
     }, 1000)
   }
