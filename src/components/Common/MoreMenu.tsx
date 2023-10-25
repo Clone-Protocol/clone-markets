@@ -32,17 +32,21 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     open={open}
     onClose={onClose}
     onClick={onClose}
+    transitionDuration={0}
     PaperProps={{
       elevation: 0,
       sx: {
         overflow: 'visible',
         mt: 1.5,
+        transition: 'none',
+        transitionDuration: 0,
         background: '#080018',
         color: '#fff',
         border: '1px solid #414166',
         borderRadius: '10px'
       },
     }}
+    MenuListProps={{ sx: { pt: 0, pb: '15px' } }}
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
   >
@@ -84,7 +88,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         </HoverStack>
       </StyledMenuItem>
     </a>
-    <Stack direction='row' gap={2} justifyContent='center' mt='15px' mb='10px'>
+    <Stack direction='row' gap={2} justifyContent='center' mt='15px'>
       <a href={OFFICIAL_WEB} target="_blank" rel="noreferrer"><MenuIcon srcImage={HomeIcon} hoverImage={HomeHoverIcon} alt="home" /></a>
       <a href={TWITTER_URL} target="_blank" rel="noreferrer"><MenuIcon srcImage={TwitterIcon} hoverImage={TwitterHoverIcon} alt="twitter" /></a>
       <a href={DISCORD_URL} target="_blank" rel="noreferrer"><MenuIcon srcImage={DiscordIcon} hoverImage={DiscordHoverIcon} alt="discord" /></a>
@@ -99,7 +103,7 @@ const StyledMenuItem = styled(MenuItem)`
   line-height: 12px;
   color: #fff;
   margin-bottom: 10px;
-  padding: 0;
+  padding: 0 !important;
 `
 const HoverStack = styled(Stack)`
   width: 100%;

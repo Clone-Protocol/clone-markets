@@ -8,14 +8,12 @@ import { useSnackbar } from 'notistack'
 import { useSetAtom } from 'jotai'
 import { cloneClient } from '~/features/globalAtom'
 import withSuspense from '~/hocs/withSuspense'
-import { useRouter } from 'next/navigation'
 import { shortenAddress } from '~/utils/address'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getSolInBalance } from '~/utils/address';
 import { ON_USD } from '~/utils/constants';
 
-const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
-  const router = useRouter()
+const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
   const { publicKey, disconnect } = useWallet()
   const setCloneClient = useSetAtom(cloneClient)
@@ -29,7 +27,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
 
   useMemo(() => {
     const getBalance = async () => {
-      if (publicKey) {
+      if (publicKey && show) {
         try {
           const balance = await getSolInBalance(publicKey)
           setSolBalance(balance)
@@ -39,7 +37,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
       }
     }
     getBalance()
-  }, [publicKey])
+  }, [show, publicKey])
 
   const handleDisconnect = async () => {
     setCloneClient(null)
@@ -51,7 +49,7 @@ const WalletSelectBox = ({ onHide }: { onHide: () => void }) => {
     }, 1000)
   }
 
-  return balance ? (
+  return show ? (
     <WalletWrapper>
       <Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
         <Box lineHeight={1}>

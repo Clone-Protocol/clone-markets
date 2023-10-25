@@ -16,6 +16,8 @@ import dynamic from 'next/dynamic'
 import useFaucet from '~/hooks/useFaucet'
 import TokenFaucetDialog from './Account/TokenFaucetDialog'
 import { isMobile } from 'react-device-detect';
+import MoreMenu from './Common/MoreMenu'
+import WalletSelectBox from './Common/WalletSelectBox'
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -85,9 +87,6 @@ const RightMenu: React.FC = () => {
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	useFaucet()
 
-	const MoreMenu = dynamic(() => import('./Common/MoreMenu'))
-	const WalletSelectBox = dynamic(() => import('./Common/WalletSelectBox'))
-
 	const handleWalletClick = () => {
 		try {
 			if (!connected) {
@@ -134,7 +133,7 @@ const RightMenu: React.FC = () => {
 							<Typography variant='p'>{publicKey && shortenAddress(publicKey.toString())}</Typography>
 						</ConnectedButton>
 					}
-					{showWalletSelectPopup && <WalletSelectBox onHide={() => setShowWalletSelectPopup(false)} />}
+					<WalletSelectBox show={showWalletSelectPopup} onHide={() => setShowWalletSelectPopup(false)} />
 				</Box>
 			</Box>
 

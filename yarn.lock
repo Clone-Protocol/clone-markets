@@ -2743,9 +2743,9 @@ clipboardy@^3.0.0:
     execa "^5.1.1"
     is-wsl "^2.2.0"
 
-"clone-protocol-sdk@git+https://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:x-oauth-basic@github.com/Clone-Protocol/clone-protocol.git#develop":
+"clone-protocol-sdk@git+https://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:x-oauth-basic@github.com/Clone-Protocol/clone-protocol.git#fix/decimal-rounding-ild":
   version "0.1.0"
-  resolved "git+https://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:x-oauth-basic@github.com/Clone-Protocol/clone-protocol.git#b95579311c25b37f3e739757960951b4a9eeffdb"
+  resolved "git+https://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:x-oauth-basic@github.com/Clone-Protocol/clone-protocol.git#1c2bcde2ac78c0d6bfbe1dbe545820da75e7867a"
   dependencies:
     "@coral-xyz/anchor" "^0.27.0"
     "@metaplex-foundation/solita" "^0.19.4"

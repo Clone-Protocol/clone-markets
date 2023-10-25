@@ -68,7 +68,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         cursor: 'pointer'
       },
       '& .MuiDataGrid-row:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.05)'
+        backgroundColor: 'rgba(196, 181, 253, 0.1)'
       },
       '& .MuiDataGrid-cell': {
         borderBottom: '0',
@@ -108,7 +108,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
     disableExtendRowFullWidth
     hideFooter
     headerHeight={40}
-    rowHeight={52}
+    rowHeight={72}
     rowCount={20}
     onRowClick={onRowClick}
     columns={headers}
