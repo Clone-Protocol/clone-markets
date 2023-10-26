@@ -75,7 +75,7 @@ export const fetchMarketDetail = async ({
 export const fetchMarketDetailDefault = (): MarketDetail => {
   return {
     tickerName: "Clone Euro",
-    tickerSymbol: "onEUR",
+    tickerSymbol: "clEUR",
     pythSymbol: "FX.EUR/USD",
     tickerIcon: "",
     price: 160.51,
@@ -89,7 +89,7 @@ export const fetchMarketDetailDefault = (): MarketDetail => {
     avgLiquidity: 50700000,
     avgPremium: 0.013,
     detailOverview:
-      "iSOL, appreviated from iSolana, is a synthetic asset of Solana on Clone. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.",
+      "clSOL, appreviated from iSolana, is a synthetic asset of Solana on Clone. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.",
     collateral: null,
   }
 }

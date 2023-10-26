@@ -117,7 +117,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 										</Box>
 									</Box>
 									<Box width='160px'>
-										<Box><Typography variant='p' color='#8988a3'>onAsset Portfolio %</Typography></Box>
+										<Box><Typography variant='p' color='#8988a3'>clAsset Portfolio %</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{myData.portfolioValue.toFixed(2)}%</Typography>
 										</Box>

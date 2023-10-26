@@ -36,14 +36,15 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
   return (
     <>
       <TopBox>
-        <Box><Typography variant='p' color='#8988a3'>onAsset</Typography></Box>
+        <Box><Typography variant='p' color='#8988a3'>clAsset</Typography></Box>
         <Box><Typography variant='h3' fontWeight={500}>${totalAsset.toFixed(2)}</Typography></Box>
       </TopBox>
       <Grid
         headers={columns}
         rows={assets || []}
-        minHeight={10}
+        minHeight={110}
         isBorderTopRadius={false}
+        noAutoHeight={!publicKey || assets.length === 0}
         customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
         onRowClick={handleRowClick}
       />

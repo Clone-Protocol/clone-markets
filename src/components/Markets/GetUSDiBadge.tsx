@@ -19,9 +19,9 @@ const GetUSDiBadge: React.FC = () => {
 const StyledStack = styled(Stack)`
   width: 100%;
   height: 74px;
-  color: ${(props) => props.theme.basis.lightSlateBlue};
+  color: ${(props) => props.theme.basis.melrose};
   border-radius: 10px;
-  background-color: rgba(170, 63, 255, 0.12);
+  background-color: rgba(196, 181, 253, 0.1);
 `
 
 const GetButton = styled(Button)`
@@ -30,28 +30,28 @@ const GetButton = styled(Button)`
   flex-grow: 0;
   padding: 8px 4px 8px 5px;
   border-radius: 100px;
-  color: #fff;
-  background-color: rgba(196, 181, 253, 0.1);
+  color: #000;
+  background-color: ${(props) => props.theme.basis.melrose};
 
   &:hover {
-		background-color: rgba(155, 121, 252, 0.15);
+		background-color: ${(props) => props.theme.basis.lightSlateBlue};
 
-		&::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			border-radius: 100px;
-			border: 1px solid transparent;
-			background: ${(props) => props.theme.gradients.light} border-box;
-			-webkit-mask:
-				linear-gradient(#fff 0 0) padding-box, 
-				linear-gradient(#fff 0 0);
-			-webkit-mask-composite: destination-out;
-			mask-composite: exclude;
-		}
+		// &::before {
+		// 	content: "";
+		// 	position: absolute;
+		// 	top: 0;
+		// 	left: 0;
+		// 	right: 0;
+		// 	bottom: 0;
+		// 	border-radius: 100px;
+		// 	border: 1px solid transparent;
+		// 	background: ${(props) => props.theme.gradients.light} border-box;
+		// 	-webkit-mask:
+		// 		linear-gradient(#fff 0 0) padding-box, 
+		// 		linear-gradient(#fff 0 0);
+		// 	-webkit-mask-composite: destination-out;
+		// 	mask-composite: exclude;
+		// }
 	}
 `
 

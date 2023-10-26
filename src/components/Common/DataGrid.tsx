@@ -9,10 +9,11 @@ interface GridProps {
   customNoResultsOverlay: () => JSX.Element,
   isBorderTopRadius?: boolean,
   minHeight?: number,
+  noAutoHeight?: boolean,
   onRowClick?: GridEventListener<'rowClick'>
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, onRowClick }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, noAutoHeight = false, onRowClick }) => (
   <DataGrid
     sx={{
       width: '100%',
@@ -29,6 +30,11 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         borderTopLeftRadius: isBorderTopRadius ? '20px' : '0',
         borderTopRightRadius: isBorderTopRadius ? '20px' : '0',
       },
+      '& .right--cell': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        paddingRight: '40px'
+      },
       '& .last--cell': {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -39,6 +45,13 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         fontSize: '12px',
         lineHeight: 1.33,
         marginLeft: '10px'
+      },
+      '& .right--header': {
+        '& .MuiDataGrid-columnHeaderTitleContainer': {
+          display: 'flex',
+          justifyContent: 'flex-end',
+          paddingRight: '20px'
+        }
       },
       '& .balance--header': {
         '& .MuiDataGrid-columnHeaderTitleContainer': {
@@ -80,10 +93,6 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
       '& .MuiDataGrid-cell:focus-within': {
         outline: 'none !important'
       },
-      '& .MuiDataGrid-withBorder': {
-        // borderRight: '1px solid rgba(195, 153, 248, 0.25)',
-        // marginLeft: '-5px'
-      },
       '.border-warning--row': {
         borderLeft: '1px solid #ff8e4f',
         borderRight: '1px solid #ff8e4f',
@@ -99,7 +108,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
     getRowClassName={(params) => {
       return 'super-app-theme--row'
     }}
-    autoHeight
+    autoHeight={!noAutoHeight}
     disableColumnFilter
     disableSelectionOnClick
     disableColumnSelector
@@ -118,7 +127,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
 
 export const CustomNoRowsOverlay = (msg: string) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
       <Typography variant='p_lg' color='#8988a3'>{msg}</Typography>
     </Box>
   )
@@ -126,8 +135,8 @@ export const CustomNoRowsOverlay = (msg: string) => {
 
 export const CustomNoOnAssetOverlay = () => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px', zIndex: '999', position: 'relative' }}>
-      <Typography variant='p_lg'>No onAsset to display. </Typography>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px', zIndex: '999', position: 'relative' }}>
+      <Typography variant='p_lg'>No clAsset to display. </Typography>
       <Link href="/trade/euro"><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Start Trading!</Typography></Link>
     </Box>
   )

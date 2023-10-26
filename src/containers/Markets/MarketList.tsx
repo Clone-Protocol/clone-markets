@@ -59,7 +59,7 @@ const MarketList = () => {
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
 			}}>
 
-			<Box mb='9px'><Typography variant='p_xlg'>All onAssets on Clone Protocol</Typography></Box>
+			<Box mb='9px'><Typography variant='p_xlg'>All clAssets on Clone Protocol</Typography></Box>
 			<Grid
 				headers={columns}
 				rows={assets || []}
@@ -76,7 +76,7 @@ let columns: GridColDef[] = [
 		field: 'iAsset',
 		headerClassName: 'super-app-theme--header',
 		cellClassName: 'super-app-theme--cell',
-		headerName: 'onAsset',
+		headerName: 'clAsset',
 		flex: 5,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
@@ -86,8 +86,8 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: 'price',
-		headerClassName: 'super-app-theme--header',
-		cellClassName: 'super-app-theme--cell',
+		headerClassName: 'super-app-theme--header right--header',
+		cellClassName: 'super-app-theme--cell right--cell',
 		headerName: `Price (${ON_USD})`,
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -96,8 +96,8 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: '24hChange',
-		headerClassName: 'super-app-theme--header',
-		cellClassName: 'super-app-theme--cell',
+		headerClassName: 'super-app-theme--header right--header',
+		cellClassName: 'super-app-theme--cell right--cell',
 		headerName: '24h Change',
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -114,8 +114,8 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: 'liquidity',
-		headerClassName: 'super-app-theme--header',
-		cellClassName: 'super-app-theme--cell',
+		headerClassName: 'super-app-theme--header right--header',
+		cellClassName: 'super-app-theme--cell right--cell',
 		headerName: 'Liquidity',
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
@@ -124,12 +124,12 @@ let columns: GridColDef[] = [
 	},
 	{
 		field: '24hVolume',
-		headerClassName: 'last--header',
-		cellClassName: 'last--cell',
+		headerClassName: 'super-app-theme--header right--header',
+		cellClassName: 'super-app-theme--cell right--cell',
 		headerName: 'Volume',
 		flex: 3,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Typography variant='p_xlg' mr="20px">{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
+			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
 		},
 	},
 ]

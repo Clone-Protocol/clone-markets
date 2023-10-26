@@ -27,7 +27,7 @@ const getTxnURL = (txHash: string) => {
 
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
   const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
-  return (<Stack direction='row' alignItems='center' gap={2}>
+  return (<Stack direction='row' alignItems='center' gap={1}>
     <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} width={65} height={65} alt='icStatus' /></Box>
     <Box lineHeight={1.3}>
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
@@ -124,7 +124,7 @@ const BoxWrapper = styled(Box)`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  padding: 12px 17px;
+  padding: 12px;
   background: #080e1c;
 `
 const CloseButton = styled(Box)`

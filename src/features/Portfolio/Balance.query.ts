@@ -10,6 +10,8 @@ import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndica
 export const fetchBalance = async ({ program, userPubKey, index }: { program: CloneClient, userPubKey: PublicKey | null, index: number }) => {
 	if (!userPubKey) return null
 
+	console.log('fetchBalance')
+
 	let onusdVal = 0.0
 	let onassetVal = 0.0
 	const devnetConversionFactor = Math.pow(10, -program.clone.collateral.scale)

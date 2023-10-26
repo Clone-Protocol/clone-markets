@@ -160,7 +160,6 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       if (data) {
         setLoading(false)
         console.log('data', data)
-        refetch()
         initData()
       }
     } catch (err) {
@@ -331,20 +330,21 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               onTickerClick={onShowSearchAsset}
             />
 
-            <Box my='15px'>
+            <Box mt='15px' mb='5px'>
               {!publicKey ? <ConnectButton onClick={() => setOpen(true)}>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
-                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(66, 0, 255, 0) 0%, #ff6cdf 100% )' } : {}}>
+                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { border: '1px solid #c4b5fd' } : {}}>
                   {!loading ?
-                    <Typography variant='h4'>Swap</Typography> :
+                    <Typography variant='p_xlg'>Swap</Typography>
+                    :
                     <Stack direction='row' alignItems='center' gap={2}>
-                      <CircularProgress sx={{ color: '#ff6cdf' }} size={16} thickness={3} />
-                      <Typography variant='h4' color='#fff'>Swapping</Typography>
+                      <CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} />
+                      <Typography variant='p_xlg' color='#fff'>Swapping</Typography>
                     </Stack>}
                 </ActionButton> :
                   <DisableButton disabled={true}>
-                    <Typography variant='h4'>{invalidMsg()}</Typography>
+                    <Typography variant='p_xlg'>{invalidMsg()}</Typography>
                   </DisableButton>
               }
             </Box>
@@ -352,7 +352,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
               <RateLoadingIndicator restartTimer={restartTimer} />
               <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
-              <Box mx='10px'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
+              <Box mx='10px' display='flex' alignItems='center'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}
 
@@ -374,52 +374,21 @@ const ToolButton = styled(IconButton)`
   margin-left: 6px;
   align-content: center;
   &:hover {
-  	background-color: rgba(196, 181, 253, 0.1);
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 100px;
-      border: 1px solid transparent;
-      background: ${(props) => props.theme.gradients.light} border-box;
-      -webkit-mask:
-        linear-gradient(#fff 0 0) padding-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: destination-out;
-      mask-composite: exclude;
-    }
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+    border: solid 1px ${(props) => props.theme.basis.melrose};
   }
 `
 const SwapButton = styled(IconButton)`
-  margin-top: 23px;
-  margin-bottom: 13px;
+  width: 35px;
+  height: 35px;
+  margin-top: 13px;
+  margin-bottom: 6px;
   padding: 8px;
   border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.05);
   &:hover {
-    background-color: rgba(196, 181, 253, 0.1);
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 999px;
-      padding: 8px;
-      border: 1px solid transparent;
-      background: ${(props) => props.theme.gradients.light} border-box;
-      -webkit-mask:
-        linear-gradient(#fff 0 0) padding-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: destination-out;
-      mask-composite: exclude;
-    }
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+    border: solid 1px ${(props) => props.theme.basis.melrose};
   }
 `
 const ConnectButton = styled(Button)`
@@ -437,31 +406,12 @@ const ConnectButton = styled(Button)`
 const ActionButton = styled(Button)`
 	width: 100%;
   height: 52px;
-	color: #fff;
+	color: #000;
 	margin-bottom: 10px;
   border-radius: 10px;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    background: ${(props) => props.theme.gradients.light} border-box;
-    opacity: 0.4;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) padding-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-  }
+  background: ${(props) => props.theme.basis.melrose};
   &:hover {
-    background-color: transparent;
-    &::before {
-      opacity: 1;
-    }
+    background: ${(props) => props.theme.basis.lightSlateBlue};
   }
   &:disabled {
     opacity: 0.4;
@@ -479,7 +429,7 @@ const DisableButton = styled(Button)`
     color: ${(props) => props.theme.basis.textRaven};
   } 
 `
-const TitleOrderDetails = styled('div')`
+const TitleOrderDetails = styled(Box)`
   cursor: pointer; 
   text-align: left; 
   display: flex;

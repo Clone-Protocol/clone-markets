@@ -30,11 +30,9 @@ export type LineChartProps = {
   minY: number
 } & React.HTMLAttributes<HTMLDivElement>
 
-
-
 const LineChartAlt: React.FC<LineChartProps> = ({
   data,
-  color = '#ff0ed8',
+  color = 'rgba(166, 153, 251)',
   value,
   label,
   setValue,
@@ -46,7 +44,6 @@ const LineChartAlt: React.FC<LineChartProps> = ({
   minHeight = 307,
   maxY,
   minY,
-  ...rest
 }) => {
   const parsedValue = value
 
@@ -90,8 +87,8 @@ const LineChartAlt: React.FC<LineChartProps> = ({
         >
           <defs>
             <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={darken(0.36, color)} stopOpacity={0.5} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
+              <stop offset="15%" stopColor={color} stopOpacity={0.29} />
+              <stop offset="100%" stopColor={darken(0.29, color)} stopOpacity={0.5} />
             </linearGradient>
           </defs>
           {/* <XAxis
@@ -124,7 +121,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
           //   if (setLabel && label !== formattedTime) setLabel(formattedTime)
           // }}
           />
-          <Area dataKey="value" type="monotone" stroke="#ff0ed8" fill="url(#gradient)" strokeWidth={1} />
+          <Area dataKey="value" type="monotone" stroke="#c4b5fd" fill="url(#gradient)" strokeWidth={1} />
         </AreaChart>
       </ResponsiveContainer>
     </Wrapper>

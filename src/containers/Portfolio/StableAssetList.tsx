@@ -46,7 +46,8 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				headers={columns}
 				rows={assets || []}
 				isBorderTopRadius={false}
-				minHeight={10}
+				minHeight={110}
+				noAutoHeight={!publicKey}
 				customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
 			/>
 		</>
@@ -57,7 +58,7 @@ let columns: GridColDef[] = [
 	{
 		field: 'iAssets',
 		headerName: 'Stable Coin',
-		flex: 2,
+		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -67,7 +68,9 @@ let columns: GridColDef[] = [
 	{
 		field: 'myBalance',
 		headerName: 'Total Balance',
-		flex: 2,
+		headerClassName: 'right--header',
+		cellClassName: 'right--cell',
+		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Stack width='78px' textAlign='right'>
@@ -81,7 +84,9 @@ let columns: GridColDef[] = [
 	{
 		field: 'price',
 		headerName: 'Price',
-		flex: 2,
+		headerClassName: 'right--header',
+		cellClassName: 'right--cell',
+		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 			return (
 				<Stack>
@@ -95,11 +100,13 @@ let columns: GridColDef[] = [
 	{
 		field: '',
 		headerName: '',
+		headerClassName: 'right--header',
+		cellClassName: 'right--cell',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
 
 			return (
-				<GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get more {ON_USD}</Typography></GetUSDButton>
+				<GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get {ON_USD}</Typography></GetUSDButton>
 			)
 		},
 	},
@@ -119,32 +126,16 @@ const TopBox = styled(Box)`
 `
 
 const GetUSDButton = styled(Button)`
-	width: 120px;
-	height: 29px;
+	width: 108px;
+	height: 28px;
 	border-radius: 100px;
-	border: solid 1px rgba(104, 0, 237, 0.5);
+	border: solid 1px ${(props) => props.theme.basis.melrose};
 	background-color: rgba(155, 121, 252, 0.15);
 	color: #fff;
 	line-height: 29px;
 	&:hover {
 		background-color: rgba(155, 121, 252, 0.15);
-
-		&::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			border-radius: 100px;
-			border: 1px solid transparent;
-			background: ${(props) => props.theme.gradients.light} border-box;
-			-webkit-mask:
-				linear-gradient(#fff 0 0) padding-box, 
-				linear-gradient(#fff 0 0);
-			-webkit-mask-composite: destination-out;
-			mask-composite: exclude;
-		}
+		border-color: ${(props) => props.theme.basis.lightSlateBlue};
 	}
 `
 

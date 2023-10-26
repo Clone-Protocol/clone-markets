@@ -3,6 +3,7 @@ import { Box, Typography, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT } from '~/data/localstorage'
+import { CloseButton } from './CommonButtons'
 
 const InitEnterScreen = ({ onClose }: { onClose: () => void }) => {
   const [_, setIsCompleteInit] = useLocalStorage(IS_COMPLETE_INIT, false)
@@ -15,14 +16,16 @@ const InitEnterScreen = ({ onClose }: { onClose: () => void }) => {
   return (
     <BackScreen>
       <BoxWrapper>
-        <Box><Typography variant='h1'>Before you enter...</Typography></Box>
-        <Box my='30px' lineHeight={1.4}>
-          <Typography variant='p_xlg'>
-            Welcome to Clone Markets (Beta) on Solana Devnet. As the word {`"Beta"`} in the name suggests, you may find minor bugs in the interface. If you do, please report the issue to us on Discord or write an email to us at team@clone.so and we will address them ASAP. Thank you and congrats for being an early bird in Clone Ecosystem!
+        <TextHead>Welcome!</TextHead>
+        <Box my='20px' lineHeight={0.9}>
+          <Typography variant='p_xlg' lineHeight={1.5}>
+            Welcome to Clone Liquidity on Solana Devnet. Devnet is the perfect place to explore Clone and Solana without any cost!
           </Typography>
         </Box>
-        <Box display='flex' justifyContent='center'>
-          <EnterButton onClick={() => close()}><Typography variant='h4' color='#fff'>Enter App</Typography></EnterButton>
+        <EnterButton onClick={() => close()}><Typography variant='p_xlg'>Enter Clone Devnet</Typography></EnterButton>
+
+        <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
+          <CloseButton handleClose={onClose} />
         </Box>
       </BoxWrapper>
     </BackScreen>
@@ -39,44 +42,30 @@ const BackScreen = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  -webkit-backdrop-filter: blur(72px);
-  backdrop-filter: blur(72px);
-  background-color: rgba(11, 7, 15, 0.32);
   z-index: 99999;
 `
 const BoxWrapper = styled(Box)`
-  width: 680px;
-  color: #fff;
+  position: relative;
+  width: 607px;
+  color: #fff; 
+  text-align: left;
+  background: #000916;
+  padding: 28px 53px;
+`
+const TextHead = styled(Box)`
+  font-size: 36px;
+  font-weight: 600;
+  color: ${(props) => props.theme.basis.melrose};
 `
 const EnterButton = styled(Button)`
-  width: 360px;
+  width: 100%;
   height: 52px;
+  color: #000;
   margin-top: 10px;
-  color: #fff;
-  
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 10px;
-    opacity: 1;
-    border: 1px solid transparent;
-    background: ${(props) => props.theme.gradients.light} border-box;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) padding-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-  }
-
+  border-radius: 10px;
+  background: ${(props) => props.theme.basis.melrose};
   &:hover {
-    background: transparent;
-    &::before {
-      opacity: 0.4;
-    }
+    background: ${(props) => props.theme.basis.lightSlateBlue};
   }
 `
 

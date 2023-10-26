@@ -19,7 +19,7 @@ const PortfolioBalance: React.FC = () => {
 			<Box>
 				<Box mb='43px'><Typography variant='p_xxlg' color='#c4b5fd'>My Portfolio Balance</Typography></Box>
 				<Box>
-					<Typography variant='h2'>${balance.toLocaleString()}</Typography>
+					<Typography fontSize={38}>${balance.toLocaleString()}</Typography>
 				</Box>
 			</Box>
 		</Box>

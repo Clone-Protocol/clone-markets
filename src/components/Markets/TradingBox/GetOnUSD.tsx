@@ -12,9 +12,9 @@ const GetOnUSD: React.FC = () => {
     <Wrapper>
       <Box display='flex' gap={1} alignItems='center'>
         <Image src={PrimaryIcon} width={19} alt='primary' />
-        <Box><Typography variant='p_lg' color='#9b79fc'>Need {ON_USD}?</Typography></Box>
+        <Box><Typography variant='p_lg' color='#c4b5fd'>Need {ON_USD}?</Typography></Box>
       </Box>
-      <Box lineHeight={1}><Typography variant='p' color='#8988a3'>Devnet USD is needed for you to trade on Devnet Clone Markets app.</Typography></Box>
+      <Box lineHeight={1} my='10px'><Typography variant='p' color='#8988a3'>Devnet USD is needed for you to trade on Devnet Clone Markets app.</Typography></Box>
       <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
     </Wrapper>
   )
@@ -26,9 +26,9 @@ const Wrapper = styled(Box)`
   width: 100%;
   height: 145px;
   text-align: left;
-  padding: 12px 24px;
+  padding: 12px 16px;
   border-radius: 15px;
-  background-color: rgba(155, 121, 252, 0.1)
+  background-color: rgba(255, 255, 255, 0.05);
 `
 
 const GetButton = styled(Button)`
@@ -37,28 +37,11 @@ const GetButton = styled(Button)`
   flex-grow: 0;
   padding: 8px 4px 8px 5px;
   border-radius: 100px;
-  color: #fff;
-  background-color: rgba(196, 181, 253, 0.1);
-  margin-top: 14px;
+  color: #000;
+  background-color: ${(props) => props.theme.basis.melrose};
+  margin-top: 5px;
   
   &:hover {
-		background-color: rgba(155, 121, 252, 0.15);
-
-		&::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			border-radius: 100px;
-			border: 1px solid transparent;
-			background: ${(props) => props.theme.gradients.light} border-box;
-			-webkit-mask:
-				linear-gradient(#fff 0 0) padding-box, 
-				linear-gradient(#fff 0 0);
-			-webkit-mask-composite: destination-out;
-			mask-composite: exclude;
-		}
+		background-color: ${(props) => props.theme.basis.lightSlateBlue};
 	}
 `

@@ -1,7 +1,7 @@
 'use client'
 import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
-import logoIcon from 'public/images/logo-markets.svg'
+import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
 import { Button, Toolbar, Container, Box, AppBar, Theme, useMediaQuery, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
@@ -53,8 +53,8 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={255} height={32} alt="clone" />
-						<Box><NaviMenu /></Box>
+						<Image src={logoIcon} width={121} height={25} alt="clone" />
+						<Box ml='60px'><NaviMenu /></Box>
 						<RightMenu />
 
 						{/* 
@@ -118,7 +118,7 @@ const RightMenu: React.FC = () => {
 				<HeaderButton onClick={() => setOpenTokenFaucet(true)}>
 					<Typography variant='p'>Devnet Faucet</Typography>
 				</HeaderButton>
-				<HeaderButton sx={{ fontSize: '15px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
+				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
 					{!connected ?
@@ -184,47 +184,61 @@ const NavPlaceholder = styled('div')`
 const HeaderButton = styled(Button)`
 	padding: 8px;
 	margin-left: 16px;
-	color: ${(props) => props.theme.basis.ghost};
+	color: #c5c7d9;
 	height: 42px;
 	border-radius: 10px;
 	&:hover {
 		border-radius: 10px;
-  	background-color: rgba(196, 181, 253, 0.1);
+  	background-color: rgba(255, 255, 255, 0.05);
 	}
 `
 const ConnectButton = styled(Button)`
 	padding: 9px;
-	margin-left: 16px;
+	margin-left: 8px;
 	color: #fff;
-	width: 142px;
+	width: 140px;
 	height: 42px;
 	border-radius: 10px;
-	box-shadow: 0 0 10px 0 ${(props) => props.theme.basis.hansPurple};
-	background: linear-gradient(to bottom, ${(props) => props.theme.basis.royalPurple}, ${(props) => props.theme.basis.royalPurple}), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed);
-	&::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    background: ${(props) => props.theme.gradients.light} border-box;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) padding-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-  }
+	box-shadow: 0 0 10px 0 #6d5887;
+	border: 1px solid ${(props) => props.theme.basis.melrose};
 	&:hover {
-		&::before {
-			background: linear-gradient(to right, #8e1674 0%, #642f99 16%, #905a99 34%, #999 50%, #995a88 68%, #512f99 83%, #2e168e) border-box;
-		}
+		background-color: transparent;
+		border-color: ${(props) => props.theme.basis.lightSlateBlue};
   }
 `
+// const ConnectButtonOld = styled(Button)`
+// 	padding: 9px;
+// 	margin-left: 8px;
+// 	color: #fff;
+// 	width: 142px;
+// 	height: 42px;
+// 	border-radius: 10px;
+// 	box-shadow: 0 0 10px 0 #6d5887;
+// 	background: linear-gradient(to bottom, ${(props) => props.theme.basis.royalPurple}, ${(props) => props.theme.basis.royalPurple}), linear-gradient(to right, #ed25c1 0%, #a74fff 16%, #f096ff 34%, #fff 50%, #ff96e2 68%, #874fff 83%, #4d25ed, #4d25ed);
+// 	&::before {
+//     content: "";
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     border-radius: 10px;
+//     border: 1px solid transparent;
+//     background: ${(props) => props.theme.gradients.light} border-box;
+//     -webkit-mask:
+//       linear-gradient(#fff 0 0) padding-box, 
+//       linear-gradient(#fff 0 0);
+//     -webkit-mask-composite: destination-out;
+//     mask-composite: exclude;
+//   }
+// 	&:hover {
+// 		&::before {
+// 			background: linear-gradient(to right, #8e1674 0%, #642f99 16%, #905a99 34%, #999 50%, #995a88 68%, #512f99 83%, #2e168e) border-box;
+// 		}
+//   }
+// `
 const ConnectedButton = styled(Button)`
-	width: 142px;
+	width: 140px;
 	height: 42px;
 	padding: 9px;
 	margin-left: 16px;

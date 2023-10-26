@@ -34,6 +34,7 @@ const Home = () => {
 export const StyledSection = styled('section')`
 	max-width: 1085px;
 	margin: 0 auto;
+  padding-bottom: 20px;
 	${(props) => props.theme.breakpoints.up('md')} {
 		padding-top: 100px;
 	}
@@ -47,7 +48,7 @@ const Divider = styled('div')`
 	height: 1px;
 	margin-top: 30px;
 	margin-bottom: 30px;
-	background-color: rgba(155, 121, 252, 0.5);
+	background-color: ${(props) => props.theme.basis.melrose};
 `
 
 export default Home

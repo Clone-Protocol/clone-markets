@@ -77,7 +77,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 					</Box>
 				}
 			</Box>
-		</StyledPaper >
+		</StyledPaper>
 	)
 }
 
@@ -93,5 +93,6 @@ const StyledPaper = styled(Paper)`
 const ColorIndicator = styled(Box)`
 	width: 10px;
 	height: 10px;
+	margin-top: 2px;
 	border-radius: 120px;
 `

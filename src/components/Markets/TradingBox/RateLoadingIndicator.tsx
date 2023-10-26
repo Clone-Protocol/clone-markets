@@ -53,7 +53,7 @@ const RateLoadingIndicator = ({ restartTimer }: { restartTimer: boolean }) => {
           thickness={2}
           value={100}
         />
-        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#ff6cdf', position: 'absolute', left: 0 }} size={12}
+        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#9b79fc', position: 'absolute', left: 0 }} size={12}
           thickness={5} value={progress} />
       </Box>
     </Wrapper>
@@ -72,7 +72,7 @@ const Wrapper = styled(Box)`
   display: flex;
   align-items: center;
   margin-right: 6px;
-  margin-top: 6px;
+  margin-top: 8px;
   width: 12px;
   height: 12px;
   // -webkit-filter: blur(13px);
