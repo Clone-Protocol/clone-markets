@@ -6,6 +6,7 @@ import { StyledTabs, StyledTab } from './OrderSettingSlippage'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 import { useEffect, useState } from 'react'
 import { SLIPPAGE } from '~/data/localstorage'
+import { CloseButton } from '~/components/Common/CommonButtons'
 
 const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
   const [customInputValue, setCustomInputValue] = useState('')
@@ -63,14 +64,18 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
               </StyledTabs>
 
               <FormControl variant="standard" sx={{ width: '132px' }}>
-                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #fff' } : {}}>
+                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #c4b5fd' } : {}}>
                   <CustomSlippagePlaceholder>
                     <Typography variant='p_lg'>Custom</Typography>
                   </CustomSlippagePlaceholder>
-                  <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: '#adadad' }} value={customInputValue} onChange={onChangeCustom} />
+                  <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: 'rgba(137, 136, 163, 0.8)' }} value={customInputValue} onChange={onChangeCustom} />
                 </FormStack>
               </FormControl>
             </SlippageStack>
+
+            <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
+              <CloseButton handleClose={onSave} />
+            </Box>
           </BoxWrapper>
         </DialogContent>
       </Dialog>

@@ -6,13 +6,14 @@ import ConnectWalletIcon from 'public/images/icons-connect-wallet.svg'
 import WalletIcon from 'public/images/wallet-icon.svg'
 import ArrowOutwardIcon from 'public/images/arrow-outward-icon.svg'
 import infoOutlineIcon from 'public/images/info-outline.svg'
+import { CloseButton } from '../Common/CommonButtons'
 
 const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onHide }: { open: boolean, isConnect: boolean, connectWallet: () => void, onGetUsdiClick: () => void, onHide: () => void }) => {
 
   return (
     <>
       <Dialog open={open} onClose={onHide} TransitionComponent={FadeTransition}>
-        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px' }}>
+        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', maxWidth: '375px', padding: '15px' }}>
           <BoxWrapper>
             <Box mb="21px"><Typography variant='h3' fontWeight={500}>Devnet Token Faucet</Typography></Box>
             <a href="https://solfaucet.com/" target="_blank" rel="noreferrer">
@@ -26,7 +27,7 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
                 </Stack>
               </LinkBox>
             </a>
-            <LinkBox mt="11px" mb="17px" onClick={onGetUsdiClick}>
+            <LinkBox my="12px" onClick={onGetUsdiClick}>
               <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Stack direction='row' spacing={2} alignItems='center'>
                   <Image src={'/images/assets/on-usd.svg'} width={27} height={27} alt='usd' />
@@ -48,7 +49,7 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
                 </Box>
               </Stack>
             </LinkBox>
-            <InfoBox mb="8px">
+            <InfoBox mb="12px">
               <Image src={infoOutlineIcon} alt="info" width={18} />
               <Typography variant='p' ml='12px' maxWidth='278px'>
                 You need Devnet SOL in your wallet before you can claim Devnet USD.
@@ -62,6 +63,10 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
                 </Typography>
               </InfoSelectableBox>
             </a>
+
+            <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
+              <CloseButton handleClose={onHide} />
+            </Box>
           </BoxWrapper>
         </DialogContent>
       </Dialog>
@@ -70,9 +75,8 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
 }
 
 const BoxWrapper = styled(Box)`
-  padding: 1px; 
   color: #fff;
-  width: 347px;
+  width: 100%;
   overflow-x: hidden;
 `
 const LinkBox = styled(Box)`
@@ -87,7 +91,7 @@ const LinkBox = styled(Box)`
   color: #fff;
   cursor: pointer;
   &:hover {
-    border-color: #fff;
+    border-color: ${(props) => props.theme.basis.melrose};
   }
 `
 const InfoBox = styled(Box)`

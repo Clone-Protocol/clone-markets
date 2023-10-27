@@ -4,6 +4,7 @@ import { FadeTransition } from '~/components/Common/Dialog'
 import { useCallback, useState } from 'react'
 import SearchInput from './SearchInput'
 import GridAssets from './GridAssets'
+import { CloseButton } from '~/components/Common/CommonButtons'
 
 const SearchAssetDialog = ({ open, onChooseAsset, onHide }: { open: boolean, onChooseAsset: (id: number) => void, onHide: () => void }) => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -28,6 +29,10 @@ const SearchAssetDialog = ({ open, onChooseAsset, onHide }: { open: boolean, onC
             </Box>
             <StyledDivider />
             <GridAssets onChoose={onChooseAsset} searchTerm={searchTerm} />
+
+            <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
+              <CloseButton handleClose={onHide} />
+            </Box>
           </BoxWrapper>
         </DialogContent>
       </Dialog>

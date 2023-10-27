@@ -361,9 +361,9 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                 <GetOnUSD />
               </Box>
             }
-          </Box >
-        </Box >
-      </div >
+          </Box>
+        </Box>
+      </div>
     </>
   )
 }
