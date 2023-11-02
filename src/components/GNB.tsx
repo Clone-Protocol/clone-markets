@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
-import { Button, Toolbar, Container, Box, AppBar, Theme, useMediaQuery, Typography } from '@mui/material'
+import { Button, Toolbar, Container, Box, AppBar, Theme, useMediaQuery, Typography, IconButton } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -23,18 +23,18 @@ const GNB: React.FC = () => {
 	// const router = useRouter()
 	// const { pathname } = router
 	// const [path, setPath] = useState<string>('/')
-	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
+	const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	// const { scrolled } = useScroll()
 
-	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
+	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
 	// }, [pathname])
 
-	// const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
+	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 	// useEffect(() => {
 	// 	const path = GNB_ROUTES.find((route) => firstPathname === route.path)?.path
 	// 	if (path) setPath(path)
@@ -54,22 +54,21 @@ const GNB: React.FC = () => {
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 						<Image src={logoIcon} width={121} height={25} alt="clone" />
-						<Box ml='60px'><NaviMenu /></Box>
-						<RightMenu />
-
-						{/* 
-						<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}></Box>
-						<Box sx={{ flexGrow: 0, display: { xs: 'none', sm: 'inherit' } }}>
+						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
+							<NaviMenu />
+						</Box>
+						<Box sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<RightMenu />
 						</Box>
+
 						<Box sx={{ marginLeft: 'auto', display: { xs: 'flex', sm: 'none' } }}>
 							<IconButton sx={{ color: 'white' }} onClick={handleMobileNavBtn}>
-								{mobileNavToggle ? <CancelIcon color="info" /> : <MenuIcon />}
+								{/* {mobileNavToggle ? <CancelIcon color="info" /> : <MenuIcon />} */}
 							</IconButton>
-						</Box> */}
+						</Box>
 					</Toolbar>
 				</Container>
-				<MobileWarningDialog open={isMobile || isMobileOnSize} handleClose={() => { return null }} />
+				{/* <MobileWarningDialog open={isMobile || isMobileOnSize} handleClose={() => { return null }} /> */}
 			</StyledAppBar>
 		</>
 	)
