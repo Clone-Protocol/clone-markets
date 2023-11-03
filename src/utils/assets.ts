@@ -1,5 +1,5 @@
-import { CLONE_TOKEN_SCALE, CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
-import { StatsData, fetchStatsData as netlifyFetchStatsData, fetchOHLCV } from "./fetch_netlify";
+import { CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
+import { StatsData, fetchStatsData as netlifyFetchStatsData } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
 import { Connection, PublicKey } from "@solana/web3.js"
@@ -73,65 +73,14 @@ export type AggregatedStats = {
   previousLiquidity: number
 }
 
-type OHLCVResponse = {
-  time_interval: string,
-  pool_index: string,
-  open: string,
-  high: string,
-  low: string,
-  close: string,
-  volume: string,
-  trading_fees: string
-}
-
-
-export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour' | 'day') => {
-  const requestResult = await await fetchOHLCV(interval, 'month', poolIndex)
-  const now = new Date()
-  const lookback30Day = new Date(now.getTime() - 30 * 86400 * 1000)
-
-  const dates = generateDates(lookback30Day, interval)
-  const prices = []
-
-  let resultIndex = 0
-  let datesIndex = 0;
-
-  while (datesIndex < dates.length) {
-    const result = requestResult[resultIndex]
-    const date = dates[datesIndex]
-
-    const resultDate = new Date(result.time_interval)
-
-    const price = (() => {
-      if (date < resultDate) {
-        //Use open
-        return Number(result.open)
-      } else {
-        resultIndex = Math.min(requestResult.length - 1, resultIndex + 1)
-        return Number(result.close)
-      }
-    })()
-    prices.push({ time: date.toUTCString(), value: price })
-    datesIndex++
-  }
-
-  return prices
-}
-
 export const fetch24hourVolume = async () => {
 
-  const data = await fetchOHLCV('hour', 'week')
+  const data = await fetchStatsData('day', 'day')
 
   const result: Map<number, number> = new Map()
-  const now = new Date()
-  const isWithin24hrs = (date: Date) => {
-    return (date.getTime() >= (now.getTime() - 86400000))
-  }
+
   const conversion = Math.pow(10, -7)
   data.forEach((response) => {
-    if (!isWithin24hrs(new Date(response.time_interval))) {
-      return;
-    }
     const poolIndex = Number(response.pool_index)
     result.set(poolIndex, (result.get(poolIndex) ?? 0) + Number(response.volume) * conversion)
   })
