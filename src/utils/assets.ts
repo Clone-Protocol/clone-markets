@@ -127,7 +127,7 @@ export const fetch24hourVolume = async () => {
   const isWithin24hrs = (date: Date) => {
     return (date.getTime() >= (now.getTime() - 86400000))
   }
-  const conversion = Math.pow(10, -CLONE_TOKEN_SCALE)
+  const conversion = Math.pow(10, -7)
   data.forEach((response) => {
     if (!isWithin24hrs(new Date(response.time_interval))) {
       return;
