@@ -122,16 +122,16 @@ export const assetMapping = (index: number) => {
     switch (index) {
         case Asset.Euro:
             tickerName = 'Clone Euro'
-            tickerSymbol = 'onEUR'
+            tickerSymbol = 'clEUR'
             tickerIcon = '/images/assets/on-euro.svg'
             ticker = 'euro'
             assetType = AssetType.Fx
             pythSymbol = 'FX.EUR/USD'
-            supabaseSymbol = 'EURUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Gold:
             tickerName = 'Clone Gold'
-            tickerSymbol = 'onGOLD'
+            tickerSymbol = 'clGOLD'
             tickerIcon = '/images/assets/on-gold.svg'
             ticker = 'gold'
             assetType = AssetType.Commodities
@@ -140,75 +140,75 @@ export const assetMapping = (index: number) => {
             break
         case Asset.Solana:
             tickerName = 'Clone Solana'
-            tickerSymbol = 'onSOL'
+            tickerSymbol = 'clSOL'
             tickerIcon = '/images/assets/on-sol.svg'
             ticker = 'solana'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.SOL/USD'
-            supabaseSymbol = 'SOLUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Ethereum:
             tickerName = 'Clone Ethereum'
-            tickerSymbol = 'onETH'
+            tickerSymbol = 'clETH'
             tickerIcon = '/images/assets/on-eth.svg'
             ticker = 'ethereum'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.ETH/USD'
-            supabaseSymbol = 'ETHUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Bitcoin:
             tickerName = 'Clone Bitcoin'
-            tickerSymbol = 'onBTC'
+            tickerSymbol = 'clBTC'
             tickerIcon = '/images/assets/on-btc.svg'
             ticker = 'bitcoin'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.BTC/USD'
-            supabaseSymbol = 'BTCUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Cosmos:
             tickerName = 'Clone Cosmos'
-            tickerSymbol = 'onATOM'
+            tickerSymbol = 'clATOM'
             tickerIcon = '/images/assets/on-atom.svg'
             ticker = 'cosmos'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.ATOM/USD'
-            supabaseSymbol = 'ATOMUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Avalanche:
             tickerName = 'Clone Avalanche'
-            tickerSymbol = 'onAVAX'
+            tickerSymbol = 'clAVAX'
             tickerIcon = '/images/assets/on-avax.svg'
             ticker = 'avalanche'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.AVAX/USD'
-            supabaseSymbol = 'AVAXUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Sui:
             tickerName = 'Clone Sui'
-            tickerSymbol = 'onSUI'
+            tickerSymbol = 'clSUI'
             tickerIcon = '/images/assets/on-sui.svg'
             ticker = 'sui'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.SUI/USD'
-            supabaseSymbol = 'SUIUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Aptos:
             tickerName = 'Clone Aptos'
-            tickerSymbol = 'onAPT'
+            tickerSymbol = 'clAPT'
             tickerIcon = '/images/assets/on-apt.svg'
             ticker = 'aptos'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.APT/USD'
-            supabaseSymbol = 'APTUSD'
+            supabaseSymbol = pythSymbol
             break
         case Asset.Cardano:
             tickerName = 'Clone Cardano'
-            tickerSymbol = 'onADA'
+            tickerSymbol = 'clADA'
             tickerIcon = '/images/assets/on-ada.svg'
             ticker = 'cardano'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.ADA/USD'
-            supabaseSymbol = 'ADAUSD'
+            supabaseSymbol = pythSymbol
             break
         default:
             throw new Error('Not supported')
