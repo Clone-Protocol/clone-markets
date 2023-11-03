@@ -1,6 +1,6 @@
 import { Box, Stack, Button, IconButton, Typography, CircularProgress } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import PairInput from './PairInput'
 import Image from 'next/image'
 import swapIcon from 'public/images/swap-icon.svg'
@@ -59,6 +59,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const { setOpen } = useWalletDialog()
   const [restartTimer, setRestartTimer] = useState(false)
   const [isEnabledRestart, setIsEnabledRestart] = useState(true);
+  const [estimatedSwapResult, setEstimatedSwapResult] = useState(0.0)
 
   const onUSDInfo = collateralMapping(StableCollateral.onUSD)
   const fromPair: PairData = {
@@ -135,7 +136,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       newValue, true, isBuy, assetData?.poolCollateralIld!, assetData?.poolOnassetIld!, assetData?.poolCommittedCollateral!,
       assetData?.liquidityTradingFee!, assetData?.treasuryTradingFee!, assetData?.oraclePrice!, assetData?.collateral!
     )
-    const resultVal = round(swapResult.result, CLONE_TOKEN_SCALE)
+    const resultVal = round(swapResult.result, isBuy ? CLONE_TOKEN_SCALE : 7)
+    setEstimatedSwapResult(swapResult.result)
     if (isBuy) {
       setValue('amountOnasset', resultVal)
     } else {
@@ -154,6 +156,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
           quantityIsInput: true,
           poolIndex: assetIndex,
           slippage: slippage / 100,
+          estimatedSwapResult,
         }
       )
 
