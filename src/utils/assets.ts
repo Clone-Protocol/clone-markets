@@ -1,5 +1,5 @@
 import { CLONE_TOKEN_SCALE, CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
-import { fetchFromCloneIndex } from "./fetch_netlify";
+import { StatsData, fetchStatsData as netlifyFetchStatsData, fetchOHLCV } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
 import { Connection, PublicKey } from "@solana/web3.js"
@@ -33,13 +33,12 @@ export const generateDates = (start: Date, interval: Interval): Date[] => {
       dates.push(new Date(currentDate)); // Create a new date object to avoid references to the same object
     }
   }
-
   return dates;
 }
 
-export const fetchStatsData = async (filter: Filter, interval: Interval): Promise<ResponseValue[]> => {
-  const response = await fetchFromCloneIndex('stats', { interval, filter })
-  return response.data as ResponseValue[]
+export const fetchStatsData = async (filter: Filter, interval: Interval): Promise<StatsData[]> => {
+  const response = await netlifyFetchStatsData(interval, filter)
+  return response as StatsData[]
 }
 
 
@@ -85,14 +84,9 @@ type OHLCVResponse = {
   trading_fees: string
 }
 
-const fetch30DayOHLCV = async (poolIndex: number, interval: 'hour' | 'day') => {
-  const response = await fetchFromCloneIndex('ohlcv', { interval, pool: poolIndex, filter: 'month' })
-  const result: OHLCVResponse[] = response.data
-  return result
-}
 
 export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour' | 'day') => {
-  const requestResult = await fetch30DayOHLCV(poolIndex, interval)
+  const requestResult = await await fetchOHLCV(interval, 'month', poolIndex)
   const now = new Date()
   const lookback30Day = new Date(now.getTime() - 30 * 86400 * 1000)
 
@@ -126,8 +120,7 @@ export const getDailyPoolPrices30Day = async (poolIndex: number, interval: 'hour
 
 export const fetch24hourVolume = async () => {
 
-  const response = await fetchFromCloneIndex('ohlcv', { interval: 'hour', filter: 'week' })
-  const data: OHLCVResponse[] = response.data
+  const data = await fetchOHLCV('hour', 'week')
 
   const result: Map<number, number> = new Map()
   const now = new Date()
