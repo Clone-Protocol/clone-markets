@@ -183,8 +183,6 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 					return asset.assetType === AssetType.Fx
 				} else if (filter === 'onCommodity') {
 					return asset.assetType === AssetType.Commodities
-				} else if (filter === 'onStock') {
-					return asset.assetType === AssetType.Stocks
 				}
 				return true;
 			})

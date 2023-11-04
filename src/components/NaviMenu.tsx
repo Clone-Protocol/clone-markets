@@ -14,8 +14,8 @@ const NaviMenu = () => {
             <Box><Typography variant='p_lg'>Home</Typography></Box>
           </StyledListItemButton>
         </Link>
-        <Link href="/onportfolio">
-          <StyledListItemButton className={pathname?.startsWith('/onportfolio') ? 'selected' : ''}>
+        <Link href="/clportfolio">
+          <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
             <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
           </StyledListItemButton>
         </Link>
