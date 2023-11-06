@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
@@ -29,6 +29,16 @@ const GNB: React.FC = () => {
 
 	const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
+
+	const [showMobileWarning, setShowMobileWarning] = useState(isMobile)
+
+	useEffect(() => {
+		if (isMobile || isMobileOnSize) {
+			setShowMobileWarning(true)
+		} else {
+			setShowMobileWarning(false)
+		}
+	}, [isMobileOnSize])
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
@@ -69,7 +79,7 @@ const GNB: React.FC = () => {
 						</Box> */}
 					</Toolbar>
 				</Container>
-				<MobileWarningDialog open={isMobile || isMobileOnSize} handleClose={() => { return null }} />
+				<MobileWarningDialog open={showMobileWarning} handleClose={() => setShowMobileWarning(false)} />
 			</StyledAppBar>
 		</>
 	)
