@@ -59,8 +59,6 @@ const PortfolioView = () => {
 				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
 				if (item.id === AssetType.Crypto) {
 					return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, onusdAmount: item.val } as PieItem
-				} else if (item.id === AssetType.Stocks) {
-					return { key: 'onStock', name: FilterTypeMap.onStock, value: percentVal, onusdAmount: item.val } as PieItem
 				} else if (item.id === AssetType.Fx) {
 					return { key: 'onFx', name: FilterTypeMap.onFx, value: percentVal, onusdAmount: item.val } as PieItem
 				} else {

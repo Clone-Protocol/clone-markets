@@ -3,7 +3,6 @@ export enum FilterTypeMap {
 	'stableCoin' = 'Stable Coin',
 	'onCrypto' = 'clCrypto',
 	'onCommodity' = 'clCommodity',
-	'onStock' = 'clStock',
 	'onFx' = 'clFX',
 }
 export type FilterType = keyof typeof FilterTypeMap
@@ -13,7 +12,6 @@ export enum FilterTypeColorMap {
 	'stableCoin' = '#6800ed',
 	'onCrypto' = '#c4b5fd',
 	'onCommodity' = '#fffc72',
-	'onStock' = '#00ff99',
 	'onFx' = '#ff0084',
 }
 

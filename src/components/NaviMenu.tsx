@@ -3,28 +3,46 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 
-const NaviMenu = () => {
+const CommonMenu = ({ isMobile = false, onClick }: { isMobile?: boolean, onClick?: () => void }) => {
   const pathname = usePathname()
 
   return (
+    <List component="nav" sx={{ display: isMobile ? 'block' : 'flex', padding: 0 }}>
+      <Link href="/">
+        <StyledListItemButton className={pathname === '/' ? 'selected' : ''} onClick={onClick}>
+          <Box><Typography variant='p_lg'>Home</Typography></Box>
+        </StyledListItemButton>
+      </Link>
+      <Link href="/clportfolio">
+        <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''} onClick={onClick}>
+          <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
+        </StyledListItemButton>
+      </Link>
+      <Link href="/trade/euro">
+        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''} onClick={onClick}>
+          <Box><Typography variant='p_lg'>Trade</Typography></Box>
+        </StyledListItemButton>
+      </Link>
+    </List>
+  )
+}
+
+const NaviMenu = () => {
+  return (
     <Fade in timeout={1500}>
-      <List component="nav" sx={{ display: 'flex', padding: 0 }}>
-        <Link href="/">
-          <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
-            <Box><Typography variant='p_lg'>Home</Typography></Box>
-          </StyledListItemButton>
-        </Link>
-        <Link href="/onportfolio">
-          <StyledListItemButton className={pathname?.startsWith('/onportfolio') ? 'selected' : ''}>
-            <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
-          </StyledListItemButton>
-        </Link>
-        <Link href="/trade/euro">
-          <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
-            <Box><Typography variant='p_lg'>Trade</Typography></Box>
-          </StyledListItemButton>
-        </Link>
-      </List>
+      <Box>
+        <CommonMenu />
+      </Box>
+    </Fade>
+  )
+}
+
+export const MobileNaviMenu = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Fade in timeout={1500}>
+      <Box>
+        <CommonMenu isMobile={true} onClick={onClick} />
+      </Box>
     </Fade>
   )
 }

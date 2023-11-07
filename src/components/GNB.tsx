@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
@@ -10,7 +10,7 @@ import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { shortenAddress } from '~/utils/address'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { useSetAtom } from 'jotai'
-import NaviMenu from './NaviMenu'
+import NaviMenu, { MobileNaviMenu } from './NaviMenu'
 import { mintUSDi } from '~/features/globalAtom'
 import dynamic from 'next/dynamic'
 import useFaucet from '~/hooks/useFaucet'
@@ -18,6 +18,8 @@ import TokenFaucetDialog from './Account/TokenFaucetDialog'
 import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -29,6 +31,16 @@ const GNB: React.FC = () => {
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
+
+	const [showMobileWarning, setShowMobileWarning] = useState(isMobile)
+
+	useEffect(() => {
+		if (isMobile || isMobileOnSize) {
+			setShowMobileWarning(true)
+		} else {
+			setShowMobileWarning(false)
+		}
+	}, [isMobileOnSize])
 
 	// const firstPathname = useMemo(() => {
 	// 	return pathname.split('/').slice(0, 2).join('/')
@@ -63,12 +75,15 @@ const GNB: React.FC = () => {
 
 						<Box sx={{ marginLeft: 'auto', display: { xs: 'flex', sm: 'none' } }}>
 							<IconButton sx={{ color: 'white' }} onClick={handleMobileNavBtn}>
-								{/* {mobileNavToggle ? <CancelIcon color="info" /> : <MenuIcon />} */}
+								{mobileNavToggle ? <CloseIcon /> : <MenuIcon />}
 							</IconButton>
 						</Box>
+						{mobileNavToggle && <Box sx={{ position: 'absolute', top: '45px', right: '0px', zIndex: '999' }}>
+							<MobileNaviMenu onClick={handleMobileNavBtn} />
+						</Box>}
 					</Toolbar>
 				</Container>
-				{/* <MobileWarningDialog open={isMobile || isMobileOnSize} handleClose={() => { return null }} /> */}
+				{/* <MobileWarningDialog open={showMobileWarning} handleClose={() => setShowMobileWarning(false)} /> */}
 			</StyledAppBar>
 		</>
 	)
