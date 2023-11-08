@@ -18,8 +18,8 @@ import TokenFaucetDialog from './Account/TokenFaucetDialog'
 import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
-import CloseIcon from '@mui/icons-material/Close';
-import MenuIcon from '@mui/icons-material/Menu';
+// import CloseIcon from '@mui/icons-material/Close';
+// import MenuIcon from '@mui/icons-material/Menu';
 
 const GNB: React.FC = () => {
 	// const router = useRouter()
@@ -27,7 +27,6 @@ const GNB: React.FC = () => {
 	// const [path, setPath] = useState<string>('/')
 	const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-	// const { scrolled } = useScroll()
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
@@ -47,6 +46,7 @@ const GNB: React.FC = () => {
 	// }, [pathname])
 
 	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
+
 	// useEffect(() => {
 	// 	const path = GNB_ROUTES.find((route) => firstPathname === route.path)?.path
 	// 	if (path) setPath(path)
@@ -73,14 +73,14 @@ const GNB: React.FC = () => {
 							<RightMenu />
 						</Box>
 
-						<Box sx={{ marginLeft: 'auto', display: { xs: 'flex', sm: 'none' } }}>
+						{/* <Box sx={{ marginLeft: 'auto', display: { xs: 'flex', sm: 'none' } }}>
 							<IconButton sx={{ color: 'white' }} onClick={handleMobileNavBtn}>
 								{mobileNavToggle ? <CloseIcon /> : <MenuIcon />}
 							</IconButton>
+						</Box> */}
+						<Box sx={{ display: { xs: 'block', sm: 'none' }, position: 'fixed', bottom: '0px', width: '100%', zIndex: '999' }}>
+							<MobileNaviMenu />
 						</Box>
-						{mobileNavToggle && <Box sx={{ position: 'absolute', top: '45px', right: '0px', zIndex: '999' }}>
-							<MobileNaviMenu onClick={handleMobileNavBtn} />
-						</Box>}
 					</Toolbar>
 				</Container>
 				{/* <MobileWarningDialog open={showMobileWarning} handleClose={() => setShowMobileWarning(false)} /> */}

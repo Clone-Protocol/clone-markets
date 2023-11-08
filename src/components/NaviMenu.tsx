@@ -3,23 +3,23 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 
-const CommonMenu = ({ isMobile = false, onClick }: { isMobile?: boolean, onClick?: () => void }) => {
+const CommonMenu = ({ isMobile = false }: { isMobile?: boolean }) => {
   const pathname = usePathname()
 
   return (
-    <List component="nav" sx={{ display: isMobile ? 'block' : 'flex', padding: 0 }}>
+    <List component="nav" sx={{ display: 'flex', padding: 0 }}>
       <Link href="/">
-        <StyledListItemButton className={pathname === '/' ? 'selected' : ''} onClick={onClick}>
+        <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
           <Box><Typography variant='p_lg'>Home</Typography></Box>
         </StyledListItemButton>
       </Link>
       <Link href="/clportfolio">
-        <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''} onClick={onClick}>
+        <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
           <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
         </StyledListItemButton>
       </Link>
       <Link href="/trade/euro">
-        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''} onClick={onClick}>
+        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
           <Box><Typography variant='p_lg'>Trade</Typography></Box>
         </StyledListItemButton>
       </Link>
@@ -37,11 +37,11 @@ const NaviMenu = () => {
   )
 }
 
-export const MobileNaviMenu = ({ onClick }: { onClick: () => void }) => {
+export const MobileNaviMenu = () => {
   return (
     <Fade in timeout={1500}>
-      <Box>
-        <CommonMenu isMobile={true} onClick={onClick} />
+      <Box display='flex' justifyContent='center' bgcolor="#040414" paddingBottom='15px'>
+        <CommonMenu isMobile={true} />
       </Box>
     </Fade>
   )
