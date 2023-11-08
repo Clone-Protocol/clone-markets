@@ -69,7 +69,7 @@ const GNB: React.FC = () => {
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
 						</Box>
-						<Box sx={{ display: { xs: 'none', sm: 'inherit' } }}>
+						<Box>
 							<RightMenu />
 						</Box>
 
