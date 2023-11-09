@@ -12,7 +12,7 @@ const GetUSDiBadge: React.FC = () => {
     <Box>
       <Typography variant='p_lg'>Get devnet USD from the devnet faucet to start trading on devnet. On mainnet, you will be able to trade using USDC.</Typography>
     </Box>
-    <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
+    <GetButton sx={{ display: { xs: 'none', md: 'block' } }} onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
   </StyledStack>
 }
 

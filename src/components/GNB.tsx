@@ -129,7 +129,7 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				<HeaderButton onClick={() => setOpenTokenFaucet(true)}>
+				<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
 					<Typography variant='p'>Devnet Faucet</Typography>
 				</HeaderButton>
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
