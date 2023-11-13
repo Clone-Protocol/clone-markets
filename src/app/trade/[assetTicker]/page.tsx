@@ -45,7 +45,7 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
           <Box minWidth={isMobileOnSize ? '360px' : '750px'}>
             <MarketDetail assetId={assetId} />
           </Box>
-          <Box width={showTrading ? '100%' : '360px'} height='100%' display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '10px' : 'inherit'}>
+          <Box width={showTrading ? '100%' : '360px'} height='100%' display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '20px' : 'inherit'}>
             {(showTrading || !isMobileOnSize) && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}
           </Box>
         </Stack>
