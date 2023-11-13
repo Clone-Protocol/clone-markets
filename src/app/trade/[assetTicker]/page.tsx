@@ -12,6 +12,7 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
   const [assetId, setAssetId] = useState(0)
   const assetTicker = params.assetTicker || AssetTickers.euro
+  const [showTrading, setShowTrading] = useState(false)
 
   useMemo(() => {
     if (assetTicker) {
@@ -30,6 +31,10 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
     setAssetId(id)
   }, [assetId])
 
+  const toggleShowTrading = () => {
+    setShowTrading(!showTrading)
+  }
+
   return (
     <div>
       <StyledSection
@@ -40,12 +45,12 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
           <Box minWidth={isMobileOnSize ? '360px' : '750px'}>
             <MarketDetail assetId={assetId} />
           </Box>
-          <Box width='360px'>
-            <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />
+          <Box width={showTrading ? '100%' : '360px'} height='100%' display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '10px' : 'inherit'}>
+            {(showTrading || !isMobileOnSize) && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}
           </Box>
         </Stack>
       </StyledSection>
-      <Box display={isMobileOnSize ? 'block' : 'none'}><ShowTradingBtn>Show Trading</ShowTradingBtn></Box>
+      <Box display={isMobileOnSize ? 'block' : 'none'}><ShowTradingBtn onClick={() => toggleShowTrading()}>{showTrading ? 'Hide Trading' : 'Show Trading'}</ShowTradingBtn></Box>
     </div>
   )
 }
@@ -55,7 +60,7 @@ const StyledSection = styled('section')`
 		padding-top: 100px;
 	}
 	${(props) => props.theme.breakpoints.down('md')} {
-		padding: 50px 0px;
+		padding: 100px 0px;
 	}
 `
 const ShowTradingBtn = styled(Box)`
