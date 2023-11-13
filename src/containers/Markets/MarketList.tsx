@@ -1,5 +1,5 @@
 'use client'
-import { Box, Typography } from '@mui/material'
+import { Box, Theme, Typography, useMediaQuery } from '@mui/material'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { FilterType } from '~/data/filter'
@@ -22,6 +22,7 @@ const MarketList = () => {
 	// const [filter, setFilter] = useState<FilterType>('all')
 	const filter: FilterType = 'all'
 
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	const { data: assets } = useAssetsQuery({
 		filter,
 		refetchOnMount: true,
@@ -62,6 +63,11 @@ const MarketList = () => {
 			<Box mb='9px'><Typography variant='p_xlg'>All clAssets on Clone Protocol</Typography></Box>
 			<Grid
 				headers={columns}
+				columnVisibilityModel={isMobileOnSize ? {
+					"24hChange": false,
+					"liquidity": false,
+					"24hVolume": false
+				} : {}}
 				rows={assets || []}
 				minHeight={570}
 				customNoResultsOverlay={() => CustomNoRowsOverlay('No assets')}

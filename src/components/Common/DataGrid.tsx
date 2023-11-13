@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridColumnVisibilityModel, GridEventListener } from '@mui/x-data-grid'
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,11 +10,13 @@ interface GridProps {
   isBorderTopRadius?: boolean,
   minHeight?: number,
   noAutoHeight?: boolean,
+  columnVisibilityModel?: GridColumnVisibilityModel,
   onRowClick?: GridEventListener<'rowClick'>
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, noAutoHeight = false, onRowClick }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, noAutoHeight = false, columnVisibilityModel, onRowClick }) => (
   <DataGrid
+    columnVisibilityModel={columnVisibilityModel}
     sx={{
       width: '100%',
       border: 0,
