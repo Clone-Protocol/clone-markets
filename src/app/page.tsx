@@ -39,7 +39,7 @@ export const StyledSection = styled('section')`
 		padding-top: 100px;
 	}
 	${(props) => props.theme.breakpoints.down('md')} {
-		padding: 100px 0px;
+		padding: 110px 0px;
 	}
 `
 
