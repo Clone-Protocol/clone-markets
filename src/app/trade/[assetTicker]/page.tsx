@@ -60,7 +60,7 @@ const StyledSection = styled('section')`
 		padding-top: 100px;
 	}
 	${(props) => props.theme.breakpoints.down('md')} {
-		padding: 80px 0px 110px 0px;
+		padding: 70px 0px 110px 0px;
 	}
 `
 const ShowTradingBtn = styled(Box)`
