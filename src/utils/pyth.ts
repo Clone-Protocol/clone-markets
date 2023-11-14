@@ -51,14 +51,18 @@ export const fetchPythPriceHistory = async (pythSymbol: string, range: Range): P
     return response.data
 }
 
-export const getPythOraclePrice = async (
+export const getPythOraclePrices = async (
     connection: Connection,
-    pythSymbol: string
 ) => {
     // TODO: Set this up as an env variable.
     const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
     const data = await pythClient.getData();
-    return {
-        price: data.productPrice.get(pythSymbol)?.aggregate.price,
-    };
+    const pricesMap = new Map<string, number>();
+    for (const product of data.products) {
+        const price = data.productPrice.get(product.symbol)?.aggregate.price;
+        if (price) {
+            pricesMap.set(product.symbol, price);
+        }
+    }
+    return pricesMap;
 };
