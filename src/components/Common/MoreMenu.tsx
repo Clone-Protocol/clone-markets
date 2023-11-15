@@ -43,7 +43,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         background: '#080018',
         color: '#fff',
         border: '1px solid #414166',
-        borderRadius: '10px'
+        borderRadius: '5px'
       },
     }}
     MenuListProps={{ sx: { pt: 0, pb: '15px' } }}
@@ -52,7 +52,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
   >
     <StyledMenuItem onClick={onShowTokenFaucet}>
       <HoverStack direction='row' alignItems='center'>
-        <Box width='144px'>
+        <Box width='184px'>
           <Box><Typography variant='p'>Token Faucet</Typography></Box>
           <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana devnet</Typography></Box>
         </Box>
@@ -61,7 +61,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     <a href={DOCS_URL} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
-          <Box width='144px'>
+          <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography></Stack>
             <Box><Typography variant='p_sm' color='#8988a3'>Learn about Clone Markets</Typography></Box>
           </Box>
@@ -71,7 +71,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     <a href={LIQUIDITY_APP} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
-          <Box width='144px'>
+          <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Liquidity</Typography></Stack>
             <Box><Typography variant='p_sm' color='#8988a3'>Provide Liquidity on Clone Protocol</Typography></Box>
           </Box>
@@ -81,7 +81,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     <a href={CAREER_URL} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
-          <Box width='144px'>
+          <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Opportunities</Typography></Stack>
             <Box><Typography variant='p_sm' color='#8988a3'>Wanna be a pioneer of Defi?</Typography></Box>
           </Box>
@@ -98,18 +98,16 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
 
 const StyledMenuItem = styled(MenuItem)`
   display: flex;
-  width: 210px;
-  height: 35px;
+  width: 220px;
+  height: 50px;
   line-height: 12px;
   color: #fff;
-  margin-bottom: 10px;
   padding: 0 !important;
 `
 const HoverStack = styled(Stack)`
   width: 100%;
-  height: 40px;
-  padding: 8px 12px 6px 12px;
-  line-height: 0.7;
+  height: 100%;
+  padding: 6px 20px;
   &:hover {
     background-color: rgba(255, 255, 255, 0.05);
   }
