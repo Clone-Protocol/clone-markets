@@ -1,14 +1,14 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
-import { getPythOraclePrice } from "~/utils/pyth"
+import { getPythOraclePrices } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
 import { getCloneClient } from '../baseQuery'
 import { useAtomValue } from 'jotai'
 import { cloneClient } from '~/features/globalAtom'
-import { Clone } from 'clone-protocol-sdk/sdk/generated/clone'
+import { calculatePoolAmounts } from 'clone-protocol-sdk/sdk/src/utils'
 
 export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { index: number, setStartTimer: (start: boolean) => void, mainCloneClient?: CloneClient | null }) => {
   console.log('fetchBalance')
@@ -58,13 +58,15 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { 
         onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
-      const { price } = await getPythOraclePrice(program.provider.connection, pythSymbol)
+      const price = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol);
       const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
-      const poolCollateral =
-        fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
-      const poolOnasset =
-        fromScale(pool.committedCollateralLiquidity, collateralScale) / oraclePrice -
-        fromScale(pool.collateralIld, collateralScale);
+      const { poolCollateral, poolOnasset } = calculatePoolAmounts(
+        fromScale(pool.collateralIld, collateralScale),
+        fromCloneScale(pool.onassetIld),
+        fromScale(pool.committedCollateralLiquidity, collateralScale),
+        oraclePrice, 
+        program.clone.collateral
+      )
 
       ammOnassetValue = poolOnasset
       ammCollateralValue = poolCollateral
