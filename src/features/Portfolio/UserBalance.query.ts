@@ -1,6 +1,6 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { PublicKey } from '@solana/web3.js'
-import { CloneClient, fromScale, fromCloneScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, fromScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useClone } from '~/hooks/useClone'
 import { assetMapping, AssetType } from '~/data/assets'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
@@ -8,8 +8,6 @@ import { FilterType } from '~/data/filter'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { getCollateralAccount } from "~/utils/token_accounts"
-import { calculatePoolAmounts } from "clone-protocol-sdk/sdk/src/utils"
-import { getPythOraclePrices } from '~/utils/pyth'
 
 const fetchOnassetBalance = async (onassetMint: PublicKey, program: CloneClient) => {
 	const onassetAssociatedTokenAccount = await getTokenAccount(
@@ -36,7 +34,7 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	}
 
 	const pools = await program.getPools();
-	const priceMap = await getPythOraclePrices(program.provider.connection);
+	const oracles = await program.getOracles();
 
 	const balanceQueries = [];
 	for (let i = 0; i < Number(pools.pools.length); i++) {
@@ -50,13 +48,12 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	const collateralScale = program.clone.collateral.scale
 	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const pool = pools.pools[i]
-		const { poolCollateral, poolOnasset } = calculatePoolAmounts(
-			fromScale(pool.collateralIld, collateralScale),
-			fromCloneScale(pool.onassetIld),
-			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)!, 
-			program.clone.collateral
-		  )
+		const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)]
+		const poolCollateral =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
+		const poolOnasset =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) / fromScale(oracle.price, oracle.expo) -
+			fromScale(pool.collateralIld, collateralScale);
 		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
@@ -97,7 +94,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 
 	// console.log('fetchUserBalance')
 	const pools = await program.getPools();
-	const priceMap = await getPythOraclePrices(program.provider.connection);
+	const oracles = await program.getOracles();
 
 	const balanceQueries = [];
 	for (let i = 0; i < Number(pools.pools.length); i++) {
@@ -111,13 +108,12 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
 		const pool = pools.pools[i]
-		const { poolCollateral, poolOnasset } = calculatePoolAmounts(
-			fromScale(pool.collateralIld, collateralScale),
-			fromCloneScale(pool.onassetIld),
-			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)!, 
-			program.clone.collateral
-		  )
+		const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)]
+		const poolCollateral =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) - fromScale(pool.collateralIld, collateralScale);
+		const poolOnasset =
+			fromScale(pool.committedCollateralLiquidity, collateralScale) / fromScale(oracle.price, oracle.expo) -
+			fromScale(pool.collateralIld, collateralScale);
 		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
