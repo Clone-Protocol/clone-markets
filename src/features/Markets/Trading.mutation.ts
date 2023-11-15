@@ -7,7 +7,6 @@ import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
-import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
 import { sendAndConfirm } from '~/utils/tx_helper'
 
 export const callTrading = async ({
@@ -32,7 +31,6 @@ export const callTrading = async ({
 	const pools = await program.getPools();
 	const oracles = await program.getOracles();
 	const pool = pools.pools[poolIndex]
-	const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)];
 
 	let ixns: TransactionInstruction[] = []
 
@@ -97,28 +95,10 @@ export const callTrading = async ({
 	}
 
 	const collateralScale = program.clone.collateral.scale
-	const executionEstimate = calculateSwapExecution(
-		quantity,
-		quantityIsInput,
-		quantityIsCollateral,
-		fromScale(pool.collateralIld, collateralScale),
-		fromCloneScale(pool.onassetIld),
-		fromScale(pool.committedCollateralLiquidity, collateralScale),
-		fromScale(pool.liquidityTradingFeeBps, 4),
-		fromScale(pool.treasuryTradingFeeBps, 4),
-		fromScale(oracle.price, oracle.expo),
-		program.clone.collateral
-	)
-	const slippageMultiplier = (() => {
-		if (quantityIsInput) {
-			return 1. - slippage
-		} else {
-			return 1. + slippage
-		}
-	})()
 
 	const scaledQuantity = quantityIsCollateral ? toScale(quantity, collateralScale) : toCloneScale(quantity)
-	const scaledThreshold = (quantityIsCollateral && quantityIsInput) || (!quantityIsCollateral && !quantityIsInput) ? toCloneScale(executionEstimate.result * slippageMultiplier) : toScale(executionEstimate.result * slippageMultiplier, collateralScale)
+	const threshold = data.estimatedSwapResult * (quantityIsInput ? 1. - slippage : 1. + slippage);
+	const scaledThreshold = (quantityIsCollateral && quantityIsInput) || (!quantityIsCollateral && !quantityIsInput) ? toCloneScale(threshold) : toScale(threshold, collateralScale)
 
 	ixns.push(program.updatePricesInstruction(oracles))
 	ixns.push(program.swapInstruction(
@@ -146,6 +126,7 @@ type FormData = {
 	quantityIsInput: boolean,
 	poolIndex: number,
 	slippage: number,
+	estimatedSwapResult: number,
 }
 interface CallTradingProps {
 	program: CloneClient

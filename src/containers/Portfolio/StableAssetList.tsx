@@ -1,4 +1,4 @@
-import { Box, Stack, Button, Typography } from '@mui/material'
+import { Box, Stack, Button, Typography, useMediaQuery, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { Grid, CellTicker, CustomNoOnAssetOverlay, CustomNoRowsOverlay } from '~/components/Common/DataGrid'
@@ -18,6 +18,7 @@ interface Props {
 
 const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const { publicKey } = useWallet()
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
 	const [assets, setAssets] = useState<any>([])
 	const setMintUsdi = useSetAtom(mintUSDi)
@@ -44,6 +45,10 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 			</TopBox>
 			<Grid
 				headers={columns}
+				columnVisibilityModel={isMobileOnSize ? {
+					"price": false,
+					"actions": false
+				} : {}}
 				rows={assets || []}
 				isBorderTopRadius={false}
 				minHeight={110}
@@ -98,7 +103,7 @@ let columns: GridColDef[] = [
 		},
 	},
 	{
-		field: '',
+		field: 'actions',
 		headerName: '',
 		headerClassName: 'right--header',
 		cellClassName: 'right--cell',
