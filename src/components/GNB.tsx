@@ -78,7 +78,7 @@ const GNB: React.FC = () => {
 								{mobileNavToggle ? <CloseIcon /> : <MenuIcon />}
 							</IconButton>
 						</Box> */}
-						<Box sx={{ display: { xs: 'block', sm: 'none' }, position: 'fixed', bottom: '0px', width: '100%', zIndex: '999' }}>
+						<Box sx={{ display: { xs: 'block', sm: 'none' }, position: 'fixed', bottom: '0px', left: '0px', width: '100%', zIndex: '999' }}>
 							<MobileNaviMenu />
 						</Box>
 					</Toolbar>
