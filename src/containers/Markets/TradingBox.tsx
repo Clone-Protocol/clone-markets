@@ -2,8 +2,6 @@ import { Paper } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useCallback, useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
-import withSuspense from '~/hocs/withSuspense'
-import { LoadingProgress } from '~/components/Common/Loading'
 import { useRouter } from 'next/navigation'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { SLIPPAGE } from '~/data/localstorage'
@@ -11,7 +9,7 @@ import { ASSETS } from '~/data/assets'
 import dynamic from 'next/dynamic'
 
 interface Props {
-	assetId: string
+	assetId: number
 	onSelectAssetId: (id: number) => void
 }
 
@@ -20,7 +18,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const [showSearchAssetDlog, setShowSearchAssetDlog] = useState(false)
 	const [showOrderSetting, setShowOrderSetting] = useState(false)
 	const [slippage, setLocalSlippage] = useLocalStorage(SLIPPAGE, 0.5)
-	const assetIndex = parseInt(assetId)
+	const assetIndex = assetId
 
 	const SearchAssetDialog = dynamic(() => import('~/components/Markets/TradingBox/Dialogs/SearchAssetDialog'), { ssr: false })
 	const SwapSettingDialog = dynamic(() => import('~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'), { ssr: false })
@@ -66,4 +64,4 @@ const StyledPaper = styled(Paper)`
 	text-align: center;
 `
 
-export default withSuspense(TradingBox, <LoadingProgress />)
+export default TradingBox

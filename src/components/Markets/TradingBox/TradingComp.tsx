@@ -23,6 +23,8 @@ import { Collateral as StableCollateral, collateralMapping } from '~/data/assets
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
 import { ON_USD } from '~/utils/constants'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -447,4 +449,4 @@ const ArrowIcon = styled('div')`
   color: #c5c7d9;
 `
 
-export default TradingComp
+export default withSuspense(TradingComp, <Box mt='20px'><LoadingProgress /></Box>)
