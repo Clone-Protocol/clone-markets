@@ -30,6 +30,80 @@ const MarketList = () => {
 		enabled: true
 	})
 
+	const Change24hComp = ({ change24h }: { change24h: number }) => {
+		if (change24h >= 0) {
+			return <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
+				<Typography variant={isMobileOnSize ? 'p' : 'p_xlg'}>+{change24h.toFixed(2)}%</Typography>
+				<Image src={ArrowUpward} alt='arrowUp' height={isMobileOnSize ? 20 : 25} />
+			</Box>
+		} else {
+			return <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
+				<Typography variant={isMobileOnSize ? 'p' : 'p_xlg'}>{change24h.toFixed(2)}%</Typography>
+				<Image src={ArrowDownward} alt='arrowDown' height={isMobileOnSize ? 20 : 25} />
+			</Box>
+		}
+	}
+
+	let columns: GridColDef[] = [
+		{
+			field: 'iAsset',
+			headerClassName: 'super-app-theme--header',
+			cellClassName: 'super-app-theme--cell',
+			headerName: 'clAsset',
+			flex: 5,
+			renderCell(params: GridRenderCellParams<string>) {
+				return (
+					<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
+				)
+			},
+		},
+		{
+			field: 'price',
+			headerClassName: 'super-app-theme--header right--header',
+			cellClassName: 'super-app-theme--cell right--cell',
+			headerName: `Price (${ON_USD})`,
+			flex: 3,
+			renderCell(params: GridRenderCellParams<string>) {
+				return <Box textAlign={isMobileOnSize ? 'right' : 'left'}>
+					<Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
+					{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
+				</Box>
+			}
+		},
+		{
+			field: '24hChange',
+			headerClassName: 'super-app-theme--header right--header',
+			cellClassName: 'super-app-theme--cell right--cell',
+			headerName: '24h Change',
+			flex: 3,
+			renderCell(params: GridRenderCellParams<string>) {
+				return <Change24hComp change24h={params.row.change24h} />
+			},
+		},
+		{
+			field: 'liquidity',
+			headerClassName: 'super-app-theme--header right--header',
+			cellClassName: 'super-app-theme--cell right--cell',
+			headerName: 'Liquidity',
+			flex: 3,
+			renderCell(params: GridRenderCellParams<string>) {
+				return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.value), 3)}</Typography>
+			},
+		},
+		{
+			field: '24hVolume',
+			headerClassName: 'super-app-theme--header right--header',
+			cellClassName: 'super-app-theme--cell right--cell',
+			headerName: 'Volume',
+			flex: 3,
+			renderCell(params: GridRenderCellParams<string>) {
+				return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
+			},
+		},
+	]
+
+	columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
+
 	// const handleFilterChange = (event: React.SyntheticEvent, newValue: FilterType) => {
 	// 	setFilter(newValue)
 	// }
@@ -76,70 +150,5 @@ const MarketList = () => {
 		</Box>
 	)
 }
-
-let columns: GridColDef[] = [
-	{
-		field: 'iAsset',
-		headerClassName: 'super-app-theme--header',
-		cellClassName: 'super-app-theme--cell',
-		headerName: 'clAsset',
-		flex: 5,
-		renderCell(params: GridRenderCellParams<string>) {
-			return (
-				<CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
-			)
-		},
-	},
-	{
-		field: 'price',
-		headerClassName: 'super-app-theme--header right--header',
-		cellClassName: 'super-app-theme--cell right--cell',
-		headerName: `Price (${ON_USD})`,
-		flex: 3,
-		renderCell(params: GridRenderCellParams<string>) {
-			return <Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
-		}
-	},
-	{
-		field: '24hChange',
-		headerClassName: 'super-app-theme--header right--header',
-		cellClassName: 'super-app-theme--cell right--cell',
-		headerName: '24h Change',
-		flex: 3,
-		renderCell(params: GridRenderCellParams<string>) {
-			return params.row.change24h >= 0 ?
-				<Box color='#00ff99' display='flex' alignItems='center' gap={1}>
-					<Typography variant='p_xlg'>+{params.row.change24h.toFixed(2)}%</Typography>
-					<Image src={ArrowUpward} alt='arrowUp' />
-				</Box>
-				: <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
-					<Typography variant='p_xlg'>{params.row.change24h.toFixed(2)}%</Typography>
-					<Image src={ArrowDownward} alt='arrowDown' />
-				</Box>
-		},
-	},
-	{
-		field: 'liquidity',
-		headerClassName: 'super-app-theme--header right--header',
-		cellClassName: 'super-app-theme--cell right--cell',
-		headerName: 'Liquidity',
-		flex: 3,
-		renderCell(params: GridRenderCellParams<string>) {
-			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.value), 3)}</Typography>
-		},
-	},
-	{
-		field: '24hVolume',
-		headerClassName: 'super-app-theme--header right--header',
-		cellClassName: 'super-app-theme--cell right--cell',
-		headerName: 'Volume',
-		flex: 3,
-		renderCell(params: GridRenderCellParams<string>) {
-			return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
-		},
-	},
-]
-
-columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
 export default withSuspense(MarketList, <LoadingProgress />)

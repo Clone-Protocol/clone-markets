@@ -1,4 +1,4 @@
-import { Typography, Stack, Box, Button } from '@mui/material'
+import { Typography, Stack, Box, Button, Theme, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Image from 'next/image'
 import PrimaryIcon from 'public/images/icons-badge.svg'
@@ -7,18 +7,21 @@ import { mintUSDi } from '~/features/globalAtom'
 
 const GetUSDiBadge: React.FC = () => {
   const setMintUsdi = useSetAtom(mintUSDi)
-  return <StyledStack direction='row' justifyContent='center' alignItems='center' spacing={2}>
-    <Image src={PrimaryIcon} alt='primary' />
+  const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+
+  return <StyledStack direction={isMobileOnSize ? 'column' : 'row'} justifyContent='center' alignItems='center' spacing={isMobileOnSize ? 1 : 2} textAlign={isMobileOnSize ? 'center' : 'left'}>
+    <Box sx={{ display: { xs: 'none', md: 'block' } }}><Image src={PrimaryIcon} alt='primary' /></Box>
     <Box>
       <Typography variant='p_lg'>Get devnet USD from the devnet faucet to start trading on devnet. On mainnet, you will be able to trade using USDC.</Typography>
     </Box>
-    <GetButton sx={{ display: { xs: 'none', md: 'block' } }} onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
+    <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
   </StyledStack>
 }
 
 const StyledStack = styled(Stack)`
   width: 100%;
-  height: 74px;
+  padding: 10px 15px;
+  // height: 74px;
   color: ${(props) => props.theme.basis.melrose};
   border-radius: 10px;
   background-color: rgba(196, 181, 253, 0.1);

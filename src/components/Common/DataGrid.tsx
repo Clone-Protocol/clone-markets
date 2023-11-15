@@ -153,11 +153,11 @@ export interface TickerType {
 export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, tickerSymbol }) => (
   <Box display="flex" justifyContent="flex-start">
     {tickerIcon && <Image src={tickerIcon} width={27} height={27} alt={tickerSymbol} />}
-    <Box display='flex' alignItems='center' ml='10px'>
+    <Box display='flex' ml='10px' sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'flex-start', md: 'center' } }}>
       <Box sx={{ maxWidth: '200px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
         <Typography variant='p_xlg'>{tickerName}</Typography>
       </Box>
-      <Box sx={{ color: '#989898' }} ml='10px'>
+      <Box sx={{ color: '#989898', marginLeft: { xs: '0px', md: '10px' } }}>
         <Typography variant='p_lg'>{tickerSymbol}</Typography>
       </Box>
     </Box>

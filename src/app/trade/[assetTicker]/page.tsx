@@ -45,12 +45,12 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
           <Box minWidth={isMobileOnSize ? '360px' : '750px'}>
             <MarketDetail assetId={assetId} />
           </Box>
-          <Box width={showTrading ? '100%' : '360px'} height='100%' display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '30px' : 'inherit'}>
+          <Box width={showTrading ? '100%' : '360px'} height='100%' display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '45px' : 'inherit'}>
             {(showTrading || !isMobileOnSize) && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}
           </Box>
         </Stack>
       </StyledSection>
-      <Box display={isMobileOnSize ? 'block' : 'none'}><ShowTradingBtn onClick={() => toggleShowTrading()}>{showTrading ? 'Hide Trading' : 'Show Trading'}</ShowTradingBtn></Box>
+      <Box display={isMobileOnSize ? 'block' : 'none'}><ShowTradingBtn onClick={() => toggleShowTrading()}>{showTrading ? 'Hide Swap' : 'Swap'}</ShowTradingBtn></Box>
     </div>
   )
 }
