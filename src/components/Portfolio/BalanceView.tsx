@@ -38,7 +38,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 	}, [newData, selectedFilter])
 
 	return (
-		<StyledPaper sx={{ flexDirection: { xs: 'column', md: 'row' }, justifyContent: { xs: 'center', md: 'space-around' }, marginTop: { xs: '40px', md: '0' } }}>
+		<StyledPaper>
 			<Box width='200px' mb='40px'>
 				<Box><Typography variant='p_lg' color='#c4b5fd'>{selectedTitle}</Typography></Box>
 				<Box>

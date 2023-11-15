@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef, GridColumnVisibilityModel, GridEventListener } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,13 +10,11 @@ interface GridProps {
   isBorderTopRadius?: boolean,
   minHeight?: number,
   noAutoHeight?: boolean,
-  columnVisibilityModel?: GridColumnVisibilityModel,
   onRowClick?: GridEventListener<'rowClick'>
 }
 
-export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, noAutoHeight = false, columnVisibilityModel, onRowClick }) => (
+export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverlay, isBorderTopRadius = true, minHeight = 260, noAutoHeight = false, onRowClick }) => (
   <DataGrid
-    columnVisibilityModel={columnVisibilityModel}
     sx={{
       width: '100%',
       border: 0,
@@ -153,11 +151,11 @@ export interface TickerType {
 export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, tickerSymbol }) => (
   <Box display="flex" justifyContent="flex-start">
     {tickerIcon && <Image src={tickerIcon} width={27} height={27} alt={tickerSymbol} />}
-    <Box display='flex' ml='10px' sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'flex-start', md: 'center' } }}>
+    <Box display='flex' alignItems='center' ml='10px'>
       <Box sx={{ maxWidth: '200px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
         <Typography variant='p_xlg'>{tickerName}</Typography>
       </Box>
-      <Box sx={{ color: '#989898', marginLeft: { xs: '0px', md: '10px' } }}>
+      <Box sx={{ color: '#989898' }} ml='10px'>
         <Typography variant='p_lg'>{tickerSymbol}</Typography>
       </Box>
     </Box>

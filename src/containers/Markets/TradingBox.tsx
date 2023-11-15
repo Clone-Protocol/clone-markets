@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles'
 import { useCallback, useState } from 'react'
 import TradingComp from '~/components/Markets/TradingBox/TradingComp'
 import withSuspense from '~/hocs/withSuspense'
-import { LoadingProgress } from '~/components/Common/Loading'
 import { useRouter } from 'next/navigation'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { SLIPPAGE } from '~/data/localstorage'
@@ -66,4 +65,4 @@ const StyledPaper = styled(Paper)`
 	text-align: center;
 `
 
-export default withSuspense(TradingBox, <LoadingProgress />)
+export default withSuspense(TradingBox, <></>)

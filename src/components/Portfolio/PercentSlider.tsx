@@ -10,7 +10,7 @@ const PercentSlider: React.FC<Props> = ({ percent }) => {
 
   const CustomSlider = styled(Slider)(({ theme }) => ({
     color: '#0038ff',
-    width: 190,
+    width: 210,
     height: 4,
     '& .MuiSlider-track': {
       height: 8,
@@ -28,7 +28,7 @@ const PercentSlider: React.FC<Props> = ({ percent }) => {
   }))
 
   return (
-    <Box lineHeight={0.4}>
+    <Box lineHeight={0.4} pr='50px'>
       <CustomSlider
         min={0}
         max={100}
