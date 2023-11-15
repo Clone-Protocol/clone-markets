@@ -1,8 +1,7 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Theme, Typography, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { BalanceList } from '~/features/Portfolio/UserBalance.query'
-import { PieItem } from '~/data/filter'
 import { Grid, CellTicker, CustomNoOnAssetOverlay, CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { GridEventListener } from '@mui/x-data-grid'
 import Image from 'next/image'
@@ -19,12 +18,11 @@ import { ON_USD } from '~/utils/constants'
 
 interface Props {
   assets: BalanceList[]
-  pieitems: PieItem[]
 }
 
-const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
+const OnAssetList: React.FC<Props> = ({ assets }) => {
   const { publicKey } = useWallet()
-
+  const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
   const router = useRouter()
   const handleRowClick: GridEventListener<'rowClick'> = useCallback((
     params
@@ -41,6 +39,10 @@ const OnAssetList: React.FC<Props> = ({ assets, pieitems }) => {
       </TopBox>
       <Grid
         headers={columns}
+        columnVisibilityModel={isMobileOnSize ? {
+          "price": false,
+          "iPortfolio": false
+        } : {}}
         rows={assets || []}
         minHeight={110}
         isBorderTopRadius={false}
@@ -56,7 +58,7 @@ let columns: GridColDef[] = [
   {
     field: 'iAssets',
     headerName: 'Token',
-    flex: 2,
+    flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
@@ -66,8 +68,9 @@ let columns: GridColDef[] = [
   {
     field: 'myBalance',
     headerName: 'Total Balance',
-    headerClassName: 'balance--header',
-    flex: 2,
+    headerClassName: 'right--header',
+    cellClassName: 'right--cell',
+    flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <Stack lineHeight={1.2} width='120px' textAlign='right'>
@@ -84,6 +87,8 @@ let columns: GridColDef[] = [
   {
     field: 'price',
     headerName: `Price (${ON_USD})`,
+    headerClassName: 'right--header',
+    cellClassName: 'right--cell',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       const percent = parseFloat(params.row.changePercent)
@@ -110,9 +115,10 @@ let columns: GridColDef[] = [
   },
   {
     field: 'iPortfolio',
-    headerClassName: 'last--header',
+    headerClassName: 'right--header',
+    cellClassName: 'right--cell',
     headerName: 'Portfolio %',
-    flex: 2,
+    flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return (
         <Box mt='-15px'>

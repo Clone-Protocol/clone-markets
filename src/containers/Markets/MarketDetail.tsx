@@ -1,4 +1,4 @@
-import { Box, Stack, Divider, Typography } from '@mui/material'
+import { Box, Stack, Divider, Typography, useMediaQuery, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Chart from '~/components/Markets/MarketDetail/Chart'
 import Image from 'next/image'
@@ -13,6 +13,7 @@ import { ON_USD } from '~/utils/constants'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	const { data: asset } = useMarketDetailQuery({
 		index: parseInt(assetId),
 		refetchOnMount: true,
@@ -58,7 +59,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 	return (
 		<>
 			{asset ? (
-				<Stack mb={2} direction="column" paddingLeft={5} paddingY={1} maxWidth='750px'>
+				<Stack mb={2} direction="column" pl={isMobileOnSize ? 0 : 5} pt={isMobileOnSize ? 5 : 1} pb={1} maxWidth={isMobileOnSize ? '380px' : '750px'}>
 					<Box>
 						<Box display="inline-flex" alignItems="center">
 							<Image src={asset.tickerIcon} width={30} height={30} alt={asset.tickerSymbol} />
@@ -75,7 +76,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
 					<OverviewWrapper>
 						<Typography variant='h3' fontWeight={500}>Market Overview</Typography>
-						<Stack direction="row" justifyContent="flex-start" spacing={9} mt='25px'>
+						<Stack direction={isMobileOnSize ? "column" : "row"} justifyContent="flex-start" spacing={isMobileOnSize ? 3 : 9} mt='25px'>
 							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
@@ -103,7 +104,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
 							<Box padding='10px'>
 								<Typography variant='h3' fontWeight={500}>My {asset.tickerSymbol}</Typography>
-								<Stack direction="row" justifyContent="flex-start" spacing={9} mt='25px'>
+								<Stack direction={isMobileOnSize ? "column" : "row"} justifyContent="flex-start" spacing={isMobileOnSize ? 3 : 9} mt='25px'>
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
 										<Box mt='8px'>

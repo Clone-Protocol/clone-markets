@@ -3,28 +3,46 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 
-const NaviMenu = () => {
+const CommonMenu = ({ isMobile = false }: { isMobile?: boolean }) => {
   const pathname = usePathname()
 
   return (
+    <List component="nav" sx={{ display: 'flex', padding: 0 }}>
+      <Link href="/">
+        <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
+          <Box><Typography variant='p_lg'>Home</Typography></Box>
+        </StyledListItemButton>
+      </Link>
+      <Link href="/clportfolio">
+        <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
+          <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
+        </StyledListItemButton>
+      </Link>
+      <Link href="/trade/euro">
+        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
+          <Box><Typography variant='p_lg'>Trade</Typography></Box>
+        </StyledListItemButton>
+      </Link>
+    </List>
+  )
+}
+
+const NaviMenu = () => {
+  return (
     <Fade in timeout={1500}>
-      <List component="nav" sx={{ display: 'flex', padding: 0 }}>
-        <Link href="/">
-          <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
-            <Box><Typography variant='p_lg'>Home</Typography></Box>
-          </StyledListItemButton>
-        </Link>
-        <Link href="/clportfolio">
-          <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
-            <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
-          </StyledListItemButton>
-        </Link>
-        <Link href="/trade/euro">
-          <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
-            <Box><Typography variant='p_lg'>Trade</Typography></Box>
-          </StyledListItemButton>
-        </Link>
-      </List>
+      <Box>
+        <CommonMenu />
+      </Box>
+    </Fade>
+  )
+}
+
+export const MobileNaviMenu = () => {
+  return (
+    <Fade in timeout={1500}>
+      <Box display='flex' justifyContent='center' bgcolor="#040414" paddingBottom='15px'>
+        <CommonMenu isMobile={true} />
+      </Box>
     </Fade>
   )
 }
