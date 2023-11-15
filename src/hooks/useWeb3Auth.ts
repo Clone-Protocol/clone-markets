@@ -25,5 +25,12 @@ export default function useWeb3Auth() {
     init()
   }, [])
 
-  return web3auth
+  const connect = async () => {
+    await web3auth.connect()
+  }
+
+  return {
+    web3auth,
+    connect
+  }
 }
