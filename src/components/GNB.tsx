@@ -18,7 +18,6 @@ import TokenFaucetDialog from './Account/TokenFaucetDialog'
 import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
-import { Web3Auth } from "@web3auth/modal";
 // import CloseIcon from '@mui/icons-material/Close';
 // import MenuIcon from '@mui/icons-material/Menu';
 
@@ -102,35 +101,11 @@ const RightMenu: React.FC = () => {
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	useFaucet()
 
-	//initialize web3-auth
-	const web3auth = new Web3Auth({
-		clientId: process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID!,
-		web3AuthNetwork: "sapphire_devnet", // Web3Auth Network
-		chainConfig: {
-			chainNamespace: "solana",
-			chainId: "0x103",
-			rpcTarget: "https://api.devnet.solana.com",
-			displayName: "Solana Devnet",
-			blockExplorer: "https://explorer.solana.com/",
-			ticker: "SOL",
-			tickerName: "Solana",
-		},
-	});
-
-	useEffect(() => {
-		async function init() {
-			await web3auth.initModal();
-		}
-		init()
-	}, [])
-
 	const handleWalletClick = async () => {
 		try {
 			if (!connected) {
 				if (!wallet) {
-					// setOpen(true)
-					//connect web3 auth
-					await web3auth.initModal();
+					setOpen(true)
 				} else {
 					connect()
 				}
