@@ -3,7 +3,7 @@ import { CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/s
 import { Collateral } from "clone-protocol-sdk/sdk/generated/clone"
 import { assetMapping } from "src/data/assets"
 import { REFETCH_CYCLE } from "~/components/Markets/TradingBox/RateLoadingIndicator"
-import { getPythOraclePrices } from "~/utils/pyth"
+import { getPythOraclePrices, fetchPythPriceFromAccountAddress } from "~/utils/pyth"
 import { ASSETS_DESC } from "~/data/assets_desc"
 import { fetch24hourVolume } from "~/utils/assets"
 import { getCloneClient } from "../baseQuery"
@@ -31,13 +31,15 @@ export const fetchMarketDetail = async ({
 
   const { tickerName, tickerSymbol, tickerIcon, pythSymbol } = assetMapping(index)
   const pools = await program.getPools()
+  const oracles = await program.getOracles();
   const pool = pools.pools[index]
   const poolOnassetIld = fromCloneScale(pool.onassetIld)
   const poolCollateralIld = fromCollateralScale(pool.collateralIld)
   const poolCommittedCollateral = fromCollateralScale(pool.committedCollateralLiquidity)
   const liquidityTradingFee = fromScale(pool.liquidityTradingFeeBps, 4)
   const treasuryTradingFee = fromScale(pool.treasuryTradingFeeBps, 4)
-  const oraclePrice = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol)!
+  const oraclePrice = await fetchPythPriceFromAccountAddress(program.provider.connection, oracles.oracles[pool.assetInfo.oracleInfoIndex].address)
+  //const oraclePrice = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol)!
   const committedCollateralLiquidity = fromCollateralScale(pool.committedCollateralLiquidity)
   const poolCollateral = committedCollateralLiquidity - fromCollateralScale(pool.collateralIld)
   const poolOnasset = committedCollateralLiquidity / oraclePrice - fromCloneScale(pool.onassetIld)

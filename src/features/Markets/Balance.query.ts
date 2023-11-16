@@ -3,7 +3,7 @@ import { CloneClient, fromCloneScale, fromScale } from 'clone-protocol-sdk/sdk/s
 import { useDataLoading } from '~/hooks/useDataLoading'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
-import { getPythOraclePrices } from "~/utils/pyth"
+import { getPythOraclePrices, fetchPythPriceFromAccountAddress } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
 import { getCloneClient } from '../baseQuery'
 import { useAtomValue } from 'jotai'
@@ -58,7 +58,9 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { 
         onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
-      const price = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol);
+      // NOTE: This reads the data directly from the blockchain, should be used for Eclipse testnet.
+      const price = await fetchPythPriceFromAccountAddress(program.provider.connection, oracle.address);
+      //const price = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol);
       const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
       const { poolCollateral, poolOnasset } = calculatePoolAmounts(
         fromScale(pool.collateralIld, collateralScale),

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PythHttpClient, getPythProgramKeyForCluster } from '@pythnetwork/client';
+import { PythHttpClient, getPythProgramKeyForCluster, parsePriceData } from '@pythnetwork/client';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { ASSETS, assetMapping } from '~/data/assets';
 
@@ -66,3 +66,17 @@ export const getPythOraclePrices = async (
     }
     return pricesMap;
 };
+
+export const fetchPythPriceFromAccountAddress = async (
+    connection: Connection, priceAddress: PublicKey
+): Promise<number | undefined> => {
+
+    const info = await connection.getAccountInfo(priceAddress)
+
+    if (!info)
+        return undefined;
+
+    const pythData = parsePriceData(info.data)
+
+    return pythData.aggregate.price
+}
