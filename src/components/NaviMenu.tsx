@@ -3,7 +3,7 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 
-const CommonMenu = ({ isMobile = false }: { isMobile?: boolean }) => {
+const CommonMenu = () => {
   const pathname = usePathname()
 
   return (
@@ -41,7 +41,7 @@ export const MobileNaviMenu = () => {
   return (
     <Fade in timeout={1500}>
       <Box display='flex' justifyContent='center' bgcolor="#040414" paddingBottom='15px'>
-        <CommonMenu isMobile={true} />
+        <CommonMenu />
       </Box>
     </Fade>
   )
