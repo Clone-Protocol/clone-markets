@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Stack, Theme, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
@@ -35,6 +35,14 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
     setShowTrading(!showTrading)
   }
 
+  useEffect(() => {
+    if (!isMobileOnSize) {
+      setShowTrading(false)
+    }
+  }, [isMobileOnSize])
+
+  const isShowTradingBox = showTrading || !isMobileOnSize
+
   return (
     <div>
       <StyledSection
@@ -45,8 +53,8 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
           <Box minWidth={isMobileOnSize ? '360px' : '750px'}>
             <MarketDetail assetId={assetId} />
           </Box>
-          <Box width={showTrading ? '100%' : '360px'} height='100%' overflow={showTrading ? 'auto' : 'hidden'} display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '45px' : 'inherit'}>
-            {(showTrading || !isMobileOnSize) && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}
+          <Box width={showTrading ? '100%' : '360px'} height='100%' overflow={showTrading ? 'auto' : 'hidden'} display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '45px' : 'inherit'} mb={showTrading ? '180px' : '0px'}>
+            {isShowTradingBox && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}
           </Box>
         </Stack>
       </StyledSection>

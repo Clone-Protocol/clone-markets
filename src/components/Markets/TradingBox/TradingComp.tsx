@@ -221,7 +221,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   return (
     <>
       <div style={{ width: '100%', height: '100%' }}>
-        <Box p='18px'>
+        <Box p='18px' sx={{ paddingBottom: { xs: '150px', md: '18px' } }}>
           <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
             <ToolButton onClick={() => { refreshBalance() }} disabled={!isEnabledRestart}>
               <Image src={reloadIcon} alt="reload" />
