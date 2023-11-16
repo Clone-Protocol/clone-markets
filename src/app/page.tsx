@@ -4,7 +4,7 @@ import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Container from '@mui/material/Container'
 import MarketList from '~/containers/Markets/MarketList'
-import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
+// import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
 import PortfolioBalance from '~/components/Markets/PortfolioBalance'
 import { useWallet } from '@solana/wallet-adapter-react'
 
@@ -15,13 +15,13 @@ const Home = () => {
       <StyledSection>
         <Container>
           {publicKey &&
-            <Box>
+            <Box mb='30px'>
               <PortfolioBalance />
 
-              <Divider />
+              {/* <Divider />
               <Box mb='30px'>
                 <GetUSDiBadge />
-              </Box>
+              </Box> */}
             </Box>
           }
           <MarketList />

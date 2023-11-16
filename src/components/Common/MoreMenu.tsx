@@ -10,7 +10,7 @@ import HomeHoverIcon from 'public/images/more/home-hover.svg'
 import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
 import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
 import { useState } from 'react'
-import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
+import { CAREER_URL, DISCORD_URL, DOCS_URL, ECLIPSE_DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
 
 interface Props {
   anchorEl: null | HTMLElement
@@ -40,9 +40,9 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         mt: 1.5,
         transition: 'none',
         transitionDuration: 0,
-        background: '#080018',
+        background: '#0f0f0f',
         color: '#fff',
-        border: '1px solid #414166',
+        border: '1px solid #676767',
         borderRadius: '10px'
       },
     }}
@@ -50,20 +50,22 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
   >
-    <StyledMenuItem onClick={onShowTokenFaucet}>
-      <HoverStack direction='row' alignItems='center'>
-        <Box width='184px'>
-          <Box><Typography variant='p'>Token Faucet</Typography></Box>
-          <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana devnet</Typography></Box>
-        </Box>
-      </HoverStack>
-    </StyledMenuItem>
+    <a href={ECLIPSE_DOCS_URL} target='_blank' rel="noreferrer">
+      <StyledMenuItem>
+        <HoverStack direction='row' alignItems='center'>
+          <Box width='184px'>
+            <Box><Typography variant='p'>Eclipse Testnet Docs</Typography></Box>
+            <Box><Typography variant='p_sm' color='#a7a7a7'>Learn about Eclipse</Typography></Box>
+          </Box>
+        </HoverStack>
+      </StyledMenuItem>
+    </a>
     <a href={DOCS_URL} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
-            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#8988a3'>Learn about Clone Markets</Typography></Box>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Docs</Typography></Stack>
+            <Box><Typography variant='p_sm' color='#a7a7a7'>Learn about Clone Protocol</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
@@ -72,8 +74,8 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
-            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Liquidity</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#8988a3'>Provide Liquidity on Clone Protocol</Typography></Box>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Liquidity on Solana Devnet</Typography></Stack>
+            <Box><Typography variant='p_sm' color='#a7a7a7'>Try Liquidity on Solana Devnet</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
@@ -83,7 +85,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Opportunities</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#8988a3'>Wanna be a pioneer of Defi?</Typography></Box>
+            <Box><Typography variant='p_sm' color='#a7a7a7'>Wanna be a pioneer of Defi?</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>

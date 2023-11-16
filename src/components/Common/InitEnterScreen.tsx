@@ -19,10 +19,10 @@ const InitEnterScreen = ({ onClose }: { onClose: () => void }) => {
         <TextHead>Welcome!</TextHead>
         <Box my='20px' lineHeight={0.9}>
           <Typography variant='p_xlg' lineHeight={1.5}>
-            Welcome to Clone Liquidity on Solana Devnet. Devnet is the perfect place to explore Clone and Solana without any cost!
+            Welcome to Clone Markets on Eclipse Testnet. Testnet is the perfect place to explore Clone and Eclipse without any cost!
           </Typography>
         </Box>
-        <EnterButton onClick={() => close()}><Typography variant='p_xlg'>Enter Clone Devnet</Typography></EnterButton>
+        <EnterButton onClick={() => close()}><Typography variant='p_xlg'>Enter Clone on Eclipse Testnet</Typography></EnterButton>
 
         <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
           <CloseButton handleClose={onClose} />

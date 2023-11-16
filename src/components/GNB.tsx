@@ -43,7 +43,7 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={121} height={25} alt="clone" />
+						<Image src={logoIcon} width={150} height={25} alt="clone" />
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
 						</Box>
@@ -107,9 +107,9 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
+				{/* <HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
 					<Typography variant='p'>Devnet Faucet</Typography>
-				</HeaderButton>
+				</HeaderButton> */}
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
@@ -176,7 +176,7 @@ const NavPlaceholder = styled('div')`
 const HeaderButton = styled(Button)`
 	padding: 8px;
 	margin-left: 16px;
-	color: #c5c7d9;
+	color: #dadada;
 	height: 42px;
 	border-radius: 10px;
 	&:hover {

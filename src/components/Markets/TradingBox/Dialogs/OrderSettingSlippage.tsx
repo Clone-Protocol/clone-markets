@@ -38,16 +38,16 @@ export const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple {.
 	},
 	textTransform: 'none',
 	fontSize: '14px',
-	color: '#8988a3',
+	color: '#a7a7a7',
 	'&:hover': {
-		border: 'solid 1px #c4b5fd',
+		backgroundColor: 'rgba(255, 255, 255, 0.1)'
 	},
 	'&.Mui-selected': {
 		// backgroundColor: '#000',
 		color: '#fff',
 		borderWidth: '1px',
 		borderStyle: 'solid',
-		borderColor: '#c4b5fd',
-		backgroundImage: 'radial-gradient(circle at -63% 50%, #ff6cdf, rgba(66, 0, 255, 0) 48%), radial-gradient(circle at 215% 71%, #ff6cdf, rgba(66, 0, 255, 0) 66%)'
+		borderColor: '#fff',
+		// backgroundImage: 'radial-gradient(circle at -63% 50%, #ff6cdf, rgba(66, 0, 255, 0) 48%), radial-gradient(circle at 215% 71%, #ff6cdf, rgba(66, 0, 255, 0) 66%)'
 	}
 }))

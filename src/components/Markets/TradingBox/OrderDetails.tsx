@@ -29,21 +29,21 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
   return (
     <Wrapper>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Price Impact <InfoTooltip title="Price Impact" color='#8988a3' /></Typography>
+        <Typography variant='p' color='#dadada' display='flex' alignItems='center'>Price Impact <InfoTooltip title="Price Impact" color='#dadada' /></Typography>
         <PriceImpactValue>{isNaN(priceImpact) || priceImpact < 0.1 ? '<' : '~'} {isNaN(priceImpact) ? '0.1' : Math.max(priceImpact, 0.1)}%</PriceImpactValue>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title="Minimum received" color='#8988a3' /></Typography>
+        <Typography variant='p' color='#dadada' display='flex' alignItems='center'>Minimum received <InfoTooltip title="Minimum received" color='#dadada' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
-          <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(minReceived) ? '0' : minReceived?.toLocaleString()} {outputSymbol}</Typography></Box>
-          <Box><Typography variant='p_sm' color='#8988a3'>Slippage tolerance: {slippage?.toLocaleString()}%</Typography></Box>
+          <Box><Typography variant='p' fontWeight={600} color='#fff'>{isNaN(minReceived) ? '0' : minReceived?.toLocaleString()} {outputSymbol}</Typography></Box>
+          <Box><Typography variant='p_sm' color='#a7a7a7'>Slippage tolerance: {slippage?.toLocaleString()}%</Typography></Box>
         </div>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Trade Fees <InfoTooltip title="Trade fees" color='#8988a3' /></Typography>
+        <Typography variant='p' color='#dadada' display='flex' alignItems='center'>Trade Fees <InfoTooltip title="Trade fees" color='#dadada' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
-          <Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(estimatedFees) ? '0' : estimatedFees?.toFixed(6)} {outputSymbol}</Typography>
-          <Box><Typography variant='p_sm' color='#8988a3'>{tradeFee.toFixed(2)}% (${isNaN(tradeFeeDollar) ? '0' : tradeFeeDollar?.toFixed(6)})</Typography></Box>
+          <Typography variant='p' fontWeight={600} color='#fff'>{isNaN(estimatedFees) ? '0' : estimatedFees?.toFixed(6)} {outputSymbol}</Typography>
+          <Box><Typography variant='p_sm' color='#a7a7a7'>{tradeFee.toFixed(2)}% (${isNaN(tradeFeeDollar) ? '0' : tradeFeeDollar?.toFixed(6)})</Typography></Box>
         </div>
       </Stack>
     </Wrapper>

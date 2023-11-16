@@ -32,7 +32,7 @@ export type LineChartProps = {
 
 const LineChartAlt: React.FC<LineChartProps> = ({
   data,
-  color = 'rgba(166, 153, 251)',
+  color = 'rgba(255, 255, 255, 0.25)',
   value,
   label,
   setValue,
@@ -56,7 +56,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
       const formattedTime = dayjs(payload[0].payload.time).format('MMM D, h:mm A')
       // if (setLabel && label !== formattedTime) setLabel(formattedTime)
       return (
-        <Box sx={{ fontSize: '12px', color: '#8988a3' }}>
+        <Box sx={{ fontSize: '12px', color: '#a7a7a7' }}>
           <p className="label">{`${formattedTime}`}</p>
         </Box>
       );
@@ -109,7 +109,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             hide
           />
           <Tooltip
-            cursor={{ stroke: '#8988a3', strokeDasharray: '4 4' }}
+            cursor={{ stroke: '#a7a7a7', strokeDasharray: '4 4' }}
             content={CustomTooltip}
             contentStyle={{ display: 'block', background: 'transparent' }}
           // formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
@@ -121,7 +121,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
           //   if (setLabel && label !== formattedTime) setLabel(formattedTime)
           // }}
           />
-          <Area dataKey="value" type="monotone" stroke="#c4b5fd" fill="url(#gradient)" strokeWidth={1} />
+          <Area dataKey="value" type="monotone" stroke="#fff" fill="url(#gradient)" strokeWidth={1} />
         </AreaChart>
       </ResponsiveContainer>
     </Wrapper>

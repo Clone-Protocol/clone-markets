@@ -48,7 +48,7 @@ let columns: GridColDef[] = [
 					<Image src={params.row.tickerIcon} width={28} height={28} alt={params.row.tickerSymbol} />
 					<Box marginLeft='8px' marginTop='3px'>
 						<Typography variant='p_lg'>{params.row.tickerName}</Typography>
-						<Typography variant='p_lg' color='#8988a3' ml='10px'>{params.row.tickerSymbol}</Typography>
+						<Typography variant='p_lg' color='#a7a7a7' ml='10px'>{params.row.tickerSymbol}</Typography>
 					</Box>
 				</Box>
 			)
@@ -61,7 +61,7 @@ let columns: GridColDef[] = [
 		headerName: '',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box mr='5px'><Typography variant='p_lg' color='#c5c7d9'>{params.value?.toLocaleString()}</Typography></Box>
+			return <Box mr='5px'><Typography variant='p_lg' color='#dadada'>{params.value?.toLocaleString()}</Typography></Box>
 		},
 	},
 ]

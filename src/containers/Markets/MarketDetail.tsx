@@ -67,7 +67,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 								<Typography variant="h3" fontWeight={500}>{asset.tickerName}</Typography>
 							</Box>
 							<Box ml='8px'>
-								<Typography variant='h3' fontWeight={500} color='#8988a3'>{asset.tickerSymbol}</Typography>
+								<Typography variant='h3' fontWeight={500} color='#a7a7a7'>{asset.tickerSymbol}</Typography>
 							</Box>
 						</Box>
 					</Box>
@@ -78,19 +78,19 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 						<Typography variant='h3' fontWeight={500}>Market Overview</Typography>
 						<Stack direction={isMobileOnSize ? "column" : "row"} justifyContent="flex-start" spacing={isMobileOnSize ? 3 : 9} mt='25px'>
 							<Box width='160px'>
-								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
+								<Box><Typography variant='p' color='#a7a7a7'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${asset.volume.toLocaleString()} {ON_USD}</Typography>
 								</Box>
 							</Box>
 							<Box width='160px'>
-								<Box><Typography variant='p' color='#8988a3'>Current Liquidity (24h)</Typography></Box>
+								<Box><Typography variant='p' color='#a7a7a7'>Current Liquidity (24h)</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} {ON_USD}</Typography>
 								</Box>
 							</Box>
 							<Box width='160px'>
-								<Box><Typography variant='p' color='#8988a3'>Current Premium</Typography></Box>
+								<Box><Typography variant='p' color='#a7a7a7'>Current Premium</Typography></Box>
 								<Box mt='8px'>
 									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{asset.avgPremium.toFixed(3)}%</Typography>
 								</Box>
@@ -106,19 +106,19 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 								<Typography variant='h3' fontWeight={500}>My {asset.tickerSymbol}</Typography>
 								<Stack direction={isMobileOnSize ? "column" : "row"} justifyContent="flex-start" spacing={isMobileOnSize ? 3 : 9} mt='25px'>
 									<Box width='160px'>
-										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
+										<Box><Typography variant='p' color='#a7a7a7'>Balance</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{myData.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {asset.tickerSymbol}</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>
-										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
+										<Box><Typography variant='p' color='#a7a7a7'>Value</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${myData.value.toLocaleString()} {ON_USD}</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>
-										<Box><Typography variant='p' color='#8988a3'>clAsset Portfolio %</Typography></Box>
+										<Box><Typography variant='p' color='#a7a7a7'>clAsset Portfolio %</Typography></Box>
 										<Box mt='8px'>
 											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{myData.portfolioValue.toFixed(2)}%</Typography>
 										</Box>
@@ -133,7 +133,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 					<Box marginBottom='40px' padding='10px'>
 						<Typography variant='h3' fontWeight={500}>About {asset.tickerSymbol}</Typography>
 						<Box lineHeight={1.14} mt='8px'><Typography variant='p_lg'>{asset.detailOverview}</Typography></Box>
-						<a href={`https://docs.clone.so/devnet-guide/classets-devnet/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#c4b5fd'>...read more</Typography></a>
+						<a href={`https://docs.clone.so/devnet-guide/classets-devnet/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#00ff99'>...read more</Typography></a>
 					</Box>
 				</Stack>
 			) : (
@@ -149,7 +149,7 @@ const OverviewWrapper = styled(Box)`
 	padding: 10px;
 `
 const StyledDivider = styled(Divider)`
-	background-color: rgba(195, 153, 248, 0.25);
+	background-color: rgba(255, 255, 255, 0.25);
 	margin-bottom: 12px;
 	margin-top: 12px;
 	height: 1px;

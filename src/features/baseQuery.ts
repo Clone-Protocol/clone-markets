@@ -4,6 +4,7 @@ import { PublicKey, Connection, Commitment } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { ECLIPSE_NET, ECLIPSE_TESTNET_RPC } from '~/utils/eclipse_contracts';
 
 export const funcNoWallet = async () => {
   console.log('no wallet')
@@ -13,8 +14,11 @@ export const funcNoWallet = async () => {
 }
 
 export const getCloneClient = async (wallet?: AnchorWallet) => {
-  const network = getNetworkDetailsFromEnv()
+  const network = ECLIPSE_NET //getNetworkDetailsFromEnv()
   const connection = new Connection(network.endpoint)
+
+  // hardcoded eclipse
+  // const connection = new Connection(ECLIPSE_TESTNET_RPC)
 
   let provider
   if (wallet) {

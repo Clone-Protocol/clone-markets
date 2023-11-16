@@ -53,7 +53,7 @@ const RateLoadingIndicator = ({ restartTimer }: { restartTimer: boolean }) => {
           thickness={2}
           value={100}
         />
-        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#9b79fc', position: 'absolute', left: 0 }} size={12}
+        <CustomCircularProgress variant="determinate" color="primary" sx={{ color: '#fff', position: 'absolute', left: 0 }} size={12}
           thickness={5} value={progress} />
       </Box>
     </Wrapper>
@@ -64,7 +64,7 @@ export default RateLoadingIndicator
 
 const CustomCircularProgress = styled(CircularProgress)`
   .MuiCircularProgress-root	{
-    color: #525252;
+    color: #fff;
   }
 `
 

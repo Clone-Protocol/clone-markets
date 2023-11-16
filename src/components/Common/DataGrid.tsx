@@ -43,7 +43,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         maxWidth: '180px'
       },
       '& .MuiDataGrid-columnHeaderTitle': {
-        color: '#8988a3',
+        color: '#a7a7a7',
         fontSize: '12px',
         lineHeight: 1.33,
         marginLeft: '10px'
@@ -83,7 +83,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         cursor: 'pointer'
       },
       '& .MuiDataGrid-row:hover': {
-        backgroundColor: 'rgba(196, 181, 253, 0.1)'
+        backgroundColor: 'rgba(255, 255, 255, 0.1)'
       },
       '& .MuiDataGrid-cell': {
         borderBottom: '0',
@@ -130,7 +130,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
 export const CustomNoRowsOverlay = (msg: string) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
-      <Typography variant='p_lg' color='#8988a3'>{msg}</Typography>
+      <Typography variant='p_lg' color='#a7a7a7'>{msg}</Typography>
     </Box>
   )
 }

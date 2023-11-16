@@ -26,15 +26,15 @@ const getTxnURL = (txHash: string) => {
 }
 
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
-  const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
+  // const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
   return (<Stack direction='row' alignItems='center' gap={1}>
     <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} width={65} height={65} alt='icStatus' /></Box>
     <Box lineHeight={1.3}>
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
-      {!isSuccess && <Box mt='6px'><Typography variant='p' color='#8988a3'>Something went wrong. Please try again.</Typography></Box>}
-      <Box mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>
+      {!isSuccess && <Box mt='6px'><Typography variant='p' color='#a7a7a7'>Something went wrong. Please try again.</Typography></Box>}
+      {/* <Box mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>
         <a href={isSuccess ? getTxnURL(txHash) : 'https://status.solana.com/'} target='_blank' rel="noreferrer"><Typography variant='p_sm' color={txStatusColor}>{isSuccess ? 'View Transaction' : 'Check Solana network status'}</Typography></a>
-      </Box>
+      </Box> */}
     </Box>
   </Stack>)
 }
@@ -48,7 +48,7 @@ const useCircleStyles = makeStyles(() => ({
 const ConfirmingWrapper = ({ txHash, isFocus }: { txHash: string, isFocus: boolean }) => {
   const classes = useCircleStyles({});
   const [longTimeStatus, setLongTimeStatus] = useState<JSX.Element>()
-  const StatusWrap = (<LongTimeStatus><Typography variant='p'>This transaction is taking longer than usual. Please check <br /> <a href='https://status.solana.com/' target='_blank' rel="noreferrer">Solana Network status</a></Typography></LongTimeStatus>)
+  const StatusWrap = (<LongTimeStatus><Typography variant='p'>This transaction is taking longer than usual.</Typography></LongTimeStatus>)
   setTimeout(() => {
     setLongTimeStatus(StatusWrap)
   }, 15000)
@@ -59,17 +59,16 @@ const ConfirmingWrapper = ({ txHash, isFocus }: { txHash: string, isFocus: boole
         <Box display='flex' alignItems='center'>
           <svg width="8" height="6">
             <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="25%" stopColor="#ff6cdf" />
-              <stop offset="90%" stopColor="rgba(66,0,255, 0.0)" />
+              <stop offset="25%" stopColor="#fff" />
+              <stop offset="90%" stopColor="rgba(113,113,113,0.0)" />
             </linearGradient>
           </svg>
-          <CircularProgress classes={{ circle: classes.circle }} size='56px' thickness={5} />
+          <CircularProgress sx={{ color: '#fff' }} classes={{ circle: classes.circle }} size='56px' thickness={5} />
         </Box>
         <Box>
           <Box><Typography variant='p_xlg'>Confirming transaction...</Typography></Box>
           <Box my='6px' lineHeight={1.3}>
-            <Box><Typography variant='p' color='#8988a3'>Transactions on Solana typically take an average of 5 seconds. </Typography></Box>
-            <Box sx={{ textDecoration: 'underline', color: '#c4b5fd' }}><a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p_sm' color='#c4b5fd'>View Transaction</Typography></a></Box>
+            <Box sx={{ textDecoration: 'underline', color: '#fff' }}><a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p_sm' color='#fff'>View Transaction</Typography></a></Box>
           </Box>
         </Box>
       </Stack>
@@ -143,7 +142,9 @@ const ConfirmBoxWrapper = styled(Box)`
   background: ${(props) => props.theme.basis.darkPurple};
 `
 const LongTimeStatus = styled(Box)`
-  padding: 12px 18px;
+  background-color: rgba(255, 141, 78, 0.1);
+  padding: 6px 12px;
+  border-radius: 5px;
   color: ${(props) => props.theme.palette.warning.main};
   margin-top: 8px;
   line-height: 1;

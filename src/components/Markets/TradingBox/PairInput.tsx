@@ -24,15 +24,15 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 	return (
 		<FormControl variant="standard" sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between">
-				<Box><Typography variant='p_lg' color='#8988a3'>{title}</Typography></Box>
+				<Box><Typography variant='p_lg' color='#a7a7a7'>{title}</Typography></Box>
 				{!balanceDisabled ? <Box display='flex' alignItems='center'>
-					<Typography variant='p' color='#8988a3'>Balance: </Typography> <Typography variant='p' color='#c4b5fd'>{balance?.toLocaleString(undefined, { maximumFractionDigits: 4 })}</Typography>
-					<MaxButton onClick={() => onMax && onMax(balance!)}>Max</MaxButton></Box> : <></>}
+					<Typography variant='p' color='#a7a7a7'>Balance: </Typography> <Typography variant='p' color='#fff'>{balance?.toLocaleString(undefined, { maximumFractionDigits: 4 })}</Typography>
+					<MaxButton onClick={() => onMax && onMax(balance!)}>MAX</MaxButton></Box> : <></>}
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display='flex' flexDirection='column' alignItems='flex-start' pl='5px' sx={valueDisabled ? { cursor: 'not-allowed' } : { cursor: 'default' }}>
-					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} disabled={valueDisabled} onChange={onChange} />
-					<Box><Typography variant='p' color='#8988a3'>${!dollarValue || isNaN(dollarValue) ? 0 : dollarValue?.toLocaleString()}</Typography></Box>
+					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#a7a7a7' }} placeholder="0.00" min={0} max={max} value={value} disabled={valueDisabled} onChange={onChange} />
+					<Box><Typography variant='p' color='#a7a7a7'>${!dollarValue || isNaN(dollarValue) ? 0 : dollarValue?.toLocaleString()}</Typography></Box>
 				</Box>
 
 				{!tickerClickable ?
@@ -75,7 +75,7 @@ const TickerBox = styled(Box)`
 	padding: 3px 10px 3px 5px;
 	color: #fff;
 	border-radius: 100px;
-	background-color: rgba(65, 65, 102, 0.5);
+	background-color: rgba(9, 9, 12, 0.5);
 `
 
 const SelectTickerButton = styled(Button)`
@@ -83,11 +83,11 @@ const SelectTickerButton = styled(Button)`
 	align-items: center;
 	color: #fff;
 	border-radius: 100px;
-	background-color: rgba(65, 65, 102, 0.5);
+	background-color: rgba(9, 9, 12, 0.5);
 	padding: 3px 0px 3px 5px;
 
 	&:hover {
-		background-color: rgba(65, 65, 102, 0.5);
+		background-color: rgba(9, 9, 12, 0.5);
 		box-shadow: 0 0 0 1px ${(props) => props.theme.basis.melrose} inset;
 	}
 `
@@ -111,11 +111,11 @@ const MaxButton = styled(Button)`
 	color: ${(props) => props.theme.basis.melrose};
 	padding: 2px 7px;
 	border-radius: 100px;
-	background-color: rgba(155, 121, 252, 0.3);
+	background-color: rgba(125, 125, 125, 0.3);
 	margin-left: 6px;
 	margin-bottom: 3px;
 	&:hover {
-		background-color: rgba(155, 121, 252, 0.3);
+		background-color: rgba(125, 125, 125, 0.3);
 		border: solid 1px ${(props) => props.theme.basis.melrose};
   }
 `

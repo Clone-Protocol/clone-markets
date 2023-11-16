@@ -40,7 +40,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 	return balance ? (
 		<>
 			<TopBox>
-				<Box><Typography variant='p' color='#8988a3'>Stable Coin</Typography></Box>
+				<Box><Typography variant='p' color='#a7a7a7'>Stable Coin</Typography></Box>
 				<Box><Typography variant='h3' fontWeight={500}>${balance?.onusdVal.toFixed(2)}</Typography></Box>
 			</TopBox>
 			<Grid
@@ -135,11 +135,11 @@ const GetUSDButton = styled(Button)`
 	height: 28px;
 	border-radius: 100px;
 	border: solid 1px ${(props) => props.theme.basis.melrose};
-	background-color: rgba(155, 121, 252, 0.15);
+	background-color: #0f0f0f;
 	color: #fff;
 	line-height: 29px;
 	&:hover {
-		background-color: rgba(155, 121, 252, 0.15);
+		background-color: #0f0f0f;
 		border-color: ${(props) => props.theme.basis.lightSlateBlue};
 	}
 `

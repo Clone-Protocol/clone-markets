@@ -34,7 +34,7 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
   return (
     <>
       <TopBox>
-        <Box><Typography variant='p' color='#8988a3'>clAsset</Typography></Box>
+        <Box><Typography variant='p' color='#a7a7a7'>clAsset</Typography></Box>
         <Box><Typography variant='h3' fontWeight={500}>${totalAsset.toFixed(2)}</Typography></Box>
       </TopBox>
       <Grid
@@ -78,7 +78,7 @@ let columns: GridColDef[] = [
             <Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
           </Box>
           <Box display='flex' justifyContent='flex-end'>
-            <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
+            <Typography variant='p_lg' color='#a7a7a7'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
           </Box>
         </Stack>
       )

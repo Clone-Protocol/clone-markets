@@ -339,12 +339,12 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               {!publicKey ? <ConnectButton onClick={() => setOpen(true)}>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
-                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { border: '1px solid #c4b5fd' } : {}}>
+                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { border: '1px solid #fff' } : {}}>
                   {!loading ?
                     <Typography variant='p_xlg'>Swap</Typography>
                     :
                     <Stack direction='row' alignItems='center' gap={2}>
-                      <CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} />
+                      <CircularProgress sx={{ color: '#fff' }} size={15} thickness={4} />
                       <Typography variant='p_xlg' color='#fff'>Swapping</Typography>
                     </Stack>}
                 </ActionButton> :
@@ -356,8 +356,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
               <RateLoadingIndicator restartTimer={restartTimer} />
-              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
-              <Box mx='10px' display='flex' alignItems='center'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
+              <Typography variant='p' color='#fff'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
+              <Box mx='10px' my='10px' display='flex' alignItems='center'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#dadada'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}
 
@@ -400,8 +400,8 @@ const ConnectButton = styled(Button)`
   width: 100%;
   height: 52px;
   color: #fff;
-  border: solid 1px rgba(65, 65, 102, 0.5);
-  background: ${(props) => props.theme.basis.royalPurple};
+  border: solid 1px #fff;
+  background: #000;
   border-radius: 10px;
   &:hover {
     background: ${(props) => props.theme.basis.royalPurple};
@@ -446,7 +446,7 @@ const ArrowIcon = styled('div')`
   margin-left: 5px;
   margin-top: -20px;
   font-weight: 600;
-  color: #c5c7d9;
+  color: #dadada;
 `
 
 export default withSuspense(TradingComp, <Box mt='20px'><LoadingProgress /></Box>)

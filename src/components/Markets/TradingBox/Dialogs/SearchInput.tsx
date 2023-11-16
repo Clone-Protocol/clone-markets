@@ -38,17 +38,12 @@ const StyledInput = styled(Input)`
     width: 206px;
     height: 46px;
     font-size: 14px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
     text-align: left;
     margin-left: 10px;
     color: #fff;
 
     &::placeholder {
-      color: #8988a3;
+      color: #a7a7a7;
     }
   }
 `

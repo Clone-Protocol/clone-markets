@@ -52,7 +52,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
   return (
     <>
       <Dialog open={open} onClose={onSave} TransitionComponent={FadeTransition}>
-        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
+        <DialogContent sx={{ backgroundColor: '#0f0f0f', border: '1px solid #676767', borderRadius: '20px', width: '375px' }}>
           <BoxWrapper>
             <Box mb="21px"><Typography variant='h3' fontWeight={500}>Swap Settings</Typography></Box>
             <Box><Typography variant='p_lg'>Slippage Tolerance</Typography> <InfoTooltip title="Slippage Tolerance is the pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when swapping on AMMs." /></Box>
@@ -64,7 +64,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
               </StyledTabs>
 
               <FormControl variant="standard" sx={{ width: '132px' }}>
-                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #c4b5fd' } : {}}>
+                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #fff' } : {}}>
                   <CustomSlippagePlaceholder>
                     <Typography variant='p_lg'>Custom</Typography>
                   </CustomSlippagePlaceholder>

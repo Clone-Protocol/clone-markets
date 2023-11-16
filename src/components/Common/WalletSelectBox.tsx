@@ -55,7 +55,7 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
         <Box lineHeight={1}>
           <Box><Typography variant='p' fontWeight={600} color='#fff'>{solBalance.toLocaleString()} SOL</Typography></Box>
           {publicKey && (
-            <Box><Typography variant='p' color='#c5c7d9'>{shortenAddress(publicKey.toString())}</Typography></Box>
+            <Box><Typography variant='p' color='#dadada'>{shortenAddress(publicKey.toString())}</Typography></Box>
           )}
         </Box>
         <Stack direction='row' spacing={1}>
@@ -80,7 +80,7 @@ const WalletWrapper = styled(Stack)`
 	top: 70px;
 	right: 0px;
 	width: 282px;
-	background-color: ${(props) => props.theme.basis.darkPurple};
+	background-color: #0f0f0f;
 	border-radius: 10px;
   border: solid 1px ${(props) => props.theme.basis.portGore};
 	z-index: 99;
@@ -91,10 +91,10 @@ const PopupButton = styled(Box)`
 	color: ${(props) => props.theme.basis.melrose};
 	padding: 2px 6px;
 	border-radius: 100px;
-  background-color: rgba(155, 121, 252, 0.3);
+  background-color: rgba(172, 172, 172, 0.3);
 	cursor: pointer;
   &:hover {
-		background-color: rgba(155, 121, 252, 0.3);
+		background-color: rgba(172, 172, 172, 0.3);
     box-shadow: 0 0 0 1px ${(props) => props.theme.basis.melrose} inset;
   }
 `

@@ -43,7 +43,7 @@ export const TimeTab = styled(Tab)`
 		text-transform: none;
 	}
 	&.Mui-selected {
-    background-color: #414166;
+    background-color: rgba(255, 255, 255, 0.2);
 		color: #fff;
 	}
 	&.Mui-focusVisible {

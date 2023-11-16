@@ -40,7 +40,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 	return (
 		<StyledPaper sx={{ flexDirection: { xs: 'column', md: 'row' }, justifyContent: { xs: 'center', md: 'space-around' }, marginTop: { xs: '40px', md: '0' } }}>
 			<Box width='200px' mb='40px'>
-				<Box><Typography variant='p_lg' color='#c4b5fd'>{selectedTitle}</Typography></Box>
+				<Box><Typography variant='p_lg' color='#fff'>{selectedTitle}</Typography></Box>
 				<Box>
 					<Typography variant='h1' fontWeight={500}>${selectedonusdAmount.toLocaleString()}</Typography>
 				</Box>
@@ -50,8 +50,8 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 			</Box>
 			<Box width='200px'>
 				<Stack direction='row' gap={6} mb='5px'>
-					<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
-					<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
+					<Box ml='15px'><Typography variant='p_lg' color='#fff'>Category</Typography></Box>
+					<Box><Typography variant='p_lg' color='#fff'>Percentage</Typography></Box>
 				</Stack>
 				{newData.length > 0 ?
 					newData.map(item => (
