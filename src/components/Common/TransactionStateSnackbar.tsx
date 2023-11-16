@@ -22,7 +22,7 @@ const getTxnURL = (txHash: string) => {
     throw new Error(`Network ${network} not yet supported!`)
   })();
 
-  return `https://solana.fm/tx/${txHash}?cluster=${cluster}`
+  return `https://explorer.solana.com/tx/${txHash}?cluster=custom&customUrl=https%3A%2F%2Fstaging-rpc.dev.eclipsenetwork.xyz`;
 }
 
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
