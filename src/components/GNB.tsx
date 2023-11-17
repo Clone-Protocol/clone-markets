@@ -181,7 +181,7 @@ const HeaderButton = styled(Button)`
 	border-radius: 10px;
 	&:hover {
 		border-radius: 10px;
-  	background-color: rgba(196, 181, 253, 0.1);
+  	background-color: rgba(255, 255, 255, 0.1);
 	}
 `
 const ConnectButton = styled(Button)`
@@ -191,7 +191,7 @@ const ConnectButton = styled(Button)`
 	width: 140px;
 	height: 42px;
 	border-radius: 10px;
-	box-shadow: 0 0 10px 0 #6d5887;
+	// box-shadow: 0 0 10px 0 #6d5887;
 	border: 1px solid ${(props) => props.theme.basis.melrose};
 	&:hover {
 		background-color: transparent;

@@ -40,7 +40,7 @@ const NaviMenu = () => {
 export const MobileNaviMenu = () => {
   return (
     <Fade in timeout={1500}>
-      <Box display='flex' justifyContent='center' bgcolor="#040414" paddingBottom='15px'>
+      <Box display='flex' justifyContent='center' bgcolor="#0F0F0F" paddingBottom='15px'>
         <CommonMenu />
       </Box>
     </Fade>
@@ -55,11 +55,10 @@ const StyledListItemButton = styled(ListItemButton)`
   color: ${(props) => props.theme.basis.raven};
   &:hover {
     border-radius: 5px;
-    background-color: rgba(196, 181, 253, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
   }
   &.selected {
     color: #fff;
-    transition: all 0.3s ease 0.2s;
   }
 `
 

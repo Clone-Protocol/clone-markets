@@ -99,9 +99,12 @@ export const WalletDialog: FC<WalletDialogProps> = ({
 	const { open, setOpen } = useWalletDialog()
 	const [expanded, setExpanded] = useState(false)
 
+	//MEMO: filter only allow salmon wallet
+	const filteredWallets = useMemo(() => wallets.filter(wallet => wallet.adapter.name === 'Salmon'), [wallets])
+
 	const [featured, more] = useMemo(
-		() => [wallets.slice(0, featuredWallets), wallets.slice(featuredWallets)],
-		[wallets, featuredWallets]
+		() => [filteredWallets.slice(0, featuredWallets), filteredWallets.slice(featuredWallets)],
+		[filteredWallets, featuredWallets]
 	)
 
 	const handleClose = useCallback(

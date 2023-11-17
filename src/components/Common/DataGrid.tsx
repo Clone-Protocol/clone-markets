@@ -23,10 +23,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
       color: '#fff',
       minHeight: `${minHeight}px`,
       '& .MuiDataGrid-main': {
-        borderLeft: '1px solid rgba(196, 181, 253, 0.25)',
-        borderRight: '1px solid rgba(196, 181, 253, 0.25)',
-        borderBottom: '1px solid rgba(196, 181, 253, 0.25)',
-        borderTop: '1px solid rgba(196, 181, 253, 0.25)',
+        border: '1px solid #303030',
         borderBottomLeftRadius: '20px',
         borderBottomRightRadius: '20px',
         borderTopLeftRadius: isBorderTopRadius ? '20px' : '0',
@@ -69,7 +66,7 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         }
       },
       '& .MuiDataGrid-columnHeaders': {
-        borderBottom: '1px solid rgba(196, 181, 253, 0.25)',
+        borderBottom: '1px solid #303030',
       },
       '& .MuiDataGrid-columnHeader:focus': {
         outline: 'none',

@@ -65,7 +65,7 @@ const FormStack = styled(Stack)`
 	color: ${(props) => props.theme.basis.textRaven};
 	background-color: rgba(255, 255, 255, 0.1);
 	&:hover {
-		box-shadow: 0 3px 20px 0 rgba(67, 48, 119, 0.52), 0 0 0 1px ${(props) => props.theme.basis.portGore} inset;
+		box-shadow: 0 0 0 1px ${(props) => props.theme.basis.portGore} inset;
 	}
 `
 

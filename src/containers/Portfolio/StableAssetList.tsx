@@ -121,9 +121,9 @@ const TopBox = styled(Box)`
 	height: 87px;
 	border-top-left-radius: 20px;
 	border-top-right-radius: 20px;
-	border-left: solid 1px rgba(196, 181, 253, 0.25);
-	border-right: solid 1px rgba(196, 181, 253, 0.25);
-	border-top: solid 1px rgba(196, 181, 253, 0.25);
+	border-left: solid 1px #303030;
+	border-right: solid 1px #303030;
+	border-top: solid 1px #303030;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
