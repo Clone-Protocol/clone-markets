@@ -53,7 +53,7 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
     <WalletWrapper>
       <Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
         <Box lineHeight={1}>
-          <Box><Typography variant='p' fontWeight={600} color='#fff'>{solBalance.toLocaleString()} SOL</Typography></Box>
+          <Box><Typography variant='p' fontWeight={600} color='#fff'>{solBalance.toLocaleString()} ETH</Typography></Box>
           {publicKey && (
             <Box><Typography variant='p' color='#dadada'>{shortenAddress(publicKey.toString())}</Typography></Box>
           )}

@@ -90,7 +90,7 @@ export interface WalletDialogProps extends Omit<DialogProps, 'title' | 'open'> {
 }
 
 export const WalletDialog: FC<WalletDialogProps> = ({
-	title = 'Connect a wallet on Solana to continue',
+	title = 'Connect a wallet on Eclipse Testnet to continue',
 	featuredWallets = 1,
 	onClose,
 	...props
@@ -139,6 +139,9 @@ export const WalletDialog: FC<WalletDialogProps> = ({
 			</DialogTitle>
 			<DialogContent>
 				<List>
+					{featured.length === 0 && (
+						<Box display='flex' justifyContent='center'><Typography variant='p_lg' sx={{ textDecoration: 'underline' }}>No Eclipse Testnet Wallet detected</Typography></Box>
+					)}
 					{featured.map((wallet) => (
 						<WalletListItem
 							key={wallet.adapter.name}
@@ -167,6 +170,14 @@ export const WalletDialog: FC<WalletDialogProps> = ({
 							</Box>
 						</>
 					) : null}
+
+					<Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px', marginBottom: '15px', marginRight: '10px' }}>
+						<a href="https://docs.eclipse.builders/building-on-eclipse/developer-wallet-setup" target='_blank'>
+							<Button sx={{ color: '#a7a7a7', background: '#10141f', fontWeight: 'bold', marginTop: '20px', ":hover": { background: '#2d3858', color: '#fff' } }}>
+								Guide to setup Testnet Wallet
+							</Button>
+						</a>
+					</Box>
 				</List>
 			</DialogContent>
 		</RootDialog>
