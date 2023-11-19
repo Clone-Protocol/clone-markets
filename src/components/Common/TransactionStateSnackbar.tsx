@@ -11,30 +11,32 @@ import 'animate.css'
 import { makeStyles } from '@mui/styles'
 
 const getTxnURL = (txHash: string) => {
-  let cluster = (() => {
-    let network = process.env.NEXT_PUBLIC_USE_NETWORK;
-    if (network === "DEV_NET") {
-      return 'devnet-qn1'
-    }
-    if (network === "MAIN_NET") {
-      return 'mainnet-qn1'
-    }
-    throw new Error(`Network ${network} not yet supported!`)
-  })();
+  // let cluster = (() => {
+  //   let network = process.env.NEXT_PUBLIC_USE_NETWORK;
+  //   if (network === "DEV_NET") {
+  //     return 'devnet-qn1'
+  //   }
+  //   if (network === "MAIN_NET") {
+  //     return 'mainnet-qn1'
+  //   }
+  //   throw new Error(`Network ${network} not yet supported!`)
+  // })();
 
-  return `https://explorer.solana.com/tx/${txHash}?cluster=custom&customUrl=https%3A%2F%2Fstaging-rpc.dev.eclipsenetwork.xyz`;
+  return `https://solscan.io/tx/${txHash}?cluster=custom&customUrl=https%3A%2F%2Fstaging-rpc.dev.eclipsenetwork.xyz`;
 }
 
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
-  // const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
+  const txStatusColor = isSuccess ? '#00ff99' : '#ff0084'
   return (<Stack direction='row' alignItems='center' gap={1}>
     <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} width={65} height={65} alt='icStatus' /></Box>
     <Box lineHeight={1.3}>
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
       {!isSuccess && <Box mt='6px'><Typography variant='p' color='#a7a7a7'>Something went wrong. Please try again.</Typography></Box>}
-      {/* <Box mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>
-        <a href={isSuccess ? getTxnURL(txHash) : 'https://status.solana.com/'} target='_blank' rel="noreferrer"><Typography variant='p_sm' color={txStatusColor}>{isSuccess ? 'View Transaction' : 'Check Solana network status'}</Typography></a>
-      </Box> */}
+      {isSuccess &&
+        <Box mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>
+          <a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p_sm' color={txStatusColor}>{isSuccess ? 'View Transaction' : 'Check Solana network status'}</Typography></a>
+        </Box>
+      }
     </Box>
   </Stack>)
 }
