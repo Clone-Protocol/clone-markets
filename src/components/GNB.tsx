@@ -1,9 +1,9 @@
 'use client'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
-import { Button, Toolbar, Container, Box, AppBar, Theme, useMediaQuery, Typography } from '@mui/material'
+import { Button, Toolbar, Container, Box, AppBar, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -15,48 +15,27 @@ import { mintUSDi } from '~/features/globalAtom'
 import dynamic from 'next/dynamic'
 import useFaucet from '~/hooks/useFaucet'
 import TokenFaucetDialog from './Account/TokenFaucetDialog'
-import { isMobile } from 'react-device-detect';
+// import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
-// import CloseIcon from '@mui/icons-material/Close';
-// import MenuIcon from '@mui/icons-material/Menu';
+import useWeb3Auth from '~/hooks/useWeb3Auth'
 
 const GNB: React.FC = () => {
-	// const router = useRouter()
-	// const { pathname } = router
-	// const [path, setPath] = useState<string>('/')
-	const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
+	// const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
 
-	const [showMobileWarning, setShowMobileWarning] = useState(isMobile)
-
-	useEffect(() => {
-		if (isMobile || isMobileOnSize) {
-			setShowMobileWarning(true)
-		} else {
-			setShowMobileWarning(false)
-		}
-	}, [isMobileOnSize])
-
-	// const firstPathname = useMemo(() => {
-	// 	return pathname.split('/').slice(0, 2).join('/')
-	// }, [pathname])
-
-	const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
-
+	// const [showMobileWarning, setShowMobileWarning] = useState(isMobile)
 	// useEffect(() => {
-	// 	const path = GNB_ROUTES.find((route) => firstPathname === route.path)?.path
-	// 	if (path) setPath(path)
-	// }, [firstPathname])
-
-	// const navClassName = useMemo(() => {
-	// 	let className = mobileNavToggle ? 'mobile-on' : ''
-	// 	className += scrolled ? ' scrolled' : ''
-	// 	return className
-	// }, [mobileNavToggle, scrolled])
+	// 	if (isMobile || isMobileOnSize) {
+	// 		setShowMobileWarning(true)
+	// 	} else {
+	// 		setShowMobileWarning(false)
+	// 	}
+	// }, [isMobileOnSize])
+	// const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 
 	return (
 		<>
@@ -92,13 +71,14 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu: React.FC = () => {
-	const { connecting, connected, publicKey, connect } = useWallet()
+	// const { connecting, connected, publicKey } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
 	const setMintUsdi = useSetAtom(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
+	const { connect, connected, publicKey, authenticateUser } = useWeb3Auth()
 	useFaucet()
 
 	const handleWalletClick = async () => {
@@ -138,7 +118,7 @@ const RightMenu: React.FC = () => {
 					{!connected ?
 						<ConnectButton
 							onClick={handleWalletClick}
-							disabled={connecting}
+						// disabled={connecting}
 						>
 							<Typography variant='p_lg'>Connect Wallet</Typography>
 						</ConnectButton>
@@ -203,7 +183,7 @@ const HeaderButton = styled(Button)`
 	border-radius: 10px;
 	&:hover {
 		border-radius: 10px;
-  	background-color: rgba(255, 255, 255, 0.05);
+  	background-color: rgba(196, 181, 253, 0.1);
 	}
 `
 const ConnectButton = styled(Button)`

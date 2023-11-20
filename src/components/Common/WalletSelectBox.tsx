@@ -12,10 +12,12 @@ import { shortenAddress } from '~/utils/address'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getSolInBalance } from '~/utils/address';
 import { ON_USD } from '~/utils/constants';
+import useWeb3Auth from '~/hooks/useWeb3Auth';
 
 const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const { publicKey, disconnect } = useWallet()
+  // const { publicKey, disconnect } = useWallet()
+  const { publicKey, disconnect } = useWeb3Auth()
   const setCloneClient = useSetAtom(cloneClient)
   const [solBalance, setSolBalance] = useState(0)
 
