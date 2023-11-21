@@ -16,8 +16,8 @@ import useWeb3Auth from '~/hooks/useWeb3Auth';
 
 const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
-  // const { publicKey, disconnect } = useWallet()
-  const { publicKey, disconnect } = useWeb3Auth()
+  const { publicKey, disconnect } = useWallet()
+  // const { publicKey, disconnect } = useWeb3Auth()
   const setCloneClient = useSetAtom(cloneClient)
   const [solBalance, setSolBalance] = useState(0)
 

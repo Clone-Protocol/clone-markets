@@ -17,17 +17,18 @@ export default function useWeb3Auth() {
   const [connected, setConnected] = useState(false);
 
   const clientId = process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID
+  const RPC_ENDPOINT = process.env.NEXT_PUBLIC_NETWORK_ENDPOINT
 
   useEffect(() => {
     async function init() {
       try {
         const web3auth = new Web3Auth({
           clientId: clientId!,
-          web3AuthNetwork: "sapphire_devnet", // Web3Auth Network
+          web3AuthNetwork: "sapphire_mainnet", // Web3Auth Network
           chainConfig: {
             chainNamespace: "solana",
             chainId: "0x3",
-            rpcTarget: "https://api.devnet.solana.com",
+            rpcTarget: RPC_ENDPOINT, //"https://api.devnet.solana.com",
             displayName: "Solana Devnet",
             blockExplorer: "https://explorer.solana.com/?cluster=devnet",
             ticker: "SOL",
@@ -152,6 +153,7 @@ export default function useWeb3Auth() {
     web3auth,
     connected,
     publicKey,
+    provider,
     connect,
     authenticateUser,
     // getAccounts,

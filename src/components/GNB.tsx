@@ -71,24 +71,24 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu: React.FC = () => {
-	// const { connecting, connected, publicKey } = useWallet()
-	const wallet = useAnchorWallet()
-	const { setOpen } = useWalletDialog()
+	const { connecting, connected, publicKey } = useWallet()
+	// const wallet = useAnchorWallet()
+	// const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
 	const setMintUsdi = useSetAtom(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
-	const { connect, connected, publicKey, authenticateUser } = useWeb3Auth()
+	// const { connect, connected, publicKey } = useWeb3Auth()
 	useFaucet()
 
 	const handleWalletClick = async () => {
 		try {
 			if (!connected) {
-				if (!wallet) {
-					setOpen(true)
-				} else {
-					connect()
-				}
+				// if (!wallet) {
+				// 	setOpen(true)
+				// } else {
+				connect()
+				// }
 				setShowWalletSelectPopup(false)
 			} else {
 				setShowWalletSelectPopup(!showWalletSelectPopup)
