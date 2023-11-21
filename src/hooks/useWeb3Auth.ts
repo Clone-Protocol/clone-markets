@@ -28,7 +28,7 @@ export default function useWeb3Auth() {
           chainConfig: {
             chainNamespace: "solana",
             chainId: "0x3",
-            rpcTarget: RPC_ENDPOINT, //"https://api.devnet.solana.com",
+            rpcTarget: "https://rpc.ankr.com/solana", // RPC_ENDPOINT,
             displayName: "Solana Devnet",
             blockExplorer: "https://explorer.solana.com/?cluster=devnet",
             ticker: "SOL",
