@@ -18,6 +18,7 @@ import TokenFaucetDialog from './Account/TokenFaucetDialog'
 // import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
+import { NETWORK_NAME } from '~/utils/constants'
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
@@ -108,7 +109,7 @@ const RightMenu: React.FC = () => {
 		<>
 			<Box display="flex">
 				<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
-					<Typography variant='p'>Devnet Faucet</Typography>
+					<Typography variant='p'>{NETWORK_NAME} Faucet</Typography>
 				</HeaderButton>
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />

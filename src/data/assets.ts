@@ -1,4 +1,4 @@
-import { ON_USD } from "~/utils/constants"
+import { ON_USD, ON_USD_NAME } from "~/utils/constants"
 
 export enum Collateral {
     onUSD,
@@ -223,7 +223,7 @@ export const collateralMapping = (index: number) => {
     let collateralType: number
     switch (index) {
         case Collateral.onUSD:
-            collateralName = 'Devnet USD'
+            collateralName = ON_USD_NAME
             collateralType = Collateral.onUSD
             collateralSymbol = ON_USD
             collateralIcon = '/images/assets/on-usd.svg'

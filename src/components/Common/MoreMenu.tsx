@@ -11,6 +11,7 @@ import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
 import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
 import { useState } from 'react'
 import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
+import { NETWORK_NAME } from '~/utils/constants'
 
 interface Props {
   anchorEl: null | HTMLElement
@@ -54,7 +55,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
       <HoverStack direction='row' alignItems='center'>
         <Box width='184px'>
           <Box><Typography variant='p'>Token Faucet</Typography></Box>
-          <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana devnet</Typography></Box>
+          <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana {NETWORK_NAME}</Typography></Box>
         </Box>
       </HoverStack>
     </StyledMenuItem>
