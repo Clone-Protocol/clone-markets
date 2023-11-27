@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
+import SettingsIcon from 'public/images/buttons-more-menu-settings.svg'
 import { Button, Toolbar, Container, Box, AppBar, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { withCsrOnly } from '~/hocs/CsrOnly'
@@ -18,7 +19,8 @@ import TokenFaucetDialog from './Account/TokenFaucetDialog'
 // import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
-import { NETWORK_NAME } from '~/utils/constants'
+// import { NETWORK_NAME } from '~/utils/constants'
+import SettingDialog from './Common/SettingDialog'
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
@@ -44,7 +46,7 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={121} height={25} alt="clone" />
+						<Image src={logoIcon} width={100} height={26} alt="clone" />
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
 						</Box>
@@ -75,6 +77,7 @@ const RightMenu: React.FC = () => {
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
+	const [openSettingDlog, setOpenSettingDlog] = useState(false)
 	const setMintUsdi = useSetAtom(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
@@ -108,10 +111,11 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
+				{/* <HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
 					<Typography variant='p'>{NETWORK_NAME} Faucet</Typography>
-				</HeaderButton>
+				</HeaderButton> */}
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
+				<HeaderButton onClick={() => setOpenSettingDlog(true)}><Image src={SettingsIcon} alt="settings" /></HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
 					{!connected ?
@@ -129,6 +133,8 @@ const RightMenu: React.FC = () => {
 					<WalletSelectBox show={showWalletSelectPopup} onHide={() => setShowWalletSelectPopup(false)} />
 				</Box>
 			</Box>
+
+			<SettingDialog open={openSettingDlog} handleClose={() => setOpenSettingDlog(false)} />
 
 			<TokenFaucetDialog
 				open={openTokenFaucet}
@@ -176,7 +182,6 @@ const NavPlaceholder = styled('div')`
 `
 const HeaderButton = styled(Button)`
 	padding: 8px;
-	margin-left: 16px;
 	color: #c5c7d9;
 	height: 42px;
 	border-radius: 10px;

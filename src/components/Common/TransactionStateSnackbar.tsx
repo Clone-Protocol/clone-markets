@@ -59,7 +59,7 @@ const ConfirmingWrapper = ({ txHash, isFocus }: { txHash: string, isFocus: boole
         <Box display='flex' alignItems='center'>
           <svg width="8" height="6">
             <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="25%" stopColor="#ff6cdf" />
+              <stop offset="25%" stopColor="#c4b5fd" />
               <stop offset="90%" stopColor="rgba(66,0,255, 0.0)" />
             </linearGradient>
           </svg>
@@ -68,7 +68,7 @@ const ConfirmingWrapper = ({ txHash, isFocus }: { txHash: string, isFocus: boole
         <Box>
           <Box><Typography variant='p_xlg'>Confirming transaction...</Typography></Box>
           <Box my='6px' lineHeight={1.3}>
-            <Box><Typography variant='p' color='#8988a3'>Transactions on Solana typically take an average of 5 seconds. </Typography></Box>
+            <Box><Typography variant='p' color='#8988a3'>Transactions on Solana typically take about 5 seconds. </Typography></Box>
             <Box sx={{ textDecoration: 'underline', color: '#c4b5fd' }}><a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p_sm' color='#c4b5fd'>View Transaction</Typography></a></Box>
           </Box>
         </Box>
@@ -137,12 +137,15 @@ const CloseButton = styled(Box)`
 const ConfirmBoxWrapper = styled(Box)`
   width: 419px;
   border-radius: 10px;
-  padding: 22px 10px;
+  padding: 22px 4px;
   box-shadow: 0 0 32px 4px rgba(167, 108, 242, 0.25);
   border: solid 1px ${(props) => props.theme.basis.lightSlateBlue};
-  background: ${(props) => props.theme.basis.darkPurple};
+  background: #000;
 `
 const LongTimeStatus = styled(Box)`
+  background-color: rgba(255, 141, 78, 0.1);
+  border-radius: 5px;
+  margin: 0px 10px;
   padding: 12px 18px;
   color: ${(props) => props.theme.palette.warning.main};
   margin-top: 8px;

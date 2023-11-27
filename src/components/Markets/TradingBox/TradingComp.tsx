@@ -361,11 +361,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}
 
-            {publicKey &&
+            {/* {publicKey &&
               <Box mt='10px'>
                 <GetOnUSD />
               </Box>
-            }
+            } */}
           </Box>
         </Box>
       </div>

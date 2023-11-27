@@ -7,6 +7,7 @@ import InfoTooltip from '~/components/Common/InfoTooltip'
 import { useEffect, useState } from 'react'
 import { SLIPPAGE } from '~/data/localstorage'
 import { CloseButton } from '~/components/Common/CommonButtons'
+import { TooltipTexts } from '~/data/tooltipTexts'
 
 const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
   const [customInputValue, setCustomInputValue] = useState('')
@@ -55,7 +56,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
         <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: '375px' }}>
           <BoxWrapper>
             <Box mb="21px"><Typography variant='h3' fontWeight={500}>Swap Settings</Typography></Box>
-            <Box><Typography variant='p_lg'>Slippage Tolerance</Typography> <InfoTooltip title="Slippage Tolerance is the pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when swapping on AMMs." /></Box>
+            <Box><Typography variant='p_lg'>Slippage Tolerance</Typography> <InfoTooltip title={TooltipTexts.slippageTolerance} /></Box>
             <SlippageStack direction="row" alignItems="center">
               <StyledTabs value={!isNaN(customSlippage) ? 0 : slippage} onChange={handleSlippageChange}>
                 <StyledTab value={0.1} label="0.1%" />

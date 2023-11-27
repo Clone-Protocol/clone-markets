@@ -157,7 +157,7 @@ export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, ticke
       <Box sx={{ maxWidth: '200px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
         <Typography variant='p_xlg'>{tickerName}</Typography>
       </Box>
-      <Box sx={{ color: '#989898', marginLeft: { xs: '0px', md: '10px' } }}>
+      <Box sx={{ color: '#8988a3', marginLeft: { xs: '0px', md: '10px' } }}>
         <Typography variant='p_lg'>{tickerSymbol}</Typography>
       </Box>
     </Box>

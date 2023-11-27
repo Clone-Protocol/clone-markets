@@ -13,14 +13,19 @@ const CommonMenu = () => {
           <Box><Typography variant='p_lg'>Home</Typography></Box>
         </StyledListItemButton>
       </Link>
+      <Link href="/trade/gold">
+        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
+          <Box><Typography variant='p_lg'>Trade</Typography></Box>
+        </StyledListItemButton>
+      </Link>
       <Link href="/clportfolio">
         <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
           <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
         </StyledListItemButton>
       </Link>
-      <Link href="/trade/euro">
-        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
-          <Box><Typography variant='p_lg'>Trade</Typography></Box>
+      <Link href="/points">
+        <StyledListItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
+          <Box><Typography variant='p_lg'>Points</Typography></Box>
         </StyledListItemButton>
       </Link>
     </List>
@@ -52,7 +57,7 @@ const StyledListItemButton = styled(ListItemButton)`
   margin-left: 8px;
   margin-right: 8px;
   border-radius: 5px;
-  color: ${(props) => props.theme.basis.raven};
+  color: ${(props) => props.theme.basis.textRaven};
   &:hover {
     border-radius: 5px;
     background-color: rgba(196, 181, 253, 0.1);

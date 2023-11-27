@@ -111,7 +111,8 @@ let columns: GridColDef[] = [
 		renderCell(params: GridRenderCellParams<string>) {
 
 			return (
-				<GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get {ON_USD}</Typography></GetUSDButton>
+				<></>
+				// <GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get {ON_USD}</Typography></GetUSDButton>
 			)
 		},
 	},

@@ -11,7 +11,7 @@ import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
 import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
 import { useState } from 'react'
 import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
-import { NETWORK_NAME } from '~/utils/constants'
+// import { NETWORK_NAME } from '~/utils/constants'
 
 interface Props {
   anchorEl: null | HTMLElement
@@ -51,20 +51,20 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
   >
-    <StyledMenuItem onClick={onShowTokenFaucet}>
+    {/* <StyledMenuItem onClick={onShowTokenFaucet}>
       <HoverStack direction='row' alignItems='center'>
         <Box width='184px'>
           <Box><Typography variant='p'>Token Faucet</Typography></Box>
           <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana {NETWORK_NAME}</Typography></Box>
         </Box>
       </HoverStack>
-    </StyledMenuItem>
+    </StyledMenuItem> */}
     <a href={DOCS_URL} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#8988a3'>Learn about Clone Markets</Typography></Box>
+            <Box><Typography variant='p_sm' color='#989898'>Learn about Clone Markets</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
@@ -74,7 +74,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Liquidity</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#8988a3'>Provide Liquidity on Clone Protocol</Typography></Box>
+            <Box><Typography variant='p_sm' color='#989898'>LP with most capital efficient system</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
@@ -84,7 +84,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Opportunities</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#8988a3'>Wanna be a pioneer of Defi?</Typography></Box>
+            <Box><Typography variant='p_sm' color='#989898'>Wanna be a pioneer of Defi?</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>

@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { assetMapping } from '~/data/assets'
+import { AssetType, assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
@@ -109,6 +109,14 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = t
 		enabled,
 		select: (assets) => {
 			let filteredAssets = assets
+
+			filteredAssets = assets.filter((asset) => {
+				if (filter === 'all') {
+					return asset.assetType === AssetType.Crypto || asset.assetType === AssetType.Commodities
+				}
+				return true;
+			})
+
 			if (searchTerm && searchTerm.length > 0) {
 				filteredAssets = filteredAssets.filter((asset) => asset.tickerName.toLowerCase().includes(searchTerm.toLowerCase()) || asset.tickerSymbol.toLowerCase().includes(searchTerm.toLowerCase()))
 			}
