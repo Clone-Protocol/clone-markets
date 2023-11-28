@@ -1,7 +1,6 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Theme, Typography, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useState } from 'react'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { Grid } from '~/components/Common/DataGrid'
@@ -11,6 +10,7 @@ import { shortenAddress } from '~/utils/address'
 import { useRankingQuery } from '~/features/Points/Ranking.query'
 
 const RankingList: React.FC = () => {
+  const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
   const { data: rankList } = useRankingQuery({
     refetchOnMount: true,
     enabled: true
@@ -20,10 +20,15 @@ const RankingList: React.FC = () => {
     <PanelBox>
       <Grid
         headers={columns}
+        columnVisibilityModel={isMobileOnSize ? {
+          "lpPoints": false,
+          "tradePoints": false,
+          "socialPoints": false
+        } : {}}
         rows={rankList || []}
         minHeight={110}
-        hasTopBorderRadius={true}
-        customNoRowsOverlay={() => CustomNoRowsOverlay('No Rank')}
+        isBorderTopRadius={true}
+        customNoResultsOverlay={() => CustomNoRowsOverlay('No Rank')}
       />
     </PanelBox>
   )
@@ -51,7 +56,7 @@ let columns: GridColDef[] = [
     headerName: `User`,
     flex: 2,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_xlg'>{shortenAddress(params.value!.toString())}</Typography>
+      return <Typography variant='p_xlg' sx={{ ':hover': { color: '#c4b5fd' } }}>{shortenAddress(params.value!.toString())}</Typography>
     },
   },
   {
@@ -97,7 +102,6 @@ let columns: GridColDef[] = [
 ]
 
 const PanelBox = styled(Box)`
-	padding: 18px 36px;
   color: #fff;
   & .super-app-theme--header { 
     color: #9d9d9d; 

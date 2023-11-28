@@ -11,12 +11,12 @@ const Points = () => {
   return (
     <StyledSection>
       <Container>
-        <Box px='20px'>
+        <Box sx={{ paddingX: { xs: '0px', md: '20px' } }}>
           <Box><Typography fontSize='20px' fontWeight={500}>Points</Typography></Box>
           <Stack direction='row' alignItems='center' gap={1}>
             <Typography variant='p' color='#66707e'>Earn points by participating in Clone ecosystem.</Typography>
-            <Box display='flex' sx={{ cursor: 'pointer' }}>
-              <Typography variant='p' color='#c4b5fd' mr='3px'>Learn more</Typography>
+            <Box display='flex' color='#c4b5fd' sx={{ cursor: 'pointer', ':hover': { color: '#8070ad' } }}>
+              <Typography variant='p' mr='3px'>Learn more</Typography>
               <Image src={LearnMoreIcon} alt='learnMore' />
             </Box>
           </Stack>

@@ -21,6 +21,7 @@ interface ResultAsset {
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
 	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
+	const filterType = selectedFilter as FilterType
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 
 	const { data: balance } = useBalanceQuery({
@@ -31,7 +32,7 @@ const PortfolioView = () => {
 
 	const { data: assets } = useUserBalanceQuery({
 		userPubKey: publicKey,
-		filter: selectedFilter as FilterType,
+		filter: filterType,
 		refetchOnMount: 'always',
 		enabled: publicKey != null
 	})
@@ -89,12 +90,16 @@ const PortfolioView = () => {
 				{balance ? <BalanceView data={dataPie} /> : <></>}
 			</Box>
 			<Box py='30px'>
-				<Box mb='45px'>
-					<StableAssetList balance={balance} />
-				</Box>
-				<Box>
-					<OnAssetList assets={assets} balance={balance} />
-				</Box>
+				{(filterType === 'all' || filterType === 'stableCoin') &&
+					<Box mb='45px'>
+						<StableAssetList balance={balance} />
+					</Box>
+				}
+				{(filterType === 'all' || filterType !== 'stableCoin') &&
+					<Box>
+						<OnAssetList assets={assets} balance={balance} />
+					</Box>
+				}
 			</Box>
 		</div>
 	)
