@@ -8,8 +8,10 @@ import { useEffect, useState } from 'react'
 import { SLIPPAGE } from '~/data/localstorage'
 import { CloseButton } from '~/components/Common/CommonButtons'
 import { TooltipTexts } from '~/data/tooltipTexts'
+import { useSnackbar } from 'notistack'
 
 const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
+  const { enqueueSnackbar } = useSnackbar()
   const [customInputValue, setCustomInputValue] = useState('')
   const [customSlippage, setCustomSlippage] = useState(NaN)
   const [slippage, setSlippage] = useState(0.5)
@@ -27,6 +29,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
     setSlippage(newValue)
     setCustomInputValue('')
     setCustomSlippage(NaN)
+    enqueueSnackbar(`Slippage tolerance set to ${newValue}%`)
   }
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {

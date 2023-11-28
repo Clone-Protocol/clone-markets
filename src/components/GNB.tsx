@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
@@ -21,6 +21,7 @@ import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
 // import { NETWORK_NAME } from '~/utils/constants'
 import SettingDialog from './Common/SettingDialog'
+import { useSnackbar } from 'notistack'
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
@@ -74,6 +75,7 @@ export default withCsrOnly(GNB)
 
 const RightMenu: React.FC = () => {
 	const { connecting, connected, publicKey, connect } = useWallet()
+	const { enqueueSnackbar } = useSnackbar()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
@@ -82,6 +84,12 @@ const RightMenu: React.FC = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	useFaucet()
+
+	useEffect(() => {
+		if (connected) {
+			enqueueSnackbar('Wallet connected')
+		}
+	}, [connected])
 
 	const handleWalletClick = () => {
 		try {
