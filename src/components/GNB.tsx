@@ -2,9 +2,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
+import logoMIcon from 'public/images/clone_icon.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
 import SettingsIcon from 'public/images/buttons-more-menu-settings.svg'
-import { Button, Toolbar, Container, Box, AppBar, Typography } from '@mui/material'
+import { Button, Toolbar, Container, Box, AppBar, Typography, Theme, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -25,7 +26,7 @@ import { useSnackbar } from 'notistack'
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	// const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
@@ -47,7 +48,11 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={100} height={26} alt="clone" />
+						{isMobileOnSize ?
+							<Image src={logoMIcon} width={50} height={46} alt="clone" />
+							:
+							<Image src={logoIcon} width={100} height={26} alt="clone" />
+						}
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
 						</Box>
