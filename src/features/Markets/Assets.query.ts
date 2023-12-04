@@ -8,6 +8,7 @@ import { cloneClient, showPythBanner } from '~/features/globalAtom'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator';
 import { getCloneClient } from '../baseQuery';
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
+import { Status } from 'clone-protocol-sdk/sdk/generated/clone';
 
 export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null }) => {
 	console.log('fetchAssets')
@@ -64,7 +65,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setS
 			liquidity: parseInt(info.liquidity.toString()),
 			volume24h: dailyVolumeStats.get(info.poolIndex) ?? 0,
 			change24h,
-			feeRevenue24h: 0 // We don't use this on the markets app.
+			status: info.status
 		})
 	}
 	return result
@@ -87,7 +88,7 @@ export interface AssetList {
 	liquidity: number
 	volume24h: number
 	change24h: number
-	feeRevenue24h: number
+	status: Status
 }
 
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {

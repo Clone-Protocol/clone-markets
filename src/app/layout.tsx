@@ -22,7 +22,9 @@ import GlobalError from './global-error'
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isCompleteInit, _] = useLocalStorage(IS_COMPLETE_INIT, false)
   const [isOpenInit, setIsOpenInit] = useState(false)
+  const [showGeoblock, setShowGeoblock] = useState(false)
   const InitEnterScreen = dynamic(() => import('~/components/Common/InitEnterScreen'), { ssr: false })
+  const GeoblockDialog = dynamic(() => import('~/components/Common/GeoblockDialog'), { ssr: false })
 
   useEffect(() => {
     if (!isCompleteInit) {
@@ -63,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             {children}
                           </Box>
                           {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
+                          {showGeoblock && <GeoblockDialog open={showGeoblock} handleClose={() => setShowGeoblock(false)} />}
                         </Box>
                       </ErrorBoundary>
                     </DataLoadingIndicatorProvider>

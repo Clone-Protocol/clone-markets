@@ -3,6 +3,7 @@ import { StatsData, fetchStatsData as netlifyFetchStatsData } from "./fetch_netl
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
 import { Connection, PublicKey } from "@solana/web3.js"
+import { Status } from "clone-protocol-sdk/sdk/generated/clone";
 
 export type Interval = 'day' | 'hour';
 export type Filter = 'day' | 'week' | 'month' | 'year';
@@ -42,7 +43,7 @@ export const fetchStatsData = async (filter: Filter, interval: Interval): Promis
 }
 
 
-export const getiAssetInfos = async (connection: Connection, program: CloneClient): Promise<{ poolIndex: number, poolPrice: number, liquidity: number }[]> => {
+export const getiAssetInfos = async (connection: Connection, program: CloneClient): Promise<{ status: Status, poolIndex: number, poolPrice: number, liquidity: number }[]> => {
   const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
   const data = await pythClient.getData();
   const pools = await program.getPools();
@@ -51,6 +52,7 @@ export const getiAssetInfos = async (connection: Connection, program: CloneClien
   const iassetInfo = [];
   for (let poolIndex = 0; poolIndex < Number(pools.pools.length); poolIndex++) {
     const pool = pools.pools[poolIndex];
+    const status = pool.status
     const oracle = oracles.oracles[Number(pool.assetInfo.oracleInfoIndex)];
     const committedCollateral = fromScale(pool.committedCollateralLiquidity, program.clone.collateral.scale)
     const poolCollateralIld = fromScale(pool.collateralIld, program.clone.collateral.scale)
@@ -59,7 +61,7 @@ export const getiAssetInfos = async (connection: Connection, program: CloneClien
     const oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? fromScale(oracle.price, oracle.expo);
     const poolPrice = (committedCollateral - poolCollateralIld) / (committedCollateral / oraclePrice - poolOnassetIld)
     const liquidity = committedCollateral * 2;
-    iassetInfo.push({ poolIndex, poolPrice, liquidity });
+    iassetInfo.push({ status, poolIndex, poolPrice, liquidity });
   }
   return iassetInfo;
 }

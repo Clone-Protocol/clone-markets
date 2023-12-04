@@ -1,6 +1,6 @@
 import { QueryObserverOptions, useQuery } from "@tanstack/react-query"
 import { CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
-import { Collateral } from "clone-protocol-sdk/sdk/generated/clone"
+import { Collateral, Status } from "clone-protocol-sdk/sdk/generated/clone"
 import { assetMapping } from "src/data/assets"
 import { REFETCH_CYCLE } from "~/components/Markets/TradingBox/RateLoadingIndicator"
 import { getPythOraclePrices } from "~/utils/pyth"
@@ -66,6 +66,7 @@ export const fetchMarketDetail = async ({
     avgPremium,
     detailOverview,
     collateral: program.clone.collateral,
+    status: pool.status
   }
 
   return marketDetail
@@ -90,6 +91,7 @@ export const fetchMarketDetailDefault = (): MarketDetail => {
     detailOverview:
       "clSOL, appreviated from iSolana, is a synthetic asset of Solana on Clone. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.",
     collateral: null,
+    status: Status.Active
   }
 }
 
@@ -116,6 +118,7 @@ export interface MarketDetail {
   avgPremium: number
   detailOverview: string
   collateral: Collateral | null
+  status: Status
 }
 
 export interface PairData {
