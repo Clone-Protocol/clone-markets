@@ -184,11 +184,15 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 			refetchIntervalInBackground: true,
 			enabled,
 			select: (assets) => assets.filter((asset) => {
-				if (filter === 'onCrypto') {
+				if (filter === 'all') {
+					return asset.assetType === AssetType.Crypto || asset.assetType === AssetType.Commodities
+				} else if (filter === 'onCrypto') {
 					return asset.assetType === AssetType.Crypto
-				} else if (filter === 'onFx') {
-					return asset.assetType === AssetType.Fx
-				} else if (filter === 'onCommodity') {
+				}
+				// else if (filter === 'onFx') {
+				// 	return asset.assetType === AssetType.Fx
+				// } 
+				else if (filter === 'onCommodity') {
 					return asset.assetType === AssetType.Commodities
 				}
 				return true;

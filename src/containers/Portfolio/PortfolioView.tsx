@@ -12,6 +12,7 @@ import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
 import { useAtom } from 'jotai'
 import { filterState } from '~/features/Portfolio/filterAtom'
+import { showPoolStatus } from '~/components/Common/PoolStatus'
 
 interface ResultAsset {
 	id: number
@@ -43,7 +44,7 @@ const PortfolioView = () => {
 		if (selectedFilter === 'all') {
 			const result: ResultAsset[] = []
 			let totalBalance = onusdBalance
-			assets?.forEach((asset) => {
+			assets?.filter(asset => !showPoolStatus(asset.status)).forEach((asset) => {
 				if (result[asset.assetType]) {
 					result[asset.assetType].val += asset.onusdBalance
 				} else {
