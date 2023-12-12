@@ -1,13 +1,9 @@
 import { Query, useQuery } from '@tanstack/react-query'
-import { CloneClient } from "clone-protocol-sdk/sdk/src/clone"
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
-import { useAtomValue } from 'jotai'
-import { getCloneClient } from '../baseQuery';
-import { cloneClient } from '../globalAtom'
 import { fetchUserPoints, UserPointsView } from '~/utils/fetch_netlify'
 
 
-export const fetchRanking = async ({ mainCloneClient }: { mainCloneClient?: CloneClient | null }) => {
+export const fetchRanking = async () => {
   console.log('fetchRanking')
 
   let userPoints: UserPointsView[] = await fetchUserPoints();
@@ -43,11 +39,9 @@ export interface RankingList {
 }
 
 export function useRankingQuery({ refetchOnMount, enabled = true }: GetProps) {
-  const mainCloneClient = useAtomValue(cloneClient)
-
   let queryFunc
   try {
-    queryFunc = () => fetchRanking({ mainCloneClient })
+    queryFunc = () => fetchRanking()
   } catch (e) {
     console.error(e)
     queryFunc = () => []

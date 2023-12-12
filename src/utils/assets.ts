@@ -1,5 +1,5 @@
-import { CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
-import { StatsData, fetchStatsData as netlifyFetchStatsData } from "./fetch_netlify";
+import { CLONE_TOKEN_SCALE, CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
+import { StatsData, fetchOHLCV, fetchStatsData as netlifyFetchStatsData } from "./fetch_netlify";
 import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
 import { Connection, PublicKey } from "@solana/web3.js"
@@ -76,13 +76,18 @@ export type AggregatedStats = {
 }
 
 export const fetch24hourVolume = async () => {
+  let data = await fetchOHLCV("hour", "month");
 
-  const data = await fetchStatsData('day', 'day')
-
-  const result: Map<number, number> = new Map()
-
-  const conversion = Math.pow(10, -7)
+  let result: Map<number, number> = new Map()
+  const now = new Date()
+  const isWithin24hrs = (date: Date) => {
+    return (date.getTime() >= (now.getTime() - 86400000))
+  }
+  const conversion = Math.pow(10, -CLONE_TOKEN_SCALE)
   data.forEach((response) => {
+    if (!isWithin24hrs(new Date(response.time_interval))) {
+      return;
+    }
     const poolIndex = Number(response.pool_index)
     result.set(poolIndex, (result.get(poolIndex) ?? 0) + Number(response.volume) * conversion)
   })

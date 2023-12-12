@@ -8,20 +8,22 @@ import { ASSETS_DESC } from "~/data/assets_desc"
 import { fetch24hourVolume } from "~/utils/assets"
 import { getCloneClient } from "../baseQuery"
 import { useAtomValue } from "jotai"
-import { cloneClient } from "../globalAtom"
+import { cloneClient, rpcEndpoint } from "../globalAtom"
 
 export const fetchMarketDetail = async ({
   index,
   mainCloneClient,
+  networkEndpoint
 }: {
   index: number
   mainCloneClient?: CloneClient | null
+  networkEndpoint: string
 }) => {
   let program: CloneClient
   if (mainCloneClient) {
     program = mainCloneClient
   } else {
-    const { cloneClient: cloneProgram } = await getCloneClient()
+    const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
     program = cloneProgram
   }
 
@@ -129,9 +131,10 @@ export interface PairData {
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const mainCloneClient = useAtomValue(cloneClient)
+  const networkEndpoint = useAtomValue(rpcEndpoint)
   let queryFunc
   try {
-    queryFunc = () => fetchMarketDetail({ index, mainCloneClient })
+    queryFunc = () => fetchMarketDetail({ index, mainCloneClient, networkEndpoint })
   } catch (e) {
     console.error(e)
     queryFunc = () => fetchMarketDetailDefault()

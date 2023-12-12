@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import logoMIcon from 'public/images/clone_icon.png'
@@ -22,7 +22,10 @@ import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
 // import { NETWORK_NAME } from '~/utils/constants'
 import SettingDialog from './Common/SettingDialog'
-import { useSnackbar } from 'notistack'
+import { IS_DEV } from '~/data/networks'
+import { fetchGeoBlock } from '~/utils/fetch_netlify'
+import { NETWORK_NAME } from '~/utils/constants'
+
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
@@ -80,7 +83,6 @@ export default withCsrOnly(GNB)
 
 const RightMenu: React.FC = () => {
 	const { connecting, connected, publicKey, connect } = useWallet()
-	const { enqueueSnackbar } = useSnackbar()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
@@ -88,19 +90,24 @@ const RightMenu: React.FC = () => {
 	const setMintUsdi = useSetAtom(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
+	const [showGeoblock, setShowGeoblock] = useState(false)
+
+	const GeoblockDialog = dynamic(() => import('~/components/Common/GeoblockDialog'), { ssr: false })
+
 	useFaucet()
 
-	useEffect(() => {
-		if (connected) {
-			enqueueSnackbar('Wallet connected')
-		}
-	}, [connected])
-
-	const handleWalletClick = () => {
+	const handleWalletClick = async () => {
 		try {
 			if (!connected) {
 				if (!wallet) {
-					setOpen(true)
+					// validate geoblock
+					const geoblock = await fetchGeoBlock()
+
+					if (geoblock.result) {
+						setOpen(true)
+					} else {
+						setShowGeoblock(true)
+					}
 				} else {
 					connect()
 				}
@@ -124,9 +131,11 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				{/* <HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
-					<Typography variant='p'>{NETWORK_NAME} Faucet</Typography>
-				</HeaderButton> */}
+				{IS_DEV &&
+					<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
+						<Typography variant='p'>{NETWORK_NAME} Faucet</Typography>
+					</HeaderButton>
+				}
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<HeaderButton onClick={() => setOpenSettingDlog(true)}><Image src={SettingsIcon} alt="settings" /></HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
@@ -156,6 +165,7 @@ const RightMenu: React.FC = () => {
 				onGetUsdiClick={handleGetUsdiClick}
 				onHide={() => setOpenTokenFaucet(false)}
 			/>
+			{showGeoblock && <GeoblockDialog open={showGeoblock} handleClose={() => setShowGeoblock(false)} />}
 		</>
 	)
 }

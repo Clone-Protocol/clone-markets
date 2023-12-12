@@ -4,20 +4,20 @@ import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { cloneClient, showPythBanner } from '~/features/globalAtom'
+import { cloneClient, rpcEndpoint, showPythBanner } from '~/features/globalAtom'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator';
 import { getCloneClient } from '../baseQuery';
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
 import { Status } from 'clone-protocol-sdk/sdk/generated/clone';
 
-export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null }) => {
+export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkEndpoint }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
 	console.log('fetchAssets')
 
 	let program
 	if (mainCloneClient) {
 		program = mainCloneClient
 	} else {
-		const { cloneClient: cloneProgram } = await getCloneClient()
+		const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
 		program = cloneProgram
 	}
 
@@ -94,10 +94,11 @@ export interface AssetList {
 export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const setShowPythBanner = useSetAtom(showPythBanner)
 	const mainCloneClient = useAtomValue(cloneClient)
+	const networkEndpoint = useAtomValue(rpcEndpoint)
 
 	let queryFunc
 	try {
-		queryFunc = () => fetchAssets({ setShowPythBanner, mainCloneClient })
+		queryFunc = () => fetchAssets({ setShowPythBanner, mainCloneClient, networkEndpoint })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => []

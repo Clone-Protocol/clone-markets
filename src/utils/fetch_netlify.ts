@@ -21,6 +21,26 @@ export const fetchStatsData = async (interval: string, filter: string): Promise<
     return response.data as StatsData[]
 }
 
+export interface OHLCVResponse {
+    time_interval: string,
+    pool_index: number,
+    open: string,
+    high: string,
+    low: string,
+    close: string,
+    volume: string,
+    trading_fees: string
+}
+
+export const fetchOHLCV = async (interval: string, filter: string, pool?: number | string): Promise<OHLCVResponse[]> => {
+    let endpoint = `/.netlify/functions/get-ohlcv?interval=${interval}&filter=${filter}`
+
+    if (pool !== undefined)
+        endpoint += `&pool=${pool}`
+
+    const response = await axios.get(endpoint)
+    return response.data as OHLCVResponse[]
+}
 
 export const fetchFromSupabaseNotice = async () => {
     return await axios.get(`/.netlify/functions/supabase-notice-fetch`)
@@ -34,7 +54,7 @@ export type UserPointsView = {
     social_points: number
     total_points: number
     name?: string
-  }
+}
 
 export const fetchUserPoints = async (userAddress?: string): Promise<UserPointsView[]> => {
     let url = `/.netlify/functions/get-user-points`;
@@ -43,4 +63,9 @@ export const fetchUserPoints = async (userAddress?: string): Promise<UserPointsV
     }
     const response = await axios.get(url)
     return response.data as UserPointsView[]
+}
+
+export const fetchGeoBlock = async (): Promise<{ result: boolean }> => {
+    const response = await axios.post(`/api`)
+    return response.data
 }

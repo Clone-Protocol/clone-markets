@@ -11,6 +11,8 @@ import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
 import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
 import { useState } from 'react'
 import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
+import { IS_DEV } from '~/data/networks'
+import { NETWORK_NAME } from '~/utils/constants'
 // import { NETWORK_NAME } from '~/utils/constants'
 
 interface Props {
@@ -51,14 +53,16 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
   >
-    {/* <StyledMenuItem onClick={onShowTokenFaucet}>
-      <HoverStack direction='row' alignItems='center'>
-        <Box width='184px'>
-          <Box><Typography variant='p'>Token Faucet</Typography></Box>
-          <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana {NETWORK_NAME}</Typography></Box>
-        </Box>
-      </HoverStack>
-    </StyledMenuItem> */}
+    {IS_DEV &&
+      <StyledMenuItem onClick={onShowTokenFaucet}>
+        <HoverStack direction='row' alignItems='center'>
+          <Box width='184px'>
+            <Box><Typography variant='p'>Token Faucet</Typography></Box>
+            <Box><Typography variant='p_sm' color='#8988a3'>Get started on Solana {NETWORK_NAME}</Typography></Box>
+          </Box>
+        </HoverStack>
+      </StyledMenuItem>
+    }
     <a href={DOCS_URL} target='_blank' rel="noreferrer">
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
@@ -73,7 +77,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
       <StyledMenuItem>
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
-            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Clone Liquidity</Typography></Stack>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>{IS_DEV && 'Devnet'} Clone Liquidity</Typography></Stack>
             <Box><Typography variant='p_sm' color='#989898'>LP with most capital efficient system</Typography></Box>
           </Box>
         </HoverStack>

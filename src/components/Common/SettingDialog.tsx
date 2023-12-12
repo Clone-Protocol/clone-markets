@@ -1,45 +1,62 @@
 import React, { useState } from 'react'
-import { Box, Dialog, DialogContent, Typography, Button, InputLabel, MenuItem, FormControl, Stack, Input } from '@mui/material'
+import { Box, Dialog, DialogContent, Typography, Button, MenuItem, Stack, Input } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FadeTransition } from '~/components/Common/Dialog'
 import { CloseButton } from '~/components/Common/CommonButtons'
 import { IndicatorGreen, IndicatorRed, IndicatorStatus, IndicatorYellow } from './StatusIndicator';
+import IconShare from 'public/images/icon-share.svg'
 import { useSnackbar } from 'notistack';
-
-const RPCs = [
-  'Helius RPC',
-  'Quicknode RPC',
-  'HelloMoon RPC',
-  'Custom'
-]
+import { useAtom, useSetAtom } from 'jotai';
+import { rpcEndpoint, rpcEndpointIndex } from '~/features/globalAtom';
+import { CUSTOM_RPC_INDEX, DEVNET_PUBLIC, DEV_RPCs, IS_DEV, MAINNET_PUBLIC, MAIN_RPCs } from '~/data/networks';
+import Image from 'next/image';
 
 const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [rpcEndpointIndex, setRpcEndpointIndex] = useState('0')
-  const [networkIndex, setNetworkIndex] = useState('devnet')
+  const [atomRpcEndpointIndex, setAtomRpcEndpointIndex] = useAtom(rpcEndpointIndex)
+  const setAtomRpcEndpoint = useSetAtom(rpcEndpoint)
+
   const [showCustom, setShowCustom] = useState(false)
+  const [customUrl, setCustomUrl] = useState('')
   const [errorCustomMsg, setErrorCustomMsg] = useState(false)
+  const RPCs = IS_DEV ? DEV_RPCs : MAIN_RPCs
 
   const handleChangeRpcEndpoint = (event: SelectChangeEvent) => {
-    setRpcEndpointIndex(event.target.value as string);
-    setShowCustom(event.target.value == '3')
+    const rpcIndex = Number(event.target.value)
+    setShowCustom(rpcIndex == CUSTOM_RPC_INDEX)
 
-    //TODO: showing after rpc is connected
-    if (event.target.value != '3') {
-      enqueueSnackbar(`Connected to ${RPCs[parseInt(event.target.value)]}`)
+    if (rpcIndex != CUSTOM_RPC_INDEX) {
+      setAtomRpcEndpointIndex(rpcIndex);
+      setAtomRpcEndpoint(RPCs[rpcIndex].rpc_url)
+
+      //TODO: showing after rpc is connected
+      enqueueSnackbar(`Connected to ${RPCs[rpcIndex].rpc_name}`)
     }
   };
 
-  const handleChangeNetwork = (event: SelectChangeEvent) => {
-    setNetworkIndex(event.target.value as string);
+  const goNetwork = () => {
+    if (IS_DEV) {
+      window.open(MAINNET_PUBLIC, '_blank')
+    } else {
+      window.open(DEVNET_PUBLIC, '_blank')
+    }
   };
 
   const handleChangeCustomRPCUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
-
+    setCustomUrl(event.target.value)
   }
 
   const saveCustomURL = () => {
+    const urlRegex = /^(http:\/\/|https:\/\/).+/;
+    if (customUrl && urlRegex.test(customUrl)) {
+      setAtomRpcEndpointIndex(CUSTOM_RPC_INDEX);
+      setAtomRpcEndpoint(customUrl.trim())
+      setErrorCustomMsg(false)
+    } else {
+      setErrorCustomMsg(true)
+    }
+
     try {
       enqueueSnackbar('Connected to Custom RPC')
     } catch (e) {
@@ -69,84 +86,61 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
         <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '10px', width: '375px' }}>
           <BoxWrapper>
             <Typography variant='h3' fontWeight={500}>App Settings</Typography>
-            <Box my='20px'>
-              <Box><Typography variant="p_lg">RPC Endpoint</Typography></Box>
-              <Box lineHeight={1} mb='7px'><Typography variant="p" color="#8988a3">At anytime, choose the fastest RPC for most optimal experience!</Typography></Box>
-              <SelectBox
-                labelId="rpc-select-label"
-                id="rpc-select"
-                value={rpcEndpointIndex}
-                onChange={handleChangeRpcEndpoint}
-                sx={{
-                  padding: '0px',
-                  '& .MuiSelect-icon': {
-                    color: '#fff'
-                  }
-                }}
-                MenuProps={{
-                  disablePortal: true,
-                  PaperProps: {
-                    sx: {
-                      '& .MuiMenu-list': {
-                        padding: 0,
-                        '&:hover': {
-                          backgroundColor: '#000',
+            {!IS_DEV &&
+              <Box my='20px'>
+                <Box><Typography variant="p_lg">RPC Endpoint</Typography></Box>
+                <Box lineHeight={1} mb='7px'><Typography variant="p" color="#8988a3">At anytime, choose the fastest RPC for most optimal experience!</Typography></Box>
+                <SelectBox
+                  labelId="rpc-select-label"
+                  id="rpc-select"
+                  value={atomRpcEndpointIndex}
+                  onChange={handleChangeRpcEndpoint}
+                  sx={{
+                    padding: '0px',
+                    '& .MuiSelect-icon': {
+                      color: '#fff'
+                    }
+                  }}
+                  MenuProps={{
+                    disablePortal: true,
+                    PaperProps: {
+                      sx: {
+                        '& .MuiMenu-list': {
+                          padding: 0,
+                          '&:hover': {
+                            backgroundColor: '#000',
+                          }
+                        },
+                        '& .Mui-selected': {
+                          backgroundColor: '#000 !important',
                         }
-                      },
-                      '& .Mui-selected': {
-                        backgroundColor: '#000 !important',
                       }
                     }
-                  }
-                }}
-              >
-                <SelectMenuItem value={0}><Stack direction='row' alignItems='center' gap={1}><Typography variant='p'>{RPCs[0]}</Typography> <StatusIndicator status={IndicatorStatus.Green} speed={134.1} /></Stack></SelectMenuItem>
-                <SelectMenuItem value={1}><Stack direction='row' alignItems='center' gap={1}><Typography variant='p'>{RPCs[1]}</Typography> <StatusIndicator status={IndicatorStatus.Yellow} speed={84.1} /></Stack></SelectMenuItem>
-                <SelectMenuItem value={2}><Stack direction='row' alignItems='center' gap={1}><Typography variant='p'>{RPCs[2]}</Typography> <StatusIndicator status={IndicatorStatus.Red} speed={34.1} /></Stack></SelectMenuItem>
-                <SelectMenuItem value={3}><Typography variant='p'>{RPCs[3]}</Typography></SelectMenuItem>
-              </SelectBox>
-              {showCustom &&
-                <Box>
-                  <StyledInput placeholder="Enter custom RPC URL" disableUnderline onChange={handleChangeCustomRPCUrl} />
-                  {errorCustomMsg && <Box><Typography variant='p' color='#ed2525'>Custom RPC Connection Failed. Try different URL.</Typography></Box>}
-                  <SaveBtn onClick={saveCustomURL}>Save</SaveBtn>
-                </Box>
-              }
-            </Box>
+                  }}
+                >
+                  {RPCs.map((rpc, index) => (
+                    <SelectMenuItem key={index} value={index}>
+                      <Stack direction='row' alignItems='center' gap={1}>
+                        <Typography variant='p'>{rpc.rpc_name}</Typography>
+                        {/* <StatusIndicator status={IndicatorStatus.Green} speed={134.1} /> */}
+                      </Stack>
+                    </SelectMenuItem>
+                  ))}
+                  <SelectMenuItem value={CUSTOM_RPC_INDEX}><Typography variant='p'>Custom</Typography></SelectMenuItem>
+                </SelectBox>
+                {showCustom &&
+                  <Box>
+                    <StyledInput placeholder="Enter custom RPC URL" disableUnderline onChange={handleChangeCustomRPCUrl} />
+                    {errorCustomMsg && <Box><Typography variant='p' color='#ed2525'>Custom RPC Connection Failed. Try different URL.</Typography></Box>}
+                    <SaveBtn onClick={saveCustomURL}>Save</SaveBtn>
+                  </Box>
+                }
+              </Box>
+            }
             <Box my='20px'>
-              <Box><Typography variant="p_lg">Network Setting</Typography></Box>
+              <Box><Typography variant="p_lg">Network Switching</Typography></Box>
               <Box lineHeight={1} mb='7px'><Typography variant="p" color="#8988a3">Choose between Solana mainnet and devnet. Learn more about it <a href="#" target="_blank" style={{ textDecoration: 'underline', color: '#fff' }}>here</a>.</Typography></Box>
-              <SelectBox
-                labelId="network-select-label"
-                id="network-select"
-                value={networkIndex}
-                onChange={handleChangeNetwork}
-                sx={{
-                  padding: '0px',
-                  '& .MuiSelect-icon': {
-                    color: '#fff'
-                  },
-                }}
-                MenuProps={{
-                  disablePortal: true,
-                  PaperProps: {
-                    sx: {
-                      '& .MuiMenu-list': {
-                        padding: 0,
-                        '&:hover': {
-                          backgroundColor: '#000',
-                        }
-                      },
-                      '& .Mui-selected': {
-                        backgroundColor: '#000 !important',
-                      },
-                    }
-                  }
-                }}
-              >
-                <SelectMenuItem value={'mainnet'}><Typography variant='p'>Solana Mainnet</Typography></SelectMenuItem>
-                <SelectMenuItem value={'devnet'}><Typography variant='p'>Solana Devnet</Typography></SelectMenuItem>
-              </SelectBox>
+              <ChangeNetworkButton onClick={goNetwork}><Typography variant='p'>Go to Solana {IS_DEV ? 'Mainnet' : 'Devnet'}</Typography> <Image src={IconShare} alt='icon-share' /></ChangeNetworkButton>
             </Box>
             <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
               <CloseButton handleClose={handleClose} />
@@ -170,10 +164,10 @@ const SelectBox = styled(Select)`
   border-radius: 5px;
   background: #000;
   border: 1px solid #343441;
-  &:hover {
-    border-width: 1px !important;
-    border-color: ${(props) => props.theme.basis.melrose};
-  }
+  // &:hover {
+  //   border-width: 1px !important;
+  //   border-color: ${(props) => props.theme.basis.melrose};
+  // }
 `
 const SelectMenuItem = styled(MenuItem)`
   display: flex;
@@ -204,6 +198,21 @@ const StyledInput = styled(Input)`
   
   &:hover {
     border: solid 1px ${(props) => props.theme.basis.melrose};
+  }
+`
+const ChangeNetworkButton = styled(Box)`
+  width: 209px;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 6px 11px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
   }
 `
 const SaveBtn = styled(Button)`
