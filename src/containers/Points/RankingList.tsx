@@ -54,15 +54,17 @@ let columns: GridColDef[] = [
     headerClassName: 'super-app-theme--header',
     cellClassName: 'super-app-theme--cell',
     headerName: `User`,
-    flex: 2,
+    flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_xlg' sx={{ ':hover': { color: '#c4b5fd' } }}>{shortenAddress(params.value!.toString())}</Typography>
+      return <a href={`https://solana.fm/address/${params.value!.toString()}`} target='_blank' rel='noreferrer' style={{ color: '#fff' }}>
+        <Typography variant='p_xlg' sx={{ ':hover': { color: '#c4b5fd' } }}>{params.value.length > 10 ? shortenAddress(params.value!.toString()) : params.value}</Typography>
+      </a>
     },
   },
   {
     field: 'lpPoints',
-    headerClassName: 'super-app-theme--header',
-    cellClassName: 'super-app-theme--cell',
+    headerClassName: 'super-app-theme--header right--header',
+    cellClassName: 'super-app-theme--cell right--cell',
     headerName: 'LP Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
@@ -71,8 +73,8 @@ let columns: GridColDef[] = [
   },
   {
     field: 'tradePoints',
-    headerClassName: 'super-app-theme--header',
-    cellClassName: 'super-app-theme--cell',
+    headerClassName: 'super-app-theme--header right--header',
+    cellClassName: 'super-app-theme--cell right--cell',
     headerName: 'Trade Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
@@ -81,8 +83,8 @@ let columns: GridColDef[] = [
   },
   {
     field: 'socialPoints',
-    headerClassName: 'super-app-theme--header',
-    cellClassName: 'super-app-theme--cell',
+    headerClassName: 'super-app-theme--header right--header',
+    cellClassName: 'super-app-theme--cell right--cell',
     headerName: 'Social Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
@@ -91,8 +93,8 @@ let columns: GridColDef[] = [
   },
   {
     field: 'totalPoints',
-    headerClassName: 'super-app-theme--header',
-    cellClassName: 'super-app-theme--cell',
+    headerClassName: 'super-app-theme--header right--header',
+    cellClassName: 'super-app-theme--cell right--cell',
     headerName: 'Total Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {

@@ -2,7 +2,7 @@ import { styled } from '@mui/system'
 import { Box, Button, Stack, Theme, Typography, useMediaQuery } from '@mui/material'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 import { TooltipTexts } from '~/data/tooltipTexts'
-import { RankIndex } from '~/components/Points/RankItems'
+import { RankIndex, RankIndexForStatus } from '~/components/Points/RankItems'
 import { usePointStatusQuery } from '~/features/Points/PointStatus.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { BlackDefault, OpaqueDefault } from '~/components/Common/OpaqueArea'
@@ -27,7 +27,7 @@ const MyPointStatus = () => {
             <Typography variant='p_lg'>Global Rank</Typography>
           </Box>
           <StatusValue>
-            {infos && <RankIndex rank={infos.myRank} />}
+            <RankIndexForStatus rank={infos?.myRank} />
           </StatusValue>
         </BorderBox>
         <BorderBox width={isMobileOnSize ? '166px' : '350px'} position='relative'>
@@ -37,7 +37,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='h3' fontWeight={500}>
-              {infos && infos.totalPoints.toLocaleString()}
+              {infos ? infos.totalPoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -50,7 +50,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos && infos.lpPoints.toLocaleString()}
+              {infos ? infos.lpPoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -61,7 +61,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos && infos.tradePoints.toLocaleString()}
+              {infos ? infos.tradePoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -72,14 +72,14 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos && infos.socialPoints.toLocaleString()}
+              {infos ? infos.socialPoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
       </Stack>
       {!publicKey && <>
         {isMobileOnSize ? <BlackDefault /> : <OpaqueDefault />}
-        <Box position='absolute' top='20px' marginY='55px' marginX={isMobileOnSize ? '70px' : '213px'}>
+        <Box position='absolute' top='20px' marginY='55px' marginX={isMobileOnSize ? 'calc(50% - 170px)' : '213px'}>
           <Box display='flex' justifyContent='center' mb='7px'><Typography variant='p_lg'>To see your points: </Typography></Box>
           <ConnectWallet onClick={() => setOpen(true)}><Typography variant='p_xlg'>Connect Wallet</Typography></ConnectWallet>
         </Box>

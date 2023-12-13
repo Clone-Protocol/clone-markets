@@ -26,10 +26,10 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
     const rpcIndex = Number(event.target.value)
     setShowCustom(rpcIndex == CUSTOM_RPC_INDEX)
 
-    if (rpcIndex != CUSTOM_RPC_INDEX) {
-      setAtomRpcEndpointIndex(rpcIndex);
-      setAtomRpcEndpoint(RPCs[rpcIndex].rpc_url)
+    setAtomRpcEndpointIndex(rpcIndex);
 
+    if (rpcIndex != CUSTOM_RPC_INDEX) {
+      setAtomRpcEndpoint(RPCs[rpcIndex].rpc_url)
       //TODO: showing after rpc is connected
       enqueueSnackbar(`Connected to ${RPCs[rpcIndex].rpc_name}`)
     }
@@ -53,13 +53,9 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
       setAtomRpcEndpointIndex(CUSTOM_RPC_INDEX);
       setAtomRpcEndpoint(customUrl.trim())
       setErrorCustomMsg(false)
+      enqueueSnackbar('Connected to Custom RPC')
     } else {
       setErrorCustomMsg(true)
-    }
-
-    try {
-      enqueueSnackbar('Connected to Custom RPC')
-    } catch (e) {
       enqueueSnackbar('Custom RPC connection failed, please try a different custom RPC URL.')
     }
   }

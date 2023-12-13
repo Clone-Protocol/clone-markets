@@ -52,7 +52,7 @@ const GNB: React.FC = () => {
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 						{isMobileOnSize ?
-							<Image src={logoMIcon} width={50} height={46} alt="clone" />
+							<Image src={logoMIcon} width={46} height={46} alt="clone" />
 							:
 							<Image src={logoIcon} width={100} height={26} alt="clone" />
 						}

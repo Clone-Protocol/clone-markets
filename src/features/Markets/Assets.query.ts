@@ -9,6 +9,7 @@ import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndica
 import { getCloneClient } from '../baseQuery';
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
 import { Status } from 'clone-protocol-sdk/sdk/generated/clone';
+import { showPoolStatus } from '~/components/Common/PoolStatus';
 
 export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkEndpoint }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
 	console.log('fetchAssets')
@@ -75,6 +76,7 @@ interface GetAssetsProps {
 	filter: FilterType
 	searchTerm: string
 	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	filterPoolStatus?: boolean
 	enabled?: boolean
 }
 
@@ -91,7 +93,7 @@ export interface AssetList {
 	status: Status
 }
 
-export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useAssetsQuery({ filter, searchTerm, refetchOnMount, filterPoolStatus = false, enabled = true }: GetAssetsProps) {
 	const setShowPythBanner = useSetAtom(showPythBanner)
 	const mainCloneClient = useAtomValue(cloneClient)
 	const networkEndpoint = useAtomValue(rpcEndpoint)
@@ -111,8 +113,10 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = t
 		enabled,
 		select: (assets) => {
 			let filteredAssets = assets
-
-			filteredAssets = assets.filter((asset) => {
+			if (filterPoolStatus) {
+				filteredAssets = filteredAssets.filter((asset) => !showPoolStatus(asset.status))
+			}
+			filteredAssets = filteredAssets.filter((asset) => {
 				if (filter === 'all') {
 					return asset.assetType === AssetType.Crypto || asset.assetType === AssetType.Commodities
 				}
