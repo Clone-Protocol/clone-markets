@@ -61,7 +61,6 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
   }
 
   const StatusIndicator = ({ status, speed }: { status: IndicatorStatus, speed: number }) => {
-
     return (
       <Stack direction='row' alignItems='center' gap={1}>
         <Box><Typography variant='p_sm' color='#c5c7d9'>{speed.toFixed(1)}ms</Typography></Box>
@@ -79,7 +78,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
   return (
     <>
       <Dialog open={open} onClose={handleClose} TransitionComponent={FadeTransition} maxWidth={375}>
-        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '10px', width: '375px' }}>
+        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '10px', width: { xs: '100%', md: '375px' } }}>
           <BoxWrapper>
             <Typography variant='h3' fontWeight={500}>App Settings</Typography>
             {!IS_DEV &&
@@ -126,7 +125,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                 </SelectBox>
                 {showCustom &&
                   <Box>
-                    <StyledInput placeholder="Enter custom RPC URL" disableUnderline onChange={handleChangeCustomRPCUrl} />
+                    <StyledInput placeholder="Enter custom RPC URL" disableUnderline onChange={handleChangeCustomRPCUrl} sx={{ width: { xs: '100%', md: '322px' } }} />
                     {errorCustomMsg && <Box><Typography variant='p' color='#ed2525'>Custom RPC Connection Failed. Try different URL.</Typography></Box>}
                     <SaveBtn onClick={saveCustomURL}>Save</SaveBtn>
                   </Box>
@@ -169,10 +168,12 @@ const SelectMenuItem = styled(MenuItem)`
   display: flex;
   padding: 10px;
   background: #000;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
 `
 const StyledInput = styled(Input)`
   border: solid 1px #343441;
-  width: 322px;
   height: 36px;
   margin-top: 7px;
   border-radius: 5px;

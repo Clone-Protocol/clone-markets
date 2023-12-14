@@ -2,7 +2,7 @@ import { styled } from '@mui/system'
 import { Box, Button, Stack, Theme, Typography, useMediaQuery } from '@mui/material'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 import { TooltipTexts } from '~/data/tooltipTexts'
-import { RankIndex, RankIndexForStatus } from '~/components/Points/RankItems'
+import { RankIndexForStatus } from '~/components/Points/RankItems'
 import { usePointStatusQuery } from '~/features/Points/PointStatus.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { BlackDefault, OpaqueDefault } from '~/components/Common/OpaqueArea'
@@ -79,9 +79,11 @@ const MyPointStatus = () => {
       </Stack>
       {!publicKey && <>
         {isMobileOnSize ? <BlackDefault /> : <OpaqueDefault />}
-        <Box position='absolute' top='20px' marginY='55px' marginX={isMobileOnSize ? 'calc(50% - 170px)' : '213px'}>
+        <Box position='absolute' top='20px' marginY='55px' left="0px" right="0px" marginX='auto'>
           <Box display='flex' justifyContent='center' mb='7px'><Typography variant='p_lg'>To see your points: </Typography></Box>
-          <ConnectWallet onClick={() => setOpen(true)}><Typography variant='p_xlg'>Connect Wallet</Typography></ConnectWallet>
+          <Box display='flex' justifyContent='center'>
+            <ConnectWallet onClick={() => setOpen(true)}><Typography variant='p_xlg'>Connect Wallet</Typography></ConnectWallet>
+          </Box>
         </Box>
       </>}
     </Wrapper>
@@ -110,16 +112,6 @@ const BorderBox = styled(Box)`
   border: solid 1px rgba(255, 255, 255, 0.1);
   padding-top: 14px;
   padding-bottom: 22px;
-`
-const ClickBox = styled(Box)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 10px;
-  font-weight: 500;
-  margin: 4px 6px;
-  cursor: pointer;
-  color: ${(props) => props.theme.basis.slug};
 `
 const ConnectWallet = styled(Button)`
   width: 236px;
