@@ -3,11 +3,9 @@ import { styled } from '@mui/material/styles'
 import { FadeTransition } from '~/components/Common/Dialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { StyledTabs, StyledTab } from './OrderSettingSlippage'
-import InfoTooltip from '~/components/Common/InfoTooltip'
 import { useEffect, useState } from 'react'
 import { SLIPPAGE } from '~/data/localstorage'
 import { CloseButton } from '~/components/Common/CommonButtons'
-import { TooltipTexts } from '~/data/tooltipTexts'
 import { useSnackbar } from 'notistack'
 
 const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
@@ -16,6 +14,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
   const [customSlippage, setCustomSlippage] = useState(NaN)
   const [slippage, setSlippage] = useState(0.5)
   const [localSlippage, _] = useLocalStorage(SLIPPAGE, 0.5)
+  const [showErrorMsg, setShowErrorMsg] = useState(false)
 
   useEffect(() => {
     if (localSlippage === 0.1 || localSlippage === 0.5 || localSlippage === 1) {
@@ -34,14 +33,19 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
 
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newData = parseFloat(e.currentTarget.value)
-    console.log('n', e.currentTarget.value + "/" + newData)
+    // console.log('n', e.currentTarget.value + "/" + newData)
     if (isNaN(newData)) {
       setCustomInputValue('')
       setCustomSlippage(NaN)
+      setShowErrorMsg(false)
+    } else if (newData < 0.1) {
+      setCustomInputValue(e.currentTarget.value)
+      setCustomSlippage(NaN)
+      setShowErrorMsg(true)
     } else if (newData <= 100) {
-      console.log('nn', newData)
       setCustomInputValue(e.currentTarget.value)
       setCustomSlippage(parseFloat(newData.toFixed(2)))
+      setShowErrorMsg(false)
     }
   }
 
@@ -56,10 +60,11 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
   return (
     <>
       <Dialog open={open} onClose={onSave} TransitionComponent={FadeTransition}>
-        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: { xs: '100%', md: '375px' } }}>
+        <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', width: { xs: '100%', md: '330px' } }}>
           <BoxWrapper>
-            <Box mb="21px"><Typography variant='h3' fontWeight={500}>Swap Settings</Typography></Box>
-            <Box><Typography variant='p_lg'>Slippage Tolerance</Typography> <InfoTooltip title={TooltipTexts.slippageTolerance} /></Box>
+            <Box mb="15px"><Typography variant='h3' fontWeight={500}>Swap Settings</Typography></Box>
+            <Box mb='5px'><Typography variant='p_lg'>Max slippage tolerance</Typography></Box>
+            <Box lineHeight={1}><Typography variant='p' color='#8988a3'>Your transaction will revert if price changes unfavorably by more than this percentage.</Typography></Box>
             <SlippageStack direction="row" alignItems="center">
               <StyledTabs value={!isNaN(customSlippage) ? 0 : slippage} onChange={handleSlippageChange}>
                 <StyledTab value={0.1} label="0.1%" />
@@ -67,15 +72,19 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
                 <StyledTab value={1} label="1%" />
               </StyledTabs>
 
-              <FormControl variant="standard" sx={{ width: '132px' }}>
-                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #c4b5fd' } : {}}>
+              <FormControl variant="standard" sx={{ width: '120px', height: '40px' }}>
+                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #c4b5fd', borderRadius: '10px', color: '#fff' } : {}}>
                   <CustomSlippagePlaceholder>
-                    <Typography variant='p_lg'>Custom</Typography>
+                    <Typography variant='p'>Custom</Typography>
                   </CustomSlippagePlaceholder>
                   <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: 'rgba(137, 136, 163, 0.8)' }} value={customInputValue} onChange={onChangeCustom} />
                 </FormStack>
               </FormControl>
             </SlippageStack>
+
+            {showErrorMsg &&
+              <Box mt='10px' lineHeight={1}><Typography variant='p' color='#ed2525'>Your transaction may be reverted due to low slippage tolerance</Typography></Box>
+            }
 
             <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
               <CloseButton handleClose={onSave} />
@@ -95,29 +104,35 @@ const BoxWrapper = styled(Box)`
 `
 const SlippageStack = styled(Stack)`
   background-color: rgba(255, 255, 255, 0.05);
-  width: 328px;
-  height: 56px;
+  width: 272px;
+  height: 40px;
   border-radius: 10px;
   margin-top: 10px;
 `
 const FormStack = styled(Stack)`
 	display: flex;
 	width: 120px;
-	height: 56px;
-	padding: 14px 17px 14px 6px;
-  border-left: solid 1px ${(props) => props.theme.basis.portGore};
+	height: 40px;
+	padding: 6px;
   color: ${(props) => props.theme.basis.textRaven};
+  background: transparent;
 `
 const CustomSlippagePlaceholder = styled(Box)`
   width: 66px; 
+  height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   text-align: center;
+  margin-right: 5px;
 `
 const InputAmount = styled(`input`)`
 	width: 66px;
+  height: 40px;
 	text-align: right;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 	border: 0px;
 	font-size: 14px;
   padding-right: 15px;

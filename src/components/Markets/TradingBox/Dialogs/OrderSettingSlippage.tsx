@@ -15,6 +15,7 @@ interface StyledTabProps {
 export const StyledTabs = styled((props: StyledTabsProps) => (
 	<Tabs {...props} TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }} />
 ))({
+	minHeight: '0px',
 	'& .MuiTabs-indicator': {
 		display: 'flex',
 		justifyContent: 'center',
@@ -27,27 +28,28 @@ export const StyledTabs = styled((props: StyledTabsProps) => (
 
 export const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple {...props} />)(({ theme }) => ({
 	'&.MuiTab-root': {
-		width: '65px',
+		width: '50px',
 		minWidth: '0px',
-		maxWidth: '65px',
+		maxWidth: '50px',
 		minHeight: '0px',
-		maxHeight: '56px',
-		height: '56px',
+		maxHeight: '40px',
+		height: '40px',
 		display: 'flex',
 		backgroundColor: 'rgba(255, 255, 255, 0.05)'
 	},
 	textTransform: 'none',
 	fontSize: '14px',
-	color: '#8988a3',
+	color: 'rgba(255, 255, 255, 0.7)',
 	'&:hover': {
-		border: 'solid 1px #c4b5fd',
+		boxShadow: '#c4b5fd 0 0 1px 1px inset',
+		borderRadius: '10px',
 	},
 	'&.Mui-selected': {
-		// backgroundColor: '#000',
+		backgroundColor: 'rgba(255, 255, 255, 0.05)',
 		color: '#fff',
-		borderWidth: '1px',
-		borderStyle: 'solid',
-		borderColor: '#c4b5fd',
-		backgroundImage: 'radial-gradient(circle at -63% 50%, #ff6cdf, rgba(66, 0, 255, 0) 48%), radial-gradient(circle at 215% 71%, #ff6cdf, rgba(66, 0, 255, 0) 66%)'
+		// border: 'solid 1px #c4b5fd',
+		boxShadow: '#c4b5fd 0 0 1px 1px inset',
+		borderRadius: '10px',
+		// backgroundImage: 'radial-gradient(circle at -63% 50%, #ff6cdf, rgba(66, 0, 255, 0) 48%), radial-gradient(circle at 215% 71%, #ff6cdf, rgba(66, 0, 255, 0) 66%)'
 	}
 }))
