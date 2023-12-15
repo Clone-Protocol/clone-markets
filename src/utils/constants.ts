@@ -4,4 +4,4 @@ export enum CreateAccountDialogStates {
 	Reminder
 }
 
-export const ON_USD = "devUSD"
+export const ON_USD = "testUSD"

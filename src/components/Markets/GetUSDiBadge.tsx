@@ -4,6 +4,7 @@ import Image from 'next/image'
 import PrimaryIcon from 'public/images/icons-badge.svg'
 import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
+import { ON_USD } from '~/utils/constants'
 
 const GetUSDiBadge: React.FC = () => {
   const setMintUsdi = useSetAtom(mintUSDi)
@@ -12,9 +13,9 @@ const GetUSDiBadge: React.FC = () => {
   return <StyledStack direction={isMobileOnSize ? 'column' : 'row'} justifyContent='center' alignItems='center' spacing={isMobileOnSize ? 1 : 2} textAlign={isMobileOnSize ? 'center' : 'left'}>
     <Box sx={{ display: { xs: 'none', md: 'block' } }}><Image src={PrimaryIcon} alt='primary' /></Box>
     <Box>
-      <Typography variant='p_lg'>Get devnet USD from the devnet faucet to start trading on devnet. On mainnet, you will be able to trade using USDC.</Typography>
+      <Typography variant='p_lg'>Get testnet USD from the testnet faucet to start trading. On mainnet, you will be able to trade using real stable coin.</Typography>
     </Box>
-    <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
+    <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Testnet USD</Typography></GetButton>
   </StyledStack>
 }
 
@@ -30,6 +31,7 @@ const StyledStack = styled(Stack)`
 const GetButton = styled(Button)`
   width: 125px;
   height: 39px;
+  margin-left: 10px;
   flex-grow: 0;
   padding: 8px 4px 8px 5px;
   border-radius: 100px;

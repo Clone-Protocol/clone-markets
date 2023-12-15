@@ -1,6 +1,5 @@
 import { LAMPORTS_PER_SOL, clusterApiUrl, PublicKey } from '@solana/web3.js'
 import * as anchor from '@coral-xyz/anchor'
-import { ECLIPSE_TESTNET_RPC } from './eclipse_contracts'
 
 export const shortenAddress = (address: string) => {
 	return `${address.slice(0, 4)}...${address.slice(-4)}`

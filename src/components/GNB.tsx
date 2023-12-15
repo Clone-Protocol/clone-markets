@@ -2,8 +2,9 @@
 import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
+import logoIconM from 'public/images/clone-icon-mobile.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
-import { Button, Toolbar, Container, Box, AppBar, Typography } from '@mui/material'
+import { Button, Toolbar, Container, Box, AppBar, Typography, useMediaQuery, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -21,7 +22,7 @@ import WalletSelectBox from './Common/WalletSelectBox'
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	// const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
@@ -43,7 +44,11 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={125} height={25} alt="clone" />
+						{isMobileOnSize ?
+							<Image src={logoIconM} width={46} height={46} alt="clone" />
+							:
+							<Image src={logoIcon} width={127} height={25} alt="clone" />
+						}
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
 						</Box>
@@ -107,9 +112,11 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				{/* <HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
-					<Typography variant='p'>Devnet Faucet</Typography>
-				</HeaderButton> */}
+				<a href="https://sepoliafaucet.com/" target="_blank" rel="noreferrer">
+					<HeaderButton>
+						<Typography variant='p'>Testnet Faucet</Typography>
+					</HeaderButton>
+				</a>
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
@@ -175,7 +182,6 @@ const NavPlaceholder = styled('div')`
 `
 const HeaderButton = styled(Button)`
 	padding: 8px;
-	margin-left: 16px;
 	color: #dadada;
 	height: 42px;
 	border-radius: 10px;

@@ -10,7 +10,6 @@ import { WalletDialogProvider } from '~/hocs/WalletDialogProvider'
 import { CloneProvider } from '~/hocs/CloneProvider'
 import { clusterApiUrl } from '@solana/web3.js'
 import React, { FC, ReactNode, useMemo } from 'react'
-import { ECLIPSE_TESTNET_RPC } from '~/utils/eclipse_contracts'
 
 const ClientWalletProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const network = WalletAdapterNetwork.Devnet

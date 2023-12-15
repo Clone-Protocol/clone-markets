@@ -22,7 +22,7 @@ const getTxnURL = (txHash: string) => {
   //   throw new Error(`Network ${network} not yet supported!`)
   // })();
 
-  return `https://solscan.io/tx/${txHash}?cluster=custom&customUrl=https%3A%2F%2Fstaging-rpc.dev.eclipsenetwork.xyz`;
+  return `https://explorer.dev.eclipsenetwork.xyz/tx/${txHash}?cluster=testnet`;
 }
 
 const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {

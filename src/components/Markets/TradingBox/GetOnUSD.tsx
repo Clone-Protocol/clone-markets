@@ -14,8 +14,8 @@ const GetOnUSD: React.FC = () => {
         <Image src={PrimaryIcon} width={19} alt='primary' />
         <Box><Typography variant='p_lg' color='#fff'>Need {ON_USD}?</Typography></Box>
       </Box>
-      <Box lineHeight={1} my='10px'><Typography variant='p' color='#a7a7a7'>Devnet USD is needed for you to trade on Clone Markets for Eclipse Testnet.</Typography></Box>
-      <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get Devnet USD</Typography></GetButton>
+      <Box lineHeight={1} my='10px'><Typography variant='p' color='#a7a7a7'>{ON_USD} is needed for you to trade on Clone Markets for Eclipse Testnet.</Typography></Box>
+      <GetButton onClick={() => setMintUsdi(true)}><Typography variant='p'>Get {ON_USD}</Typography></GetButton>
     </Wrapper>
   )
 }
