@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import logoMIcon from 'public/images/clone_icon.png'
@@ -95,6 +95,20 @@ const RightMenu: React.FC = () => {
 	const GeoblockDialog = dynamic(() => import('~/components/Common/GeoblockDialog'), { ssr: false })
 
 	useFaucet()
+
+	// validate geoblock if connected
+	useEffect(() => {
+		const validateGeoblock = async () => {
+			if (connected) {
+				const geoblock = await fetchGeoBlock()
+
+				if (!geoblock.result) {
+					setShowGeoblock(true)
+				}
+			}
+		}
+		validateGeoblock()
+	}, [connected])
 
 	const handleWalletClick = async () => {
 		try {

@@ -88,12 +88,17 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                 <SelectBox
                   labelId="rpc-select-label"
                   id="rpc-select"
+                  disableUnderline
                   value={atomRpcEndpointIndex}
                   onChange={handleChangeRpcEndpoint}
                   sx={{
                     padding: '0px',
                     '& .MuiSelect-icon': {
                       color: '#fff'
+                    },
+                    '&.Mui-focused': {
+                      outline: 'none',
+                      border: 'none'
                     }
                   }}
                   MenuProps={{
@@ -111,7 +116,15 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                           backgroundColor: '#000 !important',
                         }
                       }
-                    }
+                    },
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left"
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left"
+                    },
                   }}
                 >
                   {RPCs.map((rpc, index) => (
@@ -160,6 +173,9 @@ const SelectBox = styled(Select)`
   border-radius: 5px;
   background: #000;
   border: 1px solid #343441;
+  &:focus {
+    outline: none;
+  }
   // &:hover {
   //   border-width: 1px !important;
   //   border-color: ${(props) => props.theme.basis.melrose};

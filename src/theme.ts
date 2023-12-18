@@ -81,6 +81,7 @@ export const theme: ReturnType<typeof createTheme> = createTheme({
 		MuiSelect: {
 			styleOverrides: {
 				select: {
+
 				}
 			}
 		},
