@@ -96,9 +96,16 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                     '& .MuiSelect-icon': {
                       color: '#fff'
                     },
-                    '&.Mui-focused': {
-                      outline: 'none',
-                      border: 'none'
+                    "&.MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        border: '1px solid #343441',
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#c4b5fd"
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#c4b5fd"
+                      }
                     }
                   }}
                   MenuProps={{
@@ -114,7 +121,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                         },
                         '& .Mui-selected': {
                           backgroundColor: '#000 !important',
-                        }
+                        },
                       }
                     },
                     anchorOrigin: {
@@ -172,14 +179,6 @@ const SelectBox = styled(Select)`
   padding: 10px;
   border-radius: 5px;
   background: #000;
-  border: 1px solid #343441;
-  &:focus {
-    outline: none;
-  }
-  // &:hover {
-  //   border-width: 1px !important;
-  //   border-color: ${(props) => props.theme.basis.melrose};
-  // }
 `
 const SelectMenuItem = styled(MenuItem)`
   display: flex;

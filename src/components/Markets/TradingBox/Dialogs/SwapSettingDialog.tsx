@@ -22,6 +22,7 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
       setSlippage(localSlippage)
     } else {
       setCustomSlippage(localSlippage)
+      setCustomInputValue(localSlippage.toString())
     }
   }, [localSlippage])
 
