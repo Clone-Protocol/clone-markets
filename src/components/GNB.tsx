@@ -82,7 +82,7 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu: React.FC = () => {
-	const { connecting, connected, publicKey, connect } = useWallet()
+	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
@@ -104,6 +104,7 @@ const RightMenu: React.FC = () => {
 
 				if (!geoblock.result) {
 					setShowGeoblock(true)
+					disconnect()
 				}
 			}
 		}
