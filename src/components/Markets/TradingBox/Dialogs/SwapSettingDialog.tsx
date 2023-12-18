@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { SLIPPAGE } from '~/data/localstorage'
 import { CloseButton } from '~/components/Common/CommonButtons'
 import { useSnackbar } from 'notistack'
+import useDebounce from '~/hooks/useDebounce'
 
 const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetting: (slippage: number) => void }) => {
   const { enqueueSnackbar } = useSnackbar()
@@ -31,21 +32,26 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
     enqueueSnackbar(`Slippage tolerance set to ${newValue}%`)
   }
 
+  const showDebounceSnackbar = useDebounce((newData) => {
+    enqueueSnackbar(`Slippage tolerance set to ${newData}%`)
+  }, 1000)
+
   const onChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newData = parseFloat(e.currentTarget.value)
     // console.log('n', e.currentTarget.value + "/" + newData)
-    if (isNaN(newData)) {
+    if (isNaN(newData) || newData < 0) {
       setCustomInputValue('')
       setCustomSlippage(NaN)
       setShowErrorMsg(false)
-    } else if (newData < 0.1) {
-      setCustomInputValue(e.currentTarget.value)
-      setCustomSlippage(NaN)
-      setShowErrorMsg(true)
     } else if (newData <= 100) {
       setCustomInputValue(e.currentTarget.value)
       setCustomSlippage(parseFloat(newData.toFixed(2)))
-      setShowErrorMsg(false)
+      if (newData < 0.1) {
+        setShowErrorMsg(true)
+      } else {
+        setShowErrorMsg(false)
+      }
+      showDebounceSnackbar(newData.toString())
     }
   }
 
@@ -73,11 +79,14 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
               </StyledTabs>
 
               <FormControl variant="standard" sx={{ width: '120px', height: '40px' }}>
-                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #c4b5fd', borderRadius: '10px', color: '#fff' } : {}}>
+                <FormStack direction="row" justifyContent="space-between" alignItems="center" sx={!isNaN(customSlippage) ? { border: '1px solid #c4b5fd', borderRadius: '7px', color: '#fff' } : {}}>
                   <CustomSlippagePlaceholder>
                     <Typography variant='p'>Custom</Typography>
                   </CustomSlippagePlaceholder>
-                  <InputAmount id="ip-amount" type="number" placeholder="0.0%" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: 'rgba(137, 136, 163, 0.8)' }} value={customInputValue} onChange={onChangeCustom} />
+                  <Box position='relative'>
+                    <InputAmount id="ip-amount" type="number" placeholder="0.00" sx={!isNaN(customSlippage) ? { color: '#fff' } : { color: 'rgba(137, 136, 163, 0.8)' }} value={customInputValue} onChange={onChangeCustom} />
+                    <Box position='absolute' top='6px' right='10px'><Typography variant='p' color='#fff'>%</Typography></Box>
+                  </Box>
                 </FormStack>
               </FormControl>
             </SlippageStack>
@@ -103,7 +112,7 @@ const BoxWrapper = styled(Box)`
   overflow-x: hidden;
 `
 const SlippageStack = styled(Stack)`
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: transparent;
   width: 272px;
   height: 40px;
   border-radius: 10px;
@@ -115,7 +124,7 @@ const FormStack = styled(Stack)`
 	height: 40px;
 	padding: 6px;
   color: ${(props) => props.theme.basis.textRaven};
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
 `
 const CustomSlippagePlaceholder = styled(Box)`
   width: 66px; 
@@ -125,6 +134,7 @@ const CustomSlippagePlaceholder = styled(Box)`
   align-items: center;
   text-align: center;
   margin-right: 5px;
+  color: rgba(255, 255, 255, 0.7);
 `
 const InputAmount = styled(`input`)`
 	width: 66px;
@@ -135,8 +145,8 @@ const InputAmount = styled(`input`)`
   border-bottom-right-radius: 10px;
 	border: 0px;
 	font-size: 14px;
-  padding-right: 15px;
-  color: ${(props) => props.theme.basis.textRaven};
+  padding-right: 25px;
+  color: #fff;
 `
 
 export default SwapSettingDialog
