@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Dialog, DialogContent, Typography, Button, MenuItem, Stack, Input } from '@mui/material'
+import { Box, Dialog, DialogContent, Typography, Button, MenuItem, Stack, Input, useMediaQuery, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FadeTransition } from '~/components/Common/Dialog'
@@ -21,6 +21,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
   const [customUrl, setCustomUrl] = useState('')
   const [errorCustomMsg, setErrorCustomMsg] = useState(false)
   const RPCs = IS_DEV ? DEV_RPCs : MAIN_RPCs
+  const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
   const handleChangeRpcEndpoint = (event: SelectChangeEvent) => {
     const rpcIndex = Number(event.target.value)
@@ -109,7 +110,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                     }
                   }}
                   MenuProps={{
-                    disablePortal: true,
+                    disablePortal: isMobileOnSize ? false : true,
                     PaperProps: {
                       sx: {
                         zIndex: 999999,
