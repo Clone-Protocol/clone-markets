@@ -155,6 +155,22 @@ const LongTimeStatus = styled(Box)`
     text-decoration: underline;
   }
 `
+export const FailedStatusBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: #989898;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+`
 
 export default TransactionStateSnackbar
 
