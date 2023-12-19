@@ -15,8 +15,9 @@ import NaviMenu, { MobileNaviMenu } from './NaviMenu'
 import { mintUSDi } from '~/features/globalAtom'
 import dynamic from 'next/dynamic'
 import useFaucet from '~/hooks/useFaucet'
-import TokenFaucetDialog from './Account/TokenFaucetDialog'
+// import TokenFaucetDialog from './Account/TokenFaucetDialog'
 // import { isMobile } from 'react-device-detect';
+import TestnetTokenFaucetDialog from './Account/TestnetTokenFaucetDialog'
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
 
@@ -112,11 +113,9 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				<a href="https://sepoliafaucet.com/" target="_blank" rel="noreferrer">
-					<HeaderButton>
-						<Typography variant='p'>Testnet Faucet</Typography>
-					</HeaderButton>
-				</a>
+				<HeaderButton onClick={() => setOpenTokenFaucet(true)}>
+					<Typography variant='p'>Testnet Faucet</Typography>
+				</HeaderButton>
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
@@ -136,13 +135,21 @@ const RightMenu: React.FC = () => {
 				</Box>
 			</Box>
 
-			<TokenFaucetDialog
+			<TestnetTokenFaucetDialog
 				open={openTokenFaucet}
 				isConnect={connected}
 				connectWallet={handleWalletClick}
 				onGetUsdiClick={handleGetUsdiClick}
 				onHide={() => setOpenTokenFaucet(false)}
 			/>
+
+			{/* <TokenFaucetDialog
+				open={openTokenFaucet}
+				isConnect={connected}
+				connectWallet={handleWalletClick}
+				onGetUsdiClick={handleGetUsdiClick}
+				onHide={() => setOpenTokenFaucet(false)}
+			/> */}
 		</>
 	)
 }
