@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Dialog, DialogContent, Typography, Button } from '@mui/material'
+import { Box, Dialog, DialogContent, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { FadeTransition } from '~/components/Common/Dialog'
 import { CloseButton } from './CommonButtons'

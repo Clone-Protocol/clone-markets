@@ -133,7 +133,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 					<Box marginBottom='40px' padding='10px'>
 						<Typography variant='h3' fontWeight={500}>About {asset.tickerSymbol}</Typography>
 						<Box lineHeight={1.14} mt='8px'><Typography variant='p_lg'>{asset.detailOverview}</Typography></Box>
-						<a href={`https://docs.clone.so/devnet-guide/classets-devnet/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#c4b5fd'>...read more</Typography></a>
+						<a href={`https://docs.clone.so/solana-devnet-guide/classets-devnet/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#c4b5fd'>...read more</Typography></a>
 					</Box>
 				</Stack>
 			) : (

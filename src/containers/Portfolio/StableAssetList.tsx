@@ -10,7 +10,6 @@ import { Collateral, collateralMapping } from '~/data/assets'
 import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
 import { useMemo, useState } from 'react'
-import { ON_USD } from '~/utils/constants'
 
 interface Props {
 	balance: Balance

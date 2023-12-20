@@ -1,4 +1,4 @@
-import { Typography, Box, Stack } from '@mui/material'
+import { Typography, Box, Stack, Divider } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -9,6 +9,7 @@ import DiscordIcon from 'public/images/more/discord.svg'
 import HomeHoverIcon from 'public/images/more/home-hover.svg'
 import TwitterHoverIcon from 'public/images/more/twitter-hover.svg'
 import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
+import ShareLinkIcon from 'public/images/more/call-made.svg'
 import { useState } from 'react'
 import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL } from '~/data/social'
 import { IS_DEV } from '~/data/networks'
@@ -93,6 +94,19 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         </HoverStack>
       </StyledMenuItem>
     </a>
+    <StyledDivider />
+    <a href="#" target='_blank' rel="noreferrer">
+      <LinkStack direction='row' alignItems='center' gap={1}>
+        <Typography variant='p_sm'>Audit Report</Typography>
+        <Image src={ShareLinkIcon} alt='audit' />
+      </LinkStack>
+    </a>
+    <a href="#" target='_blank' rel="noreferrer">
+      <LinkStack direction='row' alignItems='center' gap={1}>
+        <Typography variant='p_sm'>Terms & Conditions</Typography>
+        <Image src={ShareLinkIcon} alt='audit' />
+      </LinkStack>
+    </a>
     <Stack direction='row' gap={2} justifyContent='center' mt='15px'>
       <a href={OFFICIAL_WEB} target="_blank" rel="noreferrer"><MenuIcon srcImage={HomeIcon} hoverImage={HomeHoverIcon} alt="home" /></a>
       <a href={TWITTER_URL} target="_blank" rel="noreferrer"><MenuIcon srcImage={TwitterIcon} hoverImage={TwitterHoverIcon} alt="twitter" /></a>
@@ -114,7 +128,25 @@ const HoverStack = styled(Stack)`
   height: 100%;
   padding: 6px 20px;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`
+const StyledDivider = styled(Divider)`
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 192px;
+  height: 1px;
+  margin: 0 auto;
+`
+const LinkStack = styled(Stack)`
+  width: 194px;
+  height: 24px;
+  color: #989898;
+  margin-top: 8px;
+  margin-left: 11px;
+  padding: 6px 9px;
+  border-radius: 5px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 `
 

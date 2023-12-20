@@ -78,11 +78,13 @@ const TransactionStateSnackbar = ({ txState, txHash, open, handleClose }: { txSt
   const [isFocusWarning, setIsFocusWarning] = useState(false)
   // console.log('txState', txState)
 
+  const hideDuration = txState === TransactionState.PENDING ? 60000 : 5000
+
   return (
     <Box zIndex={999999}>
-      {txState === TransactionState.PENDING && <BackLayer onClick={() => setIsFocusWarning(true)} />}
+      {/* {txState === TransactionState.PENDING && <BackLayer onClick={() => setIsFocusWarning(true)} />} */}
       <Slide direction="left" in={true} mountOnEnter unmountOnExit>
-        <Snackbar open={open} autoHideDuration={60000} onClose={txState === TransactionState.PENDING ? () => { } : handleClose} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
+        <Snackbar open={open} autoHideDuration={hideDuration} onClose={txState === TransactionState.PENDING ? () => { } : handleClose} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
           <Box>
             {txState === TransactionState.SUCCESS &&
               <BoxWrapper sx={{ border: '1px solid #c4b5fd' }}>

@@ -8,7 +8,6 @@ import {
 } from '@solana/wallet-adapter-wallets'
 import { WalletDialogProvider } from '~/hocs/WalletDialogProvider'
 import { CloneProvider } from '~/hocs/CloneProvider'
-import { clusterApiUrl } from '@solana/web3.js'
 import React, { FC, ReactNode, useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import { rpcEndpoint } from '~/features/globalAtom'
