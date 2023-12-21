@@ -2,6 +2,7 @@ import { usePathname } from 'next/navigation'
 import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
+import { IS_DEV } from '~/data/networks'
 
 const CommonMenu = () => {
   const pathname = usePathname()
@@ -23,11 +24,13 @@ const CommonMenu = () => {
           <Typography variant='p_lg'>Portfolio</Typography>
         </StyledListItemButton>
       </Link>
-      <Link href="/points">
-        <StyledListItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
-          <Typography variant='p_lg'>Points</Typography>
-        </StyledListItemButton>
-      </Link>
+      {!IS_DEV &&
+        <Link href="/points">
+          <StyledListItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
+            <Typography variant='p_lg'>Points</Typography>
+          </StyledListItemButton>
+        </Link>
+      }
     </List>
   )
 }

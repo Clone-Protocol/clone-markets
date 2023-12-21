@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
+import logoIconDevnet from 'public/images/logo-markets-devnet.png'
 import logoMIcon from 'public/images/clone_icon.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
 import SettingsIcon from 'public/images/buttons-more-menu-settings.svg'
@@ -54,7 +55,7 @@ const GNB: React.FC = () => {
 						{isMobileOnSize ?
 							<Image src={logoMIcon} width={46} height={46} alt="clone" />
 							:
-							<Image src={logoIcon} width={100} height={26} alt="clone" />
+							<Image src={IS_DEV ? logoIconDevnet : logoIcon} width={IS_DEV ? 145 : 100} height={IS_DEV ? 30 : 26} alt="clone" />
 						}
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
