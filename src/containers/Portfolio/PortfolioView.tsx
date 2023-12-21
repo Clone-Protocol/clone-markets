@@ -12,6 +12,7 @@ import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
 import { useAtom } from 'jotai'
 import { filterState } from '~/features/Portfolio/filterAtom'
+import { showPoolStatus } from '~/components/Common/PoolStatus'
 
 interface ResultAsset {
 	id: number
@@ -21,6 +22,7 @@ interface ResultAsset {
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
 	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
+	const filterType = selectedFilter as FilterType
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 
 	const { data: balance } = useBalanceQuery({
@@ -31,7 +33,7 @@ const PortfolioView = () => {
 
 	const { data: assets } = useUserBalanceQuery({
 		userPubKey: publicKey,
-		filter: selectedFilter as FilterType,
+		filter: filterType,
 		refetchOnMount: 'always',
 		enabled: publicKey != null
 	})
@@ -42,7 +44,7 @@ const PortfolioView = () => {
 		if (selectedFilter === 'all') {
 			const result: ResultAsset[] = []
 			let totalBalance = onusdBalance
-			assets?.forEach((asset) => {
+			assets?.filter(asset => !showPoolStatus(asset.status)).forEach((asset) => {
 				if (result[asset.assetType]) {
 					result[asset.assetType].val += asset.onusdBalance
 				} else {
@@ -89,12 +91,16 @@ const PortfolioView = () => {
 				{balance ? <BalanceView data={dataPie} /> : <></>}
 			</Box>
 			<Box py='30px'>
-				<Box mb='45px'>
-					<StableAssetList balance={balance} />
-				</Box>
-				<Box>
-					<OnAssetList assets={assets} balance={balance} />
-				</Box>
+				{(filterType === 'all' || filterType === 'stableCoin') &&
+					<Box mb='45px'>
+						<StableAssetList balance={balance} />
+					</Box>
+				}
+				{(filterType === 'all' || filterType !== 'stableCoin') &&
+					<Box>
+						<OnAssetList assets={assets} balance={balance} />
+					</Box>
+				}
 			</Box>
 		</div>
 	)

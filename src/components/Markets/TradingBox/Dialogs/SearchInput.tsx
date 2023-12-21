@@ -48,7 +48,7 @@ const StyledInput = styled(Input)`
     color: #fff;
 
     &::placeholder {
-      color: #8988a3;
+      color: #fff;
     }
   }
 `

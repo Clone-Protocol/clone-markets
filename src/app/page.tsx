@@ -7,6 +7,7 @@ import MarketList from '~/containers/Markets/MarketList'
 import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
 import PortfolioBalance from '~/components/Markets/PortfolioBalance'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { IS_DEV } from '~/data/networks'
 
 const Home = () => {
   const { publicKey } = useWallet()
@@ -19,9 +20,11 @@ const Home = () => {
               <PortfolioBalance />
 
               <Divider />
-              <Box mb='30px'>
-                <GetUSDiBadge />
-              </Box>
+              {IS_DEV &&
+                <Box mb='30px'>
+                  <GetUSDiBadge />
+                </Box>
+              }
             </Box>
           }
           <MarketList />

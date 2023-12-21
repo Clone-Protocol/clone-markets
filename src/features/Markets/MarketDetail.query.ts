@@ -1,6 +1,6 @@
 import { QueryObserverOptions, useQuery } from "@tanstack/react-query"
 import { CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
-import { Collateral } from "clone-protocol-sdk/sdk/generated/clone"
+import { Collateral, Status } from "clone-protocol-sdk/sdk/generated/clone"
 import { assetMapping } from "src/data/assets"
 import { REFETCH_CYCLE } from "~/components/Markets/TradingBox/RateLoadingIndicator"
 import { getPythOraclePrices } from "~/utils/pyth"
@@ -8,20 +8,22 @@ import { ASSETS_DESC } from "~/data/assets_desc"
 import { fetch24hourVolume } from "~/utils/assets"
 import { getCloneClient } from "../baseQuery"
 import { useAtomValue } from "jotai"
-import { cloneClient } from "../globalAtom"
+import { cloneClient, rpcEndpoint } from "../globalAtom"
 
 export const fetchMarketDetail = async ({
   index,
   mainCloneClient,
+  networkEndpoint
 }: {
   index: number
   mainCloneClient?: CloneClient | null
+  networkEndpoint: string
 }) => {
   let program: CloneClient
   if (mainCloneClient) {
     program = mainCloneClient
   } else {
-    const { cloneClient: cloneProgram } = await getCloneClient()
+    const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
     program = cloneProgram
   }
 
@@ -66,6 +68,7 @@ export const fetchMarketDetail = async ({
     avgPremium,
     detailOverview,
     collateral: program.clone.collateral,
+    status: pool.status
   }
 
   return marketDetail
@@ -90,6 +93,7 @@ export const fetchMarketDetailDefault = (): MarketDetail => {
     detailOverview:
       "clSOL, appreviated from iSolana, is a synthetic asset of Solana on Clone. Solana is one of a number of newer cryptocurrencies designed to compete with Ethereum. Like Ethereum, Solana is both a cryptocurrency and a flexible platform for running crypto apps — everything from NFT projects like Degenerate Apes to the Serum decentralized exchange (or DEX). However, it can process transactions much faster than Ethereum — around 50,000 transactions per second.",
     collateral: null,
+    status: Status.Active
   }
 }
 
@@ -116,6 +120,7 @@ export interface MarketDetail {
   avgPremium: number
   detailOverview: string
   collateral: Collateral | null
+  status: Status
 }
 
 export interface PairData {
@@ -126,9 +131,10 @@ export interface PairData {
 
 export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const mainCloneClient = useAtomValue(cloneClient)
+  const networkEndpoint = useAtomValue(rpcEndpoint)
   let queryFunc
   try {
-    queryFunc = () => fetchMarketDetail({ index, mainCloneClient })
+    queryFunc = () => fetchMarketDetail({ index, mainCloneClient, networkEndpoint })
   } catch (e) {
     console.error(e)
     queryFunc = () => fetchMarketDetailDefault()

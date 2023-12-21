@@ -1,9 +1,11 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
+import logoMIcon from 'public/images/clone_icon.png'
 import walletIcon from 'public/images/gnb-wallet.svg'
-import { Button, Toolbar, Container, Box, AppBar, Typography } from '@mui/material'
+import SettingsIcon from 'public/images/buttons-more-menu-settings.svg'
+import { Button, Toolbar, Container, Box, AppBar, Typography, Theme, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
@@ -18,11 +20,16 @@ import TokenFaucetDialog from './Account/TokenFaucetDialog'
 // import { isMobile } from 'react-device-detect';
 import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
+// import { NETWORK_NAME } from '~/utils/constants'
+import SettingDialog from './Common/SettingDialog'
+import { IS_DEV } from '~/data/networks'
+import { fetchGeoBlock } from '~/utils/fetch_netlify'
 import { NETWORK_NAME } from '~/utils/constants'
+
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
-	// const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
 	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
@@ -44,7 +51,11 @@ const GNB: React.FC = () => {
 				<TempWarningMsg />
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Image src={logoIcon} width={121} height={25} alt="clone" />
+						{isMobileOnSize ?
+							<Image src={logoMIcon} width={46} height={46} alt="clone" />
+							:
+							<Image src={logoIcon} width={100} height={26} alt="clone" />
+						}
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
 						</Box>
@@ -71,20 +82,47 @@ const GNB: React.FC = () => {
 export default withCsrOnly(GNB)
 
 const RightMenu: React.FC = () => {
-	const { connecting, connected, publicKey, connect } = useWallet()
+	const { connecting, connected, publicKey, connect, disconnect } = useWallet()
 	const wallet = useAnchorWallet()
 	const { setOpen } = useWalletDialog()
 	const [openTokenFaucet, setOpenTokenFaucet] = useState(false)
+	const [openSettingDlog, setOpenSettingDlog] = useState(false)
 	const setMintUsdi = useSetAtom(mintUSDi)
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
+	const [showGeoblock, setShowGeoblock] = useState(false)
+
+	const GeoblockDialog = dynamic(() => import('~/components/Common/GeoblockDialog'), { ssr: false })
+
 	useFaucet()
 
-	const handleWalletClick = () => {
+	// validate geoblock if connected
+	useEffect(() => {
+		const validateGeoblock = async () => {
+			if (connected) {
+				const geoblock = await fetchGeoBlock()
+
+				if (!geoblock.result) {
+					setShowGeoblock(true)
+					disconnect()
+				}
+			}
+		}
+		validateGeoblock()
+	}, [connected])
+
+	const handleWalletClick = async () => {
 		try {
 			if (!connected) {
 				if (!wallet) {
-					setOpen(true)
+					// validate geoblock
+					const geoblock = await fetchGeoBlock()
+
+					if (geoblock.result) {
+						setOpen(true)
+					} else {
+						setShowGeoblock(true)
+					}
 				} else {
 					connect()
 				}
@@ -108,10 +146,13 @@ const RightMenu: React.FC = () => {
 	return (
 		<>
 			<Box display="flex">
-				<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
-					<Typography variant='p'>{NETWORK_NAME} Faucet</Typography>
-				</HeaderButton>
+				{IS_DEV &&
+					<HeaderButton sx={{ display: { xs: 'none', sm: 'block' } }} onClick={() => setOpenTokenFaucet(true)}>
+						<Typography variant='p'>{NETWORK_NAME} Faucet</Typography>
+					</HeaderButton>
+				}
 				<HeaderButton sx={{ fontSize: '18px', fontWeight: 'bold', paddingBottom: '20px' }} onClick={handleMoreClick}>...</HeaderButton>
+				<HeaderButton onClick={() => setOpenSettingDlog(true)}><Image src={SettingsIcon} alt="settings" /></HeaderButton>
 				<MoreMenu anchorEl={anchorEl} onShowTokenFaucet={() => setOpenTokenFaucet(true)} onClose={() => setAnchorEl(null)} />
 				<Box>
 					{!connected ?
@@ -130,6 +171,8 @@ const RightMenu: React.FC = () => {
 				</Box>
 			</Box>
 
+			<SettingDialog open={openSettingDlog} handleClose={() => setOpenSettingDlog(false)} />
+
 			<TokenFaucetDialog
 				open={openTokenFaucet}
 				isConnect={connected}
@@ -137,6 +180,7 @@ const RightMenu: React.FC = () => {
 				onGetUsdiClick={handleGetUsdiClick}
 				onHide={() => setOpenTokenFaucet(false)}
 			/>
+			{showGeoblock && <GeoblockDialog open={showGeoblock} handleClose={() => setShowGeoblock(false)} />}
 		</>
 	)
 }
@@ -176,7 +220,6 @@ const NavPlaceholder = styled('div')`
 `
 const HeaderButton = styled(Button)`
 	padding: 8px;
-	margin-left: 16px;
 	color: #c5c7d9;
 	height: 42px;
 	border-radius: 10px;

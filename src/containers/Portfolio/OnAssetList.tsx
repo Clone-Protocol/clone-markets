@@ -15,6 +15,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
 import { ON_USD } from '~/utils/constants'
+import { PoolStatusButton, showPoolStatus } from '~/components/Common/PoolStatus'
 
 interface Props {
   assets: BalanceList[]
@@ -27,9 +28,89 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
   const handleRowClick: GridEventListener<'rowClick'> = useCallback((
     params
   ) => {
-    router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+    if (!showPoolStatus(params.row.status)) {
+      router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+    }
   }, [])
   const totalAsset = assets.reduce((acc, item) => acc + item.onusdBalance, 0)
+
+  let columns: GridColDef[] = [
+    {
+      field: 'iAssets',
+      headerName: 'Token',
+      flex: 1,
+      renderCell(params: GridRenderCellParams<string>) {
+        return (
+          <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
+        )
+      },
+    },
+    {
+      field: 'myBalance',
+      headerName: 'Total Balance',
+      headerClassName: 'right--header',
+      cellClassName: 'right--cell',
+      flex: 1,
+      renderCell(params: GridRenderCellParams<string>) {
+        return isMobileOnSize && showPoolStatus(params.row.status) ?
+          <PoolStatusButton status={params.row.status} />
+          :
+          <Stack lineHeight={1.2} width='120px' textAlign='right'>
+            <Box display='flex' justifyContent='flex-end'>
+              <Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+            </Box>
+            <Box display='flex' justifyContent='flex-end'>
+              <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
+            </Box>
+          </Stack>
+      }
+    },
+    {
+      field: 'price',
+      headerName: `Price (${ON_USD})`,
+      headerClassName: 'right--header',
+      cellClassName: 'right--cell',
+      flex: 1,
+      renderCell(params: GridRenderCellParams<string>) {
+        const percent = parseFloat(params.row.changePercent)
+        return (
+          <Stack lineHeight={1.1}>
+            <Box display='flex' justifyContent='flex-end'>
+              <Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+            </Box>
+            {percent >= 0 ? (
+              <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
+                <Typography variant='p_lg'>+{percent.toFixed(2)}%</Typography>
+                <Image src={ArrowUpward} alt='arrowUp' />
+              </Box>
+            )
+              :
+              (<Box color='#ff0084' display='flex' alignItems='center' gap={1}>
+                <Typography variant='p_lg'>-{percent.toFixed(2)}%</Typography>
+                <Image src={ArrowDownward} alt='arrowDown' />
+              </Box>
+              )}
+          </Stack>
+        )
+      },
+    },
+    {
+      field: 'iPortfolio',
+      headerClassName: 'right--header',
+      cellClassName: 'right--cell',
+      headerName: 'Portfolio %',
+      flex: 1,
+      renderCell(params: GridRenderCellParams<string>) {
+        return showPoolStatus(params.row.status) ?
+          <PoolStatusButton status={params.row.status} />
+          :
+          <Box mt='-15px'>
+            <PercentSlider percent={params.row.percentVal} />
+          </Box>
+      },
+    },
+  ]
+  columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
   return (
     <>
@@ -54,80 +135,6 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
   )
 }
 
-let columns: GridColDef[] = [
-  {
-    field: 'iAssets',
-    headerName: 'Token',
-    flex: 1,
-    renderCell(params: GridRenderCellParams<string>) {
-      return (
-        <CellTicker tickerIcon={params.row.tickerIcon} tickerName={params.row.tickerName} tickerSymbol={params.row.tickerSymbol} />
-      )
-    },
-  },
-  {
-    field: 'myBalance',
-    headerName: 'Total Balance',
-    headerClassName: 'right--header',
-    cellClassName: 'right--cell',
-    flex: 1,
-    renderCell(params: GridRenderCellParams<string>) {
-      return (
-        <Stack lineHeight={1.2} width='120px' textAlign='right'>
-          <Box display='flex' justifyContent='flex-end'>
-            <Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
-          </Box>
-          <Box display='flex' justifyContent='flex-end'>
-            <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
-          </Box>
-        </Stack>
-      )
-    },
-  },
-  {
-    field: 'price',
-    headerName: `Price (${ON_USD})`,
-    headerClassName: 'right--header',
-    cellClassName: 'right--cell',
-    flex: 1,
-    renderCell(params: GridRenderCellParams<string>) {
-      const percent = parseFloat(params.row.changePercent)
-      return (
-        <Stack lineHeight={1.1}>
-          <Box display='flex' justifyContent='flex-end'>
-            <Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
-          </Box>
-          {percent >= 0 ? (
-            <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
-              <Typography variant='p_lg'>+{percent.toFixed(2)}%</Typography>
-              <Image src={ArrowUpward} alt='arrowUp' />
-            </Box>
-          )
-            :
-            (<Box color='#ff0084' display='flex' alignItems='center' gap={1}>
-              <Typography variant='p_lg'>-{percent.toFixed(2)}%</Typography>
-              <Image src={ArrowDownward} alt='arrowDown' />
-            </Box>
-            )}
-        </Stack>
-      )
-    },
-  },
-  {
-    field: 'iPortfolio',
-    headerClassName: 'right--header',
-    cellClassName: 'right--cell',
-    headerName: 'Portfolio %',
-    flex: 1,
-    renderCell(params: GridRenderCellParams<string>) {
-      return (
-        <Box mt='-15px'>
-          <PercentSlider percent={params.row.percentVal} />
-        </Box>
-      )
-    },
-  },
-]
 
 const TopBox = styled(Box)`
   height: 87px;
@@ -141,8 +148,5 @@ const TopBox = styled(Box)`
   justify-content: center;
   padding-left: 29px;
 `
-
-
-columns = columns.map((col) => Object.assign(col, { hideSortIcons: true, filterable: false }))
 
 export default withSuspense(OnAssetList, <LoadingProgress />)

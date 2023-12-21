@@ -16,6 +16,7 @@ import { formatDollarAmount } from '~/utils/numbers'
 import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
 import { ON_USD } from '~/utils/constants'
+import { PoolStatusButton, showPoolStatus } from '~/components/Common/PoolStatus'
 
 const MarketList = () => {
 	const router = useRouter()
@@ -65,8 +66,14 @@ const MarketList = () => {
 			flex: 3,
 			renderCell(params: GridRenderCellParams<string>) {
 				return <Box textAlign={isMobileOnSize ? 'right' : 'left'}>
-					<Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
-					{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
+					{isMobileOnSize && showPoolStatus(params.row.status) ?
+						<PoolStatusButton status={params.row.status} />
+						:
+						<Box>
+							<Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
+							{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
+						</Box>
+					}
 				</Box>
 			}
 		},
@@ -87,7 +94,10 @@ const MarketList = () => {
 			headerName: 'Liquidity',
 			flex: 3,
 			renderCell(params: GridRenderCellParams<string>) {
-				return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.value), 3)}</Typography>
+				return showPoolStatus(params.row.status) ?
+					<></>
+					:
+					<Typography variant='p_xlg'>{formatDollarAmount(Number(params.value), 3)}</Typography>
 			},
 		},
 		{
@@ -97,7 +107,10 @@ const MarketList = () => {
 			headerName: 'Volume',
 			flex: 3,
 			renderCell(params: GridRenderCellParams<string>) {
-				return <Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
+				return showPoolStatus(params.row.status) ?
+					<PoolStatusButton status={params.row.status} />
+					:
+					<Typography variant='p_xlg'>{formatDollarAmount(Number(params.row.volume24h), 3)}</Typography>
 			},
 		},
 	]
@@ -120,7 +133,9 @@ const MarketList = () => {
 	const handleRowClick: GridEventListener<'rowClick'> = useCallback((
 		params
 	) => {
-		router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+		if (!showPoolStatus(params.row.status)) {
+			router.push(`/trade/${ASSETS[params.row.id].ticker}`)
+		}
 	}, [])
 
 	return (
@@ -132,6 +147,7 @@ const MarketList = () => {
 				color: '#fff',
 				borderRadius: '10px',
 				'& .super-app-theme--header': { color: '#9d9d9d', fontSize: '11px' },
+				'& .non-hover-row': { ':hover': { background: '#000' } }
 			}}>
 
 			<Box mb='9px'><Typography variant='p_xlg'>All clAssets on Clone Protocol</Typography></Box>

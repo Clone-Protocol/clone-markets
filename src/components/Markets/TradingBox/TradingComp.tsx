@@ -18,13 +18,13 @@ import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSha
 import KeyboardArrowUpSharpIcon from '@mui/icons-material/KeyboardArrowUpSharp';
 import { PairData, useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { CLONE_TOKEN_SCALE } from 'clone-protocol-sdk/sdk/src/clone'
-import GetOnUSD from './GetOnUSD'
 import { Collateral as StableCollateral, collateralMapping } from '~/data/assets'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { calculateSwapExecution } from 'clone-protocol-sdk/sdk/src/utils'
 import { ON_USD } from '~/utils/constants'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
+import { PoolStatusButton, showPoolStatus } from '~/components/Common/PoolStatus'
 
 export enum ComponentEffect {
   iAssetAmount,
@@ -339,18 +339,23 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               {!publicKey ? <ConnectButton onClick={() => setOpen(true)}>
                 <Typography variant='h4'>Connect Wallet</Typography>
               </ConnectButton> :
-                isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { border: '1px solid #c4b5fd' } : {}}>
-                  {!loading ?
-                    <Typography variant='p_xlg'>Swap</Typography>
-                    :
-                    <Stack direction='row' alignItems='center' gap={2}>
-                      <CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} />
-                      <Typography variant='p_xlg' color='#fff'>Swapping</Typography>
-                    </Stack>}
-                </ActionButton> :
-                  <DisableButton disabled={true}>
-                    <Typography variant='p_xlg'>{invalidMsg()}</Typography>
-                  </DisableButton>
+                showPoolStatus(assetData?.status!) ?
+                  <Box display='flex' justifyContent='center'>
+                    <PoolStatusButton status={assetData?.status!} />
+                  </Box>
+                  :
+                  isValid ? <ActionButton onClick={handleSubmit(onConfirm)} disabled={loading} sx={loading ? { border: '1px solid #c4b5fd' } : {}}>
+                    {!loading ?
+                      <Typography variant='p_xlg'>Swap</Typography>
+                      :
+                      <Stack direction='row' alignItems='center' gap={2}>
+                        <CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} />
+                        <Typography variant='p_xlg' color='#fff'>Swapping</Typography>
+                      </Stack>}
+                  </ActionButton> :
+                    <DisableButton disabled={true}>
+                      <Typography variant='p_xlg'>{invalidMsg()}</Typography>
+                    </DisableButton>
               }
             </Box>
 
@@ -361,11 +366,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} />}
 
-            {publicKey &&
+            {/* {publicKey &&
               <Box mt='10px'>
                 <GetOnUSD />
               </Box>
-            }
+            } */}
           </Box>
         </Box>
       </div>

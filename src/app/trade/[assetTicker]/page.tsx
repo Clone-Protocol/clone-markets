@@ -16,7 +16,7 @@ const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
 
   useMemo(() => {
     if (assetTicker) {
-      console.log('assetId', AssetTickers[assetTicker as keyof typeof AssetTickers])
+      // console.log('assetId', AssetTickers[assetTicker as keyof typeof AssetTickers])
 
       if (AssetTickers[assetTicker as keyof typeof AssetTickers]) {
         setAssetId(AssetTickers[assetTicker as keyof typeof AssetTickers])

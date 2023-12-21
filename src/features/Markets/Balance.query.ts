@@ -7,10 +7,10 @@ import { getPythOraclePrices } from "~/utils/pyth"
 import { assetMapping } from '~/data/assets'
 import { getCloneClient } from '../baseQuery'
 import { useAtomValue } from 'jotai'
-import { cloneClient } from '~/features/globalAtom'
+import { cloneClient, rpcEndpoint } from '~/features/globalAtom'
 import { calculatePoolAmounts } from 'clone-protocol-sdk/sdk/src/utils'
 
-export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { index: number, setStartTimer: (start: boolean) => void, mainCloneClient?: CloneClient | null }) => {
+export const fetchBalance = async ({ index, setStartTimer, mainCloneClient, networkEndpoint }: { index: number, setStartTimer: (start: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
   console.log('fetchBalance')
   // start timer in data-loading-indicator
   setStartTimer(false);
@@ -20,7 +20,7 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { 
   if (mainCloneClient) {
     program = mainCloneClient
   } else {
-    const { cloneClient: cloneProgram } = await getCloneClient()
+    const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
     program = cloneProgram
   }
 
@@ -64,7 +64,7 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient }: { 
         fromScale(pool.collateralIld, collateralScale),
         fromCloneScale(pool.onassetIld),
         fromScale(pool.committedCollateralLiquidity, collateralScale),
-        oraclePrice, 
+        oraclePrice,
         program.clone.collateral
       )
 
@@ -99,8 +99,9 @@ export interface Balance {
 export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetProps) {
   const { setStartTimer } = useDataLoading()
   const mainCloneClient = useAtomValue(cloneClient)
+  const networkEndpoint = useAtomValue(rpcEndpoint)
 
-  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer, mainCloneClient }), {
+  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer, mainCloneClient, networkEndpoint }), {
     refetchOnMount,
     refetchInterval: REFETCH_CYCLE,
     refetchIntervalInBackground: true,

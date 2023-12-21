@@ -10,6 +10,7 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { getCollateralAccount } from "~/utils/token_accounts"
 import { calculatePoolAmounts } from "clone-protocol-sdk/sdk/src/utils"
 import { getPythOraclePrices } from '~/utils/pyth'
+import { Status } from 'clone-protocol-sdk/sdk/generated/clone'
 
 const fetchOnassetBalance = async (onassetMint: PublicKey, program: CloneClient) => {
 	const onassetAssociatedTokenAccount = await getTokenAccount(
@@ -54,9 +55,9 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 			fromScale(pool.collateralIld, collateralScale),
 			fromCloneScale(pool.onassetIld),
 			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)!, 
+			priceMap.get(assetMapping(i).pythSymbol)!,
 			program.clone.collateral
-		  )
+		)
 		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
@@ -115,9 +116,9 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 			fromScale(pool.collateralIld, collateralScale),
 			fromCloneScale(pool.onassetIld),
 			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)!, 
+			priceMap.get(assetMapping(i).pythSymbol)!,
 			program.clone.collateral
-		  )
+		)
 		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
@@ -132,6 +133,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 				assetType: assetType,
 				assetBalance,
 				onusdBalance: price * assetBalance,
+				status: pool.status
 			})
 		}
 	}
@@ -168,6 +170,7 @@ export interface BalanceList {
 	assetBalance: number
 	onusdBalance: number
 	percentVal?: number
+	status: Status
 }
 
 export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
@@ -181,11 +184,15 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 			refetchIntervalInBackground: true,
 			enabled,
 			select: (assets) => assets.filter((asset) => {
-				if (filter === 'onCrypto') {
+				if (filter === 'all') {
+					return asset.assetType === AssetType.Crypto || asset.assetType === AssetType.Commodities
+				} else if (filter === 'onCrypto') {
 					return asset.assetType === AssetType.Crypto
-				} else if (filter === 'onFx') {
-					return asset.assetType === AssetType.Fx
-				} else if (filter === 'onCommodity') {
+				}
+				// else if (filter === 'onFx') {
+				// 	return asset.assetType === AssetType.Fx
+				// } 
+				else if (filter === 'onCommodity') {
 					return asset.assetType === AssetType.Commodities
 				}
 				return true;

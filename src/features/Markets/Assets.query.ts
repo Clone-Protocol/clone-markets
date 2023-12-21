@@ -1,22 +1,24 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { assetMapping } from '~/data/assets'
+import { AssetType, assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { cloneClient, showPythBanner } from '~/features/globalAtom'
+import { cloneClient, rpcEndpoint, showPythBanner } from '~/features/globalAtom'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator';
 import { getCloneClient } from '../baseQuery';
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
+import { Status } from 'clone-protocol-sdk/sdk/generated/clone';
+import { showPoolStatus } from '~/components/Common/PoolStatus';
 
-export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null }) => {
+export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkEndpoint }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
 	console.log('fetchAssets')
 
 	let program
 	if (mainCloneClient) {
 		program = mainCloneClient
 	} else {
-		const { cloneClient: cloneProgram } = await getCloneClient()
+		const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
 		program = cloneProgram
 	}
 
@@ -64,7 +66,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setS
 			liquidity: parseInt(info.liquidity.toString()),
 			volume24h: dailyVolumeStats.get(info.poolIndex) ?? 0,
 			change24h,
-			feeRevenue24h: 0 // We don't use this on the markets app.
+			status: info.status
 		})
 	}
 	return result
@@ -74,6 +76,7 @@ interface GetAssetsProps {
 	filter: FilterType
 	searchTerm: string
 	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	filterPoolStatus?: boolean
 	enabled?: boolean
 }
 
@@ -87,16 +90,17 @@ export interface AssetList {
 	liquidity: number
 	volume24h: number
 	change24h: number
-	feeRevenue24h: number
+	status: Status
 }
 
-export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useAssetsQuery({ filter, searchTerm, refetchOnMount, filterPoolStatus = false, enabled = true }: GetAssetsProps) {
 	const setShowPythBanner = useSetAtom(showPythBanner)
 	const mainCloneClient = useAtomValue(cloneClient)
+	const networkEndpoint = useAtomValue(rpcEndpoint)
 
 	let queryFunc
 	try {
-		queryFunc = () => fetchAssets({ setShowPythBanner, mainCloneClient })
+		queryFunc = () => fetchAssets({ setShowPythBanner, mainCloneClient, networkEndpoint })
 	} catch (e) {
 		console.error(e)
 		queryFunc = () => []
@@ -109,6 +113,16 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, enabled = t
 		enabled,
 		select: (assets) => {
 			let filteredAssets = assets
+			if (filterPoolStatus) {
+				filteredAssets = filteredAssets.filter((asset) => !showPoolStatus(asset.status))
+			}
+			filteredAssets = filteredAssets.filter((asset) => {
+				if (filter === 'all') {
+					return asset.assetType === AssetType.Crypto || asset.assetType === AssetType.Commodities
+				}
+				return true;
+			})
+
 			if (searchTerm && searchTerm.length > 0) {
 				filteredAssets = filteredAssets.filter((asset) => asset.tickerName.toLowerCase().includes(searchTerm.toLowerCase()) || asset.tickerSymbol.toLowerCase().includes(searchTerm.toLowerCase()))
 			}

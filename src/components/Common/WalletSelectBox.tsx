@@ -3,7 +3,7 @@ import { Box, Typography, Stack } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useBalanceQuery } from '~/features/Portfolio/Balance.query'
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { useSnackbar } from 'notistack'
 import { useSetAtom } from 'jotai'
 import { cloneClient } from '~/features/globalAtom'
@@ -11,10 +11,13 @@ import withSuspense from '~/hocs/withSuspense'
 import { shortenAddress } from '~/utils/address'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getSolInBalance } from '~/utils/address';
+import { useClone } from '~/hooks/useClone';
 import { ON_USD } from '~/utils/constants';
 
 const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
+  const { getCloneApp } = useClone()
+  const wallet = useAnchorWallet()
   const { publicKey, disconnect } = useWallet()
   const setCloneClient = useSetAtom(cloneClient)
   const [solBalance, setSolBalance] = useState(0)
@@ -27,9 +30,10 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
 
   useMemo(() => {
     const getBalance = async () => {
-      if (publicKey && show) {
+      if (publicKey && wallet && show) {
         try {
-          const balance = await getSolInBalance(publicKey)
+          const program = await getCloneApp(wallet)
+          const balance = await getSolInBalance(program, publicKey)
           setSolBalance(balance)
         } catch (e) {
           console.error(e)
@@ -41,6 +45,7 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
 
   const handleDisconnect = async () => {
     setCloneClient(null)
+    enqueueSnackbar('Wallet disconnected')
     await disconnect()
     onHide()
     // refresh page by force
@@ -60,7 +65,7 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
         </Box>
         <Stack direction='row' spacing={1}>
           <CopyToClipboard text={publicKey!!.toString()}
-            onCopy={() => enqueueSnackbar('Copied address')}>
+            onCopy={() => enqueueSnackbar('Wallet address copied')}>
             <PopupButton><Typography variant='p_sm'>Copy</Typography></PopupButton>
           </CopyToClipboard>
           <PopupButton><Typography variant='p_sm' onClick={handleDisconnect}>Disconnect</Typography></PopupButton>

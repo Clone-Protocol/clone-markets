@@ -10,17 +10,22 @@ const CommonMenu = () => {
     <List component="nav" sx={{ display: 'flex', padding: 0 }}>
       <Link href="/">
         <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
-          <Box><Typography variant='p_lg'>Home</Typography></Box>
+          <Typography variant='p_lg'>Home</Typography>
+        </StyledListItemButton>
+      </Link>
+      <Link href="/trade/gold">
+        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
+          <Typography variant='p_lg'>Trade</Typography>
         </StyledListItemButton>
       </Link>
       <Link href="/clportfolio">
         <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
-          <Box><Typography variant='p_lg'>Portfolio</Typography></Box>
+          <Typography variant='p_lg'>Portfolio</Typography>
         </StyledListItemButton>
       </Link>
-      <Link href="/trade/euro">
-        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
-          <Box><Typography variant='p_lg'>Trade</Typography></Box>
+      <Link href="/points">
+        <StyledListItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
+          <Typography variant='p_lg'>Points</Typography>
         </StyledListItemButton>
       </Link>
     </List>
@@ -52,7 +57,7 @@ const StyledListItemButton = styled(ListItemButton)`
   margin-left: 8px;
   margin-right: 8px;
   border-radius: 5px;
-  color: ${(props) => props.theme.basis.raven};
+  color: ${(props) => props.theme.basis.textRaven};
   &:hover {
     border-radius: 5px;
     background-color: rgba(196, 181, 253, 0.1);

@@ -18,6 +18,7 @@ import useLocalStorage from '~/hooks/useLocalStorage'
 import dynamic from 'next/dynamic'
 import ErrorBoundary from '~/components/ErrorBoundary'
 import GlobalError from './global-error'
+import { IS_DEV } from '~/data/networks'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isCompleteInit, _] = useLocalStorage(IS_COMPLETE_INIT, false)
@@ -62,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             }}>
                             {children}
                           </Box>
-                          {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
+                          {IS_DEV && isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
                         </Box>
                       </ErrorBoundary>
                     </DataLoadingIndicatorProvider>
