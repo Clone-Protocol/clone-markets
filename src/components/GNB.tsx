@@ -221,6 +221,7 @@ const NavPlaceholder = styled('div')`
 `
 const HeaderButton = styled(Button)`
 	padding: 8px;
+	margin-left: 6px;
 	color: #c5c7d9;
 	height: 42px;
 	border-radius: 10px;
