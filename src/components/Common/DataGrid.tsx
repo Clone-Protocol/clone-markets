@@ -79,7 +79,6 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
         display: 'none',
       },
       '& .MuiDataGrid-row': {
-        marginRight: '10px',
         paddingLeft: '10px',
         cursor: 'pointer'
       },
@@ -103,6 +102,9 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
       '.border-poor--row': {
         borderLeft: '1px solid #ed2525',
         borderRight: '1px solid #ed2525'
+      },
+      '& .MuiDataGrid-virtualScroller': {
+        overflow: 'hidden'
       }
     }}
     components={{
@@ -114,13 +116,12 @@ export const Grid: React.FC<GridProps> = ({ headers, rows, customNoResultsOverla
     }}
     autoHeight={!noAutoHeight}
     disableColumnFilter
-    disableSelectionOnClick
+    disableRowSelectionOnClick
     disableColumnSelector
     disableColumnMenu
     disableDensitySelector
-    disableExtendRowFullWidth
     hideFooter
-    headerHeight={40}
+    columnHeaderHeight={40}
     rowHeight={72}
     rowCount={20}
     onRowClick={onRowClick}
