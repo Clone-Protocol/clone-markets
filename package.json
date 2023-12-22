@@ -20,10 +20,12 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.27.0",
+    "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.9",
-    "@mui/material": "^5.14.10",
+    "@mui/material": "^5.15.0",
+    "@mui/material-nextjs": "^5.15.0",
     "@mui/styles": "^5.2.3",
     "@mui/x-data-grid": "^6.18.0",
     "@netlify/edge-functions": "^2.2.0",

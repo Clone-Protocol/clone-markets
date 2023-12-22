@@ -19,6 +19,7 @@ import dynamic from 'next/dynamic'
 import ErrorBoundary from '~/components/ErrorBoundary'
 import GlobalError from './global-error'
 import { IS_DEV } from '~/data/networks'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isCompleteInit, _] = useLocalStorage(IS_COMPLETE_INIT, false)
@@ -43,35 +44,37 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <QueryProvider>
-          <JotaiProvider>
-            <ThemeProvider theme={theme}>
-              <SnackbarProvider maxSnack={3}>
-                <ClientWalletProvider>
-                  <TransactionStateProvider>
-                    <DataLoadingIndicatorProvider>
-                      <ErrorBoundary fallback={<GlobalError />}>
-                        <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
-                          <CssBaseline />
-                          <GNB />
+          <AppRouterCacheProvider>
+            <JotaiProvider>
+              <ThemeProvider theme={theme}>
+                <SnackbarProvider maxSnack={3}>
+                  <ClientWalletProvider>
+                    <TransactionStateProvider>
+                      <DataLoadingIndicatorProvider>
+                        <ErrorBoundary fallback={<GlobalError />}>
+                          <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
+                            <CssBaseline />
+                            <GNB />
 
-                          <Box
-                            component="main"
-                            sx={{
-                              flexGrow: 1,
-                              height: '100vh',
-                              overflow: 'auto',
-                            }}>
-                            {children}
+                            <Box
+                              component="main"
+                              sx={{
+                                flexGrow: 1,
+                                height: '100vh',
+                                overflow: 'auto',
+                              }}>
+                              {children}
+                            </Box>
+                            {IS_DEV && isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
                           </Box>
-                          {IS_DEV && isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
-                        </Box>
-                      </ErrorBoundary>
-                    </DataLoadingIndicatorProvider>
-                  </TransactionStateProvider>
-                </ClientWalletProvider>
-              </SnackbarProvider>
-            </ThemeProvider>
-          </JotaiProvider>
+                        </ErrorBoundary>
+                      </DataLoadingIndicatorProvider>
+                    </TransactionStateProvider>
+                  </ClientWalletProvider>
+                </SnackbarProvider>
+              </ThemeProvider>
+            </JotaiProvider>
+          </AppRouterCacheProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>
