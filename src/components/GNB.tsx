@@ -55,7 +55,7 @@ const GNB: React.FC = () => {
 						{isMobileOnSize ?
 							<Image src={logoMIcon} width={46} height={46} alt="clone" />
 							:
-							<Image src={IS_DEV ? logoIconDevnet : logoIcon} width={IS_DEV ? 145 : 100} height={IS_DEV ? 30 : 26} alt="clone" />
+							<Image src={IS_DEV ? logoIconDevnet : logoIcon} width={IS_DEV ? 121 : 100} height={IS_DEV ? 25 : 26} alt="clone" />
 						}
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
