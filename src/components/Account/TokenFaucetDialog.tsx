@@ -16,7 +16,7 @@ const TokenFaucetDialog = ({ open, isConnect, connectWallet, onGetUsdiClick, onH
         <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '20px', maxWidth: '375px', padding: '15px' }}>
           <BoxWrapper>
             <Box mb="21px"><Typography variant='h3' fontWeight={500}>Devnet Token Faucet</Typography></Box>
-            <a href="https://solfaucet.com/" target="_blank" rel="noreferrer">
+            <a href="https://faucet.solana.com/" target="_blank" rel="noreferrer">
               <LinkBox>
                 <Stack direction='row' justifyContent='space-between' alignItems='center' width='100%'>
                   <Stack direction='row' spacing={2} alignItems='center'>

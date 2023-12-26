@@ -43,7 +43,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         background: '#080018',
         color: '#fff',
         border: '1px solid #414166',
-        borderRadius: '5px'
+        borderRadius: '10px'
       },
     }}
     MenuListProps={{ sx: { pt: 0, pb: '15px' } }}
