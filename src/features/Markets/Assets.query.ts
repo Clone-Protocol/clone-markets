@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { assetMapping } from '~/data/assets'
+import { Asset, assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
@@ -43,6 +43,12 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient }: { setS
 
 	for (let i = 0; i < iassetInfos.length; i++) {
 		const info = iassetInfos[i]
+
+		//TODO: temporary, it should be removed later
+		if (info.poolIndex === Asset.Sui || info.poolIndex === Asset.Aptos || info.poolIndex === Asset.Cardano) {
+			continue;
+		}
+
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
 
 		let change24h = 0
