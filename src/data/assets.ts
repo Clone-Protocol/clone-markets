@@ -87,27 +87,27 @@ export const ASSETS = [
         ticker: 'avalanche',
         pythSymbol: 'Crypto.AVAX/USD'
     },
-    {
-        tickerName: 'Clone Sui',
-        tickerSymbol: 'clSUI',
-        tickerIcon: '/images/assets/on-sui.svg',
-        ticker: 'sui',
-        pythSymbol: 'Crypto.SUI/USD'
-    },
-    {
-        tickerName: 'Clone Aptos',
-        tickerSymbol: 'clAPT',
-        tickerIcon: '/images/assets/on-apt.svg',
-        ticker: 'aptos',
-        pythSymbol: 'Crypto.APT/USD'
-    },
-    {
-        tickerName: 'Clone Cardano',
-        tickerSymbol: 'clADA',
-        tickerIcon: '/images/assets/on-ada.svg',
-        ticker: 'cardano',
-        pythSymbol: 'Crypto.ADA/USD'
-    },
+    // {
+    //     tickerName: 'Clone Sui',
+    //     tickerSymbol: 'clSUI',
+    //     tickerIcon: '/images/assets/on-sui.svg',
+    //     ticker: 'sui',
+    //     pythSymbol: 'Crypto.SUI/USD'
+    // },
+    // {
+    //     tickerName: 'Clone Aptos',
+    //     tickerSymbol: 'clAPT',
+    //     tickerIcon: '/images/assets/on-apt.svg',
+    //     ticker: 'aptos',
+    //     pythSymbol: 'Crypto.APT/USD'
+    // },
+    // {
+    //     tickerName: 'Clone Cardano',
+    //     tickerSymbol: 'clADA',
+    //     tickerIcon: '/images/assets/on-ada.svg',
+    //     ticker: 'cardano',
+    //     pythSymbol: 'Crypto.ADA/USD'
+    // },
 ]
 
 export const assetMapping = (index: number) => {
