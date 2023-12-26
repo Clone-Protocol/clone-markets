@@ -1,3 +1,4 @@
+'use client'
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'

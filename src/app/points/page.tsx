@@ -1,5 +1,4 @@
-'use client'
-import { StyledSection } from '../page'
+import { StyledSection } from '~/containers/Markets/MarketContainer';
 import { Container, Box, Typography, Stack } from '@mui/material'
 import Image from 'next/image'
 import LearnMoreIcon from 'public/images/learn-more.svg'

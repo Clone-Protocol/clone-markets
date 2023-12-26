@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import { Box, Typography, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import useLocalStorage from '~/hooks/useLocalStorage'
@@ -6,15 +7,22 @@ import { IS_COMPLETE_INIT } from '~/data/localstorage'
 import { CloseButton } from './CommonButtons'
 import { NETWORK_NAME } from '~/utils/constants'
 
-const InitEnterScreen = ({ onClose }: { onClose: () => void }) => {
-  const [_, setIsCompleteInit] = useLocalStorage(IS_COMPLETE_INIT, false)
+const InitEnterScreen = () => {
+  const [isCompleteInit, setIsCompleteInit] = useLocalStorage(IS_COMPLETE_INIT, false)
+  const [isOpenInit, setIsOpenInit] = useState(false)
+
+  useEffect(() => {
+    if (!isCompleteInit) {
+      setIsOpenInit(true)
+    }
+  }, [isCompleteInit])
 
   const close = () => {
     setIsCompleteInit(true)
-    onClose && onClose()
+    setIsOpenInit(false)
   }
 
-  return (
+  return isOpenInit ? (
     <BackScreen>
       <BoxWrapper>
         <TextHead>Welcome!</TextHead>
@@ -26,11 +34,11 @@ const InitEnterScreen = ({ onClose }: { onClose: () => void }) => {
         <EnterButton onClick={() => close()}><Typography variant='p_xlg'>Enter Clone {NETWORK_NAME}</Typography></EnterButton>
 
         <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
-          <CloseButton handleClose={onClose} />
+          <CloseButton handleClose={() => setIsOpenInit(false)} />
         </Box>
       </BoxWrapper>
     </BackScreen>
-  )
+  ) : <></>
 }
 
 const BackScreen = styled('div')`

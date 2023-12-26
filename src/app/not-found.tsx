@@ -3,7 +3,7 @@ import { Container, Typography, Box, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import logoIcon from 'public/images/logo-markets.png'
 import Image from 'next/image'
-import { StyledSection } from './page';
+import { StyledSection } from '~/containers/Markets/MarketContainer';
 
 const NotFound = () => {
   return (

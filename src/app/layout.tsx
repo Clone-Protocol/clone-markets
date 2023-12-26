@@ -1,12 +1,7 @@
-'use client'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import QueryProvider from '~/hocs/QueryClient'
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { theme } from '~/theme'
 import GNB from '~/components/GNB'
 import Box from '@mui/material/Box'
-import { SnackbarProvider } from 'notistack'
 import ClientWalletProvider from '~/hocs/ClientWalletProvider'
 import { DataLoadingIndicatorProvider } from '~/hocs/DataLoadingIndicatorProvider'
 import { Provider as JotaiProvider } from 'jotai'
@@ -14,7 +9,7 @@ import { TransactionStateProvider } from '~/hocs/TransactionStateProvider'
 import './styles.css'
 import ErrorBoundary from '~/components/ErrorBoundary'
 import GlobalError from './global-error'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
+import ThemeRegistry from '~/components/ThemeRegistry'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,36 +24,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <QueryProvider>
-          <AppRouterCacheProvider>
+          <ThemeRegistry>
             <JotaiProvider>
-              <ThemeProvider theme={theme}>
-                <SnackbarProvider maxSnack={3}>
-                  <ClientWalletProvider>
-                    <TransactionStateProvider>
-                      <DataLoadingIndicatorProvider>
-                        <ErrorBoundary fallback={<GlobalError />}>
-                          <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
-                            <CssBaseline />
-                            <GNB />
+              <ClientWalletProvider>
+                <TransactionStateProvider>
+                  <DataLoadingIndicatorProvider>
+                    <ErrorBoundary fallback={<GlobalError />}>
+                      <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
+                        <GNB />
 
-                            <Box
-                              component="main"
-                              sx={{
-                                flexGrow: 1,
-                                height: '100vh',
-                                overflow: 'auto',
-                              }}>
-                              {children}
-                            </Box>
-                          </Box>
-                        </ErrorBoundary>
-                      </DataLoadingIndicatorProvider>
-                    </TransactionStateProvider>
-                  </ClientWalletProvider>
-                </SnackbarProvider>
-              </ThemeProvider>
+                        <Box
+                          component="main"
+                          sx={{
+                            flexGrow: 1,
+                            height: '100vh',
+                            overflow: 'auto',
+                          }}>
+                          {children}
+                        </Box>
+                      </Box>
+                    </ErrorBoundary>
+                  </DataLoadingIndicatorProvider>
+                </TransactionStateProvider>
+              </ClientWalletProvider>
             </JotaiProvider>
-          </AppRouterCacheProvider>
+          </ThemeRegistry>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>

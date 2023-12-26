@@ -1,6 +1,6 @@
 'use client'
 import { Box, Container, Stack, Typography } from '@mui/material'
-import { StyledSection } from './page';
+import { StyledSection } from '~/containers/Markets/MarketContainer';
 import { FailedStatusBox } from '~/components/Common/TransactionStateSnackbar';
 import SupportDiscordIcon from 'public/images/support-button-discord.svg'
 import Image from 'next/image';

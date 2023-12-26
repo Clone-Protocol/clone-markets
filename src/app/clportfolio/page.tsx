@@ -1,7 +1,7 @@
 'use client'
 import { Container } from '@mui/material'
 import PortfolioView from '~/containers/Portfolio/PortfolioView'
-import { StyledSection } from '../page'
+import { StyledSection } from '~/containers/Markets/MarketContainer';
 
 const IportfolioPage = () => {
   return (
