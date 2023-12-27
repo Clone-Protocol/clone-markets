@@ -1,4 +1,3 @@
-'use client'
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
@@ -20,7 +19,6 @@ import { PoolStatusButton, showPoolStatus } from '~/components/Common/PoolStatus
 
 const MarketList = () => {
 	const router = useRouter()
-	// const [filter, setFilter] = useState<FilterType>('all')
 	const filter: FilterType = 'all'
 
 	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))

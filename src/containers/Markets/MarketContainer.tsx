@@ -44,7 +44,6 @@ export const StyledSection = styled('section')`
 		padding: 110px 0px;
 	}
 `
-
 const Divider = styled('div')`
   width: 100%;
   height: 1px;

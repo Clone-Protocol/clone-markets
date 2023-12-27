@@ -2,7 +2,6 @@ import { Query, useQuery } from '@tanstack/react-query'
 import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { fetchUserPoints, UserPointsView } from '~/utils/fetch_netlify'
 
-
 export const fetchRanking = async () => {
   console.log('fetchRanking')
 
@@ -10,6 +9,7 @@ export const fetchRanking = async () => {
 
   let result: RankingList[] = []
 
+  userPoints = userPoints.slice(0, 100)
   userPoints.forEach((user) => {
     result.push({
       id: user.rank,

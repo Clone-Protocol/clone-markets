@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from 'react'
 import BalanceView from '~/components/Portfolio/BalanceView'
 import { useWallet } from '@solana/wallet-adapter-react'

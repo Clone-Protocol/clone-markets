@@ -1,4 +1,3 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import QueryProvider from '~/hocs/QueryClient'
 import GNB from '~/components/GNB'
 import Box from '@mui/material/Box'
@@ -49,7 +48,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </ClientWalletProvider>
             </JotaiProvider>
           </ThemeRegistry>
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>
     </html>

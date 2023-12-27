@@ -11,7 +11,7 @@ import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
 import { Status } from 'clone-protocol-sdk/sdk/generated/clone';
 import { showPoolStatus } from '~/components/Common/PoolStatus';
 
-export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkEndpoint }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
+export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkEndpoint }: { setShowPythBanner?: (show: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
 	console.log('fetchAssets')
 
 	let program
@@ -38,7 +38,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 		)
 	} catch (e) {
 		console.error(e)
-		setShowPythBanner(true)
+		setShowPythBanner && setShowPythBanner(true)
 	}
 
 	const result: AssetList[] = []

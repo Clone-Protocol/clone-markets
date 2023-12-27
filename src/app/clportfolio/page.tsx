@@ -1,4 +1,3 @@
-'use client'
 import { Container } from '@mui/material'
 import PortfolioView from '~/containers/Portfolio/PortfolioView'
 import { StyledSection } from '~/containers/Markets/MarketContainer';

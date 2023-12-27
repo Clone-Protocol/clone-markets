@@ -1,3 +1,4 @@
+'use client'
 import { Button, Typography } from "@mui/material"
 import { styled } from '@mui/material/styles'
 import { Status } from "clone-protocol-sdk/sdk/generated/clone"
