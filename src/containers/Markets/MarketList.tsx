@@ -143,7 +143,7 @@ const MarketList = () => {
 					"24hVolume": false
 				} : {}}
 				rows={assets || []}
-				minHeight={570}
+				minHeight={270}
 				customNoResultsOverlay={() => CustomNoRowsOverlay('No assets')}
 				onRowClick={handleRowClick}
 			/>
