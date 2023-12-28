@@ -3,6 +3,7 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import { IS_DEV } from '~/data/networks'
+import { DEFAULT_ASSET_LINK } from '~/data/assets'
 
 const CommonMenu = () => {
   const pathname = usePathname()
@@ -14,7 +15,7 @@ const CommonMenu = () => {
           <Typography variant='p_lg'>Home</Typography>
         </StyledListItemButton>
       </Link>
-      <Link href="/trade/gold">
+      <Link href={DEFAULT_ASSET_LINK}>
         <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
           <Typography variant='p_lg'>Trade</Typography>
         </StyledListItemButton>

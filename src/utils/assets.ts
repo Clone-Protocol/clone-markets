@@ -4,6 +4,7 @@ import { assetMapping } from "~/data/assets";
 import { PythHttpClient, getPythProgramKeyForCluster } from "@pythnetwork/client"
 import { Connection, PublicKey } from "@solana/web3.js"
 import { Status } from "clone-protocol-sdk/sdk/generated/clone";
+import { IS_DEV } from "~/data/networks";
 
 export type Interval = 'day' | 'hour';
 export type Filter = 'day' | 'week' | 'month' | 'year';
@@ -44,7 +45,7 @@ export const fetchStatsData = async (filter: Filter, interval: Interval): Promis
 
 
 export const getiAssetInfos = async (connection: Connection, program: CloneClient): Promise<{ status: Status, poolIndex: number, poolPrice: number, liquidity: number }[]> => {
-  const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
+  const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster(IS_DEV ? "devnet" : "mainnet-beta")));
   const data = await pythClient.getData();
   const pools = await program.getPools();
   const oracles = await program.getOracles();
