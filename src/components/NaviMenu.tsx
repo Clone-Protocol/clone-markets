@@ -9,7 +9,7 @@ import { DEFAULT_ASSET_LINK } from '~/data/assets'
 const CommonMenu = () => {
   const pathname = usePathname()
   const router = useRouter()
-  router.prefetch('/trade')
+  router.prefetch(DEFAULT_ASSET_LINK)
   router.prefetch('/clportfolio')
 
   return (
