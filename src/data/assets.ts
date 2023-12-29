@@ -25,7 +25,7 @@ export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 export const ASSETS = [
     {
-        tickerName: 'ARB (Clone)',
+        tickerName: 'Clone Arbitrum',
         tickerSymbol: 'clARB',
         tickerIcon: '/images/assets/on-arb.svg',
         ticker: 'arbitrum',
@@ -43,7 +43,7 @@ export const assetMapping = (index: number) => {
     let supabaseSymbol = ''
     switch (index) {
         case Asset.Arbitrum:
-            tickerName = 'ARB (Clone)'
+            tickerName = 'Clone Arbitrum'
             tickerSymbol = 'clARB'
             tickerIcon = '/images/assets/on-arb.svg'
             ticker = 'arbitrum'
@@ -68,13 +68,13 @@ export const collateralMapping = (index: number) => {
             collateralName = IS_DEV ? 'Clone USD' : 'USD Coin'
             collateralType = Collateral.onUSD
             collateralSymbol = ON_USD
-            collateralIcon = '/images/assets/on-usd.svg'
+            collateralIcon = IS_DEV ? '/images/assets/on-usd.svg' : '/images/assets/usdc.svg'
             break
         case Collateral.mockUSDC:
             collateralName = 'USD Coin'
             collateralType = Collateral.mockUSDC
             collateralSymbol = 'USDC'
-            collateralIcon = '/images/assets/on-usd.svg'
+            collateralIcon = '/images/assets/usdc.svg'
             break
         default:
             throw new Error('Not supported')
