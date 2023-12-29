@@ -55,7 +55,7 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 			fromScale(pool.collateralIld, collateralScale),
 			fromCloneScale(pool.onassetIld),
 			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)!,
+			priceMap.get(assetMapping(i).pythSymbol)! / priceMap.get("Crypto.USDC/USD")!,
 			program.clone.collateral
 		)
 		const price = poolCollateral / poolOnasset
@@ -116,7 +116,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 			fromScale(pool.collateralIld, collateralScale),
 			fromCloneScale(pool.onassetIld),
 			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)!,
+			priceMap.get(assetMapping(i).pythSymbol)! / priceMap.get("Crypto.USDC/USD")!,
 			program.clone.collateral
 		)
 		const price = poolCollateral / poolOnasset

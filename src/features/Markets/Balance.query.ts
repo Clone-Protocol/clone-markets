@@ -45,6 +45,7 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient, netw
   try {
     if (pools.status === 'fulfilled' && oracles.status === 'fulfilled') {
       const pool = pools.value.pools[index]
+      const usdcOracle = oracles.value.oracles[program.clone.collateral.oracleInfoIndex];
       const oracle = oracles.value.oracles[Number(pool.assetInfo.oracleInfoIndex)];
       const associatedTokenAccountInfo = await getTokenAccount(
         pool.assetInfo.onassetMint,
@@ -58,8 +59,9 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient, netw
         onassetVal = Number(onassetBalance.value.amount) / 10000000;
       }
       const { pythSymbol } = assetMapping(index)
-      const price = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol);
-      const oraclePrice = price ?? fromScale(oracle.price, oracle.expo);
+      const priceMap = await getPythOraclePrices(program.provider.connection);
+      const price = priceMap.get(pythSymbol)! / priceMap.get("Crypto.USDC/USD")!;
+      const oraclePrice = price ?? fromScale(oracle.price, oracle.expo) / fromScale(usdcOracle.price, usdcOracle.expo);
       const { poolCollateral, poolOnasset } = calculatePoolAmounts(
         fromScale(pool.collateralIld, collateralScale),
         fromCloneScale(pool.onassetIld),
