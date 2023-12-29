@@ -54,8 +54,8 @@ export const fetchPythPriceHistory = async (pythSymbol: string, range: Range): P
 export const getPythOraclePrices = async (
     connection: Connection,
 ) => {
-    // TODO: Set this up as an env variable.
-    const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster("devnet")));
+    const cluster = process.env.NEXT_PUBLIC_USE_NETWORK === "MAIN_NET" ? "mainnet-beta" : "devnet";
+    const pythClient = new PythHttpClient(connection, new PublicKey(getPythProgramKeyForCluster(cluster)));
     const data = await pythClient.getData();
     const pricesMap = new Map<string, number>();
     for (const product of data.products) {
