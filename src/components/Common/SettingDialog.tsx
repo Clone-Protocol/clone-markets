@@ -186,7 +186,7 @@ const SelectMenuItem = styled(MenuItem)`
   padding: 10px;
   background: #000;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 `
 const StyledInput = styled(Input)`

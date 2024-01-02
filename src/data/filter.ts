@@ -1,6 +1,6 @@
 export enum FilterTypeMap {
 	'all' = 'All',
-	'stableCoin' = 'Stable Coin',
+	'stableCoin' = 'USDC',
 	'onCrypto' = 'clCrypto',
 	'onCommodity' = 'clCommodity',
 	'onFx' = 'clFX',
