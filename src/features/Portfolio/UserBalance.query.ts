@@ -30,12 +30,12 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	console.log('fetchUserTotalBalance')
 
 	let onusdVal = 0.0
-	// MEMO: to get rids of stable coin's value in the portfolio balance
-	// const collateralAssociatedTokenAccount = await getCollateralAccount(program);
-	// if (collateralAssociatedTokenAccount.isInitialized) {
-	// 	const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccount.address, "processed");
-	// 	onusdVal = Number(onusdBalance.value.amount) / 10000000;
-	// }
+	const devnetConversionFactor = Math.pow(10, -program.clone.collateral.scale)
+	const collateralAssociatedTokenAccount = await getCollateralAccount(program);
+	if (collateralAssociatedTokenAccount.isInitialized) {
+		const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccount.address, "processed");
+		onusdVal = Number(onusdBalance.value.amount) * devnetConversionFactor;
+	}
 
 	const pools = await program.getPools();
 	const priceMap = await getPythOraclePrices(program.provider.connection);

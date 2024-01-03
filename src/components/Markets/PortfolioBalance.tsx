@@ -10,7 +10,7 @@ const PortfolioBalance: React.FC = () => {
 
 	const { data: balance } = useUserTotalBalanceQuery({
 		userPubKey: publicKey,
-		refetchOnMount: true,
+		refetchOnMount: 'always',
 		enabled: publicKey != null
 	})
 
