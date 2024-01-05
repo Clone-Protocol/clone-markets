@@ -11,6 +11,7 @@ import { IS_DEV } from '~/data/networks'
 
 const Home = () => {
   const { publicKey } = useWallet()
+
   return (
     <div>
       <StyledSection>

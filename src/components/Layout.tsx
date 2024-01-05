@@ -1,3 +1,4 @@
+//layout for page-router
 'use client'
 import React, { useEffect, useState } from 'react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -16,7 +17,6 @@ import { IS_COMPLETE_INIT } from '~/data/localstorage'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import dynamic from 'next/dynamic'
 import ErrorBoundary from '~/components/ErrorBoundary'
-import GlobalError from './GlobalError'
 import { IS_DEV } from '~/data/networks'
 import { styled } from '@mui/material/styles'
 
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ClientWalletProvider>
               <TransactionStateProvider>
                 <DataLoadingIndicatorProvider>
-                  <ErrorBoundary fallback={<GlobalError />}>
+                  <ErrorBoundary>
                     <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
                       <CssBaseline />
                       <GNB />

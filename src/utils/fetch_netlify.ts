@@ -66,6 +66,6 @@ export const fetchUserPoints = async (userAddress?: string): Promise<UserPointsV
 }
 
 export const fetchGeoBlock = async (): Promise<{ result: boolean }> => {
-    const response = await axios.post(`/api`)
+    const response = await axios.post(`/api/route`)
     return response.data
 }
