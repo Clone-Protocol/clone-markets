@@ -114,6 +114,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                     PaperProps: {
                       sx: {
                         zIndex: 999999,
+                        border: '1px solid #343441',
                         '& .MuiMenu-list': {
                           padding: 0,
                           '&:hover': {
@@ -186,7 +187,7 @@ const SelectMenuItem = styled(MenuItem)`
   padding: 10px;
   background: #000;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 `
 const StyledInput = styled(Input)`

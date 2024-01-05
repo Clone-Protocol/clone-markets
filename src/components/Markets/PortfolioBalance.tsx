@@ -10,20 +10,20 @@ const PortfolioBalance: React.FC = () => {
 
 	const { data: balance } = useUserTotalBalanceQuery({
 		userPubKey: publicKey,
-		refetchOnMount: true,
+		refetchOnMount: 'always',
 		enabled: publicKey != null
 	})
 
-	return balance ? (
+	return (
 		<Box mt='30px'>
 			<Box>
 				<Box mb='33px'><Typography variant='p_xxlg' color='#c4b5fd'>My Portfolio Balance</Typography></Box>
 				<Box>
-					<Typography fontSize={38}>${balance.toLocaleString()}</Typography>
+					<Typography fontSize={38}>${balance ? balance.toLocaleString() : '0.00'}</Typography>
 				</Box>
 			</Box>
 		</Box>
-	) : <></>
+	)
 }
 
 export default withSuspense(PortfolioBalance, <LoadingProgress />)

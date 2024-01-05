@@ -5,24 +5,23 @@ import { Box, Stack, Theme, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
-import { AssetTickers } from '~/data/assets'
+import { AssetTickers, DEFAULT_ASSET_ID, DEFAULT_ASSET_LINK } from '~/data/assets'
 
 const AssetPage = ({ params }: { params: { assetTicker: string } }) => {
   const router = useRouter()
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
   const [assetId, setAssetId] = useState(0)
-  const assetTicker = params.assetTicker || AssetTickers.euro
+  const assetTicker = params.assetTicker
   const [showTrading, setShowTrading] = useState(false)
 
   useMemo(() => {
     if (assetTicker) {
       // console.log('assetId', AssetTickers[assetTicker as keyof typeof AssetTickers])
-
       if (AssetTickers[assetTicker as keyof typeof AssetTickers]) {
         setAssetId(AssetTickers[assetTicker as keyof typeof AssetTickers])
       } else {
-        setAssetId(AssetTickers.euro)
-        router.replace('/trade/euro')
+        setAssetId(DEFAULT_ASSET_ID)
+        router.replace(DEFAULT_ASSET_LINK)
       }
     }
   }, [assetTicker])

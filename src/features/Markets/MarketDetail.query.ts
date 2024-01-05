@@ -1,10 +1,9 @@
 import { QueryObserverOptions, useQuery } from "@tanstack/react-query"
 import { CloneClient, fromCloneScale, fromScale } from "clone-protocol-sdk/sdk/src/clone"
 import { Collateral, Status } from "clone-protocol-sdk/sdk/generated/clone"
-import { assetMapping } from "src/data/assets"
+import { assetMapping, ASSETS_DESC } from "src/data/assets"
 import { REFETCH_CYCLE } from "~/components/Markets/TradingBox/RateLoadingIndicator"
 import { getPythOraclePrices } from "~/utils/pyth"
-import { ASSETS_DESC } from "~/data/assets_desc"
 import { fetch24hourVolume } from "~/utils/assets"
 import { getCloneClient } from "../baseQuery"
 import { useAtomValue } from "jotai"
@@ -39,7 +38,8 @@ export const fetchMarketDetail = async ({
   const poolCommittedCollateral = fromCollateralScale(pool.committedCollateralLiquidity)
   const liquidityTradingFee = fromScale(pool.liquidityTradingFeeBps, 4)
   const treasuryTradingFee = fromScale(pool.treasuryTradingFeeBps, 4)
-  const oraclePrice = (await getPythOraclePrices(program.provider.connection)).get(pythSymbol)!
+  const oraclePrices = await getPythOraclePrices(program.provider.connection);
+  const oraclePrice = oraclePrices.get(pythSymbol)! / oraclePrices.get("Crypto.USDC/USD")!;
   const committedCollateralLiquidity = fromCollateralScale(pool.committedCollateralLiquidity)
   const poolCollateral = committedCollateralLiquidity - fromCollateralScale(pool.collateralIld)
   const poolOnasset = committedCollateralLiquidity / oraclePrice - fromCloneScale(pool.onassetIld)

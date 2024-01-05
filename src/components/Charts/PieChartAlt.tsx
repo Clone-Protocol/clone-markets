@@ -26,6 +26,11 @@ const PieChartAlt: React.FC<ChartProps> = ({
   const onPieEnter = (_, index: number) => {
     setActiveIndex(index)
   }
+  const onPieLeave = (_, index: number) => {
+    if (!isClicked) {
+      setActiveIndex(-1)
+    }
+  }
   const onPieClick = (_, index: number) => {
     setIsClicked(true)
     onSelect(index)
@@ -84,6 +89,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
+          strokeWidth={0}
           opacity={0.3}
         />
       </g>
@@ -116,6 +122,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
               inactiveShape={isClicked ? renderInactiveShape : null}
               onMouseDown={onPieClick}
               onMouseEnter={onPieEnter}
+              onMouseLeave={onPieLeave}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} />

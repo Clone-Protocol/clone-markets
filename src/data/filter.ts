@@ -1,9 +1,9 @@
 export enum FilterTypeMap {
 	'all' = 'All',
-	'stableCoin' = 'Stable Coin',
+	'stableCoin' = 'USDC',
 	'onCrypto' = 'clCrypto',
 	'onCommodity' = 'clCommodity',
-	'onFx' = 'clFX',
+	// 'onFx' = 'clFX',
 }
 export type FilterType = keyof typeof FilterTypeMap
 
@@ -12,7 +12,7 @@ export enum FilterTypeColorMap {
 	'stableCoin' = '#6800ed',
 	'onCrypto' = '#c4b5fd',
 	'onCommodity' = '#fffc72',
-	'onFx' = '#ff0084',
+	// 'onFx' = '#ff0084',
 }
 
 export interface PieItem {

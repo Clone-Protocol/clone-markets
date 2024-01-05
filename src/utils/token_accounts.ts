@@ -10,7 +10,8 @@ import { CloneClient } from "clone-protocol-sdk/sdk/src/clone";
 export const getTokenAccount = async (mint: PublicKey, owner: PublicKey, connection: Connection): Promise<{ address: PublicKey, isInitialized: boolean }> => {
   const associatedToken = await getAssociatedTokenAddress(
     mint,
-    owner
+    owner,
+    true
   );
 
   let isInitialized = false;
