@@ -159,9 +159,9 @@ const RightMenu: React.FC = () => {
 					{!connected ?
 						<ConnectButton
 							onClick={handleWalletClick}
-							disabled={connecting}
+						// disabled={connecting}
 						>
-							<Typography variant='p_lg'>Connect Wallet</Typography>
+							<Typography variant='p_lg'>{connecting ? 'Connecting...' : 'Connect Wallet'}</Typography>
 						</ConnectButton>
 						:
 						<ConnectedButton onClick={handleWalletClick} startIcon={publicKey ? <Image src={walletIcon} alt="wallet" /> : <></>}>
@@ -221,7 +221,8 @@ const NavPlaceholder = styled('div')`
 `
 const HeaderButton = styled(Button)`
 	padding: 8px;
-	color: #c5c7d9;
+	color: rgb(137, 136, 163);
+	margin-left: 6px;
 	height: 42px;
 	border-radius: 10px;
 	&:hover {
@@ -231,7 +232,7 @@ const HeaderButton = styled(Button)`
 `
 const ConnectButton = styled(Button)`
 	padding: 9px;
-	margin-left: 8px;
+	margin-left: 16px;
 	color: #fff;
 	width: 140px;
 	height: 42px;

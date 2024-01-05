@@ -30,10 +30,11 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	console.log('fetchUserTotalBalance')
 
 	let onusdVal = 0.0
+	const devnetConversionFactor = Math.pow(10, -program.clone.collateral.scale)
 	const collateralAssociatedTokenAccount = await getCollateralAccount(program);
 	if (collateralAssociatedTokenAccount.isInitialized) {
 		const onusdBalance = await program.provider.connection.getTokenAccountBalance(collateralAssociatedTokenAccount.address, "processed");
-		onusdVal = Number(onusdBalance.value.amount) / 10000000;
+		onusdVal = Number(onusdBalance.value.amount) * devnetConversionFactor;
 	}
 
 	const pools = await program.getPools();
