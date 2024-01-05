@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { cache } from 'react'
+// import { cache } from 'react'
 
-export const getQueryClient = cache(() => new QueryClient())
+// export const getQueryClient = cache(() => new QueryClient())
 
 export const queryClient = new QueryClient({
 	defaultOptions: {
