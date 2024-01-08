@@ -1,40 +1,40 @@
 import { usePathname } from 'next/navigation'
 import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-// import Link from 'next/link'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { IS_DEV } from '~/data/networks'
 import { DEFAULT_ASSET_LINK } from '~/data/assets'
 
 const CommonMenu = () => {
   const pathname = usePathname()
-  const router = useRouter()
-  router.prefetch(DEFAULT_ASSET_LINK)
-  router.prefetch('/clportfolio')
+  // const router = useRouter()
+  // router.prefetch(DEFAULT_ASSET_LINK)
+  // router.prefetch('/clportfolio')
 
   return (
     <List component="nav" sx={{ display: 'flex', padding: 0 }}>
-      {/* <Link href="/"> */}
-      <StyledListItemButton className={pathname === '/' ? 'selected' : ''} onClick={() => router.push('/')}>
-        <Typography variant='p_lg'>Home</Typography>
-      </StyledListItemButton>
-      {/* </Link> */}
-      {/* <Link href={DEFAULT_ASSET_LINK}> */}
-      <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''} onClick={() => router.push(DEFAULT_ASSET_LINK)}>
-        <Typography variant='p_lg'>Trade</Typography>
-      </StyledListItemButton>
-      {/* </Link> */}
-      {/* <Link href="/clportfolio"> */}
-      <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''} onClick={() => router.push('/clportfolio')}>
-        <Typography variant='p_lg'>Portfolio</Typography>
-      </StyledListItemButton>
-      {/* </Link> */}
-      {!IS_DEV &&
-        // <Link href="/points">
-        <StyledListItemButton className={pathname?.startsWith('/points') ? 'selected' : ''} onClick={() => router.push('/points')}>
-          <Typography variant='p_lg'>Points</Typography>
+      <Link href="/">
+        <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
+          <Typography variant='p_lg'>Home</Typography>
         </StyledListItemButton>
-        // </Link>
+      </Link>
+      <Link href={DEFAULT_ASSET_LINK}>
+        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
+          <Typography variant='p_lg'>Trade</Typography>
+        </StyledListItemButton>
+      </Link>
+      <Link href="/clportfolio">
+        <StyledListItemButton className={pathname?.startsWith('/clportfolio') ? 'selected' : ''}>
+          <Typography variant='p_lg'>Portfolio</Typography>
+        </StyledListItemButton>
+      </Link>
+      {!IS_DEV &&
+        <Link href="/points">
+          <StyledListItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
+            <Typography variant='p_lg'>Points</Typography>
+          </StyledListItemButton>
+        </Link>
       }
     </List>
   )

@@ -37,7 +37,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='h3' fontWeight={500}>
-              {infos ? infos.totalPoints.toLocaleString() : '0'}
+              {infos?.totalPoints ? infos.totalPoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -50,7 +50,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos ? infos.lpPoints.toLocaleString() : '0'}
+              {infos?.lpPoints ? infos.lpPoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -61,7 +61,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos ? infos.tradePoints.toLocaleString() : '0'}
+              {infos?.tradePoints ? infos.tradePoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -72,7 +72,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos ? infos.socialPoints.toLocaleString() : '0'}
+              {infos?.socialPoints ? infos.socialPoints.toLocaleString() : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>

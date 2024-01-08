@@ -23,6 +23,7 @@ import MoreMenu from './Common/MoreMenu'
 import WalletSelectBox from './Common/WalletSelectBox'
 // import { NETWORK_NAME } from '~/utils/constants'
 import SettingDialog from './Common/SettingDialog'
+import TempWarningMsg from '~/components/Common/TempWarningMsg'
 import { IS_DEV } from '~/data/networks'
 import { fetchGeoBlock } from '~/utils/fetch_netlify'
 import { NETWORK_NAME } from '~/utils/constants'
@@ -33,7 +34,6 @@ const GNB: React.FC = () => {
 	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
 	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
-	const TempWarningMsg = dynamic(() => import('~/components/Common/TempWarningMsg'))
 
 	// const [showMobileWarning, setShowMobileWarning] = useState(isMobile)
 	// useEffect(() => {
