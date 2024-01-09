@@ -1,8 +1,44 @@
 import { AnchorProvider, Provider } from "@coral-xyz/anchor";
-import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount } from "@solana/web3.js";
+import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature } from "@solana/web3.js";
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 
-export const sendAndConfirm = async (provider: AnchorProvider | Provider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
+
+const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | VersionedTransaction,
+  signers?: Signer[],
+  opts?: ConfirmOptions
+): Promise<TransactionSignature> => {
+
+  if (opts === undefined) {
+    opts = provider.opts;
+  }
+
+  if (signers) {
+    if (tx instanceof VersionedTransaction) {
+      tx.sign(signers);
+    } else {
+      for (const signer of signers) {
+        tx.partialSign(signer);
+      }
+    }
+  }
+  
+  tx = await provider.wallet.signTransaction(tx);
+  const rawTx = tx.serialize();
+  const sendOptions = opts && {
+    skipPreflight: opts.skipPreflight,
+    preflightCommitment: opts.preflightCommitment || opts.commitment,
+  };
+
+  const signature = await provider.connection.sendRawTransaction(
+    rawTx,
+    sendOptions
+  );
+
+  return signature;
+
+}
+
+export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
   const { blockhash, lastValidBlockHeight } = await provider.connection.getLatestBlockhash('finalized');
 
   let tx = await (async () => {
@@ -30,6 +66,7 @@ export const sendAndConfirm = async (provider: AnchorProvider | Provider, instru
     } else {
       let updatedTx = new Transaction({ blockhash, lastValidBlockHeight }) as Transaction;
       instructions.forEach(ix => updatedTx.add(ix));
+      updatedTx.feePayer = provider.publicKey!;
       return updatedTx;
     }
   })()
@@ -37,13 +74,13 @@ export const sendAndConfirm = async (provider: AnchorProvider | Provider, instru
   setTxState({ state: TransactionState.INIT, txHash: '' })
   let txHash = ''
   try {
-    txHash = await provider.sendAndConfirm!(tx, signers, { commitment: 'processed' })
+    txHash = await sendRawTransaction(provider, tx, signers, { commitment: 'processed' })
     console.log('txHash', txHash)
     setTxState({ state: TransactionState.PENDING, txHash })
 
     await provider.connection.confirmTransaction({
       blockhash, lastValidBlockHeight, signature: txHash,
-    }, 'finalized')
+    }, 'confirmed')
     setTxState({ state: TransactionState.SUCCESS, txHash })
 
   } catch (e: any) {
