@@ -2,6 +2,10 @@ import { Query, useQuery } from '@tanstack/react-query'
 import { ChartElem } from './Liquidity.query'
 import { fetchPythPriceHistory, Range } from '~/utils/pyth'
 import { FilterTime } from '~/components/Charts/TimeTabs'
+import { useAtomValue } from 'jotai'
+import { rpcEndpoint } from '~/features/globalAtom'
+import { Connection } from '@solana/web3.js'
+import { getPythOraclePrices } from '~/utils/pyth'
 
 // type TimeSeriesValue = { time: string, value: number }
 // const filterHistoricalData = (data: TimeSeriesValue[], numDays: number): TimeSeriesValue[] => {
@@ -17,7 +21,7 @@ import { FilterTime } from '~/components/Charts/TimeTabs'
 //   return filteredData;
 // };
 
-export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timeframe: FilterTime, pythSymbol: string | undefined }) => {
+export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol, networkEndpoint }: { timeframe: FilterTime, pythSymbol: string | undefined, networkEndpoint: string | undefined }) => {
   if (!pythSymbol) return null
 
   let chartData = []
@@ -55,6 +59,12 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol }: { timef
   chartData = pythHistoricalData.map((item) => {
     return { time: item.timestamp, value: item.price }
   })
+
+  if (networkEndpoint) {
+    const oraclePrices = await getPythOraclePrices(new Connection(networkEndpoint))
+    const currentOraclePrice = oraclePrices.get(pythSymbol)! / oraclePrices.get("Crypto.USDC/USD")!;
+    chartData.push({ time: new Date().toISOString(), value: currentOraclePrice })
+  }
 
   const allValues = chartData.map(elem => elem.value!)
   const maxValue = Math.floor(Math.max(...allValues))
@@ -95,7 +105,8 @@ interface GetProps {
 }
 
 export function usePriceHistoryQuery({ timeframe, pythSymbol, refetchOnMount, enabled = true }: GetProps) {
-  return useQuery(['oraclePriceHistory', timeframe, pythSymbol], () => fetchOraclePriceHistory({ timeframe, pythSymbol }), {
+  const networkEndpoint = useAtomValue(rpcEndpoint)
+  return useQuery(['oraclePriceHistory', timeframe, pythSymbol], () => fetchOraclePriceHistory({ timeframe, pythSymbol, networkEndpoint }), {
     refetchOnMount,
     enabled
   })
