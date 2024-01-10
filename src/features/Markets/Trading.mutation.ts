@@ -8,12 +8,15 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { TransactionStateType, useTransactionState } from "~/hooks/useTransactionState"
 import { funcNoWallet } from '../baseQuery';
 import { sendAndConfirm } from '~/utils/tx_helper'
+import { useAtomValue } from 'jotai'
+import { priorityFee } from '../globalAtom'
 
 export const callTrading = async ({
 	program,
 	userPubKey,
 	setTxState,
 	data,
+	payerFee
 }: CallTradingProps) => {
 	if (!userPubKey) throw new Error('no user public key')
 
@@ -114,7 +117,7 @@ export const callTrading = async ({
 		treasuryOnassetAssociatedTokenInfo.address,
 	))
 
-	await sendAndConfirm(program.provider, ixns, setTxState)
+	await sendAndConfirm(program.provider, ixns, setTxState, payerFee)
 	return {
 		result: true
 	}
@@ -133,14 +136,16 @@ interface CallTradingProps {
 	userPubKey: PublicKey | null
 	setTxState: (state: TransactionStateType) => void
 	data: FormData
+	payerFee: number
 }
 export function useTradingMutation(userPubKey: PublicKey | null) {
 	const wallet = useAnchorWallet()
 	const { getCloneApp } = useClone()
 	const { setTxState } = useTransactionState()
+	const payerFee = useAtomValue(priorityFee)
 
 	if (wallet) {
-		return useMutation(async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data }))
+		return useMutation(async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, payerFee }))
 	} else {
 		return useMutation((_: FormData) => funcNoWallet())
 	}

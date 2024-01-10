@@ -4,18 +4,20 @@ import { styled } from '@mui/material/styles'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FadeTransition } from '~/components/Common/Dialog'
 import { CloseButton } from '~/components/Common/CommonButtons'
-import { IndicatorGreen, IndicatorRed, IndicatorStatus, IndicatorYellow } from './StatusIndicator';
+// import { IndicatorGreen, IndicatorRed, IndicatorStatus, IndicatorYellow } from './StatusIndicator';
 import IconShare from 'public/images/icon-share.svg'
 import { useSnackbar } from 'notistack';
 import { useAtom, useSetAtom } from 'jotai';
-import { rpcEndpoint, rpcEndpointIndex } from '~/features/globalAtom';
-import { CUSTOM_RPC_INDEX, DEVNET_PUBLIC, DEV_RPCs, IS_DEV, MAINNET_PUBLIC, MAIN_RPCs } from '~/data/networks';
+import { priorityFee, priorityFeeIndex, rpcEndpoint, rpcEndpointIndex } from '~/features/globalAtom';
+import { CUSTOM_RPC_INDEX, DEVNET_PUBLIC, DEV_RPCs, IS_DEV, MAINNET_PUBLIC, MAIN_RPCs, PRIORITY_FEES } from '~/data/networks';
 import Image from 'next/image';
 
 const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [atomRpcEndpointIndex, setAtomRpcEndpointIndex] = useAtom(rpcEndpointIndex)
   const setAtomRpcEndpoint = useSetAtom(rpcEndpoint)
+  const [atomPriorityFeeIndex, setAtomPriorityFeeIndex] = useAtom(priorityFeeIndex)
+  const setAtomPriorityFee = useSetAtom(priorityFee)
 
   const [showCustom, setShowCustom] = useState(false)
   const [customUrl, setCustomUrl] = useState('')
@@ -31,7 +33,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
 
     if (rpcIndex != CUSTOM_RPC_INDEX) {
       setAtomRpcEndpoint(RPCs[rpcIndex].rpc_url)
-      //TODO: showing after rpc is connected
+
       enqueueSnackbar(`Connected to ${RPCs[rpcIndex].rpc_name}`)
     }
   };
@@ -61,18 +63,79 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
     }
   }
 
-  const StatusIndicator = ({ status, speed }: { status: IndicatorStatus, speed: number }) => {
+  const handleChangePriorityFee = (event: SelectChangeEvent) => {
+    const feeIndex = Number(event.target.value)
+    setAtomPriorityFeeIndex(feeIndex);
+    setAtomPriorityFee(PRIORITY_FEES[feeIndex].fee)
+  }
+
+  // const StatusIndicator = ({ status, speed }: { status: IndicatorStatus, speed: number }) => {
+  //   return (
+  //     <Stack direction='row' alignItems='center' gap={1}>
+  //       <Box><Typography variant='p_sm' color='#c5c7d9'>{speed.toFixed(1)}ms</Typography></Box>
+  //       {status === IndicatorStatus.Green ?
+  //         <IndicatorGreen />
+  //         : status === IndicatorStatus.Yellow ?
+  //           <IndicatorYellow />
+  //           :
+  //           <IndicatorRed />
+  //       }
+  //     </Stack>
+  //   )
+  // }
+
+  const CommonSelectBox = ({ children, value, handleChange }: { children: React.ReactNode, value: number, handleChange: (event: SelectChangeEvent) => void }) => {
     return (
-      <Stack direction='row' alignItems='center' gap={1}>
-        <Box><Typography variant='p_sm' color='#c5c7d9'>{speed.toFixed(1)}ms</Typography></Box>
-        {status === IndicatorStatus.Green ?
-          <IndicatorGreen />
-          : status === IndicatorStatus.Yellow ?
-            <IndicatorYellow />
-            :
-            <IndicatorRed />
-        }
-      </Stack>
+      <SelectBox
+        disableUnderline
+        value={value}
+        onChange={handleChange}
+        sx={{
+          padding: '0px',
+          '& .MuiSelect-icon': {
+            color: '#fff'
+          },
+          "&.MuiOutlinedInput-root": {
+            "& fieldset": {
+              border: '1px solid #343441',
+            },
+            "&:hover fieldset": {
+              borderColor: "#c4b5fd"
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#c4b5fd"
+            }
+          }
+        }}
+        MenuProps={{
+          disablePortal: isMobileOnSize ? false : true,
+          PaperProps: {
+            sx: {
+              zIndex: 999999,
+              border: '1px solid #343441',
+              '& .MuiMenu-list': {
+                padding: 0,
+                '&:hover': {
+                  backgroundColor: '#000',
+                }
+              },
+              '& .Mui-selected': {
+                backgroundColor: '#000 !important',
+              },
+            }
+          },
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "left"
+          },
+          transformOrigin: {
+            vertical: "top",
+            horizontal: "left"
+          },
+        }}
+      >
+        {children}
+      </SelectBox>
     )
   }
 
@@ -83,76 +146,44 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
           <BoxWrapper>
             <Typography variant='h3' fontWeight={500}>App Settings</Typography>
             {!IS_DEV &&
-              <Box my='20px'>
-                <Box><Typography variant="p_lg">RPC Endpoint</Typography></Box>
-                <Box lineHeight={1} mb='7px'><Typography variant="p" color="#8988a3">At anytime, choose the fastest RPC for most optimal experience!</Typography></Box>
-                <SelectBox
-                  labelId="rpc-select-label"
-                  id="rpc-select"
-                  disableUnderline
-                  value={atomRpcEndpointIndex}
-                  onChange={handleChangeRpcEndpoint}
-                  sx={{
-                    padding: '0px',
-                    '& .MuiSelect-icon': {
-                      color: '#fff'
-                    },
-                    "&.MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        border: '1px solid #343441',
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#c4b5fd"
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#c4b5fd"
-                      }
-                    }
-                  }}
-                  MenuProps={{
-                    disablePortal: isMobileOnSize ? false : true,
-                    PaperProps: {
-                      sx: {
-                        zIndex: 999999,
-                        border: '1px solid #343441',
-                        '& .MuiMenu-list': {
-                          padding: 0,
-                          '&:hover': {
-                            backgroundColor: '#000',
-                          }
-                        },
-                        '& .Mui-selected': {
-                          backgroundColor: '#000 !important',
-                        },
-                      }
-                    },
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left"
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left"
-                    },
-                  }}
-                >
-                  {RPCs.map((rpc, index) => (
-                    <SelectMenuItem key={index} value={index}>
-                      <Stack direction='row' alignItems='center' gap={1}>
-                        <Typography variant='p'>{rpc.rpc_name}</Typography>
-                        {/* <StatusIndicator status={IndicatorStatus.Green} speed={134.1} /> */}
-                      </Stack>
-                    </SelectMenuItem>
-                  ))}
-                  <SelectMenuItem value={CUSTOM_RPC_INDEX}><Typography variant='p'>Custom</Typography></SelectMenuItem>
-                </SelectBox>
-                {showCustom &&
-                  <Box>
-                    <StyledInput placeholder="Enter custom RPC URL" disableUnderline onChange={handleChangeCustomRPCUrl} sx={{ width: { xs: '100%', md: '322px' } }} />
-                    {errorCustomMsg && <Box><Typography variant='p' color='#ed2525'>Custom RPC Connection Failed. Try different URL.</Typography></Box>}
-                    <SaveBtn onClick={saveCustomURL}>Save</SaveBtn>
-                  </Box>
-                }
+              <Box>
+                <Box my='20px'>
+                  <Box><Typography variant="p_lg">RPC Endpoint</Typography></Box>
+                  <Box lineHeight={1} mb='7px'><Typography variant="p" color="#8988a3">At anytime, choose the fastest RPC for most optimal experience!</Typography></Box>
+                  <CommonSelectBox value={atomRpcEndpointIndex} handleChange={handleChangeRpcEndpoint}>
+                    {RPCs.map((rpc, index) => (
+                      <SelectMenuItem key={index} value={index}>
+                        <Stack direction='row' alignItems='center' gap={1}>
+                          <Typography variant='p'>{rpc.rpc_name}</Typography>
+                          {/* <StatusIndicator status={IndicatorStatus.Green} speed={134.1} /> */}
+                        </Stack>
+                      </SelectMenuItem>
+                    ))}
+                    <SelectMenuItem value={CUSTOM_RPC_INDEX}><Typography variant='p'>Custom</Typography></SelectMenuItem>
+                  </CommonSelectBox>
+                  {showCustom &&
+                    <Box>
+                      <StyledInput placeholder="Enter custom RPC URL" disableUnderline onChange={handleChangeCustomRPCUrl} sx={{ width: { xs: '100%', md: '322px' } }} />
+                      {errorCustomMsg && <Box><Typography variant='p' color='#ed2525'>Custom RPC Connection Failed. Try different URL.</Typography></Box>}
+                      <SaveBtn onClick={saveCustomURL}>Save</SaveBtn>
+                    </Box>
+                  }
+                </Box>
+
+                <Box my='20px'>
+                  <Box><Typography variant="p_lg">Priority Fee Setting</Typography></Box>
+                  <Box lineHeight={1} mb='7px'><Typography variant="p" color="#8988a3">Priority fees are paid to the Solana network. With higher fees, your transaction will be fasters than the others.</Typography></Box>
+                  <CommonSelectBox value={atomPriorityFeeIndex} handleChange={handleChangePriorityFee}>
+                    {PRIORITY_FEES.map((fee, index) => (
+                      <SelectMenuItem key={index} value={index}>
+                        <Stack direction='row' alignItems='center' gap={1}>
+                          <Typography variant='p'>{fee.fee_name}</Typography>
+                          {fee.fee > 0 && <Typography variant='p_sm' color='#c5c7d9'>{fee.fee} SOL</Typography>}
+                        </Stack>
+                      </SelectMenuItem>
+                    ))}
+                  </CommonSelectBox>
+                </Box>
               </Box>
             }
             <Box my='20px'>

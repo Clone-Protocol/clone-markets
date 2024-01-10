@@ -2,7 +2,6 @@ import { AnchorProvider } from "@coral-xyz/anchor";
 import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature } from "@solana/web3.js";
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 
-
 const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | VersionedTransaction,
   signers?: Signer[],
   opts?: ConfirmOptions
@@ -38,7 +37,10 @@ const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | Ve
 
 }
 
-export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
+export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, priorityFee: number, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
+  // MEMO: if payerFee is zero, it's automatic
+  console.log('priorityFee', priorityFee)
+
   const { blockhash, lastValidBlockHeight } = await provider.connection.getLatestBlockhash('finalized');
   const updatedTx = new Transaction({ blockhash, lastValidBlockHeight }) as Transaction;
   instructions.forEach(ix => updatedTx.add(ix));
