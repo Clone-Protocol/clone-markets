@@ -1,5 +1,5 @@
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram } from "@solana/web3.js";
+import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 
 const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | VersionedTransaction,
@@ -48,7 +48,7 @@ export const sendAndConfirm = async (provider: AnchorProvider, instructions: Tra
     const units = 200_000;
 
     // NOTE: we may want to also set Unit limit, will leave out for now.
-    const priorityFeeMicroLamports = priorityFee * Math.pow(10, 15)
+    const priorityFeeMicroLamports = priorityFee * LAMPORTS_PER_SOL * Math.pow(10, 6)
     const unitPrice = Math.floor(priorityFeeMicroLamports / units)
 
     extraInstructions.push(
