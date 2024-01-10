@@ -14,7 +14,7 @@ export const fetchRanking = async () => {
     result.push({
       id,
       rank: user.rank,
-      userAddr: user.name ?? user.user_address,
+      user: { name: user.name, address: user.user_address },
       lpPoints: user.lp_points,
       tradePoints: user.trading_points,
       socialPoints: user.social_points,
@@ -33,7 +33,7 @@ interface GetProps {
 export interface RankingList {
   id: number
   rank: number
-  userAddr: string
+  user: { name: string | undefined, address: string }
   lpPoints: number
   tradePoints: number
   socialPoints: number
