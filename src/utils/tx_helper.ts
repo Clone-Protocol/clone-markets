@@ -1,5 +1,5 @@
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature } from "@solana/web3.js";
+import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram } from "@solana/web3.js";
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 
 const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | VersionedTransaction,
@@ -42,8 +42,26 @@ export const sendAndConfirm = async (provider: AnchorProvider, instructions: Tra
   console.log('priorityFee', priorityFee)
 
   const { blockhash, lastValidBlockHeight } = await provider.connection.getLatestBlockhash('finalized');
-  const updatedTx = new Transaction({ blockhash, lastValidBlockHeight }) as Transaction;
-  instructions.forEach(ix => updatedTx.add(ix));
+  const extraInstructions: TransactionInstruction[] = [];
+
+  if (priorityFee > 0) {
+    const units = 200_000;
+
+    // NOTE: we may want to also set Unit limit, will leave out for now.
+    const priorityFeeMicroLamports = priorityFee * Math.pow(10, 15)
+    const unitPrice = Math.floor(priorityFeeMicroLamports / units)
+
+    extraInstructions.push(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units
+      })
+    )
+    extraInstructions.push(
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: unitPrice
+      })
+    )
+  }
 
   let tx = await (async () => {
     if (addressLookupTables !== undefined) {
@@ -62,14 +80,14 @@ export const sendAndConfirm = async (provider: AnchorProvider, instructions: Tra
       const messageV0 = new TransactionMessage({
         payerKey: provider.publicKey!,
         recentBlockhash: blockhash,
-        instructions: instructions,
+        instructions: [...extraInstructions, ...instructions],
       }).compileToV0Message(lookupTableAccounts);
       // create a v0 transaction from the v0 message
       const transactionV0 = new VersionedTransaction(messageV0);
       return transactionV0
     } else {
       let updatedTx = new Transaction({ blockhash, lastValidBlockHeight }) as Transaction;
-      instructions.forEach(ix => updatedTx.add(ix));
+      [...extraInstructions, ...instructions].forEach(ix => updatedTx.add(ix));
       updatedTx.feePayer = provider.publicKey!;
       return updatedTx;
     }
