@@ -31,6 +31,6 @@ export const rpcEndpointIndex = atom(0)
 
 export const rpcEndpoint = atom(IS_DEV ? DEV_RPCs[0].rpc_url : MAIN_RPCs[0].rpc_url)
 
-export const priorityFeeIndex = atom(2)
+export const priorityFeeIndex = atom(3)
 
-export const priorityFee = atom<FeeLevel>("medium")
+export const priorityFee = atom<FeeLevel>("high")
