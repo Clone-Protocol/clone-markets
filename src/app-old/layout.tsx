@@ -1,13 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import QueryProvider from '~/hocs/QueryClient'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '~/theme'
 import GNB from '~/components/GNB'
 import Box from '@mui/material/Box'
-import { SnackbarProvider } from 'notistack'
+
 import ClientWalletProvider from '~/hocs/ClientWalletProvider'
 import { DataLoadingIndicatorProvider } from '~/hocs/DataLoadingIndicatorProvider'
 import { Provider as JotaiProvider } from 'jotai'
@@ -45,34 +44,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <QueryProvider>
           <JotaiProvider>
             <ThemeProvider theme={theme}>
-              <SnackbarProvider maxSnack={3}>
-                <ClientWalletProvider>
-                  <TransactionStateProvider>
-                    <DataLoadingIndicatorProvider>
-                      <ErrorBoundary fallback={<GlobalError />}>
-                        <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
-                          <CssBaseline />
-                          <GNB />
+              <ClientWalletProvider>
+                <TransactionStateProvider>
+                  <DataLoadingIndicatorProvider>
+                    <ErrorBoundary fallback={<GlobalError />}>
+                      <Box sx={{ display: 'flex', backgroundColor: '#000' }}>
+                        <CssBaseline />
+                        <GNB />
 
-                          <Box
-                            component="main"
-                            sx={{
-                              flexGrow: 1,
-                              height: '100vh',
-                              overflow: 'auto',
-                            }}>
-                            {children}
-                          </Box>
-                          {IS_DEV && isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
+                        <Box
+                          component="main"
+                          sx={{
+                            flexGrow: 1,
+                            height: '100vh',
+                            overflow: 'auto',
+                          }}>
+                          {children}
                         </Box>
-                      </ErrorBoundary>
-                    </DataLoadingIndicatorProvider>
-                  </TransactionStateProvider>
-                </ClientWalletProvider>
-              </SnackbarProvider>
+                        {IS_DEV && isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
+                      </Box>
+                    </ErrorBoundary>
+                  </DataLoadingIndicatorProvider>
+                </TransactionStateProvider>
+              </ClientWalletProvider>
             </ThemeProvider>
           </JotaiProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>
     </html>
