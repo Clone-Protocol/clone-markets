@@ -66,7 +66,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
   const handleChangePriorityFee = (event: SelectChangeEvent) => {
     const feeIndex = Number(event.target.value)
     setAtomPriorityFeeIndex(feeIndex);
-    setAtomPriorityFee(PRIORITY_FEES[feeIndex].fee)
+    setAtomPriorityFee(PRIORITY_FEES[feeIndex].fee_level)
   }
 
   // const StatusIndicator = ({ status, speed }: { status: IndicatorStatus, speed: number }) => {
@@ -178,7 +178,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
                       <SelectMenuItem key={index} value={index}>
                         <Stack direction='row' alignItems='center' gap={1}>
                           <Typography variant='p'>{fee.fee_name}</Typography>
-                          {fee.fee > 0 && <Typography variant='p_sm' color='#c5c7d9'>{fee.fee} SOL</Typography>}
+                          {/* {fee.fee > 0 && <Typography variant='p_sm' color='#c5c7d9'>{fee.fee} SOL</Typography>} */}
                         </Stack>
                       </SelectMenuItem>
                     ))}
