@@ -165,7 +165,8 @@ interface GetProps {
 }
 
 export function useTotalLiquidityQuery({ timeframe, refetchOnMount, enabled = true }: GetProps) {
-  return useQuery(['totalLiquidity', timeframe], () => fetchTotalLiquidity({ timeframe }), {
+  return useQuery({
+    queryKey: ['totalLiquidity', timeframe], queryFn: () => fetchTotalLiquidity({ timeframe }),
     refetchOnMount,
     enabled
   })
