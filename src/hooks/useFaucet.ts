@@ -1,8 +1,8 @@
-import { mintUSDi } from '~/features/globalAtom'
+import { mintUSDi, priorityFee } from '~/features/globalAtom'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useEffect } from 'react'
 import { useClone } from './useClone';
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { PublicKey } from '@solana/web3.js'
 import { toScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { sendAndConfirm } from '~/utils/tx_helper'
@@ -15,6 +15,7 @@ export default function useFaucet() {
   const wallet = useAnchorWallet()
   const { getCloneApp } = useClone()
   const [mintUsdi, setMintUsdi] = useAtom(mintUSDi)
+  const payerFee = useAtomValue(priorityFee)
   const { setTxState } = useTransactionState()
   const MOCK_FAUCET_PROGRAM_ID = process.env.NEXT_PUBLIC_MOCK_FAUCET_PROGRAM_ID!
 
@@ -46,7 +47,7 @@ export default function useFaucet() {
           )
 
           let ixns = await Promise.all(ixnCalls)
-          await sendAndConfirm(program.provider, ixns, setTxState)
+          await sendAndConfirm(program.provider, ixns, setTxState, payerFee)
         } finally {
           setMintUsdi(false)
         }
