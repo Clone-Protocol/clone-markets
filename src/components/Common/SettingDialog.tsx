@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Box, Dialog, DialogContent, Typography, Button, MenuItem, Stack, Input, useMediaQuery, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -27,7 +27,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
   const [arrPingTimes, setArrPingTimes] = useState<(number | undefined)[]>([])
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
-  useEffect(() => {
+  useMemo(() => {
     const fetchPing = async () => {
       if (open) {
         const pingTimes = await measureRPCPings(MAIN_RPCs.map(x => x.rpc_url));
