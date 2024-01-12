@@ -104,7 +104,7 @@ const MarketList = () => {
 			field: '24hVolume',
 			headerClassName: 'super-app-theme--header right--header',
 			cellClassName: 'super-app-theme--cell right--cell',
-			headerName: 'Volume',
+			headerName: '24h Volume',
 			flex: 3,
 			renderCell(params: GridRenderCellParams<string>) {
 				return showPoolStatus(params.row.status) ?
