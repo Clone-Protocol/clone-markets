@@ -10,6 +10,7 @@ export const fetchRanking = async () => {
 
   let result: RankingList[] = []
 
+  userPoints = userPoints.slice(0, 100)
   userPoints.forEach((user, id) => {
     result.push({
       id,
