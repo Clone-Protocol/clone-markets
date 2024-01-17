@@ -58,17 +58,11 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
                 <Typography variant='h1' fontWeight={500}>{formatDollarAmount(chartHover, 3, true)}</Typography>
                 <Typography variant='p_xlg' ml='8px'>{ON_USD}</Typography>
               </Box>
-              <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
-                {percentOfRateHover >= 0 ?
-                  <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
-                    <Typography variant='p_xlg'>+{percentOfRateHover?.toFixed(2)}%</Typography>
-                    <Image src={ArrowUpward} alt='arrowUp' />
-                  </Box>
-                  : <Box color='#ff0084' display='flex' alignItems='center' gap={1}>
-                    <Typography variant='p_xlg'>{percentOfRateHover?.toFixed(2)}%</Typography>
-                    <Image src={ArrowDownward} alt='arrowDown' />
-                  </Box>
-                }
+              <Box display='flex' alignItems='center' gap={1}>
+                <Box display='flex' alignItems='center' gap={1}>
+                  <Typography variant='p_xlg' color={percentOfRateHover >= 0 ? '#00ff99' : '#ff0084'}>{percentOfRateHover >= 0 ? '+' : ''}{percentOfRateHover?.toFixed(2)}%</Typography>
+                  <Image src={percentOfRateHover >= 0 ? ArrowUpward : ArrowDownward} alt='arrow' />
+                </Box>
               </Box>
             </Box>
           }
