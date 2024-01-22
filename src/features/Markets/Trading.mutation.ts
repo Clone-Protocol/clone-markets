@@ -1,5 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { CloneClient, fromCloneScale, fromScale, toCloneScale, toScale } from 'clone-protocol-sdk/sdk/src/clone'
+import { CloneClient, toCloneScale, toScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useMutation } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'

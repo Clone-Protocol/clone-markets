@@ -36,7 +36,6 @@ const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | Ve
   );
 
   return signature;
-
 }
 
 export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, priorityFeeLevel: FeeLevel, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
@@ -45,7 +44,7 @@ export const sendAndConfirm = async (provider: AnchorProvider, instructions: Tra
   const baseUnitPrice = (priorityFeeLevel === "high" || priorityFeeLevel === "veryHigh") ? Number(process.env.NEXT_PUBLIC_ADDITIONAL_PRIORITY_FEE_MICRO_LAMPORTS ?? 1000) : 0;
   const priorityFee = priorityFeeEstimate[priorityFeeLevel] + baseUnitPrice;
 
-  const { blockhash, lastValidBlockHeight } = await provider.connection.getLatestBlockhash('finalized');
+  const { blockhash, lastValidBlockHeight } = await provider.connection.getLatestBlockhash();
   const extraInstructions: TransactionInstruction[] = [];
 
   if (priorityFee > 0) {
