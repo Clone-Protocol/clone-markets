@@ -3,15 +3,16 @@ import { createContext, useContext } from 'react'
 
 export enum TransactionState {
   INIT,
-  PRE_PENDING,
   PENDING,
   SUCCESS,
   FAIL,
+  EXPIRED,
 }
 
 export type TransactionStateType = {
   state: TransactionState,
   txHash: string
+  retry?: () => void
 }
 
 export interface TransactionStateContextState {

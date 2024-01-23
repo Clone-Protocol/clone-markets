@@ -1,5 +1,5 @@
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram, LAMPORTS_PER_SOL, TransactionExpiredBlockheightExceededError } from "@solana/web3.js";
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 import { getHeliusPriorityFeeEstimate } from "./fetch_netlify";
 import { FeeLevel } from "~/data/networks"
@@ -99,9 +99,20 @@ export const sendAndConfirm = async (provider: AnchorProvider, instructions: Tra
     }, 'confirmed')
     setTxState({ state: TransactionState.SUCCESS, txHash })
 
-  } catch (e: any) {
+  } catch (e) {
     console.log("TX ERROR:", e)
-    setTxState({ state: TransactionState.FAIL, txHash })
+
+    //@TODO
+    const retryFunc = () => {
+      console.log('retrying...')
+    }
+
+    // to catch exception : throw new TransactionExpiredBlockheightExceededError(txHash);
+    if (e instanceof TransactionExpiredBlockheightExceededError) {
+      setTxState({ state: TransactionState.EXPIRED, txHash, retry: retryFunc })
+    } else {
+      setTxState({ state: TransactionState.FAIL, txHash, retry: retryFunc })
+    }
     // throw new Error(e)
   }
 }
