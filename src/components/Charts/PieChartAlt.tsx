@@ -4,9 +4,10 @@ import { withCsrOnly } from '~/hocs/CsrOnly'
 import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { FilterTypeColorMap, PieItem } from '~/data/filter'
-import { filterState } from '~/features/Portfolio/filterAtom'
+import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Portfolio/filterAtom'
 import CloseIcon from '@mui/icons-material/Close';
 import { useSetAtom } from 'jotai'
+import { ASSETS } from '~/data/assets';
 
 export type ChartProps = {
   data: PieItem[]
@@ -20,7 +21,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
   onSelect
 }) => {
   const setSelectedFilter = useSetAtom(filterState)
-  const [activeIndex, setActiveIndex] = useState(-1)
+  const [activeIndex, setActiveIndex] = useState(DEFAULT_ALL_INDEX)
   const [isClicked, setIsClicked] = useState(false)
 
   const onPieEnter = (_, index: number) => {
@@ -99,7 +100,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
   const clearPie = () => {
     setIsClicked(false);
     setActiveIndex(-1);
-    setSelectedFilter('all');
+    setSelectedFilter(DEFAULT_ALL_INDEX);
   }
 
   return (
@@ -124,9 +125,12 @@ const PieChartAlt: React.FC<ChartProps> = ({
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
             >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={FilterTypeColorMap[entry.key]} strokeWidth={0} />
-              ))}
+              {data.map((entry, index) => {
+                const color = entry.key === STABLE_COIN_INDEX ? '#fff' : ASSETS[entry.key].mainColor
+                return (
+                  <Cell key={`cell-${index}`} fill={color} strokeWidth={0} />
+                )
+              })}
             </Pie>
           ) : (
             <Pie
@@ -147,7 +151,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
       </Box>
       {selectedIdx >= 0 &&
         <CloseWrapper onClick={() => clearPie()}>
-          <CloseIcon fontSize='large' sx={{ color: `${FilterTypeColorMap[data[selectedIdx].key]}` }} />
+          <CloseIcon fontSize='large' sx={{ color: selectedIdx === STABLE_COIN_INDEX ? '#fff' : `${ASSETS[data[selectedIdx].key].mainColor}` }} />
         </CloseWrapper>
       }
     </Wrapper>
