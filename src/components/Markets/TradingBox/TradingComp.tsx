@@ -258,7 +258,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const usdiAmt = parseFloat(event.currentTarget.value)
                           // console.log('d', event.currentTarget.value)
-                          field.onChange(event.currentTarget.value)
+                          field.onChange(usdiAmt)
                           calculateTotalAmountByFrom(usdiAmt)
                         }}
                         onMax={(balance: number) => {
@@ -296,7 +296,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const iassetAmt = parseFloat(event.currentTarget.value)
-                          field.onChange(event.currentTarget.value)
+                          field.onChange(iassetAmt)
                           calculateTotalAmountByFrom(iassetAmt)
                         }}
                         onMax={(balance: number) => {
