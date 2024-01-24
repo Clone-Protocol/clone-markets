@@ -121,8 +121,8 @@ const PieChartAlt: React.FC<ChartProps> = ({
               cursor="pointer"
               activeShape={isClicked ? renderActiveShape : renderHoverShape}
               inactiveShape={isClicked ? renderInactiveShape : null}
-              onMouseDown={onPieClick}
-              onMouseEnter={onPieEnter}
+              onMouseDown={!isClicked ? onPieClick : () => { }}
+              onMouseEnter={!isClicked ? onPieEnter : () => { }}
               onMouseLeave={onPieLeave}
             >
               {data.map((entry, index) => {
