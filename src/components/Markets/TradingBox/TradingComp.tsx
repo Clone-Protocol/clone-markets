@@ -113,13 +113,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const initData = () => {
     setValue('amountOnusd', NaN)
     setValue('amountOnasset', NaN)
-    refetch()
   }
 
   const handleChangeOrderType = () => {
     setisBuy(!isBuy)
     setOpenOrderDetails(false)
     initData()
+    refetch()
     trigger()
   }
 
@@ -128,6 +128,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       setisBuy(true)
       setOpenOrderDetails(false)
       initData()
+      refetch()
       trigger()
     }
   }, [assetIndex])
