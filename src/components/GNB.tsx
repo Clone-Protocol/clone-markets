@@ -27,23 +27,13 @@ import TempWarningMsg from '~/components/Common/TempWarningMsg'
 import { IS_DEV } from '~/data/networks'
 import { fetchGeoBlock } from '~/utils/fetch_netlify'
 import { NETWORK_NAME } from '~/utils/constants'
+import useLocalStorage from '~/hooks/useLocalStorage'
+import { IS_COMPLETE_WHITELISTED } from '~/data/localstorage'
 
 
 const GNB: React.FC = () => {
 	// const [mobileNavToggle, setMobileNavToggle] = useState(false)
 	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-
-	// const MobileWarningDialog = dynamic(() => import('./Common/MobileWarningDialog'))
-
-	// const [showMobileWarning, setShowMobileWarning] = useState(isMobile)
-	// useEffect(() => {
-	// 	if (isMobile || isMobileOnSize) {
-	// 		setShowMobileWarning(true)
-	// 	} else {
-	// 		setShowMobileWarning(false)
-	// 	}
-	// }, [isMobileOnSize])
-	// const handleMobileNavBtn = () => setMobileNavToggle((prev) => !prev)
 
 	return (
 		<>
@@ -74,7 +64,6 @@ const GNB: React.FC = () => {
 						</Box>
 					</Toolbar>
 				</Container>
-				{/* <MobileWarningDialog open={showMobileWarning} handleClose={() => setShowMobileWarning(false)} /> */}
 			</StyledAppBar>
 		</>
 	)
@@ -92,8 +81,12 @@ const RightMenu: React.FC = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	const [showGeoblock, setShowGeoblock] = useState(false)
+	const [showWhitelist, setShowWhitelist] = useState(false)
+	const [isWhitelisted, setIsWhitelisted] = useState(false)
+	const [isCompleteWhitelisted, setIsCompleteWhitelisted] = useLocalStorage(IS_COMPLETE_WHITELISTED, false)
 
 	const GeoblockDialog = dynamic(() => import('~/components/Common/GeoblockDialog'), { ssr: false })
+	const WhitelistDialog = dynamic(() => import('~/components/Common/WhitelistDialog'), { ssr: false })
 
 	useFaucet()
 
@@ -106,6 +99,21 @@ const RightMenu: React.FC = () => {
 				if (!geoblock.result) {
 					setShowGeoblock(true)
 					disconnect()
+				} else {
+					// validate whitelist
+					if (publicKey && geoblock.whitelistAddr?.includes(publicKey.toString())) {
+						console.log('whitelisted')
+						setIsWhitelisted(true)
+						if (!isCompleteWhitelisted) {
+							setShowWhitelist(true)
+						}
+					} else {
+						console.log('no whitelisted')
+						setIsWhitelisted(false)
+						setShowWhitelist(true)
+						disconnect()
+						setIsCompleteWhitelisted(false)
+					}
 				}
 			}
 		}
@@ -181,6 +189,7 @@ const RightMenu: React.FC = () => {
 				onGetUsdiClick={handleGetUsdiClick}
 				onHide={() => setOpenTokenFaucet(false)}
 			/>
+			<WhitelistDialog open={showWhitelist} isWhitelisted={isWhitelisted} handleClose={() => setShowWhitelist(false)} />
 			{showGeoblock && <GeoblockDialog open={showGeoblock} handleClose={() => setShowGeoblock(false)} />}
 		</>
 	)
