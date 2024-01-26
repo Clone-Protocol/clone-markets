@@ -10,6 +10,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
 import { useEffect, useState } from 'react'
 import { ON_USD } from '~/utils/constants'
+import { DEFAULT_ALL_INDEX } from '~/features/Portfolio/filterAtom'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const { publicKey } = useWallet()
@@ -27,12 +28,13 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 
 	const { data: myAssets } = useUserBalanceQuery({
 		userPubKey: publicKey,
-		filter: 'all',
+		selectedFilter: DEFAULT_ALL_INDEX,
 		refetchOnMount: 'always',
 		enabled: publicKey != null
 	})
 
 	useEffect(() => {
+		console.log('myAssets', myAssets)
 		if (myAssets && myAssets.length > 0) {
 			let foundItem = false
 			myAssets.forEach((myAsset) => {

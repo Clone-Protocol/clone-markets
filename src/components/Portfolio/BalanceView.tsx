@@ -57,7 +57,6 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 							<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
 						</Stack>
 						{newData.map(item => {
-							console.log('d', ASSETS[item.key])
 							const color = item.key === STABLE_COIN_INDEX ? '#fff' : ASSETS[item.key].mainColor
 							return (
 								<Stack key={item.key} direction='row' gap={1} height='26px' style={selectedFilter === item.key ? { boxShadow: `0 0 0 1px ${color} inset`, borderRadius: '15px' } : {}}>

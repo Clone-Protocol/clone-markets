@@ -124,6 +124,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
+
 		if (assetBalance > 0) {
 			result.push({
 				id: i,
