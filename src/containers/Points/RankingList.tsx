@@ -70,7 +70,7 @@ let columns: GridColDef[] = [
     field: 'lpPoints',
     headerClassName: 'super-app-theme--header right--header',
     cellClassName: 'super-app-theme--cell right--cell',
-    headerName: 'LP Points',
+    headerName: 'Liquidity Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
       return <Typography variant='p_lg'>{params.value?.toLocaleString()}</Typography>
