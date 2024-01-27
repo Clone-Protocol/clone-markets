@@ -69,7 +69,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Docs</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#989898'>Learn about Clone Markets</Typography></Box>
+            <Box><Typography variant='p_sm' color='#989898'>Learn more about Clone Protocol</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
@@ -79,7 +79,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>{IS_DEV && 'Devnet'} Clone Liquidity</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#989898'>LP with most capital efficient system</Typography></Box>
+            <Box><Typography variant='p_sm' color='#989898'>Provide liquidity on Clone using comets</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
@@ -89,7 +89,7 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         <HoverStack direction='row' alignItems='center'>
           <Box width='184px'>
             <Stack direction='row' justifyContent='space-between' alignItems='center'><Typography variant='p'>Opportunities</Typography></Stack>
-            <Box><Typography variant='p_sm' color='#989898'>Wanna be a pioneer of Defi?</Typography></Box>
+            <Box><Typography variant='p_sm' color='#989898'>Wanna be a pioneer of DeFi?</Typography></Box>
           </Box>
         </HoverStack>
       </StyledMenuItem>
