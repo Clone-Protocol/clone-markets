@@ -1,5 +1,5 @@
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram, LAMPORTS_PER_SOL, TransactionExpiredBlockheightExceededError } from "@solana/web3.js";
+import { Transaction, Signer, TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction, AddressLookupTableAccount, ConfirmOptions, TransactionSignature, ComputeBudgetProgram, LAMPORTS_PER_SOL, TransactionExpiredBlockheightExceededError, Connection } from "@solana/web3.js";
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 import { getHeliusPriorityFeeEstimate } from "./fetch_netlify";
 import { FeeLevel } from "~/data/networks"
@@ -38,7 +38,14 @@ const sendRawTransaction = async (provider: AnchorProvider, tx: Transaction | Ve
   return signature;
 }
 
-export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, priorityFeeLevel: FeeLevel, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
+const getConfirmation = async (connection: Connection, tx: string) => {
+  const result = await connection.getSignatureStatus(tx, {
+    searchTransactionHistory: true,
+  });
+  return result.value?.confirmationStatus;
+};
+
+export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, priorityFeeLevel: FeeLevel, retryFunc?: (txHash: string) => void, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
   // MEMO: if payerFee is zero, it's automatic
   const priorityFeeEstimate = await getHeliusPriorityFeeEstimate();
   const baseUnitPrice = (priorityFeeLevel === "high" || priorityFeeLevel === "veryHigh") ? Number(process.env.NEXT_PUBLIC_ADDITIONAL_PRIORITY_FEE_MICRO_LAMPORTS ?? 1000) : 0;
@@ -100,21 +107,25 @@ export const sendAndConfirm = async (provider: AnchorProvider, instructions: Tra
     }, 'confirmed')
 
     setTxState({ state: TransactionState.SUCCESS, txHash })
-
+    return true
   } catch (e) {
     console.log("TX ERROR:", e)
 
-    //@TODO
-    const retryFunc = () => {
-      console.log('retrying...')
-    }
-
     // to catch exception : throw new TransactionExpiredBlockheightExceededError(txHash);
     if (e instanceof TransactionExpiredBlockheightExceededError) {
-      setTxState({ state: TransactionState.EXPIRED, txHash, retry: retryFunc })
+      // need to check transaction confirm status
+      const confirmStatus = await getConfirmation(provider.connection, txHash)
+      console.log('confirmStatus', confirmStatus)
+
+      if (confirmStatus !== 'confirmed' && confirmStatus !== 'finalized') {
+        setTxState({ state: TransactionState.EXPIRED, txHash, retry: () => retryFunc!(txHash) })
+      } else {
+        setTxState({ state: TransactionState.SUCCESS, txHash })
+      }
     } else {
-      setTxState({ state: TransactionState.FAIL, txHash, retry: retryFunc })
+      setTxState({ state: TransactionState.FAIL, txHash, retry: () => retryFunc!(txHash) })
     }
     // throw new Error(e)
+    return false
   }
 }

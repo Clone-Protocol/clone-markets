@@ -133,7 +133,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     }
   }, [assetIndex])
 
-  const { mutateAsync } = useTradingMutation(publicKey)
+  const { mutateAsync } = useTradingMutation(publicKey, (txHash: string) => {
+    console.log('Failed txHash to retrying', txHash)
+    //retry func
+    onConfirm()
+  })
 
   const calculateTotalAmountByFrom = (newValue: number) => {
     const swapResult = calculateSwapExecution(
@@ -165,13 +169,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
         }
       )
 
-      if (data) {
-        setLoading(false)
+      if (data.result) {
         console.log('data', data)
         initData()
       }
     } catch (err) {
       console.error(err)
+    } finally {
       setLoading(false)
     }
   }

@@ -19,8 +19,11 @@ export const callTrading = async ({
 	setTxState,
 	data,
 	feeLevel,
+	retryFunc
 }: CallTradingProps) => {
 	if (!userPubKey) throw new Error('no user public key')
+
+	console.log('callTrading')
 
 	let {
 		quantity,
@@ -117,9 +120,9 @@ export const callTrading = async ({
 		treasuryOnassetAssociatedTokenInfo.address,
 	))
 
-	await sendAndConfirm(program.provider as AnchorProvider, ixns, setTxState, feeLevel)
+	const result = await sendAndConfirm(program.provider as AnchorProvider, ixns, setTxState, feeLevel, retryFunc)
 	return {
-		result: true
+		result
 	}
 }
 
@@ -137,8 +140,9 @@ interface CallTradingProps {
 	setTxState: (state: TransactionStateType) => void
 	data: FormData
 	feeLevel: FeeLevel
+	retryFunc?: (txHash: string) => void
 }
-export function useTradingMutation(userPubKey: PublicKey | null) {
+export function useTradingMutation(userPubKey: PublicKey | null, retryFunc?: (txHash: string) => void) {
 	const queryClient = useQueryClient()
 	const wallet = useAnchorWallet()
 	const { getCloneApp } = useClone()
@@ -147,7 +151,7 @@ export function useTradingMutation(userPubKey: PublicKey | null) {
 
 	if (wallet) {
 		return useMutation({
-			mutationFn: async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, feeLevel }),
+			mutationFn: async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, feeLevel, retryFunc }),
 			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
 			}
