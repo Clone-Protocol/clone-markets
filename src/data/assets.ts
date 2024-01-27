@@ -18,7 +18,6 @@ export enum Asset {
 
 export enum AssetType {
     Crypto,
-    // Fx,
     Commodities,
 }
 
@@ -31,14 +30,16 @@ export const ASSETS = [
         tickerSymbol: 'clARB',
         tickerIcon: '/images/assets/on-arb.svg',
         ticker: 'arbitrum',
-        pythSymbol: 'Crypto.ARB/USD'
+        pythSymbol: 'Crypto.ARB/USD',
+        mainColor: '#a7cbea',
     },
     {
         tickerName: 'Clone Optimism',
         tickerSymbol: 'clOP',
         tickerIcon: '/images/assets/on-op.svg',
         ticker: 'optimism',
-        pythSymbol: 'Crypto.OP/USD'
+        pythSymbol: 'Crypto.OP/USD',
+        mainColor: '#e24e4c',
     }
 ]
 

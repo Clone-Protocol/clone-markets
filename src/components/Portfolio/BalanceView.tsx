@@ -3,9 +3,10 @@ import { Box, Paper, Typography, Stack } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import PieChartAlt from '../Charts/PieChartAlt'
 import { useAtom } from 'jotai'
-import { filterState } from '~/features/Portfolio/filterAtom'
+import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Portfolio/filterAtom'
 import { useEffect, useState } from 'react'
 import { FilterTypeColorMap, FilterTypeMap, PieItem } from '~/data/filter'
+import { ASSETS } from '~/data/assets';
 
 interface Props {
 	data: PieItem[]
@@ -14,22 +15,22 @@ interface Props {
 const BalanceView: React.FC<Props> = ({ data }) => {
 	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('Portfolio')
-	const [selectedIdx, setSelectedIdx] = useState(0)
+	const [selectedIdx, setSelectedIdx] = useState(DEFAULT_ALL_INDEX)
 	const [selectedonusdAmount, setSelectedonusdAmount] = useState(0)
 
 	const newData = data.filter((item) => item !== undefined)
 
 	useEffect(() => {
-		if (selectedFilter === 'all') {
+		if (selectedFilter === DEFAULT_ALL_INDEX) {
 			setSelectedTitle('Portfolio')
-			setSelectedIdx(-1)
+			setSelectedIdx(DEFAULT_ALL_INDEX)
 			const totaliAsset = newData.reduce((acc, item) => acc + item.onusdAmount, 0)
 			setSelectedonusdAmount(totaliAsset);
 		} else {
 			newData.forEach((item, index) => {
 				if (item.key === selectedFilter) {
 					setSelectedTitle(item.name)
-					setSelectedIdx(index)
+					setSelectedIdx(item.key)
 					setSelectedonusdAmount(item.onusdAmount)
 					return;
 				}
@@ -49,23 +50,28 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 				<PieChartAlt data={newData} selectedOnusdAmount={selectedonusdAmount} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
 			</Box>
 			<Box width='200px'>
-				<Stack direction='row' gap={6} mb='5px'>
-					<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
-					<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
-				</Stack>
-				{newData.length > 0 ?
-					newData.map(item => (
-						<Stack key={item.key} direction='row' gap={1} height='26px' style={selectedFilter === item.key ? { boxShadow: `0 0 0 1px ${FilterTypeColorMap[item.key]} inset`, borderRadius: '15px' } : {}}>
-							<Box display="flex" alignItems='center' gap={2} width='130px' pl='5px'>
-								<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[item.key] }} />
-								<Typography variant='p_lg' mt='2px'>{item.name}</Typography>
-							</Box>
-							<Box><Typography variant='p_lg' fontWeight={600}>{item.value.toFixed(0)}%</Typography></Box>
+				{newData.length > 0 &&
+					<>
+						<Stack direction='row' gap={6} mb='5px'>
+							<Box ml='15px'><Typography variant='p_lg' color='#d5c7ff'>Category</Typography></Box>
+							<Box><Typography variant='p_lg' color='#d5c7ff'>Percentage</Typography></Box>
 						</Stack>
-					))
-					:
-					<Box sx={{ opacity: '0.5', lineHeight: '1.2', }}>
-						{Object.keys(FilterTypeMap).filter((v, index) => index !== 0).map((key: string) => (
+						{newData.map(item => {
+							const color = item.key === STABLE_COIN_INDEX ? '#fff' : ASSETS[item.key].mainColor
+							return (
+								<Stack key={item.key} direction='row' gap={1} height='26px' style={selectedFilter === item.key ? { boxShadow: `0 0 0 1px ${color} inset`, borderRadius: '15px' } : {}}>
+									<Box display="flex" alignItems='center' gap={2} width='130px' pl='5px'>
+										<ColorIndicator sx={{ backgroundColor: color }} />
+										<Typography variant='p_lg' mt='2px'>{item.name}</Typography>
+									</Box>
+									<Box><Typography variant='p_lg' fontWeight={600}>{item.value.toFixed(0)}%</Typography></Box>
+								</Stack>
+							)
+						})}
+					</>
+				}
+				{/* <Box sx={{ opacity: '0.5', lineHeight: '1.2', }}>
+					{Object.keys(FilterTypeMap).filter((v, index) => index !== 0).map((key: string) => (
 							<Stack direction='row' gap={3} key={key}>
 								<Box display="flex" alignItems='center' gap={2} width='120px'>
 									<ColorIndicator sx={{ backgroundColor: FilterTypeColorMap[key] }} />
@@ -74,8 +80,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 								<Box mt='4px'><Typography variant='p_lg'>0%</Typography></Box>
 							</Stack>
 						))}
-					</Box>
-				}
+				</Box> */}
 			</Box>
 		</StyledPaper>
 	)

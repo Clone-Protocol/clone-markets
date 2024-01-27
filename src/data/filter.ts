@@ -16,7 +16,7 @@ export enum FilterTypeColorMap {
 }
 
 export interface PieItem {
-	key: FilterType
+	key: number
 	name: string
 	value: number
 	onusdAmount: number

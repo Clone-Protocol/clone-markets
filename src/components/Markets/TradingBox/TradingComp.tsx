@@ -62,6 +62,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const [restartTimer, setRestartTimer] = useState(false)
   const [isEnabledRestart, setIsEnabledRestart] = useState(true);
   const [estimatedSwapResult, setEstimatedSwapResult] = useState(0.0)
+  const [feesAreNonZero, setFeesAreNonZero] = useState(false)
 
   const onUSDInfo = collateralMapping(StableCollateral.onUSD)
   const fromPair: PairData = {
@@ -112,13 +113,13 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const initData = () => {
     setValue('amountOnusd', NaN)
     setValue('amountOnasset', NaN)
-    refetch()
   }
 
   const handleChangeOrderType = () => {
     setisBuy(!isBuy)
     setOpenOrderDetails(false)
     initData()
+    refetch()
     trigger()
   }
 
@@ -127,6 +128,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       setisBuy(true)
       setOpenOrderDetails(false)
       initData()
+      refetch()
       trigger()
     }
   }, [assetIndex])
@@ -140,6 +142,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     )
     const resultVal = round(swapResult.result, isBuy ? CLONE_TOKEN_SCALE : 7)
     setEstimatedSwapResult(swapResult.result)
+    setFeesAreNonZero(swapResult.liquidityFeesPaid > 0 && swapResult.treasuryFeesPaid > 0)
     if (isBuy) {
       setValue('amountOnasset', resultVal)
     } else {
@@ -207,6 +210,8 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       return `Insufficient ${ON_USD}`
     } else if (!isBuy && amountOnasset > myBalance?.onassetVal!) {
       return `Insufficient ${assetData?.tickerSymbol}`
+    } else if (!feesAreNonZero) {
+      return `Amount Too Low`
     } else {
       return ''
     }
@@ -258,7 +263,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const usdiAmt = parseFloat(event.currentTarget.value)
                           // console.log('d', event.currentTarget.value)
-                          field.onChange(event.currentTarget.value)
+                          field.onChange(usdiAmt)
                           calculateTotalAmountByFrom(usdiAmt)
                         }}
                         onMax={(balance: number) => {
@@ -296,7 +301,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                         ticker={assetData?.tickerSymbol!}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const iassetAmt = parseFloat(event.currentTarget.value)
-                          field.onChange(event.currentTarget.value)
+                          field.onChange(iassetAmt)
                           calculateTotalAmountByFrom(iassetAmt)
                         }}
                         onMax={(balance: number) => {

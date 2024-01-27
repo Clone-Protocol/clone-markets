@@ -11,6 +11,7 @@ import { getCollateralAccount } from "~/utils/token_accounts"
 import { calculatePoolAmounts } from "clone-protocol-sdk/sdk/src/utils"
 import { getPythOraclePrices } from '~/utils/pyth'
 import { Status } from 'clone-protocol-sdk/sdk/generated/clone'
+import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX } from './filterAtom'
 
 const fetchOnassetBalance = async (onassetMint: PublicKey, program: CloneClient) => {
 	const onassetAssociatedTokenAccount = await getTokenAccount(
@@ -123,6 +124,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 		const price = poolCollateral / poolOnasset
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
+
 		if (assetBalance > 0) {
 			result.push({
 				id: i,
@@ -155,7 +157,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 
 interface GetAssetsProps {
 	userPubKey: PublicKey | null
-	filter?: FilterType
+	selectedFilter?: number
 	refetchOnMount?: QueryObserverOptions['refetchOnMount']
 	enabled?: boolean
 }
@@ -174,7 +176,7 @@ export interface BalanceList {
 	status: Status
 }
 
-export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enabled = true }: GetAssetsProps) {
+export function useUserBalanceQuery({ userPubKey, selectedFilter, refetchOnMount, enabled = true }: GetAssetsProps) {
 	const wallet = useAnchorWallet()
 	const { getCloneApp } = useClone()
 
@@ -185,16 +187,10 @@ export function useUserBalanceQuery({ userPubKey, filter, refetchOnMount, enable
 			refetchIntervalInBackground: true,
 			enabled,
 			select: (assets) => assets.filter((asset) => {
-				if (filter === 'all') {
-					return asset.assetType === AssetType.Crypto || asset.assetType === AssetType.Commodities
-				} else if (filter === 'onCrypto') {
+				if (selectedFilter === DEFAULT_ALL_INDEX) {
 					return asset.assetType === AssetType.Crypto
-				}
-				// else if (filter === 'onFx') {
-				// 	return asset.assetType === AssetType.Fx
-				// } 
-				else if (filter === 'onCommodity') {
-					return asset.assetType === AssetType.Commodities
+				} else if (selectedFilter !== STABLE_COIN_INDEX) {
+					return asset.id === selectedFilter
 				}
 				return true;
 			})

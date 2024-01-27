@@ -11,18 +11,19 @@ import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
 import { AssetType } from '~/data/assets'
 import { useAtom } from 'jotai'
-import { filterState } from '~/features/Portfolio/filterAtom'
+import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Portfolio/filterAtom'
 import { showPoolStatus } from '~/components/Common/PoolStatus'
 
 interface ResultAsset {
 	id: number
+	name: string
 	val: number
 }
 
 const PortfolioView = () => {
 	const { publicKey } = useWallet()
 	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
-	const filterType = selectedFilter as FilterType
+	const filterType = selectedFilter //as FilterType
 	const [dataPie, setDataPie] = useState<PieItem[]>([])
 
 	const { data: balance } = useBalanceQuery({
@@ -33,7 +34,8 @@ const PortfolioView = () => {
 
 	const { data: assets } = useUserBalanceQuery({
 		userPubKey: publicKey,
-		filter: filterType,
+		// filter: filterType,
+		selectedFilter,
 		refetchOnMount: 'always',
 		enabled: publicKey != null
 	})
@@ -41,34 +43,34 @@ const PortfolioView = () => {
 	useEffect(() => {
 		const onusdBalance = balance?.onusdVal!
 		// only called when filter is all
-		if (selectedFilter === 'all') {
+		if (selectedFilter === DEFAULT_ALL_INDEX) {
 			const result: ResultAsset[] = []
 			let totalBalance = onusdBalance
 			assets?.filter(asset => !showPoolStatus(asset.status)).forEach((asset) => {
-				if (result[asset.assetType]) {
-					result[asset.assetType].val += asset.onusdBalance
-				} else {
-					result[asset.assetType] = {
-						id: asset.assetType,
-						val: asset.onusdBalance
-					}
+				// if (result[asset.assetType]) {
+				// 	result[asset.assetType].val += asset.onusdBalance
+				// } else {
+				result[asset.id] = {
+					id: asset.id,
+					name: asset.tickerSymbol,
+					val: asset.onusdBalance
 				}
+				// }
 				totalBalance += asset.onusdBalance
 			})
 
 			const ordered = result.sort((a, b) => a.val < b.val ? 1 : -1)
 			const finalPie = ordered.map((item) => {
 				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
-				if (item.id === AssetType.Crypto) {
-					return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, onusdAmount: item.val } as PieItem
-				} else {
-					return { key: 'onCommodity', name: FilterTypeMap.onCommodity, value: percentVal, onusdAmount: item.val } as PieItem
-				}
+				// if (item.id === AssetType.Crypto) {
+				// 	return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, onusdAmount: item.val } as PieItem
+				// }
+				return { key: item.id, name: item.name, value: percentVal, onusdAmount: item.val } as PieItem
 			})
 
 			if (totalBalance > 0) {
 				finalPie.push(
-					{ key: 'stableCoin', name: FilterTypeMap.stableCoin, value: 100 * onusdBalance / totalBalance, onusdAmount: onusdBalance } as PieItem
+					{ key: STABLE_COIN_INDEX, name: FilterTypeMap.stableCoin, value: 100 * onusdBalance / totalBalance, onusdAmount: onusdBalance } as PieItem
 				)
 			}
 			console.log('f', finalPie)
@@ -79,7 +81,7 @@ const PortfolioView = () => {
 	useEffect(() => {
 		//unmounted
 		return () => {
-			setSelectedFilter('all')
+			setSelectedFilter(DEFAULT_ALL_INDEX)
 		}
 	}, [])
 
@@ -89,12 +91,12 @@ const PortfolioView = () => {
 				{balance ? <BalanceView data={dataPie} /> : <></>}
 			</Box>
 			<Box py='30px'>
-				{(filterType === 'all' || filterType === 'stableCoin') &&
+				{(filterType === DEFAULT_ALL_INDEX || filterType === STABLE_COIN_INDEX) &&
 					<Box mb='45px'>
 						<StableAssetList balance={balance} />
 					</Box>
 				}
-				{(filterType === 'all' || filterType !== 'stableCoin') &&
+				{(filterType === DEFAULT_ALL_INDEX || filterType !== STABLE_COIN_INDEX) &&
 					<Box>
 						<OnAssetList assets={assets} balance={balance} />
 					</Box>
