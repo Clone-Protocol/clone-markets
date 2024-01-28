@@ -459,4 +459,4 @@ const ArrowIcon = styled('div')`
   color: #c5c7d9;
 `
 
-export default withSuspense(TradingComp, <Box mt='20px'><LoadingProgress /></Box>)
+export default withSuspense(TradingComp, <Box mt='20px' sx={{ display: { xs: 'block', md: 'none' } }}><LoadingProgress /></Box>)
