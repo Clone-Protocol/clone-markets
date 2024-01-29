@@ -1,10 +1,10 @@
 'use client'
 import React, { FC, ReactNode, useState } from 'react'
-import { TransactionStateContext, TransactionState } from '~/hooks/useTransactionState'
+import { TransactionStateContext, TransactionState, TransactionStateType } from '~/hooks/useTransactionState'
 import TransactionStateSnackbar from '~/components/Common/TransactionStateSnackbar'
 
 export const TransactionStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [txState, setTxState] = useState({
+  const [txState, setTxState] = useState<TransactionStateType>({
     state: TransactionState.INIT,
     txHash: '',
   })
@@ -18,7 +18,7 @@ export const TransactionStateProvider: FC<{ children: ReactNode }> = ({ children
       {children}
 
       {txState.state !== TransactionState.INIT &&
-        <TransactionStateSnackbar txState={txState.state} txHash={txState.txHash} open={true} handleClose={() => { setTxState({ state: TransactionState.INIT, txHash: '' }) }} />
+        <TransactionStateSnackbar txState={txState.state} txHash={txState.txHash} retry={txState.retry} open={true} handleClose={() => { setTxState({ state: TransactionState.INIT, txHash: '' }) }} />
       }
     </TransactionStateContext.Provider>
   )

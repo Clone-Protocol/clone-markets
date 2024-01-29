@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Box, Stack, Typography, Snackbar, CircularProgress } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import RetryIcon from 'public/images/icon-retry.svg'
 import SuccessIcon from 'public/images/check-mark-icon.svg'
 import FailureIcon from 'public/images/failure-mark-icon.svg'
 import CloseIcon from 'public/images/close-round.svg'
 import SupportDiscordIcon from 'public/images/support-button-discord.svg'
-import SupportStatusIcon from 'public/images/support-button-wifi.svg'
 import Image from 'next/image'
 import { TransactionState } from '~/hooks/useTransactionState'
 import Slide from '@mui/material/Slide';
@@ -13,7 +13,7 @@ import 'animate.css'
 import { makeStyles } from '@mui/styles'
 import { getTxnURL } from '~/data/networks'
 
-const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHash: string }) => {
+const SuccessFailureWrapper = ({ isSuccess, txHash, retry }: { isSuccess: boolean, txHash: string, retry?: () => void }) => {
   const txStatusColor = isSuccess ? '#c4b5fd' : '#ff0084'
   return (<Stack direction='row' alignItems='center'>
     <Box><Image src={isSuccess ? SuccessIcon : FailureIcon} alt='icStatus' /></Box>
@@ -21,17 +21,32 @@ const SuccessFailureWrapper = ({ isSuccess, txHash }: { isSuccess: boolean, txHa
       <Box mt='6px'><Typography variant='p_xlg'>Transaction {isSuccess ? 'complete' : 'failed'}</Typography></Box>
       {!isSuccess && <Box mt='6px'><Typography variant='p' color='#989898'>Something went wrong. Please try again.</Typography></Box>}
 
-      {isSuccess &&
+      {isSuccess ?
         <Box mt='5px' mb='10px' sx={{ textDecoration: 'underline', color: txStatusColor }}>
           <a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p' color={txStatusColor}>{'View Transaction'}</Typography></a>
         </Box>
-      }
-      {!isSuccess &&
-        <Stack direction='row' gap={1} my='6px'>
+        :
+        <Stack direction='row' alignItems='center' gap={1} my='6px'>
+          <FailedStatusBox sx={{ ':hover': { boxShadow: '0 0 0 0.5px #fff' } }} onClick={() => retry && retry()}><Image src={RetryIcon} alt='retry' /> <Typography variant='p' color='#fff'>Retry</Typography></FailedStatusBox>
           <a href="https://discord.gg/BXAeVWdmmD" target='_blank' rel="noreferrer"><FailedStatusBox><Image src={SupportDiscordIcon} alt='discord' /> <Typography variant='p'>Discord</Typography></FailedStatusBox></a>
-          <a href="https://status.solana.com/" target='_blank' rel="noreferrer"><FailedStatusBox><Image src={SupportStatusIcon} alt='status' /> <Typography variant='p'>Solana Status</Typography></FailedStatusBox></a>
+          <a href="https://status.solana.com/" target='_blank' rel="noreferrer"><FailedStatusBox><Typography variant='p'>Solana Status</Typography></FailedStatusBox></a>
         </Stack>
       }
+    </Box>
+  </Stack>)
+}
+
+const RetryWrapper = ({ retry }: { retry?: () => void }) => {
+  return (<Stack direction='row' alignItems='center'>
+    <Box><Image src={FailureIcon} alt='icStatus' /></Box>
+    <Box lineHeight={1.2}>
+      <Box mt='6px'><Typography variant='p_xlg'>Please try again</Typography></Box>
+      <Box mt='6px' maxWidth='232px'><Typography variant='p' color='#989898' lineHeight={1}>It seems your transaction has failed due to high congestion on Solana, click below to retry, or consider increasing your prioritization fees in settings.</Typography></Box>
+      <Stack direction='row' gap={1} my='6px'>
+        <FailedStatusBox sx={{ ':hover': { boxShadow: '0 0 0 0.5px #fff' } }} onClick={() => retry && retry()}><Image src={RetryIcon} alt='retry' /> <Typography variant='p' color='#fff'>Retry</Typography></FailedStatusBox>
+        <a href="https://discord.gg/BXAeVWdmmD" target='_blank' rel="noreferrer"><FailedStatusBox><Image src={SupportDiscordIcon} alt='discord' /> <Typography variant='p'>Discord</Typography></FailedStatusBox></a>
+        <a href="https://status.solana.com/" target='_blank' rel="noreferrer"><FailedStatusBox><Typography variant='p'>Solana Status</Typography></FailedStatusBox></a>
+      </Stack>
     </Box>
   </Stack>)
 }
@@ -69,7 +84,6 @@ const ConfirmingWrapper = ({ txState = TransactionState.PENDING, txHash, isFocus
               <Box sx={{ textDecoration: 'underline', color: '#c4b5fd' }}><a href={getTxnURL(txHash)} target='_blank' rel="noreferrer"><Typography variant='p' color='#c4b5fd'>View Transaction</Typography></a></Box>
             </Box>
           }
-
         </Box>
       </Stack>
       {txState === TransactionState.PENDING && longTimeStatus}
@@ -77,12 +91,12 @@ const ConfirmingWrapper = ({ txState = TransactionState.PENDING, txHash, isFocus
   )
 }
 
-const TransactionStateSnackbar = ({ txState, txHash, open, handleClose }: { txState: TransactionState, txHash: string, open: boolean, handleClose: () => void }) => {
+const TransactionStateSnackbar = ({ txState, txHash, retry, open, handleClose }: { txState: TransactionState, txHash: string, retry?: () => void, open: boolean, handleClose: () => void }) => {
   const [isFocusWarning, setIsFocusWarning] = useState(false)
   // console.log('txState', txState)
 
-  const isPending = txState === TransactionState.PENDING || txState === TransactionState.PRE_PENDING
-  const hideDuration = isPending ? 60000 : 5000
+  const isPending = txState === TransactionState.PENDING
+  const hideDuration = isPending ? 60000 : 7000
 
   return (
     <Box zIndex={999999}>
@@ -99,7 +113,13 @@ const TransactionStateSnackbar = ({ txState, txHash, open, handleClose }: { txSt
             {txState === TransactionState.FAIL &&
               <BoxWrapper sx={{ border: '1px solid #ff0084' }}>
                 <CloseButton onClick={handleClose}><Image src={CloseIcon} alt='close' /></CloseButton>
-                <SuccessFailureWrapper isSuccess={false} txHash={txHash} />
+                <SuccessFailureWrapper isSuccess={false} txHash={txHash} retry={retry} />
+              </BoxWrapper>
+            }
+            {txState === TransactionState.EXPIRED &&
+              <BoxWrapper sx={{ border: '1px solid #ff0084' }}>
+                <CloseButton onClick={handleClose}><Image src={CloseIcon} alt='close' /></CloseButton>
+                <RetryWrapper retry={retry} />
               </BoxWrapper>
             }
             {isPending &&
@@ -161,6 +181,7 @@ const LongTimeStatus = styled(Box)`
   }
 `
 export const FailedStatusBox = styled(Box)`
+  height: 27px;
   display: flex;
   justify-content: center;
   align-items: center;
