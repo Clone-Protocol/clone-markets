@@ -47,7 +47,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 				</Box>
 			</Box>
 			<Box mb='-30px'>
-				<PieChartAlt data={newData} selectedOnusdAmount={selectedonusdAmount} selectedIdx={selectedIdx} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
+				<PieChartAlt data={newData} selectedOnusdAmount={selectedonusdAmount} selectedIdx={selectedFilter} onSelect={(index: number) => setSelectedFilter(newData[index].key)} />
 			</Box>
 			<Box width='200px'>
 				{newData.length > 0 &&

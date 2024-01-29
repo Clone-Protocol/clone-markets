@@ -16,8 +16,19 @@ export default function GlobalError({ error }: { error: Error }) {
   return (
     <html lang="en">
       <head>
-        <title>Clone Markets - The Most Efficient Trading on Solana</title>
-        <meta name="description" content="Clone Markets allows users to trade clAssets, our synthetic derivatives that bring supercharged liquidity and rapid scalability to trading on Solana." />
+        <title>Clone Markets - Cloned Assets to Supercharge your Portfolio</title>
+        <meta name="description" content="Designed to bring unprecedented flexibility to trading on Solana, clAssets are optimized to scale Solana DeFi." />
+        <meta property="og:title" content="Clone Markets - Cloned Assets to Supercharge your Portfolio" />
+        <meta property="og:url" content="https://markets.clone.so/" />
+        <meta property="og:image" content="/markets-meta-img.png" />
+        <meta
+          property="og:image:alt"
+          content="Clone Markets"
+        />
+        <meta
+          property="og:description"
+          content="Designed to bring unprecedented flexibility to trading on Solana, clAssets are optimized to scale Solana DeFi."
+        />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
       </head>
       <body>
