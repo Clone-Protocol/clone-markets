@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { CloneClient, fromScale, fromCloneScale } from 'clone-protocol-sdk/sdk/src/clone'
 import { useClone } from '~/hooks/useClone'
 import { assetMapping, AssetType } from '~/data/assets'
-import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
+import { REFETCH_CYCLE, REFETCH_SHORT_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { FilterType } from '~/data/filter'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
@@ -183,7 +183,7 @@ export function useUserBalanceQuery({ userPubKey, selectedFilter, refetchOnMount
 	if (wallet) {
 		return useQuery(['userBalance', wallet, userPubKey], async () => fetchUserBalance({ program: await getCloneApp(wallet), userPubKey }), {
 			refetchOnMount,
-			refetchInterval: REFETCH_CYCLE,
+			refetchInterval: REFETCH_SHORT_CYCLE,
 			refetchIntervalInBackground: true,
 			enabled,
 			select: (assets) => assets.filter((asset) => {

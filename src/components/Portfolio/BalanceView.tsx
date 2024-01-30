@@ -15,7 +15,7 @@ interface Props {
 const BalanceView: React.FC<Props> = ({ data }) => {
 	const [selectedFilter, setSelectedFilter] = useAtom(filterState)
 	const [selectedTitle, setSelectedTitle] = useState('Portfolio')
-	const [selectedIdx, setSelectedIdx] = useState(DEFAULT_ALL_INDEX)
+	// const [selectedIdx, setSelectedIdx] = useState(DEFAULT_ALL_INDEX)
 	const [selectedonusdAmount, setSelectedonusdAmount] = useState(0)
 
 	const newData = data.filter((item) => item !== undefined)
@@ -23,14 +23,14 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 	useEffect(() => {
 		if (selectedFilter === DEFAULT_ALL_INDEX) {
 			setSelectedTitle('Portfolio')
-			setSelectedIdx(DEFAULT_ALL_INDEX)
+			// setSelectedIdx(DEFAULT_ALL_INDEX)
 			const totaliAsset = newData.reduce((acc, item) => acc + item.onusdAmount, 0)
 			setSelectedonusdAmount(totaliAsset);
 		} else {
 			newData.forEach((item, index) => {
 				if (item.key === selectedFilter) {
 					setSelectedTitle(item.name)
-					setSelectedIdx(item.key)
+					// setSelectedIdx(item.key)
 					setSelectedonusdAmount(item.onusdAmount)
 					return;
 				}
