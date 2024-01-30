@@ -7,6 +7,7 @@ import { formatDollarAmount } from '~/utils/numbers'
 import Image from 'next/image'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
+import PoweredByPyth from 'public/images/powered_pyth.svg'
 import { usePriceHistoryQuery } from '~/features/Chart/PriceByAsset.query'
 import { ON_USD } from '~/utils/constants'
 
@@ -45,7 +46,7 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
 
   return (
     priceHistory ?
-      <>
+      <Box position='relative'>
         <LineChartAlt
           data={priceHistory.chartData}
           value={chartHover}
@@ -76,7 +77,10 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
             </div>
           }
         />
-      </> : <></>
+        <Box position='absolute' bottom='10px' right='20px'>
+          <Image src={PoweredByPyth} alt='powered_by_pyth' />
+        </Box>
+      </Box> : <></>
   )
 }
 
