@@ -4,9 +4,7 @@ import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import { IS_DEV } from '~/data/networks'
 import { DEFAULT_ASSET_LINK } from '~/data/assets'
-import pointsStarIcon from 'public/images/points-star.svg'
-import pointsStarIconSelected from 'public/images/points-star-selected.svg'
-import Image from 'next/image'
+import { PointsStarIcon } from './Common/SvgIcons'
 
 const CommonMenu = () => {
   const pathname = usePathname()
@@ -35,7 +33,7 @@ const CommonMenu = () => {
         <Link href="/points">
           <StyledPointsItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
             <Typography variant='p_lg' mr='2px'>Points</Typography>
-            <Image src={pathname?.startsWith('/points') ? pointsStarIconSelected : pointsStarIcon} width={14} height={14} alt="clone" />
+            <PointsStarIcon />
           </StyledPointsItemButton>
         </Link>
       }
