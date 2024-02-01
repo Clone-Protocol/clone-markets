@@ -39,7 +39,7 @@ const TempWarningMsg: React.FC = () => {
 
   useEffect(() => {
     if (showPythBannerStatus) {
-      setWarnMsg('temporarily unavailable due to oracle error')
+      setWarnMsg('Oracle error is detected. Number of pools maybe temporarily frozen.')
       setIsShowWarnMsg(true)
     }
   }, [showPythBannerStatus])

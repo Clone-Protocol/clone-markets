@@ -370,7 +370,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
 
             <TitleOrderDetails onClick={() => setOpenOrderDetails(!openOrderDetails)} style={openOrderDetails ? { color: '#fff' } : { color: '#868686' }}>
               <RateLoadingIndicator restartTimer={restartTimer} />
-              <Typography variant='p' color='#9b79fc'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
+              <Typography variant='p' color='#C4B5FD'>1 {assetData?.tickerSymbol} = {round(amountOnusd ? getPrice() : getDefaultPrice(), 4)} {ON_USD}</Typography>
               <Box mx='10px' display='flex' alignItems='center'><Image src={swapIcon} alt="swap" /></Box> <Typography variant='p' color='#c5c7d9'>Price Detail</Typography> <ArrowIcon>{openOrderDetails ? <KeyboardArrowUpSharpIcon /> : <KeyboardArrowDownSharpIcon />}</ArrowIcon>
             </TitleOrderDetails>
             {openOrderDetails && <OrderDetails isBuy={isBuy} onusdAmount={amountOnusd} onassetPrice={round(getPrice(), 4)} onassetAmount={amountOnasset} tickerSymbol={assetData?.tickerSymbol!} slippage={slippage} priceImpact={round(getPriceImpactPct(), 2)} tradeFee={tradingFeePct()} estimatedFees={estimatedFees} feesAreNonZero={feesAreNonZero} />}
@@ -414,12 +414,12 @@ const ConnectButton = styled(Button)`
   width: 100%;
   height: 52px;
   color: #fff;
-  border: solid 1px rgba(65, 65, 102, 0.5);
-  background: ${(props) => props.theme.basis.royalPurple};
+  border: solid 1px ${(props) => props.theme.basis.melrose};
+  box-shadow: 0 0 10px 0 #6d5887;
   border-radius: 10px;
   &:hover {
-    background: ${(props) => props.theme.basis.royalPurple};
-    opacity: 0.6;
+    background-color: transparent;
+		border-color: ${(props) => props.theme.basis.lightSlateBlue};
   }
 `
 const ActionButton = styled(Button)`
