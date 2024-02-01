@@ -415,11 +415,11 @@ const ConnectButton = styled(Button)`
   height: 52px;
   color: #fff;
   border: solid 1px ${(props) => props.theme.basis.melrose};
-  background: ${(props) => props.theme.basis.royalPurple};
+  box-shadow: 0 0 10px 0 #6d5887;
   border-radius: 10px;
   &:hover {
-    background: ${(props) => props.theme.basis.royalPurple};
-    opacity: 0.6;
+    background-color: transparent;
+		border-color: ${(props) => props.theme.basis.lightSlateBlue};
   }
 `
 const ActionButton = styled(Button)`
