@@ -80,3 +80,18 @@ export const getHeliusPriorityFeeEstimate = async () => {
     const response = await axios.get(`/.netlify/functions/get-priority-fee-estimate`)
     return response.data.priorityFeeLevels as PriorityFeeEstimate
 }
+
+
+export type PoolAnalytics = {
+    pool_index: number
+    current_volume: number
+    current_fees: number
+    current_liquidity: number
+    previous_volume: number
+    previous_fees: number
+    previous_liquidity: number
+  }
+  export const fetchPoolAnalytics = async (): Promise<PoolAnalytics[]> => { 
+    const response = await axios.get(`/.netlify/functions/get-pool-analytics`)
+    return response.data as PoolAnalytics[]
+  }

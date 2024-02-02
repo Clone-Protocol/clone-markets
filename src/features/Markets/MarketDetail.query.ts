@@ -4,10 +4,10 @@ import { Collateral, Status } from "clone-protocol-sdk/sdk/generated/clone"
 import { assetMapping, ASSETS_DESC } from "src/data/assets"
 import { REFETCH_CYCLE } from "~/components/Markets/TradingBox/RateLoadingIndicator"
 import { getPythOraclePrices } from "~/utils/pyth"
-import { fetch24hourVolume } from "~/utils/assets"
 import { getCloneClient } from "../baseQuery"
 import { useAtomValue } from "jotai"
 import { cloneClient, rpcEndpoint } from "../globalAtom"
+import { fetchPoolAnalytics } from "~/utils/fetch_netlify"
 
 export const fetchMarketDetail = async ({
   index,
@@ -46,8 +46,8 @@ export const fetchMarketDetail = async ({
   const price = poolCollateral / poolOnasset
   const detailOverview = ASSETS_DESC[index].desc
 
-  const dailyVolumeStats = await fetch24hourVolume()
-  const volume = dailyVolumeStats.get(index) ?? 0
+  const poolAnalytics = await fetchPoolAnalytics();
+  const volume = poolAnalytics[index].current_volume ?? 0
   const avgLiquidity = poolCommittedCollateral * 2
   const avgPremium = 100 * (price / oraclePrice - 1)
 

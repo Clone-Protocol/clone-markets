@@ -1,7 +1,7 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
 import { AssetType, assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
-import { fetch24hourVolume, getiAssetInfos } from '~/utils/assets';
+import { getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { cloneClient, rpcEndpoint, showPythBanner } from '~/features/globalAtom'
@@ -10,6 +10,7 @@ import { getCloneClient } from '../baseQuery';
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone';
 import { Status } from 'clone-protocol-sdk/sdk/generated/clone';
 import { showPoolStatus } from '~/components/Common/PoolStatus';
+import { fetchPoolAnalytics } from '~/utils/fetch_netlify';
 
 export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkEndpoint }: { setShowPythBanner: (show: boolean) => void, mainCloneClient?: CloneClient | null, networkEndpoint: string }) => {
 	console.log('fetchAssets')
@@ -23,7 +24,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 	}
 
 	const iassetInfos = await getiAssetInfos(program.provider.connection, program);
-	const dailyVolumeStats = await fetch24hourVolume()
+	const dailyVolumeStats = await fetchPoolAnalytics()
 
 	// Fetch Pyth
 	let pythData
@@ -64,7 +65,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 			price: info.poolPrice,
 			assetType,
 			liquidity: parseInt(info.liquidity.toString()),
-			volume24h: dailyVolumeStats.get(info.poolIndex) ?? 0,
+			volume24h: dailyVolumeStats[info.poolIndex].current_volume ?? 0,
 			change24h,
 			status: info.status
 		})
