@@ -1,5 +1,7 @@
 import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
 import { PublicKey, Connection, Commitment } from "@solana/web3.js";
+import fetchRetry from "fetch-retry";
+import fetch from "cross-fetch";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { CloneClient } from 'clone-protocol-sdk/sdk/src/clone'
 import { AnchorWallet } from '@solana/wallet-adapter-react';
@@ -12,7 +14,17 @@ export const funcNoWallet = async () => {
 }
 
 export const getCloneClient = async (networkEndpoint: string, wallet?: AnchorWallet) => {
-  const connection = new Connection(networkEndpoint, { commitment: 'confirmed' })
+  const fetchWithRetry = fetchRetry(fetch, {
+    retries: 3,
+    retryDelay: 100,
+  }) as any;
+
+  const connection = new Connection(networkEndpoint, {
+    commitment: 'confirmed',
+    fetch: fetchWithRetry,
+    // @TODO: set websocket endpoint
+    // wsEndpoint: env_config.WS_ENDPOINT,
+  })
 
   let provider
   if (wallet) {

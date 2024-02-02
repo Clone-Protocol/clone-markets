@@ -9,7 +9,6 @@ import StableAssetList from '~/containers/Portfolio/StableAssetList'
 import OnAssetList from './OnAssetList'
 import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
-import { AssetType } from '~/data/assets'
 import { useAtom } from 'jotai'
 import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Portfolio/filterAtom'
 import { showPoolStatus } from '~/components/Common/PoolStatus'
@@ -76,7 +75,7 @@ const PortfolioView = () => {
 			console.log('f', finalPie)
 			setDataPie(finalPie)
 		}
-	}, [assets?.length, balance?.onusdVal])
+	}, [assets, balance?.onusdVal])
 
 	useEffect(() => {
 		//unmounted

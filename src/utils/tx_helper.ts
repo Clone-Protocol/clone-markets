@@ -11,8 +11,8 @@ import {
   AddressLookupTableAccount,
   ConfirmOptions,
   TransactionSignature,
+  TransactionExpiredBlockheightExceededError,
   ComputeBudgetProgram,
-  LAMPORTS_PER_SOL,
 } from "@solana/web3.js"
 import { TransactionStateType, TransactionState } from "~/hooks/useTransactionState"
 import { getHeliusPriorityFeeEstimate } from "./fetch_netlify"
@@ -67,6 +67,13 @@ const sendRawTransaction = async (
   return signature
 }
 
+const getConfirmation = async (connection: Connection, tx: string) => {
+  const result = await connection.getSignatureStatus(tx, {
+    searchTransactionHistory: true,
+  });
+  return result.value?.confirmationStatus;
+};
+
 const confirmTransaction = async (
   provider: AnchorProvider,
   strategy: TransactionConfirmationStrategy,
@@ -84,14 +91,7 @@ const confirmTransaction = async (
   }
 }
 
-export const sendAndConfirm = async (
-  provider: AnchorProvider,
-  instructions: TransactionInstruction[],
-  setTxState: (state: TransactionStateType) => void,
-  priorityFeeLevel: FeeLevel,
-  signers?: Signer[],
-  addressLookupTables?: PublicKey[]
-) => {
+export const sendAndConfirm = async (provider: AnchorProvider, instructions: TransactionInstruction[], setTxState: (state: TransactionStateType) => void, priorityFeeLevel: FeeLevel, retryFunc?: (txHash: string) => void, signers?: Signer[], addressLookupTables?: PublicKey[]) => {
   // MEMO: if payerFee is zero, it's automatic
   const priorityFeeEstimate = await getHeliusPriorityFeeEstimate()
   const baseUnitPrice =
@@ -138,7 +138,7 @@ export const sendAndConfirm = async (
       return transactionV0
     } else {
       let updatedTx = new Transaction({ blockhash, lastValidBlockHeight }) as Transaction
-      ;[...extraInstructions, ...instructions].forEach((ix) => updatedTx.add(ix))
+        ;[...extraInstructions, ...instructions].forEach((ix) => updatedTx.add(ix))
       updatedTx.feePayer = provider.publicKey!
       return updatedTx
     }
@@ -164,9 +164,25 @@ export const sendAndConfirm = async (
     await confirmTransaction(provider, strategy, true)
 
     setTxState({ state: TransactionState.SUCCESS, txHash })
-  } catch (e: any) {
+    return true
+  } catch (e) {
     console.log("TX ERROR:", e)
-    setTxState({ state: TransactionState.FAIL, txHash })
+
+    // to catch exception : throw new TransactionExpiredBlockheightExceededError(txHash);
+    if (e instanceof TransactionExpiredBlockheightExceededError) {
+      // need to check transaction confirm status
+      const confirmStatus = await getConfirmation(provider.connection, txHash)
+      console.log('confirmStatus', confirmStatus)
+
+      if (confirmStatus !== 'confirmed' && confirmStatus !== 'finalized') {
+        setTxState({ state: TransactionState.EXPIRED, txHash, retry: () => retryFunc!(txHash) })
+      } else {
+        setTxState({ state: TransactionState.SUCCESS, txHash })
+      }
+    } else {
+      setTxState({ state: TransactionState.FAIL, txHash, retry: () => retryFunc!(txHash) })
+    }
     // throw new Error(e)
+    return false
   }
 }

@@ -39,7 +39,6 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 		)
 	} catch (e) {
 		console.error(e)
-		setShowPythBanner(true)
 	}
 
 	const result: AssetList[] = []
@@ -70,6 +69,13 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 			status: info.status
 		})
 	}
+
+	//show pyth banner if found that the status is frozen
+	const isFrozenFoundIndex = result.findIndex((asset) => asset.status === Status.Frozen)
+	if (isFrozenFoundIndex !== -1) {
+		setShowPythBanner(true)
+	}
+
 	return result
 }
 

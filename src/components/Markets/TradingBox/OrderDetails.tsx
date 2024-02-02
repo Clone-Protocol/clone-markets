@@ -15,9 +15,10 @@ interface Props {
   slippage: number
   tradeFee: number
   estimatedFees: number
+  feesAreNonZero: boolean
 }
 
-const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onassetAmount, tickerSymbol, priceImpact, slippage, tradeFee, estimatedFees }) => {
+const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onassetAmount, tickerSymbol, priceImpact, slippage, tradeFee, estimatedFees, feesAreNonZero }) => {
   const slippageMultiplier = (1 - (slippage / 100))
   const [minReceived, outputSymbol, tradeFeeDollar] = (() => {
     if (isBuy) {
@@ -31,7 +32,11 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
     <Wrapper>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Price Impact <InfoTooltip title={TooltipTexts.priceImpact} color='#8988a3' /></Typography>
-        <PriceImpactValue>{isNaN(priceImpact) || priceImpact < 0.1 ? '<' : '~'} {isNaN(priceImpact) ? '0.1' : Math.max(priceImpact, 0.1)}%</PriceImpactValue>
+        {feesAreNonZero ?
+          <PriceImpactValue sx={{ color: priceImpact > 5 ? '#FF0084' : '#00ff99' }}>{isNaN(priceImpact) || priceImpact < 0.1 ? '<' : '~'} {isNaN(priceImpact) ? '0.1' : Math.max(priceImpact, 0.1)}%</PriceImpactValue>
+          :
+          <PriceImpactValue sx={{ color: '#8988a3' }}>-</PriceImpactValue>
+        }
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title={TooltipTexts.minimumReceived} color='#8988a3' /></Typography>
