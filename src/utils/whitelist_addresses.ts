@@ -21,9 +21,9 @@ export const WHITELIST_ADDRESSES = [
   '6RGE9FVREJyccWYfUNJcy4uNv6tTRexgVioMmwejL3Mc',
   'D8AHGw9zxHkZmsVUkR9qq7q3qKSo3ZgtqVChRSPBP8bX',
   'HKpaSpoCtz1uJUhS7HZTgKo1Lf26D6ZMJi6SDntCpaf8',
-  "FvM7jcnxbLLhZtgfXNBHskKAq4HJWctLY1n3AVDqNTGo", 
-	"GZuCx7ztUA4W1znJSxmT8YknsnEGZsKhKFLNqSHSgjHd",
-	"7C8f8dxxqQEZyKpHMWaQtfGckrkLgUYmfEH9tjcwB8HT", // partners
+  "FvM7jcnxbLLhZtgfXNBHskKAq4HJWctLY1n3AVDqNTGo",
+  "GZuCx7ztUA4W1znJSxmT8YknsnEGZsKhKFLNqSHSgjHd",
+  "7C8f8dxxqQEZyKpHMWaQtfGckrkLgUYmfEH9tjcwB8HT", // partners
   "D82kLfTQ4ntrbGGnwkqP9gKLvRhGoiAHWjCLwRh2PHRo",
   "8M6obuLq8jZ3hKYW5u2XH9hpQ4BWhEz2oGzhsK1RN8Fc",
   "DoaWfppuysM296o7HkF8XrpNCpTDrDYxVteNWY9XvqRk",
@@ -349,19 +349,19 @@ export const WHITELIST_ADDRESSES = [
   "G57GFYe7Z2ghFNMpz61wx8AcFyK97UfV2ht9wpJpwKef",
   "C8N3W4FkMLQdAQF4ZWixGLhvQVB3h6ZiJ9LkJEzcVaBt",
   "2yaNYBsrsdKcxcs6okPXJmZE8SKi3te7xhR1sENk4W5r",
-	"BKXQSQDHbdJLitM3FthG52bS84jFABPUEhBv5YahssSk", // cosmic officers
-	"HaVvvZ4TQpBVZVLsqDqJGQdNB1SD1TJYGNosNiSkwmZn",
-	"3C1ydanbaMbYiWFWxGcc5oi4DUgbyHonbDPqUKMnYZpf",
-	"9cLbEL4YBB3sevh7JrN5AxTpkkyHEeii9ri9CQsZXBkn",
-	"F98so5GHZkGnYMsiyHE1hahaXaNPC6Rot5TEmxGxR74o",
-	"5uXVGF8JPf6Hhcyu7GWSSLXGsJF8vz6XBBJg6A3ytoMH",
-	"Cph4oLiFfKhyKRcc9sGE7q4pDWnX7oWSDpZC1TNDxPUu",
-	"Hja4RAjXmMHVbREmNJxhH8FCtXSkvxqfhLc5zrkgdj2R",
-	"uMdmyDfATFRiHQQ4VLbZM8n3yT5bb3FGvdutSsdroTR",
-	"A5ka1M2QmxjxaCrwabe6eo44cSok5h2ziHB8EAWbvsgP",
-	"Eug1Xhe1BNAyu5qe2KatArWpPBd45yp7QzTuVCHoscsN",
-	"DxRYXJb8GNeYs6M3Z7wBfnhArCW7oJBc3CtFQLLTLx6B",
-	"Zkf9bWvisY6vy3GmZdfvsSbXAo9T8fWdqg4N3DesAhJ",
-	"GfqH9pfeocg4dX5uZFjoq8sjSEahmmu2zYbRFNt2YBZt,
-	"FRb1tt3XAucN64dcwGDJ8LS6mCU3V1WkqEWLzRfp6dTM"
+  "BKXQSQDHbdJLitM3FthG52bS84jFABPUEhBv5YahssSk", // cosmic officers
+  "HaVvvZ4TQpBVZVLsqDqJGQdNB1SD1TJYGNosNiSkwmZn",
+  "3C1ydanbaMbYiWFWxGcc5oi4DUgbyHonbDPqUKMnYZpf",
+  "9cLbEL4YBB3sevh7JrN5AxTpkkyHEeii9ri9CQsZXBkn",
+  "F98so5GHZkGnYMsiyHE1hahaXaNPC6Rot5TEmxGxR74o",
+  "5uXVGF8JPf6Hhcyu7GWSSLXGsJF8vz6XBBJg6A3ytoMH",
+  "Cph4oLiFfKhyKRcc9sGE7q4pDWnX7oWSDpZC1TNDxPUu",
+  "Hja4RAjXmMHVbREmNJxhH8FCtXSkvxqfhLc5zrkgdj2R",
+  "uMdmyDfATFRiHQQ4VLbZM8n3yT5bb3FGvdutSsdroTR",
+  "A5ka1M2QmxjxaCrwabe6eo44cSok5h2ziHB8EAWbvsgP",
+  "Eug1Xhe1BNAyu5qe2KatArWpPBd45yp7QzTuVCHoscsN",
+  "DxRYXJb8GNeYs6M3Z7wBfnhArCW7oJBc3CtFQLLTLx6B",
+  "Zkf9bWvisY6vy3GmZdfvsSbXAo9T8fWdqg4N3DesAhJ",
+  "GfqH9pfeocg4dX5uZFjoq8sjSEahmmu2zYbRFNt2YBZt",
+  "FRb1tt3XAucN64dcwGDJ8LS6mCU3V1WkqEWLzRfp6dTM"
 ]
