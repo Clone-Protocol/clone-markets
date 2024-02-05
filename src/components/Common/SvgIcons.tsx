@@ -6,3 +6,9 @@ export const PointsStarIcon = () => {
   </svg>
   )
 }
+
+export const GoBackIcon = () => {
+  return (<svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13 6.18v1.64H3.152l4.513 4.515L6.5 13.5 0 7 6.5.5l1.165 1.165L3.152 6.18H13z" fill="currentColor" />
+  </svg>)
+}

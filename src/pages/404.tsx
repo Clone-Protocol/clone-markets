@@ -1,7 +1,7 @@
 'use client'
 import { Container, Typography, Box, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import logoIcon from 'public/images/logo-markets.png'
+import logoIcon from 'public/images/logo-markets.svg'
 import Image from 'next/image'
 import { StyledSection } from '~/components/Layout'
 const NotFound = () => {

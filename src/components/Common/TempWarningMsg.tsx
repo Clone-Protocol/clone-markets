@@ -6,7 +6,7 @@ import CloseIcon from 'public/images/close.svg'
 import { useAtomValue } from 'jotai'
 import { showPythBanner } from '~/features/globalAtom'
 import { Info, Warning } from '@mui/icons-material';
-import { fetchFromSupabaseNotice } from '~/utils/fetch_netlify';
+import { fetchFromSupabaseNotice, fetchFromSupabasePyth } from '~/utils/fetch_netlify';
 
 interface NoticeItem {
   is_general: boolean
@@ -38,9 +38,17 @@ const TempWarningMsg: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    const getNoticeMsg = async () => {
+      const response = await fetchFromSupabasePyth()
+      const data = response.data
+      if (data.length > 0) {
+        setWarnMsg('Oracle error is detected. Number of pools maybe temporarily frozen.')
+        setIsShowWarnMsg(true)
+      }
+    }
+
     if (showPythBannerStatus) {
-      setWarnMsg('Oracle error is detected. Number of pools maybe temporarily frozen.')
-      setIsShowWarnMsg(true)
+      getNoticeMsg()
     }
   }, [showPythBannerStatus])
 

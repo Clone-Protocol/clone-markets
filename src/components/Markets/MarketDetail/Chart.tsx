@@ -77,7 +77,7 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
             </div>
           }
         />
-        <Box position='absolute' bottom='10px' right='20px'>
+        <Box position='absolute' bottom='0px' right='20px'>
           <Image src={PoweredByPyth} alt='powered_by_pyth' />
         </Box>
       </Box> : <></>
