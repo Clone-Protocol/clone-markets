@@ -67,8 +67,8 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol, networkEn
   }
 
   const allValues = chartData.map(elem => elem.value!)
-  const maxValue = Math.floor(Math.max(...allValues))
-  const minValue = Math.floor(Math.min(...allValues))
+  const maxValue = Math.max(...allValues)
+  const minValue = Math.min(...allValues)
 
   const lastEntry = chartData[chartData.length - 1];
 

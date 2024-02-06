@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Box, Stack, Theme, useMediaQuery } from '@mui/material'
+import { Box, Stack, Theme, Typography, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
@@ -70,6 +70,7 @@ const StyledSection = styled('section')`
 		padding: 70px 0px 110px 0px;
 	}
 `
+
 const ShowTradingBtn = styled(Box)`
   position: fixed;
   bottom: 48px;

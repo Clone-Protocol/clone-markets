@@ -14,13 +14,13 @@ const CommonMenu = () => {
 
   return (
     <List component="nav" sx={{ display: 'flex', padding: 0 }}>
-      <Link href="/">
+      {/* <Link href="/">
         <StyledListItemButton className={pathname === '/' ? 'selected' : ''}>
           <Typography variant='p_lg'>Home</Typography>
         </StyledListItemButton>
-      </Link>
-      <Link href={DEFAULT_ASSET_LINK}>
-        <StyledListItemButton className={pathname?.startsWith('/trade') ? 'selected' : ''}>
+      </Link> */}
+      <Link href="/">
+        <StyledListItemButton className={pathname === '/' || pathname?.startsWith('/trade') ? 'selected' : ''}>
           <Typography variant='p_lg'>Trade</Typography>
         </StyledListItemButton>
       </Link>
