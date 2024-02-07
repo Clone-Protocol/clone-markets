@@ -81,6 +81,7 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             bottom: 5,
           }}
           onMouseLeave={() => {
+            console.log('onMouseLeave')
             setLabel && setLabel(undefined)
             setValue && setValue(undefined)
           }}
@@ -111,15 +112,8 @@ const LineChartAlt: React.FC<LineChartProps> = ({
           <Tooltip
             cursor={{ stroke: '#8988a3', strokeDasharray: '4 4' }}
             content={CustomTooltip}
+            isAnimationActive={false}
             contentStyle={{ display: 'block', background: 'transparent' }}
-          // formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
-          //   if (setValue && parsedValue !== props.payload.value) {
-          //     setValue(props.payload.value)
-          //   }
-          //   const formattedTime = dayjs(props.payload.time).format('MMM D, YYYY')
-          //   console.log('formatter', formattedTime)
-          //   if (setLabel && label !== formattedTime) setLabel(formattedTime)
-          // }}
           />
           <Area dataKey="value" type="monotone" stroke="#c4b5fd" fill="url(#gradient)" strokeWidth={1} />
         </AreaChart>
