@@ -81,7 +81,6 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             bottom: 5,
           }}
           onMouseLeave={() => {
-            console.log('onMouseLeave')
             setLabel && setLabel(undefined)
             setValue && setValue(undefined)
           }}
