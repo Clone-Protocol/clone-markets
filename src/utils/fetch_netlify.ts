@@ -1,14 +1,6 @@
 import axios from "axios";
 import { FeeLevel } from "~/data/networks";
 
-export const fetchFromCloneIndex = async (method: string, params: Object) => {
-    let queryString = `method=${method}`
-    for (let [key, val] of Object.entries(params)) {
-        queryString += `&${key}=${val}`
-    }
-    return await axios.get(`/.netlify/functions/clone-index-fetch?${queryString}`)
-}
-
 export interface StatsData {
     time_interval: string;
     total_committed_collateral_liquidity: number;
@@ -34,7 +26,7 @@ export interface OHLCVResponse {
 }
 
 export const fetchOHLCV = async (interval: string, filter: string, pool?: number | string): Promise<OHLCVResponse[]> => {
-    let endpoint = `/.netlify/functions/get-ohlcv?interval=${interval}&filter=${filter}`
+    let endpoint = `${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-ohlcv?interval=${interval}&filter=${filter}`
 
     if (pool !== undefined)
         endpoint += `&pool=${pool}`
@@ -44,11 +36,11 @@ export const fetchOHLCV = async (interval: string, filter: string, pool?: number
 }
 
 export const fetchFromSupabaseNotice = async () => {
-    return await axios.get(`/.netlify/functions/supabase-notice-fetch`)
+    return await axios.get(`${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/supabase-notice-fetch`)
 }
 
 export const fetchFromSupabasePyth = async () => {
-    return await axios.get(`/.netlify/functions/supabase-pyth-fetch`)
+    return await axios.get(`${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/supabase-pyth-fetch`)
 }
 
 export type UserPointsView = {
@@ -62,7 +54,7 @@ export type UserPointsView = {
 }
 
 export const fetchUserPoints = async (userAddress?: string): Promise<UserPointsView[]> => {
-    let url = `/.netlify/functions/get-user-points`;
+    let url = `${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-user-points`;
     if (userAddress) {
         url += `?userAddress=${userAddress}`;
     }
@@ -81,7 +73,7 @@ export type PriorityFeeEstimateResponse = {
 }
 
 export const getHeliusPriorityFeeEstimate = async () => {
-    const response = await axios.get(`/.netlify/functions/get-priority-fee-estimate`)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-priority-fee-estimate`)
     return response.data.priorityFeeLevels as PriorityFeeEstimate
 }
 
@@ -96,6 +88,6 @@ export type PoolAnalytics = {
     previous_liquidity: number
 }
 export const fetchPoolAnalytics = async (): Promise<PoolAnalytics[]> => {
-    const response = await axios.get(`/.netlify/functions/get-pool-analytics`)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-pool-analytics`)
     return response.data as PoolAnalytics[]
 }
