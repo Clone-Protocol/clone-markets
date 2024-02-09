@@ -11,6 +11,7 @@ import { DEV_RPCs, IS_DEV, MAIN_RPCs } from '~/data/networks'
 // import { fetchPythPriceHistory } from '~/utils/pyth'
 import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
 import { fetchAssets } from '~/features/Markets/Assets.query'
+import { IS_LOCAL_DEVELOPMENT } from '~/utils/constants'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -19,26 +20,21 @@ import { fetchAssets } from '~/features/Markets/Assets.query'
 //     'public, s-maxage=10, stale-while-revalidate=59'
 //   )
 // })
-
 export async function getStaticProps() {
   const queryClient = new QueryClient()
 
-  console.log('prefetch')
-  await queryClient.prefetchQuery(['assets'], () => fetchAssets({ setShowPythBanner: () => { }, mainCloneClient: null, networkEndpoint: IS_DEV ? DEV_RPCs[0].rpc_url : MAIN_RPCs[0].rpc_url }))
+  if (IS_LOCAL_DEVELOPMENT) {
+    console.log('prefetch')
+    await queryClient.prefetchQuery(['assets'], () => fetchAssets({ setShowPythBanner: () => { }, mainCloneClient: null, networkEndpoint: IS_DEV ? DEV_RPCs[0].rpc_url : MAIN_RPCs[0].rpc_url }))
+  }
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-
       //cached time
-      revalidate: 20,
+      revalidate: 12,
     },
   }
-
-  // const res = await fetchPythPriceHistory(
-  //   'Crypto.ARB/USD', '1D'
-  // )
-  // return { props: { data: res } }
 }
 
 const Home = ({ dehydratedState }: { dehydratedState: DehydratedState }) => {
