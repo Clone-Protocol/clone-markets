@@ -124,13 +124,11 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   }
 
   useEffect(() => {
-    if (assetIndex) {
-      setisBuy(true)
-      setOpenOrderDetails(false)
-      initData()
-      refetch()
-      trigger()
-    }
+    setisBuy(true)
+    setOpenOrderDetails(false)
+    initData()
+    refetch()
+    trigger()
   }, [assetIndex])
 
   const { mutateAsync } = useTradingMutation(publicKey, (txHash: string) => {
