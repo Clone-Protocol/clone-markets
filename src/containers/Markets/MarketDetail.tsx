@@ -64,7 +64,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 		<>
 			{asset ? (
 				<Stack mb={2} direction="column" pl={isMobileOnSize ? 0 : 5} pt={isMobileOnSize ? 5 : 1} pb={1} maxWidth={isMobileOnSize ? '380px' : '750px'}>
-					<GoBackButton onClick={() => router.back()}>
+					<GoBackButton onClick={() => router.push('/')}>
 						<GoBackIcon /><Typography variant='p'>clAssets</Typography>
 					</GoBackButton>
 					<Box>
