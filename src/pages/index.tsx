@@ -13,6 +13,13 @@ import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/reac
 import { fetchAssets } from '~/features/Markets/Assets.query'
 
 //SSR
+// export async function getServerSideProps({ req, res }) {
+//   res.setHeader(
+//     'Cache-Control',
+//     'public, s-maxage=10, stale-while-revalidate=59'
+//   )
+// })
+
 export async function getStaticProps() {
   const queryClient = new QueryClient()
 
@@ -24,7 +31,7 @@ export async function getStaticProps() {
       dehydratedState: dehydrate(queryClient),
 
       //cached time
-      revalidate: 10,
+      revalidate: 20,
     },
   }
 

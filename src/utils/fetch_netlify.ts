@@ -10,7 +10,7 @@ export interface StatsData {
 }
 
 export const fetchStatsData = async (interval: string, filter: string): Promise<StatsData[]> => {
-    const response = await axios.get(`/.netlify/functions/get-pool-stats?interval=${interval}&filter=${filter}`)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-pool-stats?interval=${interval}&filter=${filter}`)
     return response.data as StatsData[]
 }
 
