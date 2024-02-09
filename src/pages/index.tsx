@@ -8,10 +8,10 @@ import GetUSDiBadge from '~/components/Markets/GetUSDiBadge'
 import PortfolioBalance from '~/components/Markets/PortfolioBalance'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { DEV_RPCs, IS_DEV, MAIN_RPCs } from '~/data/networks'
-// import { fetchPythPriceHistory } from '~/utils/pyth'
 import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
 import { fetchAssets } from '~/features/Markets/Assets.query'
-import { IS_LOCAL_DEVELOPMENT } from '~/utils/constants'
+import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -20,10 +20,10 @@ import { IS_LOCAL_DEVELOPMENT } from '~/utils/constants'
 //     'public, s-maxage=10, stale-while-revalidate=59'
 //   )
 // })
-export async function getStaticProps() {
+export const getStaticProps = (async () => {
   const queryClient = new QueryClient()
 
-  if (IS_LOCAL_DEVELOPMENT) {
+  if (IS_NOT_LOCAL_DEVELOPMENT) {
     console.log('prefetch')
     await queryClient.prefetchQuery(['assets'], () => fetchAssets({ setShowPythBanner: () => { }, mainCloneClient: null, networkEndpoint: IS_DEV ? DEV_RPCs[0].rpc_url : MAIN_RPCs[0].rpc_url }))
   }
@@ -35,9 +35,11 @@ export async function getStaticProps() {
       revalidate: 12,
     },
   }
-}
+}) satisfies GetStaticProps<{
+  dehydratedState: DehydratedState
+}>
 
-const Home = ({ dehydratedState }: { dehydratedState: DehydratedState }) => {
+const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { publicKey } = useWallet()
 
   // const queryClient = getQueryClient()
