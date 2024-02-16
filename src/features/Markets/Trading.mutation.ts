@@ -12,6 +12,7 @@ import { useAtomValue } from 'jotai'
 import { priorityFee } from '../globalAtom'
 import { FeeLevel } from '~/data/networks'
 import { AnchorProvider } from '@coral-xyz/anchor'
+import { Pools } from 'clone-protocol-sdk/sdk/generated/clone'
 
 export const callTrading = async ({
 	program,
@@ -119,6 +120,22 @@ export const callTrading = async ({
 		treasuryCollateralAssociatedTokenInfo.address,
 		treasuryOnassetAssociatedTokenInfo.address,
 	))
+
+	//socket handler
+	const subscriptionId = program.provider.connection.onAccountChange(
+		program.getPoolsAddress(),
+		async (updatedAccountInfo, context) => {
+			console.log("Updated account info: ", updatedAccountInfo)
+			const pools = await Pools.fromAccountInfo(updatedAccountInfo, 0)[0]
+			// set pools to jotai global state
+
+			// console.log(pools)
+
+			await program.provider.connection.removeAccountChangeListener(subscriptionId);
+		},
+		"confirmed"
+	)
+	console.log('Starting web socket, subscription ID: ', subscriptionId);
 
 	const result = await sendAndConfirm(program.provider as AnchorProvider, ixns, setTxState, feeLevel, retryFunc)
 	return {

@@ -98,7 +98,7 @@ export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled =
 export const fetchUserBalance = async ({ program, userPubKey }: { program: CloneClient, userPubKey: PublicKey | null }) => {
 	if (!userPubKey) return []
 
-	// console.log('fetchUserBalance')
+	console.log('fetchUserBalance')
 	const pools = await program.getPools();
 	const priceMap = await getPythOraclePrices(program.provider.connection);
 
