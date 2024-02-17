@@ -151,7 +151,7 @@ const PieChartAlt: React.FC<ChartProps> = ({
       </Box>
       {selectedIdx >= 0 &&
         <CloseWrapper onClick={() => clearPie()}>
-          <CloseIcon fontSize='large' sx={{ color: selectedIdx === STABLE_COIN_INDEX ? '#fff' : `${ASSETS[data[selectedIdx].key].mainColor}` }} />
+          <CloseIcon fontSize='large' sx={{ color: selectedIdx === STABLE_COIN_INDEX ? '#fff' : `${ASSETS[selectedIdx].mainColor}` }} />
         </CloseWrapper>
       }
     </Wrapper>
