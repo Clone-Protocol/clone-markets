@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ErrorInfo, ReactNode } from 'react'
 import { Box, Container, Stack, Typography } from '@mui/material'
 import { StyledSection } from './Layout';
 import { FailedStatusBox } from '~/components/Common/TransactionStateSnackbar';
@@ -6,19 +6,24 @@ import SupportDiscordIcon from 'public/images/support-button-discord.svg'
 import Image from 'next/image';
 import * as Sentry from "@sentry/nextjs";
 
-class ErrorBoundary extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.state = { hasError: false };
-  }
+type Props = {
+  children: ReactNode;
+};
+type State = {
+  hasError: boolean;
+};
 
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
+class ErrorBoundary extends React.Component<Props, State> {
+  public state: State = {
+    hasError: false,
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
     return { hasError: true };
   }
-  componentDidCatch(error, errorInfo) {
-    console.log({ error, errorInfo })
-    // You can use your own error logging service here
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
     Sentry.captureException(error);
   }
 
