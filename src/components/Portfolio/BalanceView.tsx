@@ -43,7 +43,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 			<Box width='200px' mb='40px'>
 				<Box><Typography variant='p_lg' color='#c4b5fd'>{selectedTitle}</Typography></Box>
 				<Box>
-					<Typography variant='h1' fontWeight={500}>${selectedonusdAmount.toLocaleString()}</Typography>
+					<Typography variant='h1' fontWeight={500}>${selectedonusdAmount.toLocaleString("en-US")}</Typography>
 				</Box>
 			</Box>
 			<Box mb='-30px'>
