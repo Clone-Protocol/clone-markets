@@ -8,6 +8,7 @@ import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { RankIndex } from '~/components/Points/RankItems'
 import { shortenAddress } from '~/utils/address'
 import { useRankingQuery } from '~/features/Points/Ranking.query'
+import { formatLocaleAmount } from '~/utils/numbers'
 
 const RankingList: React.FC = () => {
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
@@ -73,7 +74,7 @@ let columns: GridColDef[] = [
     headerName: 'Liquidity Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_lg'>{params.value?.toLocaleString()}</Typography>
+      return <Typography variant='p_lg'>{formatLocaleAmount(params.value)}</Typography>
     },
   },
   {
@@ -83,7 +84,7 @@ let columns: GridColDef[] = [
     headerName: 'Trade Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_lg'>{params.value?.toLocaleString()}</Typography>
+      return <Typography variant='p_lg'>{formatLocaleAmount(params.value)}</Typography>
     },
   },
   {
@@ -93,7 +94,7 @@ let columns: GridColDef[] = [
     headerName: 'Social Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_lg'>{params.value?.toLocaleString()}</Typography>
+      return <Typography variant='p_lg'>{formatLocaleAmount(params.value)}</Typography>
     },
   },
   {
@@ -103,7 +104,7 @@ let columns: GridColDef[] = [
     headerName: 'Total Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_lg'>{params.value?.toLocaleString()}</Typography>
+      return <Typography variant='p_lg'>{formatLocaleAmount(params.value)}</Typography>
     },
   },
 ]

@@ -9,7 +9,7 @@ import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { getCollateralAccount } from "~/utils/token_accounts"
 import { calculatePoolAmounts } from "clone-protocol-sdk/sdk/src/utils"
-import { getPythOraclePrices } from '~/utils/pyth'
+import { fetchPythPriceHistory, getPythOraclePrices } from '~/utils/pyth'
 import { Status } from 'clone-protocol-sdk/sdk/generated/clone'
 import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX } from './filterAtom'
 
@@ -112,7 +112,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	const result: BalanceList[] = []
 	const collateralScale = program.clone.collateral.scale
 	for (let i = 0; i < Number(pools.pools.length); i++) {
-		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(i)
+		const { tickerName, tickerSymbol, tickerIcon, assetType, pythSymbol } = assetMapping(i)
 		const pool = pools.pools[i]
 		const { poolCollateral, poolOnasset } = calculatePoolAmounts(
 			fromScale(pool.collateralIld, collateralScale),
@@ -125,6 +125,14 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 		const balanceQueryResult = onassetBalancesResult[i];
 		const assetBalance = balanceQueryResult.status === "fulfilled" ? balanceQueryResult.value : 0;
 
+		// calculate change 24h
+		const priceData = await fetchPythPriceHistory(
+			pythSymbol, '1D'
+		)
+		const openPrice = priceData[0] ? Number(priceData[0].price) : 0
+		const closePrice = priceData[0] ? Number(priceData.at(-1)!.price) : 0
+		const change24h = priceData[0] ? (closePrice / openPrice - 1) * 100 : 0
+
 		if (assetBalance > 0) {
 			result.push({
 				id: i,
@@ -132,7 +140,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 				tickerSymbol,
 				tickerIcon,
 				price,
-				changePercent: 0,
+				changePercent: change24h,
 				assetType: assetType,
 				assetBalance,
 				onusdBalance: price * assetBalance,

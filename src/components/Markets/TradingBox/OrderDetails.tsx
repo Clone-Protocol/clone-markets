@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles'
 import InfoTooltip from '~/components/Common/InfoTooltip'
 import { ON_USD } from '~/utils/constants';
 import { TooltipTexts } from '~/data/tooltipTexts';
+import { formatLocaleAmount } from '~/utils/numbers';
 
 interface Props {
   isBuy: boolean,
@@ -41,8 +42,8 @@ const OrderDetails: React.FC<Props> = ({ isBuy, onusdAmount, onassetPrice, onass
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant='p' color='#c5c7d9' display='flex' alignItems='center'>Minimum received <InfoTooltip title={TooltipTexts.minimumReceived} color='#8988a3' /></Typography>
         <div style={{ lineHeight: '10px', textAlign: 'right' }}>
-          <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(minReceived) ? '0' : minReceived?.toLocaleString()} {outputSymbol}</Typography></Box>
-          <Box><Typography variant='p_sm' color='#8988a3'>Slippage tolerance: {slippage?.toLocaleString()}%</Typography></Box>
+          <Box><Typography variant='p' fontWeight={600} color='#c4b5fd'>{isNaN(minReceived) ? '0' : formatLocaleAmount(minReceived)} {outputSymbol}</Typography></Box>
+          <Box><Typography variant='p_sm' color='#8988a3'>Slippage tolerance: {formatLocaleAmount(slippage)}%</Typography></Box>
         </div>
       </Stack>
       <Stack mt="10px" direction="row" justifyContent="space-between" alignItems="center">

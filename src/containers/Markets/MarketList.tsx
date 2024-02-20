@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Image from 'next/image'
-import { formatDollarAmount } from '~/utils/numbers'
+import { formatDollarAmount, formatLocaleAmount } from '~/utils/numbers'
 import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
 import { ON_USD } from '~/utils/constants'
@@ -70,7 +70,7 @@ const MarketList = () => {
 						<PoolStatusButton status={params.row.status} />
 						:
 						<Box>
-							<Typography variant='p_xlg'>${params.value?.toLocaleString()}</Typography>
+							<Typography variant='p_xlg'>${formatLocaleAmount(params.value)}</Typography>
 							{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
 						</Box>
 					}

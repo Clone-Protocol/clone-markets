@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { showPoolStatus } from './PoolStatus'
 import { DEFAULT_ASSET_LINK } from '~/data/assets'
+import { formatLocaleAmount } from '~/utils/numbers'
 
 interface GridProps {
   headers: GridColDef[],
@@ -168,5 +169,5 @@ export const CellTicker: React.FC<TickerType> = ({ tickerIcon, tickerName, ticke
 )
 
 export const CellDigitValue = ({ value, symbol }: { value: string | undefined, symbol?: string }) => (
-  <Typography variant='p'>{value && value.toLocaleString(undefined, { maximumFractionDigits: 5 })} {symbol}</Typography>
+  <Typography variant='p'>{value && formatLocaleAmount(value, 5)} {symbol}</Typography>
 )

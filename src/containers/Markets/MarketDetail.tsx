@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useMarketDetailQuery } from '~/features/Markets/MarketDetail.query'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
-import { formatDollarAmount } from '~/utils/numbers'
+import { formatDollarAmount, formatLocaleAmount } from '~/utils/numbers'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
 import { useEffect, useState } from 'react'
@@ -87,7 +87,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 							<Box width='160px'>
 								<Box><Typography variant='p' color='#8988a3'>Volume (24h)</Typography></Box>
 								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${asset.volume.toLocaleString()} {ON_USD}</Typography>
+									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${formatLocaleAmount(asset.volume)} {ON_USD}</Typography>
 								</Box>
 							</Box>
 							<Box width='160px'>
@@ -115,13 +115,13 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Balance</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{myData.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {asset.tickerSymbol}</Typography>
+											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatLocaleAmount(myData.balance, 4)} {asset.tickerSymbol}</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>
 										<Box><Typography variant='p' color='#8988a3'>Value</Typography></Box>
 										<Box mt='8px'>
-											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${myData.value.toLocaleString()} {ON_USD}</Typography>
+											<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>${formatLocaleAmount(myData.value)} {ON_USD}</Typography>
 										</Box>
 									</Box>
 									<Box width='160px'>

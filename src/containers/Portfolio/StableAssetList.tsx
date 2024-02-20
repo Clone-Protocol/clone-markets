@@ -10,6 +10,7 @@ import { Collateral, collateralMapping } from '~/data/assets'
 import { useSetAtom } from 'jotai'
 import { mintUSDi } from '~/features/globalAtom'
 import { useMemo, useState } from 'react'
+import { formatLocaleAmount } from '~/utils/numbers'
 
 interface Props {
 	balance: Balance
@@ -79,7 +80,7 @@ let columns: GridColDef[] = [
 			return (
 				<Stack width='78px' textAlign='right'>
 					<Box>
-						<Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+						<Typography variant='p_xlg'>${formatLocaleAmount(params.row.onusdBalance)}</Typography>
 					</Box>
 				</Stack>
 			)

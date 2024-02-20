@@ -7,6 +7,7 @@ import { usePointStatusQuery } from '~/features/Points/PointStatus.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { BlackDefault, OpaqueDefault } from '~/components/Common/OpaqueArea'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
+import { formatLocaleAmount } from '~/utils/numbers'
 
 const MyPointStatus = () => {
   const { publicKey } = useWallet()
@@ -37,7 +38,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='h3' fontWeight={500}>
-              {infos?.totalPoints ? infos.totalPoints.toLocaleString() : '0'}
+              {infos?.totalPoints ? formatLocaleAmount(infos.totalPoints) : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -50,7 +51,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos?.lpPoints ? infos.lpPoints.toLocaleString() : '0'}
+              {infos?.lpPoints ? formatLocaleAmount(infos.lpPoints) : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -61,7 +62,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos?.tradePoints ? infos.tradePoints.toLocaleString() : '0'}
+              {infos?.tradePoints ? formatLocaleAmount(infos.tradePoints) : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -72,7 +73,7 @@ const MyPointStatus = () => {
           </Box>
           <StatusValue>
             <Typography variant='p_xlg'>
-              {infos?.socialPoints ? infos.socialPoints.toLocaleString() : '0'}
+              {infos?.socialPoints ? formatLocaleAmount(infos.socialPoints) : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
