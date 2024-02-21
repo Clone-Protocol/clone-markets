@@ -73,7 +73,7 @@ const StyledSection = styled('section')`
 
 const ShowTradingBtn = styled(Box)`
   position: fixed;
-  bottom: 48px;
+  bottom: 50px;
   width: 95%;
   height: 36px;
   color: #fff;

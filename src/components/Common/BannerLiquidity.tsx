@@ -5,12 +5,15 @@ import LiquidityIcon from 'public/images/logo-liquidity.svg'
 import CloseIcon from 'public/images/close-round.svg'
 import Image from 'next/image'
 import { LIQUIDITY_APP } from '~/data/social'
+import { usePathname } from 'next/navigation'
 
 const BannerLiquidity = ({ open, handleClose }: Props) => {
+  const pathname = usePathname()
+  const isTradePage = pathname?.startsWith('/trade')
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
   return open ? (
-    <Box zIndex={99} position='absolute' right={isMobileOnSize ? '12px' : '36px'} bottom={isMobileOnSize ? '66px' : '36px'} sx={{ background: '#000' }}>
+    <Box zIndex={99} position='absolute' right={isMobileOnSize ? '12px' : '36px'} bottom={isMobileOnSize ? isTradePage ? '100px' : '63px' : '36px'} sx={{ background: '#000' }}>
       <StackWrapper direction='row' alignItems='center'>
         <Box width='109px' height='100%' display='flex' justifyContent='center' alignItems='center' sx={{ background: '#000', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px' }}>
           <Image src={LiquidityIcon} alt='liquidity' width={82} height={22} />

@@ -50,7 +50,7 @@ const NaviMenu = () => {
 export const MobileNaviMenu = () => {
   return (
     <Fade in timeout={1500}>
-      <Box display='flex' justifyContent='center' bgcolor="#040414" paddingBottom='15px'>
+      <Box display='flex' height='48px' mx='7px' justifyContent='center' bgcolor="#000" borderRadius='20px' border='solid 1px #343441' mb='10px'>
         <CommonMenu />
       </Box>
     </Fade>
