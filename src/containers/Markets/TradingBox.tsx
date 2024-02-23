@@ -24,7 +24,7 @@ const TradingBox: React.FC<Props> = ({ assetId, onSelectAssetId }) => {
 	const SwapSettingDialog = dynamic(() => import('~/components/Markets/TradingBox/Dialogs/SwapSettingDialog'), { ssr: false })
 
 	const chooseAsset = useCallback((id: number) => {
-		onSelectAssetId(id)
+		// onSelectAssetId(id)
 		setShowSearchAssetDlog(false)
 		router.push(`/trade/${ASSETS[id].ticker}`)
 	}, [onSelectAssetId])

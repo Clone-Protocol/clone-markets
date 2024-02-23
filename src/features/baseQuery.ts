@@ -1,4 +1,4 @@
-import { Clone as CloneAccount } from 'clone-protocol-sdk/sdk/generated/clone'
+import { Clone as CloneAccount, Pools } from 'clone-protocol-sdk/sdk/generated/clone'
 import { PublicKey, Connection, Commitment } from "@solana/web3.js";
 import fetchRetry from "fetch-retry";
 import fetch from "cross-fetch";
@@ -22,8 +22,7 @@ export const getCloneClient = async (networkEndpoint: string, wallet?: AnchorWal
   const connection = new Connection(networkEndpoint, {
     commitment: 'confirmed',
     fetch: fetchWithRetry,
-    // @TODO: set websocket endpoint
-    // wsEndpoint: env_config.WS_ENDPOINT,
+    wsEndpoint: process.env.NEXT_PUBLIC_NETWORK_WSS_HELIUS,
   })
 
   let provider
@@ -56,6 +55,26 @@ export const getCloneClient = async (networkEndpoint: string, wallet?: AnchorWal
   );
 
   const program = new CloneClient(provider, cloneAccount, programId)
+
+  //@TEST
+  // if (wallet) {
+  //   const subscriptionId = connection.onAccountChange(
+  //     program.getPoolsAddress(),
+  //     async (updatedAccountInfo, context) => {
+  //       console.log("Updated account info: ", updatedAccountInfo)
+  //       const pools = await Pools.fromAccountInfo(updatedAccountInfo, 0)[0]
+  //       // set pools to jotai global state
+
+  //       // console.log(pools)
+  //     },
+  //     "confirmed"
+  //   )
+  //   console.log('Starting web socket, subscription ID: ', subscriptionId);
+
+  //   // await connection.removeAccountChangeListener(subscriptionId);
+  // }
+
+
   return {
     cloneClient: program,
     connection,

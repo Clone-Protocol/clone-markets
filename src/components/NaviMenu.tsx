@@ -3,12 +3,10 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import { IS_DEV } from '~/data/networks'
-import { DEFAULT_ASSET_LINK } from '~/data/assets'
 import { PointsStarIcon } from './Common/SvgIcons'
 
 const CommonMenu = () => {
   const pathname = usePathname()
-  // const router = useRouter()
   // router.prefetch(DEFAULT_ASSET_LINK)
   // router.prefetch('/clportfolio')
 

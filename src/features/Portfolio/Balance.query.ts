@@ -22,7 +22,7 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 		onusdVal = Number(onusdBalance.value.amount) * devnetConversionFactor;
 	}
 
-	// if not default index
+	// if not default index - tradingComp
 	if (index !== -1) {
 		const pools = await program.getPools();
 		const pool = pools.pools[index];
