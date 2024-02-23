@@ -20,7 +20,7 @@ const BridgeDialog = ({ open, handleClose }: { open: boolean, handleClose: () =>
   return (
     <>
       <Dialog open={open} onClose={close} TransitionComponent={FadeTransition} maxWidth={463}>
-        <DialogContent sx={{ backgroundColor: '#080018', borderRadius: '10px', padding: '15px', height: '800px', overflowX: 'hidden', width: { xs: '100%', md: '350px' } }}>
+        <DialogContent sx={{ backgroundColor: '#080018', borderRadius: '10px', padding: '15px', height: isInitStep ? '500px' : '800px', overflowX: 'hidden', width: { xs: '100%', md: '350px' } }}>
           <BoxWrapper>
             <Box position='absolute' top='0px' width='335px' padding='12px' paddingTop='25px' zIndex={999} sx={{ backgroundColor: '#080018' }}>
               <Stack direction='row' justifyContent='space-between' >
