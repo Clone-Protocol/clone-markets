@@ -22,7 +22,6 @@ export const getCloneClient = async (networkEndpoint: string, wallet?: AnchorWal
   const connection = new Connection(networkEndpoint, {
     commitment: 'confirmed',
     fetch: fetchWithRetry,
-    wsEndpoint: process.env.NEXT_PUBLIC_NETWORK_WSS_HELIUS,
   })
 
   let provider
