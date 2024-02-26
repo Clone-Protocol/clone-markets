@@ -19,20 +19,20 @@ const BridgeDialog = ({ open, handleClose }: { open: boolean, handleClose: () =>
 
   return (
     <>
-      <Dialog open={open} onClose={close} TransitionComponent={FadeTransition} maxWidth={463}>
-        <DialogContent sx={{ backgroundColor: '#080018', borderRadius: '10px', paddingY: '15px', paddingX: '0px', height: isInitStep ? '500px' : '840px', overflowX: 'hidden', width: { xs: '100%', md: '350px' } }}>
+      <Dialog open={open} onClose={close} TransitionComponent={FadeTransition} maxWidth={463} sx={{ overflowX: 'hidden' }}>
+        <DialogContent sx={{ backgroundColor: '#080018', borderRadius: '10px', paddingY: '15px', paddingX: '0px', height: isInitStep ? '500px' : '540px', overflowX: 'hidden', width: { xs: '100%', md: '340px' } }}>
           <BoxWrapper>
-            <Box position='absolute' top='0px' width='330px' paddingTop='15px' zIndex={999} sx={{ backgroundColor: '#080018' }}>
+            <Box position='absolute' top='0px' width='100%' paddingTop='15px' zIndex={999} sx={{ backgroundColor: '#080018' }}>
               <Stack direction='row' justifyContent='space-between' >
                 {isInitStep ?
                   <TitleBox ml='25px' mt='10px'><Typography variant='p_lg'>Bridge</Typography></TitleBox>
                   :
-                  <Box sx={{ cursor: 'pointer' }} ml='25px' mt='10px'>
+                  <Box sx={{ cursor: 'pointer' }} ml='20px' mt='10px'>
                     <Image src={BackIcon} alt='back' onClick={() => setIsInitStep(true)} />
                   </Box>
                 }
 
-                <Box>
+                <Box mr='15px'>
                   <CloseButton handleClose={close} />
                 </Box>
               </Stack>
