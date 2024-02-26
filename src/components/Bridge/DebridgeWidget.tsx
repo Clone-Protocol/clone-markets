@@ -43,7 +43,7 @@ const DebridgeWidget = () => {
     <>
       <Script src="https://app.debridge.finance/assets/scripts/widget.js" onLoad={onLoad} />
       {showLoading && <Box position='absolute' top='55px' ml='15px' width='315px'><LoadingProgress /></Box>}
-      <div id="debridgeWidget" style={{ marginTop: '0px' }}></div>
+      <div id="debridgeWidget" style={{ marginTop: '-45px' }}></div>
     </>
   )
 }
