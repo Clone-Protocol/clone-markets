@@ -27,9 +27,10 @@ const BridgeDialog = ({ open, handleClose }: { open: boolean, handleClose: () =>
                 {isInitStep ?
                   <TitleBox ml='25px' mt='10px'><Typography variant='p_lg'>Bridge</Typography></TitleBox>
                   :
-                  <Box sx={{ cursor: 'pointer' }} ml='20px' mt='10px'>
-                    <Image src={BackIcon} alt='back' onClick={() => setIsInitStep(true)} />
-                  </Box>
+                  <Box></Box>
+                  // <Box sx={{ cursor: 'pointer' }} ml='20px' mt='10px'>
+                  //   <Image src={BackIcon} alt='back' onClick={() => setIsInitStep(true)} />
+                  // </Box>
                 }
 
                 <Box mr='15px'>
@@ -42,7 +43,7 @@ const BridgeDialog = ({ open, handleClose }: { open: boolean, handleClose: () =>
               <>
                 <Box mt='80px'><Image src={BridgeIcon} alt='icStatus' /></Box>
 
-                <Box lineHeight={1} my='12px'>
+                <Box lineHeight={1} m='0 auto' my='12px' maxWidth='290px'>
                   <Typography variant='p_lg'>
                     Bridge your funds to Solana and dive into multi-chain trading experience with Clone.
                   </Typography>
@@ -53,9 +54,9 @@ const BridgeDialog = ({ open, handleClose }: { open: boolean, handleClose: () =>
                 <Box mt='50px'><Image src={PoweredByDebridge} alt='powered_by_pyth' /></Box>
               </>
               :
-              <>
+              <Box mt='10px'>
                 <DebridgeWidget />
-              </>
+              </Box>
             }
           </BoxWrapper>
         </DialogContent>
