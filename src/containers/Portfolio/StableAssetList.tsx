@@ -7,9 +7,10 @@ import withSuspense from '~/hocs/withSuspense'
 import { Balance } from '~/features/Portfolio/Balance.query'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Collateral, collateralMapping } from '~/data/assets'
-import { useSetAtom } from 'jotai'
-import { mintUSDi } from '~/features/globalAtom'
 import { useMemo, useState } from 'react'
+import { formatLocaleAmount } from '~/utils/numbers'
+import { ON_USD } from '~/utils/constants'
+import BridgeDialog from '~/components/Bridge/BridgeDialog'
 
 interface Props {
 	balance: Balance
@@ -20,7 +21,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 	const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 	const onUSDInfo = collateralMapping(Collateral.onUSD)
 	const [assets, setAssets] = useState<any>([])
-	const setMintUsdi = useSetAtom(mintUSDi)
+	const [showBridge, setShowBridge] = useState(false)
 
 	useMemo(() => {
 		if (publicKey && balance) {
@@ -31,7 +32,7 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				tickerSymbol: onUSDInfo.collateralSymbol,
 				onusdBalance: balance.onusdVal,
 				price: 1.0,
-				setMintUsdi
+				setShowBridge
 			}])
 		}
 	}, [publicKey, balance])
@@ -54,6 +55,8 @@ const StableAssetList: React.FC<Props> = ({ balance }) => {
 				noAutoHeight={!publicKey}
 				customNoResultsOverlay={() => !publicKey ? CustomNoRowsOverlay('Please connect wallet.') : CustomNoOnAssetOverlay()}
 			/>
+
+			<BridgeDialog open={showBridge} handleClose={() => { setShowBridge(false) }} />
 		</>
 	) : <></>
 }
@@ -79,7 +82,7 @@ let columns: GridColDef[] = [
 			return (
 				<Stack width='78px' textAlign='right'>
 					<Box>
-						<Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+						<Typography variant='p_xlg'>${formatLocaleAmount(params.row.onusdBalance)}</Typography>
 					</Box>
 				</Stack>
 			)
@@ -110,8 +113,7 @@ let columns: GridColDef[] = [
 		renderCell(params: GridRenderCellParams<string>) {
 
 			return (
-				<></>
-				// <GetUSDButton onClick={() => params.row.setMintUsdi(true)}><Typography variant='p'>Get {ON_USD}</Typography></GetUSDButton>
+				<GetUSDButton onClick={() => { params.row.setShowBridge(true) }}><Typography variant='p'>Get more {ON_USD}</Typography></GetUSDButton>
 			)
 		},
 	},
@@ -134,7 +136,7 @@ const GetUSDButton = styled(Button)`
 	width: 108px;
 	height: 28px;
 	border-radius: 100px;
-	border: solid 1px ${(props) => props.theme.basis.melrose};
+	border: solid 1px ${(props) => props.theme.basis.portGore};
 	background-color: rgba(155, 121, 252, 0.15);
 	color: #fff;
 	line-height: 29px;

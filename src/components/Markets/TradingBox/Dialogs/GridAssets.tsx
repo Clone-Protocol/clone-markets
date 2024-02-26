@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { LoadingProgress } from '~/components/Common/Loading'
 import { useAssetsQuery } from '~/features/Markets/Assets.query'
 import { useCallback } from 'react'
+import { formatLocaleAmount } from '~/utils/numbers'
 
 interface Props {
 	onChoose: (id: number) => void
@@ -62,7 +63,7 @@ let columns: GridColDef[] = [
 		headerName: '',
 		flex: 1,
 		renderCell(params: GridRenderCellParams<string>) {
-			return <Box mr='5px'><Typography variant='p_lg' color='#c5c7d9'>{params.value?.toLocaleString()}</Typography></Box>
+			return <Box mr='5px'><Typography variant='p_lg' color='#c5c7d9'>{formatLocaleAmount(params.value)}</Typography></Box>
 		},
 	},
 ]

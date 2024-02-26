@@ -16,7 +16,7 @@ export const RankIndex = ({ rank }: { rank: number }) => {
   }
 }
 
-export const RankIndexForStatus = ({ rank }: { rank: number }) => {
+export const RankIndexForStatus = ({ rank }: { rank: number | undefined }) => {
   if (rank === 1) {
     return <Image src={RankingIcon1} alt="ranking" />
   } else if (rank === 2) {

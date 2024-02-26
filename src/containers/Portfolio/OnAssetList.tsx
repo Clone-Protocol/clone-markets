@@ -16,6 +16,7 @@ import { ASSETS } from '~/data/assets'
 import { useCallback } from 'react'
 import { ON_USD } from '~/utils/constants'
 import { PoolStatusButton, showPoolStatus } from '~/components/Common/PoolStatus'
+import { formatLocaleAmount } from '~/utils/numbers'
 
 interface Props {
   assets: BalanceList[]
@@ -57,10 +58,10 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
           :
           <Stack lineHeight={1.2} width='120px' textAlign='right'>
             <Box display='flex' justifyContent='flex-end'>
-              <Typography variant='p_xlg'>${params.row.onusdBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+              <Typography variant='p_xlg'>${formatLocaleAmount(params.row.onusdBalance)}</Typography>
             </Box>
             <Box display='flex' justifyContent='flex-end'>
-              <Typography variant='p_lg' color='#8988a3'>{params.row.assetBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })} {params.row.tickerSymbol}</Typography>
+              <Typography variant='p_lg' color='#8988a3'>{formatLocaleAmount(params.row.assetBalance, 4)} {params.row.tickerSymbol}</Typography>
             </Box>
           </Stack>
       }
@@ -76,7 +77,7 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
         return (
           <Stack lineHeight={1.1}>
             <Box display='flex' justifyContent='flex-end'>
-              <Typography variant='p_xlg'>${params.row.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Typography>
+              <Typography variant='p_xlg'>${formatLocaleAmount(params.row.price)}</Typography>
             </Box>
             {percent >= 0 ? (
               <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
@@ -86,7 +87,7 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
             )
               :
               (<Box color='#ff0084' display='flex' alignItems='center' gap={1}>
-                <Typography variant='p_lg'>-{percent.toFixed(2)}%</Typography>
+                <Typography variant='p_lg'>{percent.toFixed(2)}%</Typography>
                 <Image src={ArrowDownward} alt='arrowDown' />
               </Box>
               )}

@@ -1,6 +1,6 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { CloneClient, toCloneScale, toScale } from 'clone-protocol-sdk/sdk/src/clone'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useClone } from '~/hooks/useClone'
 import { getCollateralAccount, getTokenAccount } from '~/utils/token_accounts'
 import { createAssociatedTokenAccountInstruction } from "@solana/spl-token";
@@ -12,6 +12,7 @@ import { useAtomValue } from 'jotai'
 import { priorityFee } from '../globalAtom'
 import { FeeLevel } from '~/data/networks'
 import { AnchorProvider } from '@coral-xyz/anchor'
+import { Pools } from 'clone-protocol-sdk/sdk/generated/clone'
 
 export const callTrading = async ({
 	program,
@@ -19,7 +20,8 @@ export const callTrading = async ({
 	setTxState,
 	data,
 	feeLevel,
-	retryFunc
+	retryFunc,
+	queryClient
 }: CallTradingProps) => {
 	if (!userPubKey) throw new Error('no user public key')
 
@@ -120,6 +122,23 @@ export const callTrading = async ({
 		treasuryOnassetAssociatedTokenInfo.address,
 	))
 
+	//socket handler
+	const subscriptionId = program.provider.connection.onAccountChange(
+		program.getPoolsAddress(),
+		async (updatedAccountInfo) => {
+			console.log("Updated account info: ", updatedAccountInfo)
+			// const pools = await Pools.fromAccountInfo(updatedAccountInfo, 0)[0]
+			// console.log(pools)
+
+			//if success, invalidate query
+			queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
+
+			await program.provider.connection.removeAccountChangeListener(subscriptionId);
+		},
+		"confirmed"
+	)
+	console.log('Starting web socket, subscription ID: ', subscriptionId);
+
 	const result = await sendAndConfirm(program.provider as AnchorProvider, ixns, setTxState, feeLevel, retryFunc)
 	return {
 		result
@@ -141,6 +160,7 @@ interface CallTradingProps {
 	data: FormData
 	feeLevel: FeeLevel
 	retryFunc?: (txHash: string) => void
+	queryClient: QueryClient
 }
 export function useTradingMutation(userPubKey: PublicKey | null, retryFunc?: (txHash: string) => void) {
 	const queryClient = useQueryClient()
@@ -151,10 +171,10 @@ export function useTradingMutation(userPubKey: PublicKey | null, retryFunc?: (tx
 
 	if (wallet) {
 		return useMutation({
-			mutationFn: async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, feeLevel, retryFunc }),
-			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
-			}
+			mutationFn: async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, feeLevel, retryFunc, queryClient }),
+			// onSuccess: () => {
+			// 	queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
+			// }
 		})
 	} else {
 		return useMutation((_: FormData) => funcNoWallet())

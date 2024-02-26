@@ -3,6 +3,7 @@ import { FormControl, Stack, Box, Button, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Image from 'next/image'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import { formatLocaleAmount } from '~/utils/numbers';
 
 interface Props {
 	title: string | null
@@ -26,13 +27,13 @@ const PairInput: React.FC<Props> = ({ title, tickerIcon, ticker, balance, balanc
 			<Stack direction="row" justifyContent="space-between">
 				<Box><Typography variant='p_lg' color='#8988a3'>{title}</Typography></Box>
 				{!balanceDisabled ? <Box display='flex' alignItems='center'>
-					<Typography variant='p' color='#8988a3'>Balance: </Typography> <Typography variant='p' color='#c4b5fd' ml='5px'>{balance?.toLocaleString(undefined, { maximumFractionDigits: 4 })}</Typography>
+					<Typography variant='p' color='#8988a3'>Balance: </Typography> <Typography variant='p' color='#c4b5fd' ml='5px'>{formatLocaleAmount(balance, 4)}</Typography>
 					<MaxButton onClick={() => onMax && onMax(balance!)}>Max</MaxButton></Box> : <></>}
 			</Stack>
 			<FormStack direction="row" justifyContent="space-between" alignItems="center">
 				<Box display='flex' flexDirection='column' alignItems='flex-start' pl='5px' sx={valueDisabled ? { cursor: 'not-allowed' } : { cursor: 'default' }}>
 					<InputAmount id="ip-amount" type="number" sx={value && value > 0 ? { color: '#fff' } : { color: '#8988a3' }} placeholder="0.00" min={0} max={max} value={value} disabled={valueDisabled} onChange={onChange} />
-					<Box><Typography variant='p' color='#8988a3'>${!dollarValue || isNaN(dollarValue) ? 0 : dollarValue?.toLocaleString()}</Typography></Box>
+					<Box><Typography variant='p' color='#8988a3'>${!dollarValue || isNaN(dollarValue) ? 0 : formatLocaleAmount(dollarValue)}</Typography></Box>
 				</Box>
 
 				{!tickerClickable ?

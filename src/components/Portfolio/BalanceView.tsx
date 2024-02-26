@@ -7,6 +7,7 @@ import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Po
 import { useEffect, useState } from 'react'
 import { FilterTypeColorMap, FilterTypeMap, PieItem } from '~/data/filter'
 import { ASSETS } from '~/data/assets';
+import { formatLocaleAmount } from '~/utils/numbers';
 
 interface Props {
 	data: PieItem[]
@@ -43,7 +44,7 @@ const BalanceView: React.FC<Props> = ({ data }) => {
 			<Box width='200px' mb='40px'>
 				<Box><Typography variant='p_lg' color='#c4b5fd'>{selectedTitle}</Typography></Box>
 				<Box>
-					<Typography variant='h1' fontWeight={500}>${selectedonusdAmount.toLocaleString()}</Typography>
+					<Typography variant='h1' fontWeight={500}>${formatLocaleAmount(selectedonusdAmount)}</Typography>
 				</Box>
 			</Box>
 			<Box mb='-30px'>
