@@ -8,12 +8,14 @@ export enum Collateral {
 
 export enum AssetTickers {
     arbitrum = 0,
-    optimism = 1
+    optimism = 1,
+    sui = 2
 }
 
 export enum Asset {
     Arbitrum,
-    Optimism
+    Optimism,
+    Sui
 }
 
 export enum AssetType {
@@ -39,6 +41,14 @@ export const ASSETS = [
         tickerIcon: '/images/assets/on-op.svg',
         ticker: 'optimism',
         pythSymbol: 'Crypto.OP/USD',
+        mainColor: '#e24e4c',
+    },
+    {
+        tickerName: 'Clone Sui',
+        tickerSymbol: 'clSui',
+        tickerIcon: '/images/assets/on-sui.svg',
+        ticker: 'sui',
+        pythSymbol: 'Crypto.SUI/USD',
         mainColor: '#e24e4c',
     }
 ]
@@ -68,6 +78,15 @@ export const assetMapping = (index: number) => {
             ticker = 'optimism'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.OP/USD'
+            supabaseSymbol = pythSymbol
+            break
+        case Asset.Sui:
+            tickerName = 'Clone Sui'
+            tickerSymbol = 'clSUI'
+            tickerIcon = '/images/assets/on-sui.svg'
+            ticker = 'sui'
+            assetType = AssetType.Crypto
+            pythSymbol = 'Crypto.SUI/USD'
             supabaseSymbol = pythSymbol
             break
         default:
@@ -110,5 +129,9 @@ export const ASSETS_DESC = [
     {
         ticker: 'optimism',
         desc: "clOP is the cloned asset of Optimism (OP), a key Layer 2 solution that enhances Ethereum's scalability. Known for its single-round fraud proof system and high transaction speeds, Optimism ensures swift and cost-effective Ethereum transactions. clOP offers Solana traders a unique opportunity to trade OP natively, benefiting from the efficiencies of both the Optimism and Solana ecosystems."
+    },
+    {
+        ticker: 'sui',
+        desc: "clSUI is the cloned asset of Sui (SUI)"
     },
 ]
