@@ -64,7 +64,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 			price: info.poolPrice,
 			assetType,
 			liquidity: parseInt(info.liquidity.toString()),
-			volume24h: dailyVolumeStats[info.poolIndex].current_volume ?? 0,
+			volume24h: dailyVolumeStats[info.poolIndex]?.current_volume ?? 0,
 			change24h,
 			status: info.status
 		})
