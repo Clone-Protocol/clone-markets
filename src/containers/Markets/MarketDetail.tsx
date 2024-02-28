@@ -13,6 +13,7 @@ import { ON_USD } from '~/utils/constants'
 import { DEFAULT_ALL_INDEX } from '~/features/Portfolio/filterAtom'
 import { GoBackIcon } from '~/components/Common/SvgIcons'
 import { useRouter } from 'next/router'
+import LearnMoreIcon from 'public/images/learn-more.svg'
 
 const MarketDetail = ({ assetId }: { assetId: string }) => {
 	const router = useRouter()
@@ -140,7 +141,7 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 					<Box marginBottom='40px' padding='10px'>
 						<Typography variant='h3' fontWeight={500}>About {asset.tickerSymbol}</Typography>
 						<Box lineHeight={1.14} mt='8px'><Typography variant='p_lg'>{asset.detailOverview}</Typography></Box>
-						<a href={`https://docs.clone.so/clone-mainnet-guide/classets/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#c4b5fd'>...read more</Typography></a>
+						<a href={`https://docs.clone.so/clone-mainnet-guide/classets/${asset.tickerSymbol.toLowerCase()}`} target='_blank' rel="noreferrer"><Typography variant='p_lg' color='#c4b5fd'>...read more</Typography> <Image src={LearnMoreIcon} alt='learnMore' style={{ marginBottom: '-3px' }} /></a>
 					</Box>
 				</Stack>
 			) : (

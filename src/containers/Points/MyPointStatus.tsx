@@ -8,13 +8,15 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { BlackDefault, OpaqueDefault } from '~/components/Common/OpaqueArea'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { formatLocaleAmount } from '~/utils/numbers'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 
 const MyPointStatus = () => {
   const { publicKey } = useWallet()
   const { setOpen } = useWalletDialog()
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
-  const { data: infos, refetch } = usePointStatusQuery({
+  const { data: infos } = usePointStatusQuery({
     userPubKey: publicKey,
     refetchOnMount: "always",
     enabled: publicKey != null
@@ -23,7 +25,7 @@ const MyPointStatus = () => {
   return (
     <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
       <Stack direction='row' gap={2}>
-        <BorderBox width={isMobileOnSize ? '166px' : '176px'}>
+        <BorderBox width={isMobileOnSize ? '146px' : '176px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p_lg'>Global Rank</Typography>
           </Box>
@@ -31,7 +33,7 @@ const MyPointStatus = () => {
             <RankIndexForStatus rank={infos?.myRank} />
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '166px' : '350px'} position='relative'>
+        <BorderBox width={isMobileOnSize ? '146px' : '350px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p_lg'>My Total Points</Typography>
             <InfoTooltip title={TooltipTexts.points.totalPoints} color='#66707e' />
@@ -44,7 +46,7 @@ const MyPointStatus = () => {
         </BorderBox>
       </Stack>
       <Stack direction='row' gap={2} flexWrap={'wrap'} mt='18px'>
-        <BorderBox width={isMobileOnSize ? '166px' : '250px'}>
+        <BorderBox width={isMobileOnSize ? '140px' : '250px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Liquidity Points</Typography>
             <InfoTooltip title={TooltipTexts.points.lpPoints} color='#66707e' />
@@ -55,7 +57,7 @@ const MyPointStatus = () => {
             </Typography>
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '166px' : '250px'}>
+        <BorderBox width={isMobileOnSize ? '140px' : '250px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Trade Points</Typography>
             <InfoTooltip title={TooltipTexts.points.tradePoints} color='#66707e' />
@@ -66,7 +68,7 @@ const MyPointStatus = () => {
             </Typography>
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '166px' : '250px'}>
+        <BorderBox width={isMobileOnSize ? '140px' : '250px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Social Points</Typography>
             <InfoTooltip title={TooltipTexts.points.socialPoints} color='#66707e' />
@@ -129,4 +131,4 @@ const ConnectWallet = styled(Button)`
   }
 `
 
-export default MyPointStatus
+export default withSuspense(MyPointStatus, <LoadingProgress />)
