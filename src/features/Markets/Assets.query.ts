@@ -1,5 +1,5 @@
 import { QueryObserverOptions, useQuery } from '@tanstack/react-query'
-import { AssetType, assetMapping } from '~/data/assets'
+import { AssetType, MAX_POOLS_FOR_SHOW, assetMapping } from '~/data/assets'
 import { FilterType } from '~/data/filter'
 import { getiAssetInfos } from '~/utils/assets';
 import { fetchPythPriceHistory } from '~/utils/pyth'
@@ -43,7 +43,8 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 
 	const result: AssetList[] = []
 
-	for (let i = 0; i < 2; i++) {
+	//for (let i = 0; i < iassetInfos.length; i++) {
+	for (let i = 0; i < MAX_POOLS_FOR_SHOW; i++) {
 		const info = iassetInfos[i]
 		const { tickerName, tickerSymbol, tickerIcon, assetType } = assetMapping(info.poolIndex)
 
