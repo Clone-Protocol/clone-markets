@@ -8,13 +8,15 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { BlackDefault, OpaqueDefault } from '~/components/Common/OpaqueArea'
 import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { formatLocaleAmount } from '~/utils/numbers'
+import { LoadingProgress } from '~/components/Common/Loading'
+import withSuspense from '~/hocs/withSuspense'
 
 const MyPointStatus = () => {
   const { publicKey } = useWallet()
   const { setOpen } = useWalletDialog()
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
-  const { data: infos, refetch } = usePointStatusQuery({
+  const { data: infos } = usePointStatusQuery({
     userPubKey: publicKey,
     refetchOnMount: "always",
     enabled: publicKey != null
@@ -129,4 +131,4 @@ const ConnectWallet = styled(Button)`
   }
 `
 
-export default MyPointStatus
+export default withSuspense(MyPointStatus, <LoadingProgress />)
