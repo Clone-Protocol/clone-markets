@@ -27,7 +27,7 @@ export const DEFAULT_ASSET_ID = AssetTickers.arbitrum
 export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 //@MEMO: to add more asset, need to adjust here
-export const MAX_POOLS_FOR_SHOW = 2
+export const MAX_POOLS_FOR_SHOW = 3
 
 export const ASSETS = [
     {
@@ -52,7 +52,7 @@ export const ASSETS = [
         tickerIcon: '/images/assets/on-sui.svg',
         ticker: 'sui',
         pythSymbol: 'Crypto.SUI/USD',
-        mainColor: '#e24e4c',
+        mainColor: '#3ec5f1',
     }
 ]
 
