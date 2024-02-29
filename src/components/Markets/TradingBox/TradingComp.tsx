@@ -311,7 +311,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={field.value}
-                        dollarValue={field.value * getPrice()}
+                        dollarValue={field.value * assetData?.oraclePrice!}
                         balance={myBalance?.onassetVal}
                         balanceDisabled={!publicKey}
                         tickerClickable
