@@ -19,11 +19,11 @@ export async function middleware(req: NextRequest) {
   } else {
 
     // Hardcoded whitelist address
-    const whitelistAddr = WHITELIST_ADDRESSES
+    // const whitelistAddr = WHITELIST_ADDRESSES
 
     return NextResponse.json({
       result: true,
-      whitelistAddr
+      // whitelistAddr
     })
   }
 }
