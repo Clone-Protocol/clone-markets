@@ -69,10 +69,13 @@ const MarketList = () => {
 					{isMobileOnSize && showPoolStatus(params.row.status) ?
 						<PoolStatusButton status={params.row.status} />
 						:
-						<Box>
-							<Typography variant='p_xlg'>${formatLocaleAmount(params.value)}</Typography>
-							{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
-						</Box>
+						showPoolStatus(params.row.status) ?
+							<></>
+							:
+							<Box>
+								<Typography variant='p_xlg'>${formatLocaleAmount(params.value)}</Typography>
+								{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
+							</Box>
 					}
 				</Box>
 			}
@@ -84,7 +87,10 @@ const MarketList = () => {
 			headerName: '24h Change',
 			flex: 3,
 			renderCell(params: GridRenderCellParams<string>) {
-				return <Change24hComp change24h={params.row.change24h} />
+				return showPoolStatus(params.row.status) ?
+					<></>
+					:
+					<Change24hComp change24h={params.row.change24h} />
 			},
 		},
 		{
