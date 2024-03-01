@@ -135,6 +135,6 @@ export const ASSETS_DESC = [
     },
     {
         ticker: 'sui',
-        desc: "clSUI is the cloned asset of Sui (SUI)"
+        desc: "clSUI, the cloned asset of SUI, offers traders exposure to SUI token without ever leaving the Solana ecosystem. The Sui blockchain is known for its high throughput and low latency. Built on the Move language, Sui supports secure and sophisticated dApps. clSUI provides Solana users with the ability to natively trade SUI, capitalizing on the advantages of both the Sui and Solana ecosystems."
     },
 ]
