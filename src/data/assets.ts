@@ -85,7 +85,7 @@ export const assetMapping = (index: number) => {
             break
         case Asset.Sui:
             tickerName = 'Clone Sui'
-            tickerSymbol = 'clSUI'
+            tickerSymbol = 'clSui'
             tickerIcon = '/images/assets/on-sui.svg'
             ticker = 'sui'
             assetType = AssetType.Crypto
