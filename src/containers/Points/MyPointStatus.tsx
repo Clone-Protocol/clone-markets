@@ -10,10 +10,14 @@ import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { formatLocaleAmount } from '~/utils/numbers'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
+import BoltIcon from '@mui/icons-material/Bolt';
+import PromoteDialog from '~/components/Points/PromoteDialog'
+import { useState } from 'react'
 
 const MyPointStatus = () => {
   const { publicKey } = useWallet()
   const { setOpen } = useWalletDialog()
+  const [showPromoteDialog, setShowPromoteDialog] = useState(true)
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
   const { data: infos } = usePointStatusQuery({
@@ -46,7 +50,7 @@ const MyPointStatus = () => {
         </BorderBox>
       </Stack>
       <Stack direction='row' gap={2} flexWrap={'wrap'} mt='18px'>
-        <BorderBox width={isMobileOnSize ? '140px' : '250px'}>
+        <BorderBox width={isMobileOnSize ? '140px' : '250px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Liquidity Points</Typography>
             <InfoTooltip title={TooltipTexts.points.lpPoints} color='#66707e' />
@@ -56,6 +60,10 @@ const MyPointStatus = () => {
               {infos?.lpPoints ? formatLocaleAmount(infos.lpPoints) : '0'}
             </Typography>
           </StatusValue>
+          <PromoteBox onClick={() => setShowPromoteDialog(true)}>
+            <BoltIcon sx={{ fontSize: '16px', color: '#fbdc5f' }} />
+            <ColoredText><Typography variant='p_sm'>2x Multiplier</Typography></ColoredText>
+          </PromoteBox>
         </BorderBox>
         <BorderBox width={isMobileOnSize ? '140px' : '250px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
@@ -89,6 +97,7 @@ const MyPointStatus = () => {
           </Box>
         </Box>
       </>}
+      {showPromoteDialog && <PromoteDialog onClose={() => setShowPromoteDialog(false)} />}
     </Wrapper>
   )
 
@@ -115,6 +124,29 @@ const BorderBox = styled(Box)`
   border: solid 1px rgba(255, 255, 255, 0.1);
   padding-top: 14px;
   padding-bottom: 22px;
+`
+const PromoteBox = styled(Box)`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 24px;
+  border: solid 1px #000;
+  cursor: pointer;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.07);
+`
+const ColoredText = styled('div')`
+  text-shadow: 0 0 5px rgba(252, 220, 95, 0.42);
+  background-image: linear-gradient(to right, #fbdc5f 45%, #3dddff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 3px;
 `
 const ConnectWallet = styled(Button)`
   width: 236px;

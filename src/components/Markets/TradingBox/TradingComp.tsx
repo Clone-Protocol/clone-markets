@@ -1,4 +1,4 @@
-import { Box, Stack, Button, IconButton, Typography, CircularProgress } from '@mui/material'
+import { Box, Stack, Button, IconButton, Typography, CircularProgress, Tooltip } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import React, { useState, useEffect } from 'react'
 import PairInput from './PairInput'
@@ -230,9 +230,12 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
       <div style={{ width: '100%', height: '100%' }}>
         <Box p='18px' sx={{ paddingBottom: { xs: '150px', md: '18px' } }}>
           <Stack direction="row" justifyContent="flex-end" alignItems="center" my='12px'>
-            <ToolButton onClick={() => { refreshBalance() }} disabled={!isEnabledRestart}>
-              <Image src={reloadIcon} alt="reload" />
-            </ToolButton>
+
+            <Tooltip title="Refetching latest oracle data" placement="top">
+              <ToolButton onClick={() => { refreshBalance() }} disabled={!isEnabledRestart}>
+                <Image src={reloadIcon} alt="reload" />
+              </ToolButton>
+            </Tooltip>
             {publicKey &&
               <ToolButton onClick={onShowOption}>
                 <Image src={settingsIcon} alt="settings" />
