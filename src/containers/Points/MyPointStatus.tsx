@@ -25,7 +25,7 @@ const MyPointStatus = () => {
   return (
     <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
       <Stack direction='row' gap={2}>
-        <BorderBox width={isMobileOnSize ? '146px' : '176px'}>
+        <BorderBox width={isMobileOnSize ? '140px' : '176px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p_lg'>Global Rank</Typography>
           </Box>
@@ -33,7 +33,7 @@ const MyPointStatus = () => {
             <RankIndexForStatus rank={infos?.myRank} />
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '146px' : '350px'} position='relative'>
+        <BorderBox width={isMobileOnSize ? '140px' : '350px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p_lg'>My Total Points</Typography>
             <InfoTooltip title={TooltipTexts.points.totalPoints} color='#66707e' />

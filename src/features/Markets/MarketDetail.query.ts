@@ -47,7 +47,7 @@ export const fetchMarketDetail = async ({
   const detailOverview = ASSETS_DESC[index].desc
 
   const poolAnalytics = await fetchPoolAnalytics();
-  const volume = poolAnalytics[index].current_volume ?? 0
+  const volume = poolAnalytics[index]?.current_volume ?? 0
   const avgLiquidity = poolCommittedCollateral * 2
   const avgPremium = 100 * (price / oraclePrice - 1)
 

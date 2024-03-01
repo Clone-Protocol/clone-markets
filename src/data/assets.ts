@@ -27,7 +27,7 @@ export const DEFAULT_ASSET_ID = AssetTickers.arbitrum
 export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 //@MEMO: to add more asset, need to adjust here
-export const MAX_POOLS_FOR_SHOW = 2
+export const MAX_POOLS_FOR_SHOW = 3
 
 export const ASSETS = [
     {
@@ -36,7 +36,7 @@ export const ASSETS = [
         tickerIcon: '/images/assets/on-arb.svg',
         ticker: 'arbitrum',
         pythSymbol: 'Crypto.ARB/USD',
-        mainColor: '#a7cbea',
+        mainColor: '#277DC7',
     },
     {
         tickerName: 'Clone Optimism',
@@ -52,7 +52,7 @@ export const ASSETS = [
         tickerIcon: '/images/assets/on-sui.svg',
         ticker: 'sui',
         pythSymbol: 'Crypto.SUI/USD',
-        mainColor: '#3ec5f1',
+        mainColor: '#6FBCF0',
     }
 ]
 
@@ -135,6 +135,6 @@ export const ASSETS_DESC = [
     },
     {
         ticker: 'sui',
-        desc: "clSUI is the cloned asset of Sui (SUI)"
+        desc: "clSUI, the cloned asset of SUI, offers traders exposure to SUI token without ever leaving the Solana ecosystem. The Sui blockchain is known for its high throughput and low latency. Built on the Move language, Sui supports secure and sophisticated dApps. clSUI provides Solana users with the ability to natively trade SUI, capitalizing on the advantages of both the Sui and Solana ecosystems."
     },
 ]
