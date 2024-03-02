@@ -27,8 +27,8 @@ import TempWarningMsg from '~/components/Common/TempWarningMsg'
 import { IS_DEV } from '~/data/networks'
 import { fetchGeoBlock } from '~/utils/fetch_netlify'
 import { NETWORK_NAME } from '~/utils/constants'
-import useLocalStorage from '~/hooks/useLocalStorage'
-import { IS_COMPLETE_WHITELISTED } from '~/data/localstorage'
+// import useLocalStorage from '~/hooks/useLocalStorage'
+// import { IS_COMPLETE_WHITELISTED } from '~/data/localstorage'
 
 
 const GNB: React.FC = () => {
@@ -81,12 +81,12 @@ const RightMenu: React.FC = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	const [showGeoblock, setShowGeoblock] = useState(false)
-	const [showWhitelist, setShowWhitelist] = useState(false)
-	const [isWhitelisted, setIsWhitelisted] = useState(false)
-	const [isCompleteWhitelisted, setIsCompleteWhitelisted] = useLocalStorage(IS_COMPLETE_WHITELISTED, false)
+	// const [showWhitelist, setShowWhitelist] = useState(false)
+	// const [isWhitelisted, setIsWhitelisted] = useState(false)
+	// const [isCompleteWhitelisted, setIsCompleteWhitelisted] = useLocalStorage(IS_COMPLETE_WHITELISTED, false)
 
 	const GeoblockDialog = dynamic(() => import('~/components/Common/GeoblockDialog'), { ssr: false })
-	const WhitelistDialog = dynamic(() => import('~/components/Common/WhitelistDialog'), { ssr: false })
+	// const WhitelistDialog = dynamic(() => import('~/components/Common/WhitelistDialog'), { ssr: false })
 
 	useFaucet()
 
@@ -101,19 +101,19 @@ const RightMenu: React.FC = () => {
 					disconnect()
 				} else {
 					// validate whitelist
-					if (geoblock.whitelistAddr?.includes(publicKey.toString())) {
-						console.log('whitelisted')
-						setIsWhitelisted(true)
-						if (!isCompleteWhitelisted) {
-							setShowWhitelist(true)
-						}
-					} else {
-						console.log('no whitelisted')
-						setIsWhitelisted(false)
-						setShowWhitelist(true)
-						disconnect()
-						setIsCompleteWhitelisted(false)
-					}
+					// if (geoblock.whitelistAddr?.includes(publicKey.toString())) {
+					// 	console.log('whitelisted')
+					// 	setIsWhitelisted(true)
+					// 	if (!isCompleteWhitelisted) {
+					// 		setShowWhitelist(true)
+					// 	}
+					// } else {
+					// 	console.log('no whitelisted')
+					// 	setIsWhitelisted(false)
+					// 	setShowWhitelist(true)
+					// 	disconnect()
+					// 	setIsCompleteWhitelisted(false)
+					// }
 				}
 			}
 		}
@@ -189,7 +189,7 @@ const RightMenu: React.FC = () => {
 				onGetUsdiClick={handleGetUsdiClick}
 				onHide={() => setOpenTokenFaucet(false)}
 			/>
-			<WhitelistDialog open={showWhitelist} isWhitelisted={isWhitelisted} handleClose={() => setShowWhitelist(false)} />
+			{/* <WhitelistDialog open={showWhitelist} isWhitelisted={isWhitelisted} handleClose={() => setShowWhitelist(false)} /> */}
 			{showGeoblock && <GeoblockDialog open={showGeoblock} handleClose={() => setShowGeoblock(false)} />}
 		</>
 	)
