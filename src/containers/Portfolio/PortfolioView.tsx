@@ -7,7 +7,7 @@ import { LoadingProgress } from '~/components/Common/Loading'
 import { useUserBalanceQuery } from '~/features/Portfolio/UserBalance.query'
 import StableAssetList from '~/containers/Portfolio/StableAssetList'
 import OnAssetList from './OnAssetList'
-import { FilterType, FilterTypeMap, PieItem } from '~/data/filter'
+import { FilterTypeMap, PieItem } from '~/data/filter'
 import withSuspense from '~/hocs/withSuspense'
 import { useAtom } from 'jotai'
 import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Portfolio/filterAtom'
@@ -60,7 +60,7 @@ const PortfolioView = () => {
 
 			const ordered = result.sort((a, b) => a.val < b.val ? 1 : -1)
 			const finalPie = ordered.map((item) => {
-				const percentVal = totalBalance > 0 ? item.val * 100 / totalBalance : 0
+				const percentVal = totalBalance > 0 ? Math.round(item.val * 100 / totalBalance) : 0
 				// if (item.id === AssetType.Crypto) {
 				// 	return { key: 'onCrypto', name: FilterTypeMap.onCrypto, value: percentVal, onusdAmount: item.val } as PieItem
 				// }
@@ -69,7 +69,7 @@ const PortfolioView = () => {
 
 			if (totalBalance > 0) {
 				finalPie.push(
-					{ key: STABLE_COIN_INDEX, name: FilterTypeMap.stableCoin, value: 100 * onusdBalance / totalBalance, onusdAmount: onusdBalance } as PieItem
+					{ key: STABLE_COIN_INDEX, name: FilterTypeMap.stableCoin, value: Math.round(100 * onusdBalance / totalBalance), onusdAmount: onusdBalance } as PieItem
 				)
 			}
 			console.log('f', finalPie)

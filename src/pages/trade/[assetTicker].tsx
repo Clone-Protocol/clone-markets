@@ -1,7 +1,6 @@
 'use client'
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import safeJsonStringify from 'safe-json-stringify';
-import { useRouter } from 'next/router'
 import { Box, Stack, Theme, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import MarketDetail from '~/containers/Markets/MarketDetail'
