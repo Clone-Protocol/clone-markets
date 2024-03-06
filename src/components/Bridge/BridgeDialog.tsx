@@ -3,7 +3,6 @@ import { Box, Button, Dialog, DialogContent, Stack, Typography } from '@mui/mate
 import { styled } from '@mui/material/styles'
 import { FadeTransition } from '~/components/Common/Dialog'
 import { CloseButton } from '../Common/CommonButtons'
-import BackIcon from 'public/images/back-bridge-button.svg'
 import BridgeIcon from 'public/images/debug-step-over.svg'
 import Image from 'next/image'
 import PoweredByDebridge from 'public/images/powered_by_debridge.svg'
@@ -28,9 +27,6 @@ const BridgeDialog = ({ open, handleClose }: { open: boolean, handleClose: () =>
                   <TitleBox ml='25px' mt='10px'><Typography variant='p_lg'>Bridge</Typography></TitleBox>
                   :
                   <Box></Box>
-                  // <Box sx={{ cursor: 'pointer' }} ml='20px' mt='10px'>
-                  //   <Image src={BackIcon} alt='back' onClick={() => setIsInitStep(true)} />
-                  // </Box>
                 }
 
                 <Box mr='15px'>

@@ -97,12 +97,6 @@ const MarketDetail = ({ assetId }: { assetId: string }) => {
 									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{formatDollarAmount(asset.avgLiquidity, 3)} {ON_USD}</Typography>
 								</Box>
 							</Box>
-							{/* <Box width='160px'>
-								<Box><Typography variant='p' color='#8988a3'>Current Premium</Typography></Box>
-								<Box mt='8px'>
-									<Typography variant='h3' fontWeight={500} whiteSpace='nowrap'>{asset.avgPremium.toFixed(3)}%</Typography>
-								</Box>
-							</Box> */}
 						</Stack>
 					</OverviewWrapper>
 

@@ -14,6 +14,7 @@ import { getSolInBalance } from '~/utils/address';
 import { useClone } from '~/hooks/useClone';
 import { ON_USD } from '~/utils/constants';
 import { formatLocaleAmount } from '~/utils/numbers';
+import { useClickOutside } from '~/hooks/useClickOutside';
 
 const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
@@ -22,6 +23,12 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
   const { publicKey, disconnect } = useWallet()
   const setCloneClient = useSetAtom(cloneClient)
   const [solBalance, setSolBalance] = useState(0)
+
+  const walletRef = useClickOutside(() => {
+    if (show) {
+      onHide()
+    }
+  })
 
   const { data: balance } = useBalanceQuery({
     userPubKey: publicKey,
@@ -56,7 +63,7 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
   }
 
   return show ? (
-    <WalletWrapper>
+    <WalletWrapper ref={walletRef}>
       <Stack direction='row' justifyContent='space-between' alignItems='center' padding='13px'>
         <Box lineHeight={1}>
           <Box><Typography variant='p' fontWeight={600} color='#fff'>{formatLocaleAmount(solBalance)} SOL</Typography></Box>

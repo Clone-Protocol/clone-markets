@@ -10,21 +10,17 @@ export type RPCType = {
 
 export const DEV_RPCs: RPCType[] = [
   {
+    rpc_name: 'Triton RPC',
+    rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_TRITON!,
+  },
+  {
     rpc_name: 'Helius RPC',
-    rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_HELIUS! //clusterApiUrl(WalletAdapterNetwork.Devnet)
+    rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_HELIUS!,  //clusterApiUrl(WalletAdapterNetwork.Mainnet) 
   },
   {
     rpc_name: 'Quicknode RPC',
     rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_QUICKNODE!,
   },
-  {
-    rpc_name: 'HelloMoon RPC',
-    rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_HELLOMOON!,
-  },
-  // {
-  //   rpc_name: 'Solana Devnet',
-  //   rpc_url: 'https://api.devnet.solana.com',
-  // },
 ]
 
 export const MAIN_RPCs: RPCType[] = [
@@ -40,14 +36,6 @@ export const MAIN_RPCs: RPCType[] = [
     rpc_name: 'Quicknode RPC',
     rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_QUICKNODE!,
   },
-  // {
-  //   rpc_name: 'HelloMoon RPC',
-  //   rpc_url: process.env.NEXT_PUBLIC_NETWORK_ENDPOINT_HELLOMOON!,
-  // },
-  // {
-  //   rpc_name: 'Solana Mainnet',
-  //   rpc_url: 'https://api.devnet.solana.com',
-  // },
 ]
 
 export const CUSTOM_RPC_INDEX = DEV_RPCs.length
@@ -84,14 +72,6 @@ export const PRIORITY_FEES: PriorityFeeType[] = [
     fee_name: "Min",
     fee_level: "min"
   },
-  // {
-  //   fee_name: "Low",
-  //   fee_level: "low"
-  // },
-  // {
-  //   fee_name: "Medium",
-  //   fee_level: "medium",
-  // },
   {
     fee_name: "Normal",
     fee_level: "high"

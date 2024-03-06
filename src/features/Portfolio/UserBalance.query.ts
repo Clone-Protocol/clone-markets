@@ -4,7 +4,6 @@ import { CloneClient, fromScale, fromCloneScale } from 'clone-protocol-sdk/sdk/s
 import { useClone } from '~/hooks/useClone'
 import { assetMapping, AssetType } from '~/data/assets'
 import { REFETCH_CYCLE, REFETCH_SHORT_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
-import { FilterType } from '~/data/filter'
 import { getTokenAccount } from '~/utils/token_accounts'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { getCollateralAccount } from "~/utils/token_accounts"

@@ -3,7 +3,7 @@ import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { withCsrOnly } from '~/hocs/CsrOnly'
 import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { FilterTypeColorMap, PieItem } from '~/data/filter'
+import { PieItem } from '~/data/filter'
 import { DEFAULT_ALL_INDEX, STABLE_COIN_INDEX, filterState } from '~/features/Portfolio/filterAtom'
 import CloseIcon from '@mui/icons-material/Close';
 import { useSetAtom } from 'jotai'
