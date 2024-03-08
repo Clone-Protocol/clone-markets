@@ -23,11 +23,12 @@ export const handler: Handler = async (event, context) => {
     try {
       console.log('p', params.userAddress)
       //pyth points
-      // const jsonDirectory = path.join(process.cwd(), 'public/data');
-      const dirRelativeToPublicFolder = 'data'
-      const dir = path.resolve('./public', dirRelativeToPublicFolder);
-      const fileContents = await fs.readFile(dir + '/pythSnapshot.json', 'utf8');
-      const pythResult: PythObj[] = JSON.parse(fileContents)
+      // const dirRelativeToPublicFolder = 'data'
+      // const dir = path.resolve('./public', dirRelativeToPublicFolder);
+      // const fileContents = await fs.readFile(dir + '/pythSnapshot.json', 'utf8');
+      const fetchData = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/data/pythSnapshot.json`)
+      const fileContents = await fetchData.json()
+      const pythResult: PythObj[] = fileContents
 
       const pythUser = pythResult.find((pythUser) => {
         return pythUser.address === params.userAddress
