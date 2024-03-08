@@ -15,8 +15,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<PythResponseData>
 ) {
-  const jsonDirectory = path.join(process.cwd(), 'public/data');
-  const fileContents = await fs.readFile(jsonDirectory + '/pythSnapshot.json', 'utf8');
+  const dirRelativeToPublicFolder = 'data'
+  const dir = path.resolve('./public', dirRelativeToPublicFolder);
+  const fileContents = await fs.readFile(dir + '/pythSnapshot.json', 'utf8');
   res.status(200).json({ result: JSON.parse(fileContents) });
 }
 
