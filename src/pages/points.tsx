@@ -9,7 +9,6 @@ import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/reac
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { RankingList as RankingListType, fetchRanking } from '~/features/Points/Ranking.query'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { PythResponseData } from './api/points_pythlist'
 
 //SSR
 export const getStaticProps = (async () => {
@@ -21,9 +20,14 @@ export const getStaticProps = (async () => {
   }
 
   //get pyth data
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/api/points_pythlist`)
-  const pythResult = await res.json()
-  // console.log('pythResult', pythResult)
+  let pythResult = { result: [] }
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/api/points_pythlist`)
+    pythResult = await res.json()
+    // console.log('pythResult', pythResult)
+  } catch (error) {
+    console.error('err', error)
+  }
 
   // get ranking
   const rankingList = await fetchRanking(pythResult)

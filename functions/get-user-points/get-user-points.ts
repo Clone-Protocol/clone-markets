@@ -20,18 +20,22 @@ export const handler: Handler = async (event, context) => {
 
   //check if the address is included in pythResult
   if (params.userAddress) {
-    console.log('p', params.userAddress)
-    //pyth points
-    const jsonDirectory = path.join(process.cwd(), 'public/data');
-    const fileContents = await fs.readFile(jsonDirectory + '/pythSnapshot.json', 'utf8');
-    const pythResult: PythObj[] = JSON.parse(fileContents)
+    try {
+      console.log('p', params.userAddress)
+      //pyth points
+      const jsonDirectory = path.join(process.cwd(), 'public/data');
+      const fileContents = await fs.readFile(jsonDirectory + '/pythSnapshot.json', 'utf8');
+      const pythResult: PythObj[] = JSON.parse(fileContents)
 
-    const pythUser = pythResult.find((pythUser) => {
-      return pythUser.address === params.userAddress
-    })
-    newData[0].hasPythPoint = pythUser !== undefined ? true : false
-    newData[0].pythPointTier = pythUser !== undefined ? pythUser.tier : -1
-    console.log('new', newData)
+      const pythUser = pythResult.find((pythUser) => {
+        return pythUser.address === params.userAddress
+      })
+      newData[0].hasPythPoint = pythUser !== undefined ? true : false
+      newData[0].pythPointTier = pythUser !== undefined ? pythUser.tier : -1
+      console.log('new', newData)
+    } catch (error) {
+      console.error('e', error)
+    }
   }
 
   if (error !== null) {
