@@ -45,7 +45,9 @@ const MyPointStatus = () => {
             <InfoTooltip title={TooltipTexts.points.totalPoints} color='#66707e' />
           </Box>
           <StatusValue>
-            <Box width='42px'></Box>
+            {infos?.hasPythPoint &&
+              <Box width='42px'></Box>
+            }
             <Typography variant='h3' fontWeight={500}>
               {infos?.totalPoints ? formatLocaleAmount(infos.totalPoints) : '0'}
             </Typography>
