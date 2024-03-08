@@ -16,7 +16,7 @@ export const handler: Handler = async (event, context) => {
 
   let { data, error } = await rpcCall;
 
-  let newData = data
+  let newData: any = data
 
   //check if the address is included in pythResult
   if (params.userAddress) {

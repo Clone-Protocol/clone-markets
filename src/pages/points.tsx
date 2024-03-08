@@ -30,7 +30,12 @@ export const getStaticProps = (async () => {
   }
 
   // get ranking
-  const rankingList = await fetchRanking(pythResult)
+  let rankingList: RankingListType[] = []
+  try {
+    rankingList = await fetchRanking(pythResult)
+  } catch (error) {
+    console.error('err', error)
+  }
 
   return {
     props: {
