@@ -5,7 +5,7 @@ import Image from 'next/image'
 import LearnMoreIcon from 'public/images/learn-more.svg'
 import MyPointStatus from '~/containers/Points/MyPointStatus'
 import RankingList from '~/containers/Points/RankingList'
-import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
+// import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { RankingList as RankingListType, fetchRanking } from '~/features/Points/Ranking.query'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
@@ -22,8 +22,14 @@ export const getStaticProps = (async () => {
   //get pyth data
   let pythResult = { result: [] }
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/api/points_pythlist`)
-    pythResult = await res.json()
+    // const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/api/points_pythlist`)
+    // pythResult = await res.json()
+    const fetchData = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/data/pythSnapshot.json`)
+    const fileContents = await fetchData.json()
+    pythResult = {
+      result: fileContents
+    }
+
     // console.log('pythResult', pythResult)
   } catch (error) {
     console.error('err', error)
