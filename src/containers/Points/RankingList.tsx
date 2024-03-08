@@ -1,4 +1,4 @@
-import { Box, Theme, Typography, useMediaQuery } from '@mui/material'
+import { Box, Theme, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/system'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { LoadingProgress } from '~/components/Common/Loading'
@@ -7,15 +7,18 @@ import { Grid } from '~/components/Common/DataGrid'
 import { CustomNoRowsOverlay } from '~/components/Common/DataGrid'
 import { RankIndex } from '~/components/Points/RankItems'
 import { shortenAddress } from '~/utils/address'
-import { useRankingQuery } from '~/features/Points/Ranking.query'
+import { RankingList } from '~/features/Points/Ranking.query'
 import { formatLocaleAmount } from '~/utils/numbers'
+import { PythSymbolIcon } from '~/components/Common/SvgIcons'
+import { PointTextForPyth } from '~/components/Points/PointMultiplierText'
+import { TooltipTexts } from '~/data/tooltipTexts'
 
-const RankingList: React.FC = () => {
+const RankingList = ({ rankList }: { rankList: RankingList[] }) => {
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-  const { data: rankList } = useRankingQuery({
-    refetchOnMount: true,
-    enabled: true
-  })
+  // const { data: rankList } = useRankingQuery({
+  //   refetchOnMount: true,
+  //   enabled: true
+  // })
 
   return (
     <PanelBox>
@@ -62,9 +65,21 @@ let columns: GridColDef[] = [
     headerName: `User`,
     flex: 1,
     renderCell(params: GridRenderCellParams<{ name: string | undefined, address: string }>) {
-      return <a href={`https://solana.fm/address/${params.value!.address.toString()}`} target='_blank' rel='noreferrer' style={{ color: '#fff' }}>
-        <Typography variant='p_xlg' sx={{ ':hover': { color: '#c4b5fd' } }}>{formatUserDisplayName(params.value!)}</Typography>
-      </a>
+      const hasPythPoint = params.row.hasPythPoint
+
+      return <Box display='flex' alignItems='center' gap={1}>
+        <a href={`https://solana.fm/address/${params.value!.address.toString()}`} target='_blank' rel='noreferrer' style={{ color: '#fff' }}>
+          <Typography variant='p_xlg' sx={{ ':hover': { color: '#c4b5fd' } }}>{formatUserDisplayName(params.value!)}</Typography>
+        </a>
+        {hasPythPoint &&
+          <Tooltip title={TooltipTexts.points.pythSymbol} placement="top">
+            <Box display='flex' alignItems='center' sx={{ color: '#e6dafe', ':hover': { color: '#9b90b1' } }}>
+              <PythSymbolIcon />
+            </Box>
+          </Tooltip>
+        }
+      </Box>
+
     },
   },
   {
@@ -104,7 +119,17 @@ let columns: GridColDef[] = [
     headerName: 'Total Points',
     flex: 1,
     renderCell(params: GridRenderCellParams<string>) {
-      return <Typography variant='p_lg'>{formatLocaleAmount(params.value)}</Typography>
+      const hasPythPoint = params.row.hasPythPoint
+      const pythPointTier = params.row.pythPointTier
+
+      return <Box display='flex' alignItems='center' gap='7px'>
+        <Typography variant='p_lg'>{formatLocaleAmount(params.value)}</Typography>
+        {hasPythPoint &&
+          <Tooltip title={TooltipTexts.points.multiplier} placement="top">
+            <Box><PointTextForPyth pythPointTier={pythPointTier} /></Box>
+          </Tooltip>
+        }
+      </Box>
     },
   },
 ]

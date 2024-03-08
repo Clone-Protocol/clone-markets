@@ -7,8 +7,9 @@ import MyPointStatus from '~/containers/Points/MyPointStatus'
 import RankingList from '~/containers/Points/RankingList'
 import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
-import { fetchRanking } from '~/features/Points/Ranking.query'
+import { RankingList as RankingListType, fetchRanking } from '~/features/Points/Ranking.query'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { PythResponseData } from './api/points_pythlist'
 
 //SSR
 export const getStaticProps = (async () => {
@@ -16,21 +17,31 @@ export const getStaticProps = (async () => {
 
   if (IS_NOT_LOCAL_DEVELOPMENT) {
     console.log('prefetch')
-    await queryClient.prefetchQuery(['ranks'], () => fetchRanking())
+    // await queryClient.prefetchQuery(['ranks'], () => fetchRanking())
   }
+
+  //get pyth data
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROOT}/api/points_pythlist`)
+  const pythResult = await res.json()
+  // console.log('pythResult', pythResult)
+
+  // get ranking
+  const rankingList = await fetchRanking(pythResult)
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      rankingList,
       //cached time
       revalidate: 30,
     },
   }
 }) satisfies GetStaticProps<{
-  dehydratedState: DehydratedState
+  dehydratedState: DehydratedState,
+  rankingList: RankingListType[]
 }>
 
-const Points = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Points = ({ dehydratedState, rankingList }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <StyledSection sx={{ overflowX: 'hidden' }}>
@@ -50,7 +61,7 @@ const Points = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticPro
             <MyPointStatus />
 
             <Hydrate state={dehydratedState}>
-              <RankingList />
+              <RankingList rankList={rankingList} />
             </Hydrate>
           </Box>
         </Box>
