@@ -1,7 +1,6 @@
 import { Query, useQuery } from '@tanstack/react-query'
 import { PublicKey } from '@solana/web3.js'
-import { useClone } from '~/hooks/useClone'
-import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
+// import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { fetchUserPoints, UserPointsView } from '~/utils/fetch_netlify'
 
@@ -19,7 +18,9 @@ export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null
     totalPoints: userPoints[0].total_points,
     lpPoints: userPoints[0].lp_points,
     tradePoints: userPoints[0].trading_points,
-    socialPoints: userPoints[0].social_points
+    socialPoints: userPoints[0].social_points,
+    hasPythPoint: userPoints[0].hasPythPoint,
+    pythPointTier: userPoints[0].pythPointTier
   }
 }
 
@@ -35,6 +36,8 @@ export interface Status {
   lpPoints: number
   tradePoints: number
   socialPoints: number
+  hasPythPoint: boolean
+  pythPointTier: number
 }
 
 export function usePointStatusQuery({ userPubKey, refetchOnMount, enabled = true }: GetProps) {
@@ -43,8 +46,8 @@ export function usePointStatusQuery({ userPubKey, refetchOnMount, enabled = true
   if (wallet) {
     return useQuery(['statusData', wallet, userPubKey], async () => fetchStatus({ userPubKey }), {
       refetchOnMount,
-      refetchInterval: REFETCH_CYCLE,
-      refetchIntervalInBackground: true,
+      // refetchInterval: REFETCH_CYCLE,
+      // refetchIntervalInBackground: true,
       enabled
     })
   } else {
