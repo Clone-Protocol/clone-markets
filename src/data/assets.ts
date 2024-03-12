@@ -9,13 +9,15 @@ export enum Collateral {
 export enum AssetTickers {
     arbitrum = 0,
     optimism = 1,
-    sui = 2
+    sui = 2,
+    pepe = 3,
 }
 
 export enum Asset {
     Arbitrum,
     Optimism,
-    Sui
+    Sui,
+    Pepe
 }
 
 export enum AssetType {
@@ -53,6 +55,14 @@ export const ASSETS = [
         ticker: 'sui',
         pythSymbol: 'Crypto.SUI/USD',
         mainColor: '#6FBCF0',
+    },
+    {
+        tickerName: 'Clone Pepe',
+        tickerSymbol: 'clPepe',
+        tickerIcon: '/images/assets/on-ada.svg',
+        ticker: 'pepe',
+        pythSymbol: 'Crypto.PEPE/USD',
+        mainColor: '#008000',
     }
 ]
 
@@ -90,6 +100,15 @@ export const assetMapping = (index: number) => {
             ticker = 'sui'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.SUI/USD'
+            supabaseSymbol = pythSymbol
+            break
+        case Asset.Pepe:
+            tickerName = 'Clone Pepe'
+            tickerSymbol = 'clPEPE'
+            tickerIcon = '/images/assets/on-ada.svg'
+            ticker = 'pepe'
+            assetType = AssetType.Crypto
+            pythSymbol = 'Crypto.PEPE/USD'
             supabaseSymbol = pythSymbol
             break
         default:
@@ -136,5 +155,9 @@ export const ASSETS_DESC = [
     {
         ticker: 'sui',
         desc: "clSUI, the cloned asset of SUI, offers traders exposure to SUI token without ever leaving the Solana ecosystem. The Sui blockchain is known for its high throughput and low latency. Built on the Move language, Sui supports secure and sophisticated dApps. clSUI provides Solana users with the ability to natively trade SUI, capitalizing on the advantages of both the Sui and Solana ecosystems."
+    },
+    {
+        ticker: 'pepe',
+        desc: "clPEPE, the cloned asset of PEPE, offers traders exposure to PEPE token without ever leaving the Solana ecosystem. The PEPE blockchain is known for its high throughput and low latency. Built on the Move language, PEPE supports secure and sophisticated dApps. clPEPE provides Solana users with the ability to natively trade PEPE, capitalizing on the advantages of both the PEPE and Solana ecosystems."
     },
 ]
