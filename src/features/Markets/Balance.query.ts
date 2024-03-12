@@ -87,7 +87,7 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient, netw
 
 interface GetProps {
   index: number
-  refetchOnMount?: QueryObserverOptions['refetchOnMount']
+  refetchOnMount?: boolean | "always"
   enabled?: boolean
 }
 
@@ -103,7 +103,9 @@ export function useBalanceQuery({ index, refetchOnMount, enabled = true }: GetPr
   const mainCloneClient = useAtomValue(cloneClient)
   const networkEndpoint = useAtomValue(rpcEndpoint)
 
-  return useQuery(['balance', index], () => fetchBalance({ index, setStartTimer, mainCloneClient, networkEndpoint }), {
+  return useQuery({
+    queryKey: ['balance', index],
+    queryFn: () => fetchBalance({ index, setStartTimer, mainCloneClient, networkEndpoint }),
     refetchOnMount,
     refetchInterval: REFETCH_CYCLE,
     refetchIntervalInBackground: true,

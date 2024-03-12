@@ -100,13 +100,15 @@ interface GetProps {
   timeframe: FilterTime
   pythSymbol: string | undefined
   isOraclePrice?: boolean
-  refetchOnMount?: boolean | "always" | ((query: Query) => boolean | "always")
+  refetchOnMount?: boolean | "always"
   enabled?: boolean
 }
 
 export function usePriceHistoryQuery({ timeframe, pythSymbol, refetchOnMount, enabled = true }: GetProps) {
   const networkEndpoint = useAtomValue(rpcEndpoint)
-  return useQuery(['oraclePriceHistory', timeframe, pythSymbol], () => fetchOraclePriceHistory({ timeframe, pythSymbol, networkEndpoint }), {
+  return useQuery({
+    queryKey: ['oraclePriceHistory', timeframe, pythSymbol],
+    queryFn: () => fetchOraclePriceHistory({ timeframe, pythSymbol, networkEndpoint }),
     refetchOnMount,
     enabled
   })

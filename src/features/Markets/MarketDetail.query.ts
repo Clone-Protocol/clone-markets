@@ -99,7 +99,7 @@ export const fetchMarketDetailDefault = (): MarketDetail => {
 
 interface GetProps {
   index: number
-  refetchOnMount?: QueryObserverOptions["refetchOnMount"]
+  refetchOnMount?: boolean | "always"
   enabled?: boolean
 }
 
@@ -140,7 +140,9 @@ export function useMarketDetailQuery({ index, refetchOnMount, enabled = true }: 
     queryFunc = () => fetchMarketDetailDefault()
   }
 
-  return useQuery(["marketDetail", index], queryFunc, {
+  return useQuery({
+    queryKey: ["marketDetail", index],
+    queryFn: queryFunc,
     refetchOnMount,
     refetchInterval: REFETCH_CYCLE,
     refetchIntervalInBackground: true,

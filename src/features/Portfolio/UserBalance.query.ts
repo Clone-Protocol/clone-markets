@@ -82,14 +82,18 @@ export function useUserTotalBalanceQuery({ userPubKey, refetchOnMount, enabled =
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['userTotalBalance', wallet, userPubKey], async () => fetchUserTotalBalance({ program: await getCloneApp(wallet), userPubKey }), {
+		return useQuery({
+			queryKey: ['userTotalBalance', wallet, userPubKey],
+			queryFn: async () => fetchUserTotalBalance({ program: await getCloneApp(wallet), userPubKey }),
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,
 			enabled,
 		})
 	} else {
-		return useQuery(['userTotalBalance'], () => [])
+		return useQuery({
+			queryKey: ['userTotalBalance'], queryFn: () => []
+		})
 	}
 }
 
@@ -165,7 +169,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 interface GetAssetsProps {
 	userPubKey: PublicKey | null
 	selectedFilter?: number
-	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	refetchOnMount?: boolean | "always"
 	enabled?: boolean
 }
 
@@ -188,7 +192,9 @@ export function useUserBalanceQuery({ userPubKey, selectedFilter, refetchOnMount
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['userBalance', wallet, userPubKey], async () => fetchUserBalance({ program: await getCloneApp(wallet), userPubKey }), {
+		return useQuery({
+			queryKey: ['userBalance', wallet, userPubKey],
+			queryFn: async () => fetchUserBalance({ program: await getCloneApp(wallet), userPubKey }),
 			refetchOnMount,
 			refetchInterval: REFETCH_SHORT_CYCLE,
 			refetchIntervalInBackground: true,
@@ -203,6 +209,9 @@ export function useUserBalanceQuery({ userPubKey, selectedFilter, refetchOnMount
 			})
 		})
 	} else {
-		return useQuery(['userBalance'], () => [])
+		return useQuery({
+			queryKey: ['userBalance'],
+			queryFn: () => []
+		})
 	}
 }
