@@ -52,9 +52,9 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 		if (pythData && pythData.length > 0) {
 			const priceData = pythData[i]
 
-			const openPrice = priceData[0] ? Number(priceData[0].price) : 0
-			const closePrice = priceData[0] ? Number(priceData.at(-1)!.price) : 0
-			change24h = priceData[0] ? (closePrice / openPrice - 1) * 100 : 0
+			const openPrice = priceData && priceData[0] ? Number(priceData[0].price) : 0
+			const closePrice = priceData && priceData[0] ? Number(priceData.at(-1)!.price) : 0
+			change24h = priceData && priceData[0] ? (closePrice / openPrice - 1) * 100 : 0
 		}
 
 		result.push({
