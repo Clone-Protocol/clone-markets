@@ -59,7 +59,7 @@ export const ASSETS = [
     {
         tickerName: 'Clone Pepe',
         tickerSymbol: 'clPepe',
-        tickerIcon: '/images/assets/on-ada.svg',
+        tickerIcon: '/images/assets/on-pepe.svg',
         ticker: 'pepe',
         pythSymbol: 'Crypto.PEPE/USD',
         mainColor: '#008000',
@@ -105,7 +105,7 @@ export const assetMapping = (index: number) => {
         case Asset.Pepe:
             tickerName = 'Clone Pepe'
             tickerSymbol = 'clPEPE'
-            tickerIcon = '/images/assets/on-ada.svg'
+            tickerIcon = '/images/assets/on-pepe.svg'
             ticker = 'pepe'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.PEPE/USD'
