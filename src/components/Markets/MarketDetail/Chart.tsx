@@ -57,7 +57,7 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
           topLeft={
             <Box mb='25px'>
               <Box display='flex' alignItems='baseline'>
-                <Typography variant='h1' fontWeight={500}>{pythSymbol === assetMapping(AssetTickers.pepe).tickerSymbol ? formatDollarAmount(chartHover, 7, true) : formatDollarAmount(chartHover, 3, true)}</Typography>
+                <Typography variant='h1' fontWeight={500}>{pythSymbol === assetMapping(AssetTickers.pepe).pythSymbol ? formatDollarAmount(chartHover, 7, true) : formatDollarAmount(chartHover, 3, true)}</Typography>
                 <Typography variant='p_xlg' ml='8px'>{ON_USD}</Typography>
               </Box>
               <Box display='flex' alignItems='center' gap={1}>
