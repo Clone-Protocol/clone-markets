@@ -10,6 +10,7 @@ import ArrowDownward from 'public/images/arrow-down-red.svg'
 import PoweredByPyth from 'public/images/powered_pyth.svg'
 import { usePriceHistoryQuery } from '~/features/Chart/PriceByAsset.query'
 import { ON_USD } from '~/utils/constants'
+import { AssetTickers, assetMapping } from '~/data/assets'
 
 const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
   const [filterTime, setFilterTime] = useState<FilterTime>('7d')
@@ -56,7 +57,7 @@ const Chart = ({ pythSymbol }: { pythSymbol: string }) => {
           topLeft={
             <Box mb='25px'>
               <Box display='flex' alignItems='baseline'>
-                <Typography variant='h1' fontWeight={500}>{formatDollarAmount(chartHover, 3, true)}</Typography>
+                <Typography variant='h1' fontWeight={500}>{pythSymbol === assetMapping(AssetTickers.pepe).pythSymbol ? formatDollarAmount(chartHover, 7, true) : formatDollarAmount(chartHover, 3, true)}</Typography>
                 <Typography variant='p_xlg' ml='8px'>{ON_USD}</Typography>
               </Box>
               <Box display='flex' alignItems='center' gap={1}>

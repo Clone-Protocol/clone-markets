@@ -44,6 +44,8 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol, networkEn
     }
   })()
 
+  const rescaleFactor = pythSymbol === "Crypto.PEPE/USD" ? 1_000_000 : 1
+
   const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, range)
   if (pythHistoricalData.length === 0) {
     return {
@@ -57,12 +59,12 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol, networkEn
   }
 
   chartData = pythHistoricalData.map((item) => {
-    return { time: item.timestamp, value: item.price }
+    return { time: item.timestamp, value: rescaleFactor * item.price }
   })
 
   if (networkEndpoint) {
     const oraclePrices = await getPythOraclePrices(new Connection(networkEndpoint))
-    const currentOraclePrice = oraclePrices.get(pythSymbol)! / oraclePrices.get("Crypto.USDC/USD")!;
+    const currentOraclePrice = rescaleFactor * oraclePrices.get(pythSymbol)! / oraclePrices.get("Crypto.USDC/USD")!;
     chartData.push({ time: new Date().toISOString(), value: currentOraclePrice })
   }
 

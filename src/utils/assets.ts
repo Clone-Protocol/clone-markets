@@ -59,7 +59,8 @@ export const getiAssetInfos = async (connection: Connection, program: CloneClien
     const poolCollateralIld = fromScale(pool.collateralIld, program.clone.collateral.scale)
     const poolOnassetIld = fromCloneScale(pool.onassetIld)
     const { pythSymbol } = assetMapping(poolIndex)
-    const oraclePrice = data.productPrice.get(pythSymbol)?.aggregate.price ?? fromScale(oracle.price, oracle.expo);
+    const rescaleFactor = Math.pow(10, oracle.rescaleFactor)
+    const oraclePrice = rescaleFactor * (data.productPrice.get(pythSymbol)?.aggregate.price ?? fromScale(oracle.price, oracle.expo));
     const poolPrice = (committedCollateral - poolCollateralIld) / (committedCollateral / oraclePrice - poolOnassetIld)
     const liquidity = committedCollateral * 2;
     iassetInfo.push({ status, poolIndex, poolPrice, liquidity });
