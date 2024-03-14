@@ -13,7 +13,7 @@ import ArrowUpward from 'public/images/arrow-up-green.svg'
 import ArrowDownward from 'public/images/arrow-down-red.svg'
 import Image from 'next/image'
 import { formatDollarAmount, formatLocaleAmount } from '~/utils/numbers'
-import { ASSETS } from '~/data/assets'
+import { ASSETS, AssetTickers } from '~/data/assets'
 import { useCallback } from 'react'
 import { ON_USD } from '~/utils/constants'
 import { PoolStatusButton, showPoolStatus } from '~/components/Common/PoolStatus'
@@ -73,7 +73,7 @@ const MarketList = () => {
 							<></>
 							:
 							<Box>
-								<Typography variant='p_xlg'>${formatLocaleAmount(params.value)}</Typography>
+								<Typography variant='p_xlg'>${params.row.id === AssetTickers.pepe ? formatLocaleAmount(params.value, 7) : formatLocaleAmount(params.value)}</Typography>
 								{isMobileOnSize && <Box display='flex' justifyContent='flex-end'><Change24hComp change24h={params.row.change24h} /></Box>}
 							</Box>
 					}

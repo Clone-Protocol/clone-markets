@@ -33,7 +33,7 @@ export const MAX_POOLS_FOR_SHOW = 3
 
 export const ASSETS = [
     {
-        tickerName: 'Clone Arbitrum',
+        tickerName: 'Cloned Arbitrum',
         tickerSymbol: 'clARB',
         tickerIcon: '/images/assets/on-arb.svg',
         ticker: 'arbitrum',
@@ -41,7 +41,7 @@ export const ASSETS = [
         mainColor: '#277DC7',
     },
     {
-        tickerName: 'Clone Optimism',
+        tickerName: 'Cloned Optimism',
         tickerSymbol: 'clOP',
         tickerIcon: '/images/assets/on-op.svg',
         ticker: 'optimism',
@@ -49,7 +49,7 @@ export const ASSETS = [
         mainColor: '#e24e4c',
     },
     {
-        tickerName: 'Clone Sui',
+        tickerName: 'Cloned Sui',
         tickerSymbol: 'clSui',
         tickerIcon: '/images/assets/on-sui.svg',
         ticker: 'sui',
@@ -57,9 +57,9 @@ export const ASSETS = [
         mainColor: '#6FBCF0',
     },
     {
-        tickerName: 'Clone Pepe',
+        tickerName: 'Cloned Pepe',
         tickerSymbol: 'clPepe',
-        tickerIcon: '/images/assets/on-ada.svg',
+        tickerIcon: '/images/assets/on-pepe.svg',
         ticker: 'pepe',
         pythSymbol: 'Crypto.PEPE/USD',
         mainColor: '#008000',
@@ -76,7 +76,7 @@ export const assetMapping = (index: number) => {
     let supabaseSymbol = ''
     switch (index) {
         case Asset.Arbitrum:
-            tickerName = 'Clone Arbitrum'
+            tickerName = 'Cloned Arbitrum'
             tickerSymbol = 'clARB'
             tickerIcon = '/images/assets/on-arb.svg'
             ticker = 'arbitrum'
@@ -85,7 +85,7 @@ export const assetMapping = (index: number) => {
             supabaseSymbol = pythSymbol
             break
         case Asset.Optimism:
-            tickerName = 'Clone Optimism'
+            tickerName = 'Cloned Optimism'
             tickerSymbol = 'clOP'
             tickerIcon = '/images/assets/on-op.svg'
             ticker = 'optimism'
@@ -94,7 +94,7 @@ export const assetMapping = (index: number) => {
             supabaseSymbol = pythSymbol
             break
         case Asset.Sui:
-            tickerName = 'Clone Sui'
+            tickerName = 'Cloned Sui'
             tickerSymbol = 'clSUI'
             tickerIcon = '/images/assets/on-sui.svg'
             ticker = 'sui'
@@ -103,9 +103,9 @@ export const assetMapping = (index: number) => {
             supabaseSymbol = pythSymbol
             break
         case Asset.Pepe:
-            tickerName = 'Clone Pepe'
+            tickerName = 'Cloned Pepe'
             tickerSymbol = 'clPEPE'
-            tickerIcon = '/images/assets/on-ada.svg'
+            tickerIcon = '/images/assets/on-pepe.svg'
             ticker = 'pepe'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.PEPE/USD'

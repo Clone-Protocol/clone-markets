@@ -60,8 +60,9 @@ export const fetchBalance = async ({ index, setStartTimer, mainCloneClient, netw
       }
       const { pythSymbol } = assetMapping(index)
       const priceMap = await getPythOraclePrices(program.provider.connection);
+      const rescaleFactor = Math.pow(10, oracle.rescaleFactor)
       const price = priceMap.get(pythSymbol)! / priceMap.get("Crypto.USDC/USD")!;
-      const oraclePrice = price ?? fromScale(oracle.price, oracle.expo) / fromScale(usdcOracle.price, usdcOracle.expo);
+      const oraclePrice = rescaleFactor * (price ?? fromScale(oracle.price, oracle.expo) / fromScale(usdcOracle.price, usdcOracle.expo));
       const { poolCollateral, poolOnasset } = calculatePoolAmounts(
         fromScale(pool.collateralIld, collateralScale),
         fromCloneScale(pool.onassetIld),
