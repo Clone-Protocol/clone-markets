@@ -38,6 +38,7 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	}
 
 	const pools = await program.getPools();
+	const oracles = await program.getOracles();
 	const priceMap = await getPythOraclePrices(program.provider.connection);
 
 	const balanceQueries = [];
@@ -52,11 +53,13 @@ export const fetchUserTotalBalance = async ({ program, userPubKey }: { program: 
 	const collateralScale = program.clone.collateral.scale
 	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const pool = pools.pools[i]
+		const oracle = oracles.oracles[pool.assetInfo.oracleInfoIndex]
+		const rescaleFactor = Math.pow(10, oracle.rescaleFactor)
 		const { poolCollateral, poolOnasset } = calculatePoolAmounts(
 			fromScale(pool.collateralIld, collateralScale),
 			fromCloneScale(pool.onassetIld),
 			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)! / priceMap.get("Crypto.USDC/USD")!,
+			rescaleFactor * priceMap.get(assetMapping(i).pythSymbol)! / priceMap.get("Crypto.USDC/USD")!,
 			program.clone.collateral
 		)
 		const price = poolCollateral / poolOnasset
@@ -99,6 +102,7 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 
 	console.log('fetchUserBalance')
 	const pools = await program.getPools();
+	const oracles = await program.getOracles();
 	const priceMap = await getPythOraclePrices(program.provider.connection);
 
 	const balanceQueries = [];
@@ -113,11 +117,13 @@ export const fetchUserBalance = async ({ program, userPubKey }: { program: Clone
 	for (let i = 0; i < Number(pools.pools.length); i++) {
 		const { tickerName, tickerSymbol, tickerIcon, assetType, pythSymbol } = assetMapping(i)
 		const pool = pools.pools[i]
+		const oracle = oracles.oracles[pool.assetInfo.oracleInfoIndex]
+		const rescaleFactor = Math.pow(10, oracle.rescaleFactor);
 		const { poolCollateral, poolOnasset } = calculatePoolAmounts(
 			fromScale(pool.collateralIld, collateralScale),
 			fromCloneScale(pool.onassetIld),
 			fromScale(pool.committedCollateralLiquidity, collateralScale),
-			priceMap.get(assetMapping(i).pythSymbol)! / priceMap.get("Crypto.USDC/USD")!,
+			rescaleFactor * priceMap.get(assetMapping(i).pythSymbol)! / priceMap.get("Crypto.USDC/USD")!,
 			program.clone.collateral
 		)
 		const price = poolCollateral / poolOnasset
