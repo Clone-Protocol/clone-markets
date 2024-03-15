@@ -29,7 +29,7 @@ export const DEFAULT_ASSET_ID = AssetTickers.arbitrum
 export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 //@MEMO: to add more asset, need to adjust here
-export const MAX_POOLS_FOR_SHOW = 3
+export const MAX_POOLS_FOR_SHOW = 4
 
 export const ASSETS = [
     {
@@ -50,7 +50,7 @@ export const ASSETS = [
     },
     {
         tickerName: 'Cloned Sui',
-        tickerSymbol: 'clSui',
+        tickerSymbol: 'clSUI',
         tickerIcon: '/images/assets/on-sui.svg',
         ticker: 'sui',
         pythSymbol: 'Crypto.SUI/USD',
@@ -58,7 +58,7 @@ export const ASSETS = [
     },
     {
         tickerName: 'Cloned Doge',
-        tickerSymbol: 'clDoge',
+        tickerSymbol: 'clDOGE',
         tickerIcon: '/images/assets/on-doge.svg',
         ticker: 'doge',
         pythSymbol: 'Crypto.DOGE/USD',
