@@ -77,7 +77,7 @@ const OnAssetList: React.FC<Props> = ({ assets }) => {
         return (
           <Stack lineHeight={1.1}>
             <Box display='flex' justifyContent='flex-end'>
-              <Typography variant='p_xlg'>${params.row.tickerSymbol === assetMapping(AssetTickers.pepe).tickerSymbol ? formatLocaleAmount(params.row.price, 7) : formatLocaleAmount(params.row.price)}</Typography>
+              <Typography variant='p_xlg'>${formatLocaleAmount(params.row.price)}</Typography>
             </Box>
             {percent >= 0 ? (
               <Box color='#00ff99' display='flex' alignItems='center' gap={1}>
