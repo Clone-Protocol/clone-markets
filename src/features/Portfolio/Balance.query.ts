@@ -42,7 +42,7 @@ export const fetchBalance = async ({ program, userPubKey, index }: { program: Cl
 interface GetProps {
 	userPubKey: PublicKey | null
 	index?: number
-	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	refetchOnMount?: boolean | "always"
 	enabled?: boolean
 }
 
@@ -56,13 +56,18 @@ export function useBalanceQuery({ userPubKey, index = -1, refetchOnMount, enable
 	const { getCloneApp } = useClone()
 
 	if (wallet) {
-		return useQuery(['portfolioBalance', wallet, userPubKey, index], async () => fetchBalance({ program: await getCloneApp(wallet), userPubKey, index }), {
+		return useQuery({
+			queryKey: ['portfolioBalance', wallet, userPubKey, index],
+			queryFn: async () => fetchBalance({ program: await getCloneApp(wallet), userPubKey, index }),
 			refetchOnMount,
 			refetchInterval: REFETCH_CYCLE,
 			refetchIntervalInBackground: true,
 			enabled
 		})
 	} else {
-		return useQuery(['portfolioBalance'], () => ({ onassetVal: 0, onusdVal: 0 }))
+		return useQuery({
+			queryKey: ['portfolioBalance'],
+			queryFn: () => ({ onassetVal: 0, onusdVal: 0 })
+		})
 	}
 }

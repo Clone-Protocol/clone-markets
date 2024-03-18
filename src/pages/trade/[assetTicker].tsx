@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles'
 import MarketDetail from '~/containers/Markets/MarketDetail'
 import TradingBox from '~/containers/Markets/TradingBox'
 import { ASSETS, AssetTickers, DEFAULT_ASSET_ID, DEFAULT_ASSET_LINK } from '~/data/assets'
-import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
+import { DehydratedState, HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { fetchMarketDetail } from '~/features/Markets/MarketDetail.query'
 import { DEV_RPCs, IS_DEV, MAIN_RPCs } from '~/data/networks'
@@ -34,7 +34,7 @@ export const getStaticProps = (async (context: any) => {
 
   if (IS_NOT_LOCAL_DEVELOPMENT) {
     console.log('prefetch')
-    await queryClient.prefetchQuery(['marketDetail', assetId], () => fetchMarketDetail({ index: assetId, mainCloneClient: null, networkEndpoint: IS_DEV ? DEV_RPCs[0].rpc_url : MAIN_RPCs[0].rpc_url }))
+    await queryClient.prefetchQuery({ queryKey: ['marketDetail', assetId], queryFn: () => fetchMarketDetail({ index: assetId, mainCloneClient: null, networkEndpoint: IS_DEV ? DEV_RPCs[0].rpc_url : MAIN_RPCs[0].rpc_url }) })
   }
 
   return {
@@ -81,9 +81,9 @@ const AssetPage = ({ dehydratedState, assetId }: InferGetStaticPropsType<typeof 
         }}>
         <Stack direction={isMobileOnSize ? 'column' : 'row'} gap={1} justifyContent="center" alignItems={isMobileOnSize ? "center" : ""}>
           <Box minWidth={isMobileOnSize ? '360px' : '750px'}>
-            <Hydrate state={dehydratedState}>
+            <HydrationBoundary state={dehydratedState}>
               <MarketDetail assetId={assetId} />
-            </Hydrate>
+            </HydrationBoundary>
           </Box>
           <Box width={showTrading ? '100%' : '360px'} height='100%' overflow={showTrading ? 'auto' : 'hidden'} display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '45px' : 'inherit'} mb={showTrading ? '180px' : '0px'}>
             {isShowTradingBox && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}

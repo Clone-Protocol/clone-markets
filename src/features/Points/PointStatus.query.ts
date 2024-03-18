@@ -26,7 +26,7 @@ export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null
 
 interface GetProps {
   userPubKey: PublicKey | null
-  refetchOnMount?: boolean | "always" | ((query: Query) => boolean | "always")
+  refetchOnMount?: boolean | "always"
   enabled?: boolean
 }
 
@@ -44,13 +44,18 @@ export function usePointStatusQuery({ userPubKey, refetchOnMount, enabled = true
   const wallet = useAnchorWallet()
 
   if (wallet) {
-    return useQuery(['statusData', wallet, userPubKey], async () => fetchStatus({ userPubKey }), {
+    return useQuery({
+      queryKey: ['statusData', wallet, userPubKey],
+      queryFn: async () => fetchStatus({ userPubKey }),
       refetchOnMount,
       // refetchInterval: REFETCH_CYCLE,
       // refetchIntervalInBackground: true,
       enabled
     })
   } else {
-    return useQuery(['statusData'], () => { return null })
+    return useQuery({
+      queryKey: ['statusData'],
+      queryFn: () => { return null }
+    })
   }
 }
