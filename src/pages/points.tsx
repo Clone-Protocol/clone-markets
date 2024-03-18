@@ -9,7 +9,7 @@ import RankingList from '~/containers/Points/RankingList'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { RankingList as RankingListType, fetchRanking } from '~/features/Points/Ranking.query'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { DehydratedState, Hydrate, QueryClient, dehydrate } from '@tanstack/react-query'
+import { DehydratedState, HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
 
 //SSR
 export const getStaticProps = (async () => {
@@ -17,7 +17,7 @@ export const getStaticProps = (async () => {
 
   if (IS_NOT_LOCAL_DEVELOPMENT) {
     console.log('prefetch')
-    await queryClient.prefetchQuery(['ranks'], () => fetchRanking())
+    await queryClient.prefetchQuery({ queryKey: ['ranks'], queryFn: () => fetchRanking() })
   }
 
   // SSR : there's netlify issue
@@ -76,9 +76,9 @@ const Points = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticPro
           <Box mt='10px'>
             <MyPointStatus />
 
-            <Hydrate state={dehydratedState}>
+            <HydrationBoundary state={dehydratedState}>
               <RankingList />
-            </Hydrate>
+            </HydrationBoundary>
           </Box>
         </Box>
       </Container>

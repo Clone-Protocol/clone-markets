@@ -160,19 +160,23 @@ export const fetchTotalVolume = async ({ timeframe }: { timeframe: FilterTime })
 
 interface GetProps {
   timeframe: FilterTime
-  refetchOnMount?: boolean | "always" | ((query: Query) => boolean | "always")
+  refetchOnMount?: boolean | "always"
   enabled?: boolean
 }
 
 export function useTotalLiquidityQuery({ timeframe, refetchOnMount, enabled = true }: GetProps) {
-  return useQuery(['totalLiquidity', timeframe], () => fetchTotalLiquidity({ timeframe }), {
+  return useQuery({
+    queryKey: ['totalLiquidity', timeframe],
+    queryFn: () => fetchTotalLiquidity({ timeframe }),
     refetchOnMount,
     enabled
   })
 }
 
 export function useTotalVolumeQuery({ timeframe, refetchOnMount, enabled = true }: GetProps) {
-  return useQuery(['totalVolume', timeframe], () => fetchTotalVolume({ timeframe }), {
+  return useQuery({
+    queryKey: ['totalVolume', timeframe],
+    queryFn: () => fetchTotalVolume({ timeframe }),
     refetchOnMount,
     enabled
   })
