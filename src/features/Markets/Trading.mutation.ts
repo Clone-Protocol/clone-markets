@@ -172,9 +172,9 @@ export function useTradingMutation(userPubKey: PublicKey | null, retryFunc?: (tx
 	if (wallet) {
 		return useMutation({
 			mutationFn: async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, feeLevel, retryFunc, queryClient }),
-			// onSuccess: () => {
-			// 	queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
-			// }
+			onSuccess: () => {
+				queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
+			}
 		})
 	} else {
 		return useMutation({ mutationFn: (_: FormData) => funcNoWallet() })
