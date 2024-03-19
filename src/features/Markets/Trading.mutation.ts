@@ -12,7 +12,6 @@ import { useAtomValue } from 'jotai'
 import { priorityFee } from '../globalAtom'
 import { FeeLevel } from '~/data/networks'
 import { AnchorProvider } from '@coral-xyz/anchor'
-import { Pools } from 'clone-protocol-sdk/sdk/generated/clone'
 
 export const callTrading = async ({
 	program,
@@ -173,11 +172,11 @@ export function useTradingMutation(userPubKey: PublicKey | null, retryFunc?: (tx
 	if (wallet) {
 		return useMutation({
 			mutationFn: async (data: FormData) => callTrading({ program: await getCloneApp(wallet), userPubKey, setTxState, data, feeLevel, retryFunc, queryClient }),
-			// onSuccess: () => {
-			// 	queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
-			// }
+			onSuccess: () => {
+				queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
+			}
 		})
 	} else {
-		return useMutation((_: FormData) => funcNoWallet())
+		return useMutation({ mutationFn: (_: FormData) => funcNoWallet() })
 	}
 }

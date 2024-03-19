@@ -83,7 +83,7 @@ export const fetchAssets = async ({ setShowPythBanner, mainCloneClient, networkE
 interface GetAssetsProps {
 	filter: FilterType
 	searchTerm: string
-	refetchOnMount?: QueryObserverOptions['refetchOnMount']
+	refetchOnMount?: boolean | "always"
 	filterPoolStatus?: boolean
 	enabled?: boolean
 }
@@ -114,7 +114,9 @@ export function useAssetsQuery({ filter, searchTerm, refetchOnMount, filterPoolS
 		queryFunc = () => []
 	}
 
-	return useQuery(['assets'], queryFunc, {
+	return useQuery({
+		queryKey: ['assets'],
+		queryFn: queryFunc,
 		refetchOnMount,
 		refetchInterval: REFETCH_CYCLE,
 		refetchIntervalInBackground: true,

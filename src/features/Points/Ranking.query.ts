@@ -1,5 +1,5 @@
 import { Query, useQuery } from '@tanstack/react-query'
-import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
+// import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { PythObj, PythResponseData } from '~/pages/api/points_pythlist'
 import { fetchAllUserPoints, UserPointsView } from '~/utils/fetch_netlify'
 
@@ -46,7 +46,7 @@ export const fetchRanking = async () => {
 }
 
 interface GetProps {
-  refetchOnMount?: boolean | "always" | ((query: Query) => boolean | "always")
+  refetchOnMount?: boolean | "always"
   enabled?: boolean
 }
 
@@ -71,10 +71,5 @@ export function useRankingQuery({ refetchOnMount, enabled = true }: GetProps) {
     queryFunc = () => []
   }
 
-  return useQuery(['ranks'], queryFunc, {
-    refetchOnMount,
-    // refetchInterval: REFETCH_CYCLE,
-    // refetchIntervalInBackground: true,
-    enabled
-  })
+  return useQuery({ queryKey: ['ranks'], queryFn: queryFunc, enabled, refetchOnMount })
 }

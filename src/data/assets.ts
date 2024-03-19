@@ -29,7 +29,7 @@ export const DEFAULT_ASSET_ID = AssetTickers.arbitrum
 export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 //@MEMO: to add more asset, need to adjust here
-export const MAX_POOLS_FOR_SHOW = 3
+export const MAX_POOLS_FOR_SHOW = 4
 
 export const ASSETS = [
     {
@@ -50,7 +50,7 @@ export const ASSETS = [
     },
     {
         tickerName: 'Cloned Sui',
-        tickerSymbol: 'clSui',
+        tickerSymbol: 'clSUI',
         tickerIcon: '/images/assets/on-sui.svg',
         ticker: 'sui',
         pythSymbol: 'Crypto.SUI/USD',
@@ -58,11 +58,11 @@ export const ASSETS = [
     },
     {
         tickerName: 'Cloned Doge',
-        tickerSymbol: 'clDoge',
+        tickerSymbol: 'clDOGE',
         tickerIcon: '/images/assets/on-doge.svg',
         ticker: 'doge',
         pythSymbol: 'Crypto.DOGE/USD',
-        mainColor: '#FFFF00',
+        mainColor: '#D9BD62',
     }
 ]
 
@@ -158,6 +158,6 @@ export const ASSETS_DESC = [
     },
     {
         ticker: 'doge',
-        desc: "clDOGE, the cloned asset of DOGE, offers traders exposure to DOGE token without ever leaving the Solana ecosystem. The DOGE blockchain is known for its high throughput and low latency. Built on the Move language, DOGE supports secure and sophisticated dApps. clDOGE provides Solana users with the ability to natively trade DOGE, capitalizing on the advantages of both the DOGE and Solana ecosystems."
+        desc: "clDOGE brings the quintessential memecoin, Dogecoin (DOGE), into the Solana ecosystem. Dogecoin embodies the original spirit of crypto, combining innovation and memes! Celebrated for its vibrant community, Dogecoin transcends its role as a digital currency to become a symbol of the playful and community-driven nature of the crypto space. clDOGE offers Solana traders the chance to engage with the legendary DOGE within Solana’s high-speed, low-cost environment."
     },
 ]
