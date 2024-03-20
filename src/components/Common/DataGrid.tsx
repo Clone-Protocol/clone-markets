@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { showPoolStatus } from './PoolStatus'
-import { DEFAULT_ASSET_LINK } from '~/data/assets'
 import { formatLocaleAmount } from '~/utils/numbers'
 
 interface GridProps {
@@ -143,7 +142,7 @@ export const CustomNoOnAssetOverlay = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px', zIndex: '999', position: 'relative' }}>
       <Typography variant='p_lg'>No clAsset to display. </Typography>
-      <Link href={DEFAULT_ASSET_LINK}><Typography variant='p_lg' color='#00ff99' ml='5px' sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Start Trading!</Typography></Link>
+      <Link href='/'><Typography variant='p_lg' color='#C4B5FD' ml='5px' sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Start Trading!</Typography></Link>
     </Box>
   )
 }
