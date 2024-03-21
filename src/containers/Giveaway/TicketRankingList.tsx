@@ -78,8 +78,21 @@ const PanelBox = styled(Box)`
   width: 474px;
   color: #fff;
   & .super-app-theme--header { 
-    color: #9d9d9d; 
+    color: #1a1a1a; 
     font-size: 11px; 
+  }
+  & .MuiDataGrid-columnHeaderTitle {
+    color: #989898;
+  }
+  & .MuiDataGrid-columnHeaders {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  & .MuiDataGrid-main {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  & .MuiDataGrid-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 `
 

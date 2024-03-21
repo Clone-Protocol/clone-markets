@@ -22,15 +22,13 @@ export const handler: Handler = async (event, context) => {
     return { statusCode: 500, body: JSON.stringify(error) }
   }
 
-  console.log('dd', newData)
-
   return {
     statusCode: 200,
     body: JSON.stringify(newData),
     ////  NOTE: Uncomment this out after testing, otherwise it will cache.
-    // headers: {
-    //   'Cache-Control': 'public, max-age=300',
-    //   'Content-Type': 'application/json',
-    // }
+    headers: {
+      'Cache-Control': 'public, max-age=300',
+      'Content-Type': 'application/json',
+    }
   }
 }

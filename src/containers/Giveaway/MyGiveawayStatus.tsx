@@ -7,6 +7,10 @@ import { formatLocaleAmount } from '~/utils/numbers'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import { useGiveawayStatusQuery } from '~/features/Giveaway/GiveawayStatus.query'
+import TrophyGold from 'public/images/giveaway/trophy-gold.svg'
+import TrophySilver from 'public/images/giveaway/trophy-silver.svg'
+import TrophyBronze from 'public/images/giveaway/trophy-bronze.svg'
+import Image from 'next/image'
 
 const MyGiveawayStatus = () => {
   const { publicKey } = useWallet()
@@ -21,46 +25,49 @@ const MyGiveawayStatus = () => {
 
   return (
     <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
-      <Stack direction='row' gap='12px' flexWrap={'wrap'} mt='18px'>
-        <BorderBox width={'150px'} height='92px' position='relative'>
+      <Stack direction='row' gap='12px' flexWrap={'wrap'} width='100%' justifyContent='center' mt='18px'>
+        <BorderBox width={isMobileOnSize ? '100%' : '150px'} height='92px' position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>Grand Prize</Typography>
           </Box>
           <StatusValue1>
-            <Typography variant='p_xlg'>
-              {infos?.lpPoints ? formatLocaleAmount(infos.lpPoints) : '0'}
+            <Image src={TrophyGold} alt='TrophyGold' />
+            <Typography variant='p_lg'>
+              {formatLocaleAmount(100000)} pts
             </Typography>
           </StatusValue1>
         </BorderBox>
-        <BorderBox width={'150px'} height='92px' position='relative'>
+        <BorderBox width={isMobileOnSize ? '100%' : '150px'} height='92px' position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>Draw #2</Typography>
           </Box>
           <StatusValue2>
-            <Typography variant='p_xlg'>
-              {infos?.tradePoints ? formatLocaleAmount(infos.tradePoints) : '0'}
+            <Image src={TrophySilver} alt='TrophySilver' />
+            <Typography variant='p_lg'>
+              {formatLocaleAmount(25000)} pts
             </Typography>
           </StatusValue2>
         </BorderBox>
-        <BorderBox width={'150px'} height='92px'>
+        <BorderBox width={isMobileOnSize ? '100%' : '150px'} height='92px'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>Draw #3</Typography>
           </Box>
           <StatusValue3>
-            <Typography variant='p_xlg'>
-              {infos?.socialPoints ? formatLocaleAmount(infos.socialPoints) : '0'}
+            <Image src={TrophyBronze} alt='TrophyBronze' />
+            <Typography variant='p_lg'>
+              {formatLocaleAmount(10000)} pts
             </Typography>
           </StatusValue3>
         </BorderBox>
       </Stack>
-      <Stack direction='row' gap={2} mt='23px'>
-        <BorderBox width='474px' height='104px' position='relative'>
+      <Stack direction='row' justifyContent='center' width='100%' mt='23px'>
+        <BorderBox width={isMobileOnSize ? '100%' : '474px'} height='104px' position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
-            <Typography variant='p_lg'>Your Tickets</Typography>
+            <Typography variant='p'>Your Tickets</Typography>
           </Box>
           <StatusValue>
-            <Typography variant='p_lg' fontWeight={500}>
-              {infos?.totalPoints ? formatLocaleAmount(infos.totalPoints) : '0'}
+            <Typography variant='p_xlg' fontWeight={500}>
+              {infos?.totalTickets ? formatLocaleAmount(infos.totalTickets) : '0'}
             </Typography>
           </StatusValue>
         </BorderBox>
@@ -85,16 +92,15 @@ const Wrapper = styled(Box)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 16px;
-  margin-bottom: 28px;
-  padding: 12px 28px;
+  margin-bottom: 22px;
+  padding: 0px 28px;
 `
 const StatusValue = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 7px;
+  margin-top: 17px;
 `
 const StatusValue1 = styled(StatusValue)`
   background-image: linear-gradient(147deg, #ffc700 5%, #ffe99b 28%, #ffeaa1 65%, #ffd600 89%);

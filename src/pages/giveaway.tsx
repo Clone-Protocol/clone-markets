@@ -47,7 +47,7 @@ const Giveaway = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticP
               </Box>
             </a>
           </Stack>
-          <Box my='40px'>
+          <Box my='30px'>
             <MyGiveawayStatus />
 
             <HydrationBoundary state={dehydratedState}>

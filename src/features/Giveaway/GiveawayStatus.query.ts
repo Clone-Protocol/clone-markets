@@ -1,26 +1,22 @@
-import { Query, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { PublicKey } from '@solana/web3.js'
 // import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
-import { fetchUserPoints, UserPointsView } from '~/utils/fetch_netlify'
+import { fetchUserGiveaway, UserGiveaway } from '~/utils/fetch_netlify'
 
 
-export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null }) => {
+export const fetchTicketRanking = async ({ userPubKey }: { userPubKey: PublicKey | null }) => {
   if (!userPubKey) return null
 
   console.log('fetchStatus')
-  const userPoints: UserPointsView[] = await fetchUserPoints(userPubKey.toString())
+  const userGiveaways: UserGiveaway[] = await fetchUserGiveaway(userPubKey.toString())
 
-  if (userPoints.length === 0) return null
+  if (userGiveaways.length === 0) return null
+
+  const userGiveaway = userGiveaways[0]
 
   return {
-    myRank: userPoints[0].rank,
-    totalPoints: userPoints[0].total_points,
-    lpPoints: userPoints[0].lp_points,
-    tradePoints: userPoints[0].trading_points,
-    socialPoints: userPoints[0].social_points,
-    hasPythPoint: userPoints[0].hasPythPoint,
-    pythPointTier: userPoints[0].pythPointTier
+    totalTickets: userGiveaway.tickets,
   }
 }
 
@@ -31,11 +27,7 @@ interface GetProps {
 }
 
 export interface Status {
-  myRank: number
-  totalPoints: number
-  lpPoints: number
-  tradePoints: number
-  socialPoints: number
+  totalTickets: number
 }
 
 export function useGiveawayStatusQuery({ userPubKey, refetchOnMount, enabled = true }: GetProps) {
@@ -44,7 +36,7 @@ export function useGiveawayStatusQuery({ userPubKey, refetchOnMount, enabled = t
   if (wallet) {
     return useQuery({
       queryKey: ['gaStatusData', wallet, userPubKey],
-      queryFn: async () => fetchStatus({ userPubKey }),
+      queryFn: async () => fetchTicketRanking({ userPubKey }),
       refetchOnMount,
       // refetchInterval: REFETCH_CYCLE,
       // refetchIntervalInBackground: true,
