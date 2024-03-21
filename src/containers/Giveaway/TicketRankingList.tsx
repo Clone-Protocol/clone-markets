@@ -78,21 +78,21 @@ const PanelBox = styled(Box)`
   width: 474px;
   color: #fff;
   & .super-app-theme--header { 
-    color: #1a1a1a; 
-    font-size: 11px; 
+    color: #1a1a1a !important;
+    font-size: 11px !important;
   }
   & .MuiDataGrid-columnHeaderTitle {
-    color: #989898;
+    color: #989898 !important;
   }
   & .MuiDataGrid-columnHeaders {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
   }
   & .MuiDataGrid-main {
-    border-color: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
   }
   & .MuiDataGrid-row {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 `
 
