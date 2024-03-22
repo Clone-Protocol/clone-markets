@@ -3,7 +3,10 @@ import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import { IS_DEV } from '~/data/networks'
-import { PointsStarIconOff, PointsStarIconOn, TrophyIconOff, TrophyIconOn } from './Common/SvgIcons'
+import { PointsStarIconOff, PointsStarIconOn } from './Common/SvgIcons'
+import TrophyIconOff from 'public/images/trophy-off.svg'
+import TrophyIconOn from 'public/images/trophy-on.svg'
+import Image from 'next/image'
 
 const CommonMenu = () => {
   const pathname = usePathname()
@@ -37,7 +40,7 @@ const CommonMenu = () => {
       }
       <Link href="/giveaway">
         <StyledGiveawayItemButton className={pathname?.startsWith('/giveaway') ? 'selected' : ''}>
-          {pathname?.startsWith('/giveaway') ? <TrophyIconOn /> : <TrophyIconOff />}
+          {pathname?.startsWith('/giveaway') ? <Image src={TrophyIconOn} alt='giveaway' /> : <Image src={TrophyIconOff} alt='giveaway' />}
         </StyledGiveawayItemButton>
       </Link>
     </List>
