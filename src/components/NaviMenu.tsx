@@ -4,6 +4,9 @@ import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import { IS_DEV } from '~/data/networks'
 import { PointsStarIconOff, PointsStarIconOn } from './Common/SvgIcons'
+import TrophyIconOff from 'public/images/trophy-off.svg'
+import TrophyIconOn from 'public/images/trophy-on.svg'
+import Image from 'next/image'
 
 const CommonMenu = () => {
   const pathname = usePathname()
@@ -35,6 +38,11 @@ const CommonMenu = () => {
           </StyledPointsItemButton>
         </Link>
       }
+      <Link href="/giveaway">
+        <StyledGiveawayItemButton className={pathname?.startsWith('/giveaway') ? 'selected' : ''}>
+          {pathname?.startsWith('/giveaway') ? <Image src={TrophyIconOn} alt='giveaway' /> : <Image src={TrophyIconOff} alt='giveaway' />}
+        </StyledGiveawayItemButton>
+      </Link>
     </List>
   )
 }
@@ -74,6 +82,12 @@ const StyledPointsItemButton = styled(StyledListItemButton)`
   &:hover {
     background-color: transparent;
     background-image: linear-gradient(to right, #1c1704 49%, #03181c 97%);
+  }
+`
+const StyledGiveawayItemButton = styled(StyledListItemButton)`
+  &:hover {
+    background-color: transparent;
+    background-image: linear-gradient(124deg, #312b12 -4%, #1a0c25 100%)
   }
 `
 const ColoredText = styled('div')`

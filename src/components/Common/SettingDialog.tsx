@@ -286,7 +286,6 @@ const SaveBtn = styled(Button)`
   height: 30px;
   border-radius: 5px;
   margin-top: 7px;
-  box-shadow: 0 0 10px 0 #005874;
   background-color: ${(props) => props.theme.basis.melrose};
   &:hover {
     background-color: ${(props) => props.theme.basis.melrose};
