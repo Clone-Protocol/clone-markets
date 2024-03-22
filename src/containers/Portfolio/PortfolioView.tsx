@@ -72,7 +72,7 @@ const PortfolioView = () => {
 					{ key: STABLE_COIN_INDEX, name: FilterTypeMap.stableCoin, value: Math.round(100 * onusdBalance / totalBalance), onusdAmount: onusdBalance } as PieItem
 				)
 			}
-			console.log('f', finalPie)
+			// console.log('f', finalPie)
 			setDataPie(finalPie)
 		}
 	}, [assets, balance?.onusdVal])

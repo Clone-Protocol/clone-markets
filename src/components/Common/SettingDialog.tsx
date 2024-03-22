@@ -106,7 +106,6 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
   const CommonSelectBox = ({ children, value, handleChange }: { children: React.ReactNode, value: number, handleChange: (event: SelectChangeEvent) => void }) => {
     return (
       <SelectBox
-        disableUnderline
         value={value}
         onChange={handleChange}
         sx={{
@@ -160,7 +159,7 @@ const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () =
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} TransitionComponent={FadeTransition} maxWidth={375}>
+      <Dialog open={open} onClose={handleClose} TransitionComponent={FadeTransition}>
         <DialogContent sx={{ backgroundColor: '#080018', border: '1px solid #414166', borderRadius: '10px', width: { xs: '100%', md: '375px' } }}>
           <BoxWrapper>
             <Typography variant='h3' fontWeight={500}>App Settings</Typography>
