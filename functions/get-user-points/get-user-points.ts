@@ -1,7 +1,5 @@
 import { Handler } from '@netlify/functions'
 import { createClient } from '@supabase/supabase-js'
-import path from 'path';
-import { promises as fs } from 'fs';
 import { PythObj } from '~/pages/api/points_pythlist';
 
 export const handler: Handler = async (event, context) => {
@@ -15,6 +13,7 @@ export const handler: Handler = async (event, context) => {
   ).select();
 
   let { data, error } = await rpcCall;
+  console.log('d', data)
 
   let newData: any = data
 
