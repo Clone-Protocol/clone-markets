@@ -36,7 +36,7 @@ const Giveaway = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticP
   return (
     <StyledSection sx={{ overflowX: 'hidden' }}>
       <Container>
-        <Box sx={{ paddingX: { xs: '0px', md: '20px' } }}>
+        <Box sx={{ paddingX: { xs: '0px', md: '20px' }, paddingTop: '10px' }}>
           <Box><Typography fontSize='20px' fontWeight={500}>Cloner Classic Giveaway</Typography></Box>
           <Stack direction='row' alignItems='center' gap={1}>
             <Typography variant='p' color='#66707e'>Enter into Point giveaway just by interacting with Clone</Typography>
