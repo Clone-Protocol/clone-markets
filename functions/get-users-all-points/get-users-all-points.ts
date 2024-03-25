@@ -4,12 +4,14 @@ import { createClient } from '@supabase/supabase-js'
 
 export const handler: Handler = async (event, context) => {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-
+  console.log('get-users-all-points')
   const rpcCall = supabase.from(
     "user_points_view"
-  ).select();
+  ).select().limit(100);
 
   let { data, error } = await rpcCall;
+
+  console.log('data', data)
 
   if (error !== null) {
     console.log(error)

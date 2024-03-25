@@ -74,7 +74,7 @@ const Points = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticPro
             </a>
           </Stack>
           <Box mt='10px'>
-            {/* <MyPointStatus /> */}
+            <MyPointStatus />
 
             <HydrationBoundary state={dehydratedState}>
               <RankingList />
