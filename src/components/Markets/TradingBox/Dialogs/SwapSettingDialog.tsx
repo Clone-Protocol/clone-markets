@@ -13,8 +13,8 @@ const SwapSettingDialog = ({ open, onSaveSetting }: { open: boolean, onSaveSetti
   const { enqueueSnackbar } = useSnackbar()
   const [customInputValue, setCustomInputValue] = useState('')
   const [customSlippage, setCustomSlippage] = useState(NaN)
-  const [slippage, setSlippage] = useState(0.5)
-  const [localSlippage, _] = useLocalStorage(SLIPPAGE, 0.5)
+  const [slippage, setSlippage] = useState(1)
+  const [localSlippage, _] = useLocalStorage(SLIPPAGE, 1)
   const [showErrorMsg, setShowErrorMsg] = useState(false)
 
   useEffect(() => {

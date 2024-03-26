@@ -131,6 +131,7 @@ export const callTrading = async ({
 
 			//if success, invalidate query
 			queryClient.invalidateQueries({ queryKey: ['portfolioBalance'] })
+			queryClient.invalidateQueries({ queryKey: ['marketDetail'] })
 			queryClient.invalidateQueries({ queryKey: ['userBalance'] })
 
 			await program.provider.connection.removeAccountChangeListener(subscriptionId);
