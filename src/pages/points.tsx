@@ -62,7 +62,7 @@ const Points = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticPro
   return (
     <StyledSection sx={{ overflowX: 'hidden' }}>
       <Container>
-        <Box sx={{ paddingX: { xs: '0px', md: '20px' } }}>
+        <Box sx={{ paddingX: { xs: '0px', md: '20px' }, paddingTop: '10px' }}>
           <Box><Typography fontSize='20px' fontWeight={500}>Points: Season 1</Typography></Box>
           <Stack direction='row' alignItems='center' gap={1}>
             <Typography variant='p' color='#66707e'>Earn points by participating in Clone ecosystem.</Typography>

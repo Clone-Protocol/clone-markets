@@ -75,7 +75,6 @@ const MyGiveawayStatus = () => {
       {!publicKey && <>
         {isMobileOnSize ? <BlackDefault /> : <OpaqueDefault />}
         <Box position='absolute' top='20px' marginY='55px' left="0px" right="0px" marginX='auto'>
-          <Box display='flex' justifyContent='center' mb='7px'><Typography variant='p_lg'>To see your points: </Typography></Box>
           <Box display='flex' justifyContent='center'>
             <ConnectWallet onClick={() => setOpen(true)}><Typography variant='p_xlg'>Connect Wallet</Typography></ConnectWallet>
           </Box>
@@ -132,7 +131,6 @@ const ConnectWallet = styled(Button)`
   object-fit: contain;
   border-radius: 10px;
   border: solid 1px ${(props) => props.theme.basis.melrose};
-  box-shadow: 0 0 15px 0 #005874;
   background-color: #000;
   color: #fff;
   &:hover {

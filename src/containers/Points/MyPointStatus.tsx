@@ -185,7 +185,6 @@ const ConnectWallet = styled(Button)`
   object-fit: contain;
   border-radius: 10px;
   border: solid 1px ${(props) => props.theme.basis.melrose};
-  box-shadow: 0 0 15px 0 #005874;
   background-color: #000;
   color: #fff;
   &:hover {
