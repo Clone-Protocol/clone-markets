@@ -19,6 +19,7 @@ export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null
     lpPoints: userPoints[0].lp_points,
     tradePoints: userPoints[0].trading_points,
     socialPoints: userPoints[0].social_points,
+    referralPoints: 0,
     hasPythPoint: userPoints[0].hasPythPoint,
     pythPointTier: userPoints[0].pythPointTier
   }
@@ -36,6 +37,7 @@ export interface Status {
   lpPoints: number
   tradePoints: number
   socialPoints: number
+  referralPoints: number
   hasPythPoint: boolean
   pythPointTier: number
 }
