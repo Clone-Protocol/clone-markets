@@ -11,6 +11,8 @@ import TrophyGold from 'public/images/giveaway/trophy-gold.svg'
 import TrophySilver from 'public/images/giveaway/trophy-silver.svg'
 import TrophyBronze from 'public/images/giveaway/trophy-bronze.svg'
 import Image from 'next/image'
+import { useEffect } from 'react'
+import { fetchGenerateReferralCode, fetchLinkReferralCode } from '~/utils/fetch_netlify'
 
 const MyGiveawayStatus = () => {
   const { publicKey } = useWallet()
@@ -22,6 +24,13 @@ const MyGiveawayStatus = () => {
     refetchOnMount: true,
     enabled: publicKey != null
   })
+
+  useEffect(() => {
+    if (publicKey) {
+      // fetchGenerateReferralCode(publicKey.toString())
+      // fetchLinkReferralCode(publicKey.toString(), '3')
+    }
+  }, [publicKey])
 
   return (
     <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>

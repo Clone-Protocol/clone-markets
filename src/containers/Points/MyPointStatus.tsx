@@ -31,7 +31,7 @@ const MyPointStatus = () => {
   return (
     <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
       <Stack direction='row' gap={2}>
-        <BorderBox width={isMobileOnSize ? '140px' : '176px'}>
+        <BorderBox width={isMobileOnSize ? '166px' : '176px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p_lg'>Global Rank</Typography>
           </Box>
@@ -39,7 +39,7 @@ const MyPointStatus = () => {
             <RankIndexForStatus rank={infos?.myRank} />
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '140px' : '350px'} position='relative'>
+        <BorderBox width={isMobileOnSize ? '166px' : '350px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p_lg'>My Total Points</Typography>
             <InfoTooltip title={TooltipTexts.points.totalPoints} color='#66707e' />
@@ -67,7 +67,7 @@ const MyPointStatus = () => {
         </BorderBox>
       </Stack>
       <Stack direction='row' gap={2} flexWrap={'wrap'} mt='18px'>
-        <BorderBox width={isMobileOnSize ? '140px' : '250px'} position='relative'>
+        <BorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Liquidity Points</Typography>
             <InfoTooltip title={TooltipTexts.points.lpPoints} color='#66707e' />
@@ -78,7 +78,7 @@ const MyPointStatus = () => {
             </Typography>
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '140px' : '250px'} position='relative'>
+        <BorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Trade Points</Typography>
             <InfoTooltip title={TooltipTexts.points.tradePoints} color='#66707e' />
@@ -93,7 +93,7 @@ const MyPointStatus = () => {
             <ColoredText><Typography variant='p_sm'>1.5x Multiplier</Typography></ColoredText>
           </PromoteBox>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '140px' : '250px'}>
+        <BorderBox width={isMobileOnSize ? '166px' : '200px'}>
           <Box display='flex' justifyContent='center' alignItems='center'>
             <Typography variant='p'>My Social Points</Typography>
             <InfoTooltip title={TooltipTexts.points.socialPoints} color='#66707e' />
@@ -104,11 +104,21 @@ const MyPointStatus = () => {
             </Typography>
           </StatusValue>
         </BorderBox>
+        <BorderBox width={isMobileOnSize ? '166px' : '200px'}>
+          <Box display='flex' justifyContent='center' alignItems='center'>
+            <Typography variant='p'>My Referral Points</Typography>
+            <InfoTooltip title={TooltipTexts.points.referralPoints} color='#66707e' />
+          </Box>
+          <StatusValue>
+            <Typography variant='p_xlg'>
+              {infos?.referralPoints ? formatLocaleAmount(infos.referralPoints) : '0'}
+            </Typography>
+          </StatusValue>
+        </BorderBox>
       </Stack>
       {!publicKey && <>
         {isMobileOnSize ? <BlackDefault /> : <OpaqueDefault />}
         <Box position='absolute' top='20px' marginY='55px' left="0px" right="0px" marginX='auto'>
-          <Box display='flex' justifyContent='center' mb='7px'><Typography variant='p_lg'>To see your points: </Typography></Box>
           <Box display='flex' justifyContent='center'>
             <ConnectWallet onClick={() => setOpen(true)}><Typography variant='p_xlg'>Connect Wallet</Typography></ConnectWallet>
           </Box>
