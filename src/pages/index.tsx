@@ -13,7 +13,7 @@ import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useSearchParams } from 'next/navigation'
 import { fetchLinkReferralCode } from '~/utils/fetch_netlify'
-import ReferralDialog from '~/components/Points/ReferralDialog'
+import ReferralDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 
 //SSR
