@@ -56,10 +56,11 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
       console.log('refCode', refCode)
       fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
         console.log('res', res)
-        if (res[0] && res[0].total_points > 0) {
-          setProperReferred(false)
-        } else {
+        const { status } = res
+        if (status === 0) {
           setProperReferred(true)
+        } else {
+          setProperReferred(false)
         }
         setShowReferralDialog(true)
       })
