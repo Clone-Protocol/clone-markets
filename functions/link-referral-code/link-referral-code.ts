@@ -17,7 +17,7 @@ export const handler: Handler = async (event, context) => {
   console.log("user_points_view request", data, error)
 
   // This insert will fail if they already have a referral code
-  if (error !== null && data?.length === 0) {
+  if (error === null && data?.length === 0) {
     let { error } = await supabase.from(
         "linked_referral_codes"
       ).insert([{ "user_address": userAddress, "referral_code": referralCode }]);
