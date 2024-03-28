@@ -11,7 +11,7 @@ export const handler: Handler = async (event, context) => {
   let response = null;
   // Checks the users points
   let { data, error } = await supabase.from(
-    "user_points_view"
+    "user_points_view_materialized"
   ).select().eq('user_address', userAddress).gt("total_points", 0)
 
   if (error === null && data) {
