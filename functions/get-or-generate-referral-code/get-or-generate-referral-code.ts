@@ -8,19 +8,31 @@ export const handler: Handler = async (event, context) => {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
   const userAddress = params.userAddress
 
-  // This insert will fail if they already have a referral code
-  let { error } = await supabase.from(
-    "user_referral_codes"
-  ).insert([{ "user_address": userAddress }]);
+  let response = null;
+  // Checks the users points
+  let { data, error } = await supabase.from(
+    "user_points_view"
+  ).select().eq('user_address', userAddress).gt("total_points", 0)
 
-  // This will fetch the code which they should have now.
-  let { data } = await supabase.from(
-    "user_referral_codes"
-  ).select("referral_code").eq("user_address", userAddress);
+  if (error === null && data) {
+    if (data?.length > 0) {
+      // Try to insert for new referral code, ok if it fails.
+      await supabase.from(
+        "user_referral_codes"
+      ).insert([{ "user_address": userAddress }]);
+
+      // Either it was inserted or already present.
+      let { data } = await supabase.from(
+        "user_referral_codes"
+      ).select("referral_code").eq("user_address", userAddress);
+
+      response = data
+    }
+  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify(data),
+    body: JSON.stringify(response),
     ////  NOTE: Uncomment this out after testing, otherwise it will cache.
     // headers: {
     //   'Cache-Control': 'public, max-age=300',
