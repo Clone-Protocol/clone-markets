@@ -14,11 +14,15 @@ export const handler: Handler = async (event, context) => {
     "user_points_view"
   ).select().eq('user_address', userAddress).gt("total_points", 0)
 
+  console.log("user_points_view request", data, error)
+
   // This insert will fail if they already have a referral code
   if (error !== null && data?.length === 0) {
     let { error } = await supabase.from(
         "linked_referral_codes"
       ).insert([{ "user_address": userAddress, "referral_code": referralCode }]);
+
+    console.log("linked referral codes error:", error)
   }
 
   return {
