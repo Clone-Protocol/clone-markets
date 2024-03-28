@@ -43,6 +43,8 @@ const MyPointStatus = () => {
     if (!infos?.totalPoints) {
       console.log('t', infos?.totalPoints)
       setReferralStatus(ReferralStatus.NotAllowed)
+    } else {
+      setReferralStatus(ReferralStatus.NotGenerated)
     }
   }, [infos])
 

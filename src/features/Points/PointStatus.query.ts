@@ -9,6 +9,7 @@ export const fetchReferralCode = async ({ userPubKey }: { userPubKey: PublicKey 
 
   console.log('fetchStatus')
   const referralCode = await fetchGenerateReferralCode(userPubKey.toString())
+  console.log('ref', referralCode)
 
   if (referralCode.length === 0) return null
 
