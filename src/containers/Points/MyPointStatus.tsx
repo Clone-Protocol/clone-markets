@@ -41,6 +41,7 @@ const MyPointStatus = () => {
 
   useEffect(() => {
     if (!infos?.totalPoints) {
+      console.log('t', infos?.totalPoints)
       setReferralStatus(ReferralStatus.NotAllowed)
     }
   }, [infos])

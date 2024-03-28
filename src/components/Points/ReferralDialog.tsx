@@ -17,7 +17,7 @@ const ReferralTextDialog = ({ isReferred, onClose }: { isReferred: boolean, onCl
   }
 
   return (
-    <BackScreen>
+    <BackScreen onClick={() => close()}>
       <AnimWrapper className={addedOut}>
         <BoxWrapper sx={{ width: { xs: '100%', md: '400px' }, paddingTop: { xs: '30px', md: '20px' } }}>
           <Image src={StarsIcon} alt='star' />
