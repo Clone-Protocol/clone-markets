@@ -1,5 +1,4 @@
 'use client'
-import * as React from 'react'
 import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Container from '@mui/material/Container'
@@ -12,6 +11,10 @@ import { DehydratedState, HydrationBoundary, QueryClient, dehydrate } from '@tan
 import { fetchAssets } from '~/features/Markets/Assets.query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { useSearchParams } from 'next/navigation'
+import { fetchLinkReferralCode } from '~/utils/fetch_netlify'
+import ReferralDialog from '~/components/Points/ReferralDialog'
+import { useEffect, useState } from 'react'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -42,6 +45,27 @@ export const getStaticProps = (async () => {
 const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { publicKey } = useWallet()
 
+  //for referral 
+  const params = useSearchParams()
+  const refCode = params.get('referralCode')
+  const [showReferralDialog, setShowReferralDialog] = useState(false)
+  const [properReferred, setProperReferred] = useState(false)
+
+  useEffect(() => {
+    if (publicKey && refCode) {
+      console.log('refCode', refCode)
+      fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
+        console.log('res', res)
+        if (res[0] && res[0].total_points > 0) {
+          setProperReferred(false)
+        } else {
+          setProperReferred(true)
+        }
+        setShowReferralDialog(true)
+      })
+    }
+  }, [publicKey, refCode])
+
   return (
     <div>
       <StyledSection>
@@ -61,6 +85,8 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
           <HydrationBoundary state={dehydratedState}>
             <MarketList />
           </HydrationBoundary>
+
+          {showReferralDialog && <ReferralDialog isReferred={properReferred} onClose={() => setShowReferralDialog(false)} />}
         </Container>
       </StyledSection>
     </div>

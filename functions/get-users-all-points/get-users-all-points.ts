@@ -11,7 +11,7 @@ export const handler: Handler = async (event, context) => {
 
   let { data, error } = await rpcCall;
 
-  console.log('data', data)
+  // console.log('data', data)
 
   if (error !== null) {
     console.log(error)

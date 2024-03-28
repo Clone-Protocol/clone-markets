@@ -50,7 +50,7 @@ export type UserPointsView = {
     lp_points: number
     social_points: number
     total_points: number
-    // referral_points: number
+    referral_points: number
     name?: string
     hasPythPoint?: boolean
     pythPointTier?: number
@@ -92,7 +92,6 @@ export const fetchGenerateReferralCode = async (userAddress: string) => {
     let url = `${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-or-generate-referral-code`;
     url += `?userAddress=${userAddress}`;
     const response = await axios.get(url)
-    console.log('r', response.data)
     return response.data
 }
 
@@ -100,7 +99,6 @@ export const fetchLinkReferralCode = async (userAddress: string, referralCode: s
     let url = `${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/link-referral-code`;
     url += `?userAddress=${userAddress}&referralCode=${referralCode}`;
     const response = await axios.get(url)
-    console.log('r', response.data)
     return response.data
 }
 

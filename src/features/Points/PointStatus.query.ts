@@ -2,8 +2,20 @@ import { Query, useQuery } from '@tanstack/react-query'
 import { PublicKey } from '@solana/web3.js'
 // import { REFETCH_CYCLE } from '~/components/Markets/TradingBox/RateLoadingIndicator'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
-import { fetchUserPoints, UserPointsView } from '~/utils/fetch_netlify'
+import { fetchGenerateReferralCode, fetchUserPoints, UserPointsView } from '~/utils/fetch_netlify'
 
+export const fetchReferralCode = async ({ userPubKey }: { userPubKey: PublicKey | null }) => {
+  if (!userPubKey) return null
+
+  console.log('fetchStatus')
+  const referralCode = await fetchGenerateReferralCode(userPubKey.toString())
+
+  if (referralCode.length === 0) return null
+
+  return {
+    referralCode: referralCode[0].referral_code
+  }
+}
 
 export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null }) => {
   if (!userPubKey) return null
@@ -19,7 +31,7 @@ export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null
     lpPoints: userPoints[0].lp_points,
     tradePoints: userPoints[0].trading_points,
     socialPoints: userPoints[0].social_points,
-    referralPoints: 0,
+    referralPoints: userPoints[0].referral_points,
     hasPythPoint: userPoints[0].hasPythPoint,
     pythPointTier: userPoints[0].pythPointTier
   }

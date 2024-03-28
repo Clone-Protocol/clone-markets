@@ -36,7 +36,7 @@ export const fetchRanking = async () => {
       lpPoints: user.lp_points,
       tradePoints: user.trading_points,
       socialPoints: user.social_points,
-      referralPoints: 0,
+      referralPoints: user.referral_points,
       totalPoints: user.total_points,
       hasPythPoint: pythUser !== undefined ? true : false,
       pythPointTier: pythUser !== undefined ? pythUser.tier : -1
