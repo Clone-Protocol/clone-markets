@@ -1,47 +1,40 @@
-import React, { useState } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Dialog } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import StarsIcon from 'public/images/stars.svg'
 import { CloseButton } from '../Common/CommonButtons'
+import { FadeTransition } from '~/components/Common/Dialog'
 import Image from 'next/image'
 // import RocketPromoteIcon from 'public/images/points-rocket.svg'
 // import Image from 'next/image'
 
-const ReferralTextDialog = ({ isReferred, onClose }: { isReferred: boolean, onClose: () => void }) => {
-  const [addedOut, setAddedOut] = useState('')
-  const close = () => {
-    setAddedOut('out')
-    setTimeout(() => {
-      onClose && onClose()
-    }, 1000)
-  }
+const ReferralTextDialog = ({ referralStatus, open, handleClose }: { referralStatus: number, open: boolean, handleClose: () => void }) => {
+  // const [addedOut, setAddedOut] = useState('')
+  // const close = () => {
+  //   setAddedOut('out')
+  //   setTimeout(() => {
+  //     onClose && onClose()
+  //   }, 1000)
+  // }
 
   return (
-    <BackScreen onClick={() => close()}>
-      <AnimWrapper className={addedOut}>
-        <BoxWrapper sx={{ width: { xs: '100%', md: '400px' }, paddingTop: { xs: '30px', md: '20px' } }}>
-          <Image src={StarsIcon} alt='star' />
-          <Typography variant='p_lg'>{isReferred ? 'You have already been referred!' : 'Only new users can be referred!'}</Typography>
-          <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
-            <CloseButton handleClose={() => close()} />
-          </Box>
-        </BoxWrapper>
-      </AnimWrapper>
-    </BackScreen>
+    // <AnimWrapper className={addedOut}>
+    <Dialog open={open} onClose={handleClose} TransitionComponent={FadeTransition}>
+      <BoxWrapper sx={{ width: { xs: '100%', md: '400px' }, paddingTop: { xs: '30px', md: '20px' } }}>
+        <Image src={StarsIcon} alt='star' />
+        <Typography variant='p_lg'>
+          {referralStatus === 0 || referralStatus === 2 ? 'You have already been referred!' :
+            referralStatus === 1 ? 'Only new users can be referred!' :
+              referralStatus === 3 ? 'Invalid referral link' : 'You can’t refer yourself'
+          }</Typography>
+        <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
+          <CloseButton handleClose={() => handleClose()} />
+        </Box>
+      </BoxWrapper>
+    </Dialog>
+    // </AnimWrapper>
   )
 }
 
-const BackScreen = styled('div')`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-`
 const AnimWrapper = styled('div')`
   transform: translateX(-1500px);
   animation: roadRunnerIn 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;

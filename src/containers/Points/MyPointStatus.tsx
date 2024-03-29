@@ -63,11 +63,23 @@ const MyPointStatus = () => {
     }
   }
 
+  const clickReferralCode = async () => {
+    // if (referralStatus === ReferralStatus.Generated) {
+    //   setShowReferralPanel(false)
+    //   setReferralStatus(ReferralStatus.NotGenerated)
+    // } else {
+    setShowReferralPanel(true)
+    if (referralStatus === ReferralStatus.NotGenerated) {
+      getReferralCode()
+    }
+    // }
+  }
+
   return (
     <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
       <Stack direction='row' gap={2}>
         <BorderBox width={isMobileOnSize ? '166px' : '176px'}>
-          <Box display='flex' justifyContent='center' alignItems='center'>
+          <Box display='flex' justifyContent='center' alignItems='center' height='20px'>
             <Typography variant='p_lg'>Global Rank</Typography>
           </Box>
           <StatusValue>
@@ -75,7 +87,7 @@ const MyPointStatus = () => {
           </StatusValue>
         </BorderBox>
         <BorderBox width={isMobileOnSize ? '166px' : '350px'} position='relative'>
-          <Box display='flex' justifyContent='center' alignItems='center'>
+          <Box display='flex' justifyContent='center' alignItems='center' height='20px'>
             <Typography variant='p_lg'>My Total Points</Typography>
             <InfoTooltip title={TooltipTexts.points.totalPoints} color='#66707e' />
           </Box>
@@ -103,7 +115,7 @@ const MyPointStatus = () => {
       </Stack>
       <Stack direction='row' gap={2} flexWrap={'wrap'} mt='18px'>
         <BorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
-          <Box display='flex' justifyContent='center' alignItems='center'>
+          <Box display='flex' justifyContent='center' alignItems='center' ml='10px'>
             <Typography variant='p'>My Liquidity Points</Typography>
             <InfoTooltip title={TooltipTexts.points.lpPoints} color='#66707e' />
           </Box>
@@ -114,7 +126,7 @@ const MyPointStatus = () => {
           </StatusValue>
         </BorderBox>
         <BorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
-          <Box display='flex' justifyContent='center' alignItems='center'>
+          <Box display='flex' justifyContent='center' alignItems='center' ml='10px'>
             <Typography variant='p'>My Trade Points</Typography>
             <InfoTooltip title={TooltipTexts.points.tradePoints} color='#66707e' />
           </Box>
@@ -129,7 +141,7 @@ const MyPointStatus = () => {
           </PromoteBox>
         </BorderBox>
         <BorderBox width={isMobileOnSize ? '166px' : '200px'}>
-          <Box display='flex' justifyContent='center' alignItems='center'>
+          <Box display='flex' justifyContent='center' alignItems='center' ml='10px'>
             <Typography variant='p'>My Social Points</Typography>
             <InfoTooltip title={TooltipTexts.points.socialPoints} color='#66707e' />
           </Box>
@@ -139,51 +151,53 @@ const MyPointStatus = () => {
             </Typography>
           </StatusValue>
         </BorderBox>
-        <BorderBox width={isMobileOnSize ? '166px' : '200px'} sx={{ paddingTop: !showReferralPanel ? '14px' : '0px' }} onMouseEnter={() => setShowReferralPanel(true)} onMouseLeave={() => setShowReferralPanel(false)}>
-          {!showReferralPanel ?
-            <Box>
-              <Box display='flex' justifyContent='center' alignItems='center'>
-                <Typography variant='p'>My Referral Points</Typography>
-                <InfoTooltip title={TooltipTexts.points.referralPoints} color='#66707e' />
-              </Box>
-              <StatusValue>
-                <Typography variant='p_xlg'>
-                  {infos?.referralPoints ? formatLocaleAmount(infos.referralPoints) : '0'}
-                </Typography>
-              </StatusValue>
+        <GenerateReferralBorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
+          {isGeneratingRefCode ?
+            <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
+              <Box sx={{ width: '32px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1c1c1c', borderRadius: '10px' }}><CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} /></Box>
             </Box>
             :
-            <Box height='100%'>
-              {referralStatus === ReferralStatus.Generated ?
-                <Box>
-                  <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
-                    <Box><Typography variant='p_sm'>My Referral Link</Typography></Box>
-                    <CopyToClipboard text={process.env.NEXT_PUBLIC_API_ROOT + '?referralCode=' + referralCode} onCopy={() => enqueueSnackbar('Referral link copied')}>
-                      <ReferralButton><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>Copy Link</Typography></ReferralButton>
-                    </CopyToClipboard>
-                  </Box>
-                  <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
-                    <Box><Typography variant='p_sm'>My Referral Code</Typography></Box>
-                    <CopyToClipboard text={referralCode} onCopy={() => enqueueSnackbar('Referral code copied')}>
-                      <ReferralButton><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>{referralCode}</Typography></ReferralButton>
-                    </CopyToClipboard>
-                  </Box>
+            !showReferralPanel || referralStatus === ReferralStatus.NotGenerated ?
+              <Box mt='8px'>
+                <Box display='flex' justifyContent='center' alignItems='center' ml='10px'>
+                  <Typography variant='p'>My Referral Points</Typography>
+                  <InfoTooltip title={TooltipTexts.points.referralPoints} color='#66707e' />
                 </Box>
-                :
-                <Box display='flex' justifyContent='center' alignItems='center' height='100%' mt='10px'>
-                  {referralStatus === ReferralStatus.NotGenerated ?
-                    isGeneratingRefCode ?
-                      <Box sx={{ width: '32px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1c1c1c', borderRadius: '10px' }}><CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} /></Box>
-                      :
-                      <GenerateReferralButton onClick={() => getReferralCode()}><Typography variant='p_sm'>Generate Referral Code</Typography></GenerateReferralButton>
-                    :
+                <StatusValue>
+                  <Typography variant='p_xlg'>
+                    {infos?.referralPoints ? formatLocaleAmount(infos.referralPoints) : '0'}
+                  </Typography>
+                </StatusValue>
+                <ReferralBox onClick={clickReferralCode}>
+                  <Typography variant='p_sm'>Click for referral code</Typography>
+                </ReferralBox>
+              </Box>
+              :
+              <Box height='100%'>
+                {referralStatus === ReferralStatus.Generated ?
+                  <Box mt='8px'>
+                    <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+                      <Box><Typography variant='p_sm'>My Referral Link</Typography></Box>
+                      <CopyToClipboard text={process.env.NEXT_PUBLIC_API_ROOT + '?referralCode=' + referralCode} onCopy={() => enqueueSnackbar('Referral link copied')}>
+                        <ReferralButton><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>Copy Link</Typography></ReferralButton>
+                      </CopyToClipboard>
+                    </Box>
+                    <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+                      <Box><Typography variant='p_sm'>My Referral Code</Typography></Box>
+                      <CopyToClipboard text={referralCode} onCopy={() => enqueueSnackbar('Referral code copied')}>
+                        <ReferralButton><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>{referralCode}</Typography></ReferralButton>
+                      </CopyToClipboard>
+                    </Box>
+                  </Box>
+                  :
+                  <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
+                    {/* //   <GenerateReferralButton onClick={() => getReferralCode()}><Typography variant='p_sm'>Generate Referral Code</Typography></GenerateReferralButton> */}
                     <Typography variant='p_sm' color='#cacaca' width='145px' lineHeight={1.2}>You are not eligible for referral link yet! Please use Clone Markets app and/or Clone Liquidity app first.</Typography>
-                  }
-                </Box>
-              }
-            </Box>
+                  </Box>
+                }
+              </Box>
           }
-        </BorderBox>
+        </GenerateReferralBorderBox>
       </Stack>
       {!publicKey && <>
         {isMobileOnSize ? <BlackDefault /> : <OpaqueDefault />}
@@ -214,13 +228,27 @@ const StatusValue = styled(Box)`
   justify-content: center;
   align-items: center;
   gap: 14px;
-  margin-top: 22px;
+  margin-top: 18px;
 `
 const BorderBox = styled(Box)`
   border-radius: 10px;
   border: solid 1px rgba(255, 255, 255, 0.1);
-  padding-top: 14px;
-  padding-bottom: 22px;
+  padding-top: 8px;
+  padding-bottom: 25px;
+`
+const GenerateReferralBorderBox = styled(BorderBox)`
+  padding: 0px;
+  background-color: #000;
+  &:hover {
+    background-color: #000;
+    border-style: solid;
+    border-width: 1px;
+    border-image-source: linear-gradient(to bottom, #fbdc5f, #3dddff);
+    border-image-slice: 1;
+    background-image: linear-gradient(to bottom, #000, #000), linear-gradient(to bottom, #fbdc5f, #3dddff);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+  }
 `
 const PromoteBox = styled(Box)`
   position: absolute;
@@ -235,6 +263,9 @@ const PromoteBox = styled(Box)`
   border-top-left-radius: 10px;
   border-bottom-right-radius: 8px;
   background-color: rgba(255, 255, 255, 0.07);
+`
+const ReferralBox = styled(PromoteBox)`
+  width: 140px;
 `
 const PythBox = styled(Box)`
   position: absolute;

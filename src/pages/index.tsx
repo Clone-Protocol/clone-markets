@@ -13,8 +13,9 @@ import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useSearchParams } from 'next/navigation'
 import { fetchLinkReferralCode } from '~/utils/fetch_netlify'
-import ReferralDialog from '~/components/Points/ReferralTextDialog'
+import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
+import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -48,22 +49,23 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   //for referral 
   const params = useSearchParams()
   const refCode = params.get('referralCode')
-  const [showReferralDialog, setShowReferralDialog] = useState(false)
-  const [properReferred, setProperReferred] = useState(false)
+  const [showReferralTextDialog, setShowReferralTextDialog] = useState(false)
+  const [showReferralCodePutDlog, setShowReferralCodePutDlog] = useState(false)
+  const [referralStatus, setReferralStatus] = useState(0)
 
   useEffect(() => {
-    if (publicKey && refCode) {
-      console.log('refCode', refCode)
-      fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
-        console.log('res', res)
-        const { status } = res
-        if (status === 0) {
-          setProperReferred(true)
-        } else {
-          setProperReferred(false)
-        }
-        setShowReferralDialog(true)
-      })
+    if (publicKey) {
+      if (refCode) {
+        console.log('refCode', refCode)
+        fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
+          console.log('res', res)
+          const { status } = res
+          setReferralStatus(status)
+          setShowReferralTextDialog(true)
+        })
+      } else {
+        setShowReferralCodePutDlog(true)
+      }
     }
   }, [publicKey, refCode])
 
@@ -87,7 +89,8 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
             <MarketList />
           </HydrationBoundary>
 
-          {showReferralDialog && <ReferralDialog isReferred={properReferred} onClose={() => setShowReferralDialog(false)} />}
+          <ReferralTextDialog referralStatus={referralStatus} open={showReferralTextDialog} handleClose={() => setShowReferralTextDialog(false)} />
+          <ReferralCodePutDialog open={showReferralCodePutDlog} handleClose={() => setShowReferralCodePutDlog(false)} />
         </Container>
       </StyledSection>
     </div>
