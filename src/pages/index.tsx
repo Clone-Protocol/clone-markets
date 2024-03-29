@@ -16,6 +16,8 @@ import { fetchLinkReferralCode } from '~/utils/fetch_netlify'
 import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
+import useLocalStorage from '~/hooks/useLocalStorage'
+import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -47,6 +49,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   const { publicKey } = useWallet()
 
   //for referral 
+  const [isCompleteInitRefer, setIsCompleteInitRefer] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
   const params = useSearchParams()
   const refCode = params.get('referralCode')
   const [showReferralTextDialog, setShowReferralTextDialog] = useState(false)
@@ -90,7 +93,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
           </HydrationBoundary>
 
           <ReferralTextDialog referralStatus={referralStatus} open={showReferralTextDialog} handleClose={() => setShowReferralTextDialog(false)} />
-          <ReferralCodePutDialog open={showReferralCodePutDlog} handleClose={() => setShowReferralCodePutDlog(false)} />
+          <ReferralCodePutDialog open={showReferralCodePutDlog && !isCompleteInitRefer} handleClose={() => { setIsCompleteInitRefer(true); setShowReferralCodePutDlog(false); }} />
         </Container>
       </StyledSection>
     </div>

@@ -75,7 +75,7 @@ const BoxWrapper = styled(Box)`
   align-items: center;
   gap: 12px;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: #080018;
   padding: 20px;
   z-index: 99999;
