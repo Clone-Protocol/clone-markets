@@ -49,7 +49,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   const { publicKey, connected } = useWallet()
 
   //for referral 
-  const [isCompleteInitRefer, setIsCompleteInitRefer] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
+  const [isCompleteInitRefer, _] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
   const params = useSearchParams()
   const refCode = params.get('referralCode')
   const [showReferralTextDialog, setShowReferralTextDialog] = useState(false)
@@ -64,6 +64,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
           console.log('res', res)
           const { status } = res
           setReferralStatus(status)
+          setShowReferralCodePutDlog(false)
           setShowReferralTextDialog(true)
         })
       } else {
