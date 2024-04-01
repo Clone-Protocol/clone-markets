@@ -18,7 +18,7 @@ export const handler: Handler = async (event, context) => {
 
   // If we find this user in this query, they're not eligible to link to a referrer.
   let { data, error } = await supabase.from(
-    "user_points_view"
+    "user_points_view_materialized"
   ).select().eq('user_address', userAddress).gt("total_points", 0)
 
   console.log("user_points_view request", data, error)
@@ -56,13 +56,17 @@ export const handler: Handler = async (event, context) => {
 
   console.log("status", status);
 
+  // Only time this status will persist for a user
+  // is when they already used a code, or aren't eligible
+  const header = status === 1 || status === 2 ? {
+    'Cache-Control': 'public, max-age=315360000',
+    'Content-Type': 'application/json',
+    'Netlify-Vary': 'query=userAddress'
+  } : undefined;
+
   return {
     statusCode: 200,
     body: JSON.stringify({ status }),
-    ////  NOTE: Uncomment this out after testing, otherwise it will cache.
-    // headers: {
-    //   'Cache-Control': 'public, max-age=300',
-    //   'Content-Type': 'application/json',
-    // }
+    header
   }
 }

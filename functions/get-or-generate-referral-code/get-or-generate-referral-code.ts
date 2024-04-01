@@ -9,9 +9,10 @@ export const handler: Handler = async (event, context) => {
   const userAddress = params.userAddress
 
   let response = null;
+  let successful = false;
   // Checks the users points
   let { data, error } = await supabase.from(
-    "user_points_view"
+    "user_points_view_materialized"
   ).select().eq('user_address', userAddress).gt("total_points", 0)
 
   if (error === null && data) {
@@ -27,16 +28,19 @@ export const handler: Handler = async (event, context) => {
       ).select("referral_code").eq("user_address", userAddress);
 
       response = data
+      successful = true;
     }
   }
+
+  // If successfully generated or fetched, cache indefinitely
+  const headers = successful ? {
+      'Cache-Control': 'public, max-age=315360000',
+      'Content-Type': 'application/json',
+  } : undefined;
 
   return {
     statusCode: 200,
     body: JSON.stringify(response),
-    ////  NOTE: Uncomment this out after testing, otherwise it will cache.
-    // headers: {
-    //   'Cache-Control': 'public, max-age=300',
-    //   'Content-Type': 'application/json',
-    // }
+    headers
   }
 }
