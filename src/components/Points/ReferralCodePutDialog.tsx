@@ -6,16 +6,19 @@ import OtpInput from 'react-otp-input';
 import { FadeTransition } from '../Common/Dialog';
 import { fetchLinkReferralCode } from '~/utils/fetch_netlify';
 import { useWallet } from '@solana/wallet-adapter-react';
+import useLocalStorage from '~/hooks/useLocalStorage'
+import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage';
 // import RocketPromoteIcon from 'public/images/points-rocket.svg'
 // import Image from 'next/image'
 
 const ReferralCodePutDialog = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
-  const { publicKey } = useWallet()
+  const { publicKey, disconnect } = useWallet()
   const [referralCode, setReferralCode] = useState('')
   const [showReferral, setShowReferral] = useState(false)
   const [doneReferral, setDoneReferral] = useState(false)
   const [isLinkingRefCode, setIsLinkingRefCode] = useState(false)
   const [showInvalidCode, setShowInvalidCode] = useState(false)
+  const [_, setIsCompleteInitRefer] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
 
   const linkReferralCode = async () => {
     if (publicKey && referralCode) {
@@ -28,6 +31,11 @@ const ReferralCodePutDialog = ({ open, handleClose }: { open: boolean, handleClo
         //// 0 - referral successful or // 2 - already used a referral code, 
         if (status === 0 || status === 2) {
           setDoneReferral(true)
+          setIsCompleteInitRefer(true)
+
+          setTimeout(() => {
+            handleClose()
+          }, 1200)
         } else {
           setShowInvalidCode(true)
         }
@@ -41,8 +49,19 @@ const ReferralCodePutDialog = ({ open, handleClose }: { open: boolean, handleClo
     }
   }
 
+  const clickNo = async () => {
+    setIsCompleteInitRefer(true)
+    handleClose()
+  }
+
+  const closeDialog = async () => {
+    setShowReferral(false)
+    handleClose()
+    disconnect()
+  }
+
   return (
-    <Dialog open={open} onClose={handleClose} TransitionComponent={FadeTransition}>
+    <Dialog open={open} TransitionComponent={FadeTransition}>
       <BoxWrapper sx={{ width: { xs: '100%', md: '290px' }, paddingTop: { xs: '30px', md: '20px' } }}>
         {!showReferral ?
           <Box>
@@ -51,7 +70,7 @@ const ReferralCodePutDialog = ({ open, handleClose }: { open: boolean, handleClo
 
             <Stack direction='row' justifyContent='center' gap={1}>
               <YesButton onClick={() => setShowReferral(true)}><Typography variant='p'>Yes</Typography></YesButton>
-              <NoButton onClick={handleClose}><Typography variant='p'>No</Typography></NoButton>
+              <NoButton onClick={clickNo}><Typography variant='p'>No</Typography></NoButton>
             </Stack>
           </Box>
           :
@@ -86,7 +105,7 @@ const ReferralCodePutDialog = ({ open, handleClose }: { open: boolean, handleClo
           </Box>
         }
         <Box sx={{ position: 'absolute', right: '10px', top: '10px' }}>
-          <CloseButton handleClose={handleClose} />
+          <CloseButton handleClose={closeDialog} />
         </Box>
       </BoxWrapper>
     </Dialog>

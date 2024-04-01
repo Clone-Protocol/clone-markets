@@ -31,6 +31,7 @@ const MyPointStatus = () => {
   const [referralStatus, setReferralStatus] = useState(ReferralStatus.NotGenerated)
   const [isGeneratingRefCode, setIsGeneratingRefCode] = useState(false)
   const [referralCode, setReferralCode] = useState('000000')
+  const [isRefCodeButtonMouseEnter, setIsRefCodeButtonMouseEnter] = useState(false)
   const isMobileOnSize = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
   const { data: infos } = usePointStatusQuery({
@@ -69,10 +70,19 @@ const MyPointStatus = () => {
     //   setReferralStatus(ReferralStatus.NotGenerated)
     // } else {
     setShowReferralPanel(true)
+    setIsRefCodeButtonMouseEnter(false)
     if (referralStatus === ReferralStatus.NotGenerated) {
       getReferralCode()
     }
     // }
+  }
+
+  const goBackShowReferral = (e: any) => {
+    if (showReferralPanel) {
+      e.stopPropagation()
+
+      setShowReferralPanel(false)
+    }
   }
 
   return (
@@ -151,10 +161,10 @@ const MyPointStatus = () => {
             </Typography>
           </StatusValue>
         </BorderBox>
-        <GenerateReferralBorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
+        <GenerateReferralBorderBox className={isRefCodeButtonMouseEnter ? 'hover' : ''} width={isMobileOnSize ? '166px' : '200px'} position='relative' onClick={goBackShowReferral}>
           {isGeneratingRefCode ?
             <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
-              <Box sx={{ width: '32px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1c1c1c', borderRadius: '10px' }}><CircularProgress sx={{ color: '#c4b5fd' }} size={15} thickness={4} /></Box>
+              <Box sx={{ width: '32px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1c1c1c', borderRadius: '10px' }}><CircularProgress sx={{ color: '#fff' }} size={15} thickness={4} /></Box>
             </Box>
             :
             !showReferralPanel || referralStatus === ReferralStatus.NotGenerated ?
@@ -168,24 +178,24 @@ const MyPointStatus = () => {
                     {infos?.referralPoints ? formatLocaleAmount(infos.referralPoints) : '0'}
                   </Typography>
                 </StatusValue>
-                <ReferralBox onClick={clickReferralCode}>
+                <ReferralBox onMouseEnter={() => setIsRefCodeButtonMouseEnter(true)} onMouseLeave={() => setIsRefCodeButtonMouseEnter(false)} onClick={clickReferralCode}>
                   <Typography variant='p_sm'>Click for referral code</Typography>
                 </ReferralBox>
               </Box>
               :
               <Box height='100%'>
                 {referralStatus === ReferralStatus.Generated ?
-                  <Box mt='8px'>
+                  <Box mt='3px'>
                     <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
                       <Box><Typography variant='p_sm'>My Referral Link</Typography></Box>
                       <CopyToClipboard text={process.env.NEXT_PUBLIC_API_ROOT + '?referralCode=' + referralCode} onCopy={() => enqueueSnackbar('Referral link copied')}>
-                        <ReferralButton><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>Copy Link</Typography></ReferralButton>
+                        <ReferralButton onClick={(e) => e.stopPropagation()}><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>Copy Link</Typography></ReferralButton>
                       </CopyToClipboard>
                     </Box>
                     <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
                       <Box><Typography variant='p_sm'>My Referral Code</Typography></Box>
                       <CopyToClipboard text={referralCode} onCopy={() => enqueueSnackbar('Referral code copied')}>
-                        <ReferralButton><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>{referralCode}</Typography></ReferralButton>
+                        <ReferralButton onClick={(e) => e.stopPropagation()}><Image src={ContentCopyIcon} alt='copy' /> <Typography variant='p'>{referralCode}</Typography></ReferralButton>
                       </CopyToClipboard>
                     </Box>
                   </Box>
@@ -239,7 +249,7 @@ const BorderBox = styled(Box)`
 const GenerateReferralBorderBox = styled(BorderBox)`
   padding: 0px;
   background-color: #000;
-  &:hover {
+  &.hover {
     background-color: #000;
     border-style: solid;
     border-width: 1px;

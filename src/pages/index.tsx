@@ -46,7 +46,7 @@ export const getStaticProps = (async () => {
 }>
 
 const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { publicKey } = useWallet()
+  const { publicKey, connected } = useWallet()
 
   //for referral 
   const [isCompleteInitRefer, setIsCompleteInitRefer] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
@@ -57,7 +57,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   const [referralStatus, setReferralStatus] = useState(0)
 
   useEffect(() => {
-    if (publicKey) {
+    if (connected && publicKey) {
       if (refCode) {
         console.log('refCode', refCode)
         fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
@@ -70,7 +70,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
         setShowReferralCodePutDlog(true)
       }
     }
-  }, [publicKey, refCode])
+  }, [connected, publicKey, refCode])
 
   return (
     <div>
@@ -93,7 +93,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
           </HydrationBoundary>
 
           <ReferralTextDialog referralStatus={referralStatus} open={showReferralTextDialog} handleClose={() => setShowReferralTextDialog(false)} />
-          <ReferralCodePutDialog open={showReferralCodePutDlog && !isCompleteInitRefer} handleClose={() => { setIsCompleteInitRefer(true); setShowReferralCodePutDlog(false); }} />
+          <ReferralCodePutDialog open={showReferralCodePutDlog && !isCompleteInitRefer} handleClose={() => { setShowReferralCodePutDlog(false); }} />
         </Container>
       </StyledSection>
     </div>

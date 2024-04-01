@@ -44,7 +44,7 @@ const BackScreen = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 99999;
+  z-index: 999;
 `
 const AnimWrapper = styled('div')`
   transform: translateX(-1500px);
