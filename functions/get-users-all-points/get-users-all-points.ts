@@ -7,7 +7,7 @@ export const handler: Handler = async (event, context) => {
   console.log('get-users-all-points')
   const rpcCall = supabase.from(
     "user_points_view_materialized"
-  ).select().order('rank', { ascending: false }).limit(100);
+  ).select().order('rank', { ascending: true }).limit(100);
 
   let { data, error } = await rpcCall;
 

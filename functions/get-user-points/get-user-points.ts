@@ -10,7 +10,7 @@ export const handler: Handler = async (event, context) => {
     "user_points_view_materialized"
   ).select().eq('user_address', params.userAddress) : supabase.from(
     "user_points_view_materialized"
-  ).select().order('rank', { ascending: false });
+  ).select().order('rank', { ascending: true });
 
   let { data, error } = await rpcCall;
   console.log('d', data)
