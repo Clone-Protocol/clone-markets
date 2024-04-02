@@ -86,7 +86,7 @@ const MyPointStatus = () => {
   }
 
   return (
-    <Wrapper sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
+    <Wrapper>
       <Stack direction='row' gap={2}>
         <BorderBox width={isMobileOnSize ? '166px' : '176px'}>
           <Box display='flex' justifyContent='center' alignItems='center' height='20px'>
@@ -123,7 +123,7 @@ const MyPointStatus = () => {
           }
         </BorderBox>
       </Stack>
-      <Stack direction='row' gap={2} flexWrap={'wrap'} mt='18px'>
+      <Stack direction='row' gap={2} flexWrap={'wrap'} mt='18px' justifyContent='center'>
         <BorderBox width={isMobileOnSize ? '166px' : '200px'} position='relative'>
           <Box display='flex' justifyContent='center' alignItems='center' ml='10px'>
             <Typography variant='p'>My Liquidity Points</Typography>
