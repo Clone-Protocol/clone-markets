@@ -12,12 +12,13 @@ import { fetchAssets } from '~/features/Markets/Assets.query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useSearchParams } from 'next/navigation'
-import { fetchLinkReferralCode } from '~/utils/fetch_netlify'
+import { fetchCheckReferralCode, fetchLinkReferralCode } from '~/utils/fetch_netlify'
 import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
+import { fetchCheckReferral } from '~/features/Points/PointStatus.query'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -68,7 +69,12 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
           setShowReferralTextDialog(true)
         })
       } else {
-        setShowReferralCodePutDlog(true)
+        fetchCheckReferralCode(publicKey.toString()).then((res) => {
+          console.log('res', res)
+          if (res.successful) {
+            setShowReferralCodePutDlog(true)
+          }
+        })
       }
     }
   }, [connected, publicKey, refCode])
