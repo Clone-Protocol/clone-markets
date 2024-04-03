@@ -2,10 +2,11 @@ import { usePathname } from 'next/navigation'
 import { List, ListItemButton, Box, Fade, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
-import { IS_DEV } from '~/data/networks'
-import { PointsStarIconOff, PointsStarIconOn } from './Common/SvgIcons'
+// import { PointsStarIconOff, PointsStarIconOn } from './Common/SvgIcons'
 import TrophyIconOff from 'public/images/trophy-off.svg'
 import TrophyIconOn from 'public/images/trophy-on.svg'
+import PointsStarIconOn from 'public/images/points-stars-on.svg'
+import PointsStarIconOff from 'public/images/points-stars-off.svg'
 import Image from 'next/image'
 
 const CommonMenu = () => {
@@ -30,14 +31,12 @@ const CommonMenu = () => {
           <Typography variant='p_lg'>Portfolio</Typography>
         </StyledListItemButton>
       </Link>
-      {!IS_DEV &&
-        <Link href="/points">
-          <StyledPointsItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
-            <ColoredText className={pathname?.startsWith('/points') ? 'selected' : ''}><Typography variant="p_lg" mr='3px'>Points</Typography></ColoredText>
-            {pathname?.startsWith('/points') ? <PointsStarIconOn /> : <PointsStarIconOff />}
-          </StyledPointsItemButton>
-        </Link>
-      }
+      <Link href="/points">
+        <StyledPointsItemButton className={pathname?.startsWith('/points') ? 'selected' : ''}>
+          <ColoredText className={pathname?.startsWith('/points') ? 'selected' : ''}><Typography variant="p_lg" mr='3px'>Points</Typography></ColoredText>
+          {pathname?.startsWith('/points') ? <Image src={PointsStarIconOn} alt='points' /> : <Image src={PointsStarIconOff} alt='points' />}
+        </StyledPointsItemButton>
+      </Link>
       <Link href="/giveaway">
         <StyledGiveawayItemButton className={pathname?.startsWith('/giveaway') ? 'selected' : ''}>
           {pathname?.startsWith('/giveaway') ? <Image src={TrophyIconOn} alt='giveaway' /> : <Image src={TrophyIconOff} alt='giveaway' />}

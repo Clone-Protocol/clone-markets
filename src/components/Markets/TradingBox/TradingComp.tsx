@@ -77,7 +77,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     enabled: true
   });
 
-  const { data: assetData } = useMarketDetailQuery({
+  const { data: assetData, refetch: refetchDetail } = useMarketDetailQuery({
     index: assetIndex,
     refetchOnMount: true,
     enabled: true
@@ -120,6 +120,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     setOpenOrderDetails(false)
     initData()
     refetch()
+    refetchDetail()
     trigger()
   }
 
@@ -128,6 +129,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
     setOpenOrderDetails(false)
     initData()
     refetch()
+    refetchDetail()
     trigger()
   }, [assetIndex])
 
@@ -196,6 +198,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
   const refreshBalance = () => {
     if (isEnabledRestart) {
       refetch();
+      refetchDetail()
       setRestartTimer(!restartTimer);
 
       setIsEnabledRestart(false)

@@ -7,10 +7,10 @@ export const handler: Handler = async (event, context) => {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
   const rpcCall = params.userAddress ? supabase.from(
-    "user_points_view"
+    "user_points_view_materialized"
   ).select().eq('user_address', params.userAddress) : supabase.from(
-    "user_points_view"
-  ).select();
+    "user_points_view_materialized"
+  ).select().order('rank', { ascending: true });
 
   let { data, error } = await rpcCall;
   console.log('d', data)

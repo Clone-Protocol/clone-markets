@@ -18,6 +18,8 @@ export const fetchMarketDetail = async ({
   mainCloneClient?: CloneClient | null
   networkEndpoint: string
 }) => {
+  console.log('fetchMarketDetail :: MarketDetail.query')
+
   let program: CloneClient
   if (mainCloneClient) {
     program = mainCloneClient

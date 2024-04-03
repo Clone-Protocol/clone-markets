@@ -11,6 +11,7 @@ import TrophyGold from 'public/images/giveaway/trophy-gold.svg'
 import TrophySilver from 'public/images/giveaway/trophy-silver.svg'
 import TrophyBronze from 'public/images/giveaway/trophy-bronze.svg'
 import Image from 'next/image'
+import { useEffect } from 'react'
 
 const MyGiveawayStatus = () => {
   const { publicKey } = useWallet()
