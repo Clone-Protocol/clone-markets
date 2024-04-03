@@ -43,9 +43,9 @@ const GNB: React.FC = () => {
 				<Container maxWidth={false}>
 					<Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 						{isMobileOnSize ?
-							<Image src={logoMIcon} width={46} height={46} alt="clone" />
+							<a href="/"><Image src={logoMIcon} width={46} height={46} alt="clone" /></a>
 							:
-							<Image src={IS_DEV ? logoIconDevnet : logoIcon} width={IS_DEV ? 121 : 100} height={IS_DEV ? 25 : 26} alt="clone" />
+							<a href="/"><Image src={IS_DEV ? logoIconDevnet : logoIcon} width={IS_DEV ? 121 : 100} height={IS_DEV ? 25 : 26} alt="clone" /></a>
 						}
 						<Box ml='60px' sx={{ display: { xs: 'none', sm: 'inherit' } }}>
 							<NaviMenu />
