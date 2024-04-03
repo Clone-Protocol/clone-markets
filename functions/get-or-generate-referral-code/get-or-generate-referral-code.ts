@@ -13,9 +13,9 @@ export const handler: Handler = async (event, context) => {
   // Checks the users points
   let { data, error } = await supabase.from(
     "user_points_view_materialized"
-  ).select().eq('user_address', userAddress).gt("total_points", 0)
+  ).select().eq('user_address', userAddress).or('trading_points.gt.0,lp_points.gt.0')
 
-  if (error === null && data) {
+  if (error === null && data) { 
     if (data?.length > 0) {
       // Try to insert for new referral code, ok if it fails.
       await supabase.from(
