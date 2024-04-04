@@ -44,7 +44,8 @@ export const fetchMarketDetail = async ({
   const treasuryTradingFee = fromScale(pool.treasuryTradingFeeBps, 4)
   const oraclePrices = await getPythOraclePrices(program.provider.connection);
   const rescaleFactor = Math.pow(10, oracle.rescaleFactor);
-  const oraclePrice = rescaleFactor * oraclePrices.get(pythSymbol)! / oraclePrices.get("Crypto.USDC/USD")!;
+  const oracleUsdcPrice = oraclePrices.get("Crypto.USDC/USD")!
+  const oraclePrice = rescaleFactor * oraclePrices.get(pythSymbol)! / oracleUsdcPrice;
   const committedCollateralLiquidity = fromCollateralScale(pool.committedCollateralLiquidity)
   const poolCollateral = committedCollateralLiquidity - fromCollateralScale(pool.collateralIld)
   const poolOnasset = committedCollateralLiquidity / oraclePrice - fromCloneScale(pool.onassetIld)
@@ -67,6 +68,7 @@ export const fetchMarketDetail = async ({
     poolCommittedCollateral,
     liquidityTradingFee,
     treasuryTradingFee,
+    oracleUsdcPrice,
     oraclePrice,
     volume,
     avgLiquidity,
@@ -91,6 +93,7 @@ export const fetchMarketDetailDefault = (): MarketDetail => {
     poolCommittedCollateral: 0,
     liquidityTradingFee: 0,
     treasuryTradingFee: 0,
+    oracleUsdcPrice: 1,
     oraclePrice: 0,
     volume: 12.4,
     avgLiquidity: 50700000,
@@ -119,6 +122,7 @@ export interface MarketDetail {
   poolCommittedCollateral: number
   liquidityTradingFee: number
   treasuryTradingFee: number
+  oracleUsdcPrice: number
   oraclePrice: number
   volume: number
   avgLiquidity: number
