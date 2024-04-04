@@ -279,7 +279,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
                           calculateTotalAmountByFrom(balance)
                         }}
                         value={field.value}
-                        dollarValue={field.value}
+                        dollarValue={field.value * assetData?.oracleUsdcPrice!}
                         balance={myBalance?.onusdVal}
                         balanceDisabled={!publicKey}
                         max={myBalance?.onusdVal}
@@ -341,7 +341,7 @@ const TradingComp: React.FC<Props> = ({ assetIndex, slippage, onShowOption, onSh
               tickerIcon={isBuy ? assetData?.tickerIcon! : fromPair.tickerIcon}
               ticker={isBuy ? assetData?.tickerSymbol! : fromPair.tickerSymbol}
               value={isBuy ? amountOnasset : amountOnusd}
-              dollarValue={isBuy ? amountOnusd : amountOnusd}
+              dollarValue={isBuy ? amountOnasset * assetData?.oraclePrice! : amountOnusd}
               balanceDisabled={true}
               valueDisabled={true}
               tickerClickable={isBuy}
