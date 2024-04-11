@@ -11,7 +11,7 @@ import { formatLocaleAmount } from '~/utils/numbers'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
 import BoltIcon from '@mui/icons-material/Bolt';
-import PromoteDialog from '~/components/Points/PromoteDialog'
+// import PromoteDialog from '~/components/Points/PromoteDialog'
 import { useEffect, useState } from 'react'
 import ContentCopyIcon from 'public/images/content-copy.svg'
 import { PythSymbolIcon } from '~/components/Common/SvgIcons'
@@ -27,7 +27,7 @@ const MyPointStatus = () => {
   const { setOpen } = useWalletDialog()
   const { enqueueSnackbar } = useSnackbar()
   const [showReferralPanel, setShowReferralPanel] = useState(false)
-  const [showPromoteDialog, setShowPromoteDialog] = useState(true)
+  // const [showPromoteDialog, setShowPromoteDialog] = useState(true)
   const [referralStatus, setReferralStatus] = useState(ReferralStatus.NotGenerated)
   const [isGeneratingRefCode, setIsGeneratingRefCode] = useState(false)
   const [referralCode, setReferralCode] = useState('000000')
@@ -145,10 +145,10 @@ const MyPointStatus = () => {
               {infos?.tradePoints ? formatLocaleAmount(infos.tradePoints) : '0'}
             </Typography>
           </StatusValue>
-          <PromoteBox onClick={() => setShowPromoteDialog(true)}>
+          {/* <PromoteBox>
             <BoltIcon sx={{ fontSize: '16px', color: '#fbdc5f' }} />
             <ColoredText><Typography variant='p_sm'>1.5x Multiplier</Typography></ColoredText>
-          </PromoteBox>
+          </PromoteBox> */}
         </BorderBox>
         <BorderBox width={isMobileOnSize ? '166px' : '200px'}>
           <Box display='flex' justifyContent='center' alignItems='center' ml='10px'>
@@ -217,7 +217,7 @@ const MyPointStatus = () => {
           </Box>
         </Box>
       </>}
-      {showPromoteDialog && <PromoteDialog onClose={() => setShowPromoteDialog(false)} />}
+      {/* {showPromoteDialog && <PromoteDialog onClose={() => setShowPromoteDialog(false)} />} */}
     </Wrapper>
   )
 
