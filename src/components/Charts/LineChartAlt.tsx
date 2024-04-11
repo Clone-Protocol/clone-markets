@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, ReactNode } from 'react';
+import React, { Dispatch, SetStateAction, ReactNode, useState } from 'react';
 import { Card, Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from 'recharts'
@@ -45,10 +45,11 @@ const LineChartAlt: React.FC<LineChartProps> = ({
   maxY,
   minY,
 }) => {
+  const [activeTooltip, setActiveTooltip] = useState(false)
   const parsedValue = value
 
   const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
+    if (active && activeTooltip && payload && payload.length) {
       if (setValue && parsedValue !== payload[0].value) {
         setValue(payload[0].value)
       }
@@ -114,7 +115,12 @@ const LineChartAlt: React.FC<LineChartProps> = ({
             isAnimationActive={false}
             contentStyle={{ display: 'block', background: 'transparent' }}
           />
-          <Area dataKey="value" type="monotone" stroke="#c4b5fd" fill="url(#gradient)" strokeWidth={1} />
+          <Area dataKey="value" type="monotone" stroke="#c4b5fd" fill="url(#gradient)"
+            activeDot={activeTooltip}
+            animationBegin={100} animationDuration={1200} strokeWidth={1}
+            onAnimationStart={() => setActiveTooltip(false)}
+            onAnimationEnd={() => setActiveTooltip(true)}
+          />
         </AreaChart>
       </ResponsiveContainer>
     </Wrapper>
