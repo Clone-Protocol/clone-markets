@@ -37,11 +37,11 @@ const CommonMenu = () => {
           {pathname?.startsWith('/points') ? <Image src={PointsStarIconOn} alt='points' /> : <Image src={PointsStarIconOff} alt='points' />}
         </StyledPointsItemButton>
       </Link>
-      <Link href="/giveaway">
+      {/* <Link href="/giveaway">
         <StyledGiveawayItemButton className={pathname?.startsWith('/giveaway') ? 'selected' : ''}>
           {pathname?.startsWith('/giveaway') ? <Image src={TrophyIconOn} alt='giveaway' /> : <Image src={TrophyIconOff} alt='giveaway' />}
         </StyledGiveawayItemButton>
-      </Link>
+      </Link> */}
     </List>
   )
 }
