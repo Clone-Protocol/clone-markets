@@ -11,13 +11,15 @@ export enum AssetTickers {
     optimism = 1,
     sui = 2,
     doge = 3,
+    bnb = 4,
 }
 
 export enum Asset {
     Arbitrum,
     Optimism,
     Sui,
-    Doge
+    Doge,
+    Bnb,
 }
 
 export enum AssetType {
@@ -63,6 +65,14 @@ export const ASSETS = [
         ticker: 'doge',
         pythSymbol: 'Crypto.DOGE/USD',
         mainColor: '#D9BD62',
+    },
+    {
+        tickerName: 'Cloned BNB',
+        tickerSymbol: 'clBNB',
+        tickerIcon: '/images/assets/on-bnb.svg',
+        ticker: 'bnb',
+        pythSymbol: 'Crypto.BNB/USD',
+        mainColor: '#FFFF00',
     }
 ]
 
@@ -109,6 +119,15 @@ export const assetMapping = (index: number) => {
             ticker = 'doge'
             assetType = AssetType.Crypto
             pythSymbol = 'Crypto.DOGE/USD'
+            supabaseSymbol = pythSymbol
+            break
+        case Asset.Bnb:
+            tickerName = 'Cloned BNB'
+            tickerSymbol = 'clBNB'
+            tickerIcon = '/images/assets/on-bnb.svg'
+            ticker = 'bnb'
+            assetType = AssetType.Crypto
+            pythSymbol = 'Crypto.BNB/USD'
             supabaseSymbol = pythSymbol
             break
         default:
@@ -159,5 +178,9 @@ export const ASSETS_DESC = [
     {
         ticker: 'doge',
         desc: "clDOGE brings the quintessential memecoin, Dogecoin (DOGE), into the Solana ecosystem. Dogecoin embodies the original spirit of crypto, combining innovation and memes! Celebrated for its vibrant community, Dogecoin transcends its role as a digital currency to become a symbol of the playful and community-driven nature of the crypto space. clDOGE offers Solana traders the chance to engage with the legendary DOGE within Solana’s high-speed, low-cost environment."
+    },
+    {
+        ticker: 'bnb',
+        desc: "clBNB, the cloned asset of BNB, offers traders exposure to BNB token without ever leaving the Solana ecosystem. The BNB blockchain is known for its high throughput and low latency. Built on the Move language, BNB supports secure and sophisticated dApps. clBNB provides Solana users with the ability to natively trade BNB, capitalizing on the advantages of both the Sui and Solana ecosystems."
     },
 ]
