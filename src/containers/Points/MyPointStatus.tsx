@@ -10,14 +10,13 @@ import { useWalletDialog } from '~/hooks/useWalletDialog'
 import { formatLocaleAmount } from '~/utils/numbers'
 import { LoadingProgress } from '~/components/Common/Loading'
 import withSuspense from '~/hocs/withSuspense'
-import BoltIcon from '@mui/icons-material/Bolt';
+// import BoltIcon from '@mui/icons-material/Bolt';
 // import PromoteDialog from '~/components/Points/PromoteDialog'
 import { useEffect, useState } from 'react'
 import ContentCopyIcon from 'public/images/content-copy.svg'
 import { PythSymbolIcon } from '~/components/Common/SvgIcons'
 import { PointTextForPyth } from '~/components/Points/PointMultiplierText'
 import Image from 'next/image'
-
 import { ReferralStatus } from '~/utils/constants'
 import { useSnackbar } from 'notistack'
 import CopyToClipboard from 'react-copy-to-clipboard'
@@ -145,7 +144,7 @@ const MyPointStatus = () => {
               {infos?.tradePoints ? formatLocaleAmount(infos.tradePoints) : '0'}
             </Typography>
           </StatusValue>
-          {/* <PromoteBox>
+          {/* <PromoteBox onClick={() => setShowPromoteDialog(true)}>
             <BoltIcon sx={{ fontSize: '16px', color: '#fbdc5f' }} />
             <ColoredText><Typography variant='p_sm'>1.5x Multiplier</Typography></ColoredText>
           </PromoteBox> */}
