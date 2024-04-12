@@ -11,21 +11,22 @@ const CompleteRound = () => {
 
   return (
     <Stack direction='row' justifyContent='center' alignItems='center' width='100%' mt='23px' mb='10px'>
-      <BorderBox width={isMobileOnSize ? '100%' : '474px'} height='104px' position='relative'>
-        <Box display='flex' justifyContent='center' alignItems='center'>
-          <Typography variant='p_xlg' fontWeight={500}>Round 1 draw is now complete</Typography>
-        </Box>
-        <Box display='flex' justifyContent='center' alignItems='center'>
-          <Typography variant='p' fontWeight={500} color='#c5c7d9'>
-            Prize points have been applied and click this box to see the winners!
-          </Typography>
-        </Box>
-        <a href="https://docs.clone.so/clone-mainnet-guide/points-program/season-1/cloner-classic-giveaway#past-ccg-winners" target='_blank'>
-          <Box position='absolute' top='10px' right='10px' onMouseEnter={() => setHoverArrow(true)} onMouseLeave={() => setHoverArrow(false)}>
+      <a href="https://docs.clone.so/clone-mainnet-guide/points-program/season-1/cloner-classic-giveaway#past-ccg-winners" target='_blank'>
+        <BorderBox width={isMobileOnSize ? '100%' : '474px'} height='104px' position='relative' onMouseEnter={() => setHoverArrow(true)} onMouseLeave={() => setHoverArrow(false)}>
+          <Box display='flex' justifyContent='center' alignItems='center'>
+            <Typography variant='p_xlg' fontWeight={500}>Round 1 draw is now complete</Typography>
+          </Box>
+          <Box display='flex' justifyContent='center' alignItems='center' padding='5px 15px'>
+            <Typography variant='p' fontWeight={500} color='#c5c7d9'>
+              Prize points have been applied and click this box to see the winners!
+            </Typography>
+          </Box>
+
+          <Box position='absolute' top='10px' right='10px'>
             <Image src={hoverArrow ? ArrowLinkOn : ArrowLink} alt='ArrowLink' />
           </Box>
-        </a>
-      </BorderBox>
+        </BorderBox>
+      </a>
     </Stack>
   )
 }
@@ -35,6 +36,8 @@ const BorderBox = styled(Box)`
   flex-direction: column;
   justify-content: center;
   gap: 10px;
+  color: #fff;
+  cursor: pointer;
   border-radius: 10px;
   border-style: solid;
   border-width: 1px;
