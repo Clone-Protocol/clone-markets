@@ -51,6 +51,7 @@ export const getiAssetInfos = async (connection: Connection, program: CloneClien
   const oracles = await program.getOracles();
 
   const iassetInfo = [];
+  // console.log('pp', pools.pools)
   // for (let poolIndex = 0; poolIndex < Number(pools.pools.length); poolIndex++) {
   for (let poolIndex = 0; poolIndex < MAX_POOLS_FOR_SHOW; poolIndex++) {
     const pool = pools.pools[poolIndex];
