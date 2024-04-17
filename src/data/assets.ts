@@ -181,6 +181,6 @@ export const ASSETS_DESC = [
     },
     {
         ticker: 'bnb',
-        desc: "clBNB, the cloned asset of BNB, offers traders exposure to BNB token without ever leaving the Solana ecosystem. The BNB blockchain is known for its high throughput and low latency. Built on the Move language, BNB supports secure and sophisticated dApps. clBNB provides Solana users with the ability to natively trade BNB, capitalizing on the advantages of both the Sui and Solana ecosystems."
+        desc: "clBNB, the cloned asset of BNB, offers traders exposure to BNB token without ever leaving the Solana ecosystem. The BNB blockchain is known for its high throughput and low latency. Built on the Move language, BNB supports secure and sophisticated dApps. clBNB provides Solana users with the ability to natively trade BNB, capitalizing on the advantages of both the BNB chain and Solana ecosystems."
     },
 ]
