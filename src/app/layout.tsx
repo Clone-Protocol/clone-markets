@@ -62,7 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             }}>
                             {children}
                           </Box>
-                          {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />}
+                          {/* {isOpenInit && <InitEnterScreen onClose={() => setIsOpenInit(false)} />} */}
                         </Box>
                       </ErrorBoundary>
                     </DataLoadingIndicatorProvider>

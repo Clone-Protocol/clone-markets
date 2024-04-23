@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import logoIcon from 'public/images/logo-markets.png'
 import logoIconM from 'public/images/clone-icon-mobile.png'
@@ -84,6 +84,11 @@ const RightMenu: React.FC = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [showWalletSelectPopup, setShowWalletSelectPopup] = useState(false)
 	useFaucet()
+
+	//for temporary
+	useEffect(() => {
+		throw new Error('Fallback on init')
+	}, [])
 
 	const handleWalletClick = () => {
 		try {
