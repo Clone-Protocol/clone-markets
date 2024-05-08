@@ -7,16 +7,17 @@ export enum PointMultiplier {
   OneSix = 2,
 }
 
-export const PointTextForPyth = ({ pythPointTier }: { pythPointTier: number | undefined }) => {
-  if (pythPointTier === PointMultiplier.OneTwo) {
-    return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #8649ff 96%)' }}><Typography variant='p_lg' fontWeight={800}>1.2x</Typography></MultiplierBox></BoxWrapper>
-  } else if (pythPointTier === PointMultiplier.OneFour) {
-    return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #49beff 96%)' }}><Typography variant='p_lg' fontWeight={800}>1.4x</Typography></MultiplierBox></BoxWrapper>
-  } else if (pythPointTier === PointMultiplier.OneSix) {
-    return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #49ffb3 96%)' }}><Typography variant='p_lg' fontWeight={800}>1.6x</Typography></MultiplierBox></BoxWrapper>
-  } else {
-    return <></>
-  }
+export const PointTextForBonus = ({ multipleTier }: { multipleTier: number | undefined }) => {
+  // if (pythPointTier === PointMultiplier.OneTwo) {
+  //   return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #8649ff 96%)' }}><Typography variant='p_lg' fontWeight={800}>1.2x</Typography></MultiplierBox></BoxWrapper>
+  // } else if (pythPointTier === PointMultiplier.OneFour) {
+  //   return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #49beff 96%)' }}><Typography variant='p_lg' fontWeight={800}>1.4x</Typography></MultiplierBox></BoxWrapper>
+  // } else if (pythPointTier === PointMultiplier.OneSix) {
+  //   return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #49ffb3 96%)' }}><Typography variant='p_lg' fontWeight={800}>1.6x</Typography></MultiplierBox></BoxWrapper>
+  // } else {
+  //   return <></>
+  // }
+  return <BoxWrapper><MultiplierBox sx={{ backgroundImage: 'linear-gradient(102deg, #e6dafe 3%, #49ffb3 96%)' }}><Typography variant='p_lg' fontWeight={800}>{multipleTier}x</Typography></MultiplierBox></BoxWrapper>
 }
 
 const BoxWrapper = styled(Box)`

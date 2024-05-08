@@ -48,8 +48,9 @@ export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null
     tradePoints: userPoints[0].trading_points,
     socialPoints: userPoints[0].social_points,
     referralPoints: userPoints[0].referral_points,
-    hasPythPoint: userPoints[0].hasPythPoint,
-    pythPointTier: userPoints[0].pythPointTier
+    hasPythPoint: true, //userPoints[0].hasPythPoint,
+    pythPointTier: userPoints[0].pythPointTier,
+    hasJupPoint: true, //userPoints[0].hasJupPoint
   }
 }
 
