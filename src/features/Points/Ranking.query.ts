@@ -66,11 +66,11 @@ export const calculateMultiplierForUser = (jup?: Tier, pyth?: Tier) => {
       case 1: return 0.4
       case 2: return 0.6
       default:
-        throw new Error
+        return 0
     }
   }
-  const jupMul = jup ? multiplier(jup) : 0
-  const pythMul = pyth ? multiplier(pyth) : 0
+  const jupMul = jup !== undefined ? multiplier(jup) : 0
+  const pythMul = pyth !== undefined ? multiplier(pyth) : 0
 
   return 1 + jupMul + pythMul
 }

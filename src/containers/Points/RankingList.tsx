@@ -141,16 +141,15 @@ let columns: GridColDef[] = [
     headerName: 'Total Points',
     flex: 3,
     renderCell(params: GridRenderCellParams<string>) {
-      const hasPythPoint = params.row.hasPythPoint
+      // const hasPythPoint = params.row.hasPythPoint
       const multipleTier = params.row.multipleTier
 
       return <Box display='flex' alignItems='center' gap='7px'>
         <Typography variant='p'>{formatLocaleAmount(params.value)}</Typography>
-        {hasPythPoint &&
-          <LightTooltip title={TooltipTexts.points.multiplier} placement="top">
-            <Box><PointTextForBonus multipleTier={multipleTier} /></Box>
-          </LightTooltip>
-        }
+
+        <LightTooltip title={TooltipTexts.points.multiplier} placement="top">
+          <Box><PointTextForBonus multipleTier={multipleTier} /></Box>
+        </LightTooltip>
       </Box>
     },
   },

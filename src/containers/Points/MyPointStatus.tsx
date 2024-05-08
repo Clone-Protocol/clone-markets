@@ -42,7 +42,6 @@ const MyPointStatus = () => {
 
   useEffect(() => {
     if (!infos?.totalPoints) {
-      console.log('t', infos?.totalPoints)
       setReferralStatus(ReferralStatus.NotAllowed)
     } else {
       setReferralStatus(ReferralStatus.NotGenerated)
@@ -102,15 +101,15 @@ const MyPointStatus = () => {
             <InfoTooltip title={TooltipTexts.points.totalPoints} color='#66707e' />
           </Box>
           <StatusValue>
-            {infos?.hasPythPoint &&
+            {(infos?.hasPythPoint || infos?.hasJupPoint) &&
               <Box width='42px'></Box>
             }
             <Typography variant='h3' fontWeight={500}>
               {infos?.totalPoints ? formatLocaleAmount(infos.totalPoints) : '0'}
             </Typography>
-            {infos?.hasPythPoint &&
+            {(infos?.hasPythPoint || infos?.hasJupPoint) &&
               <Tooltip title={TooltipTexts.points.multiplier} placement="top">
-                <Box width='42px'><PointTextForBonus multipleTier={infos?.pythPointTier} /></Box>
+                <Box width='42px'><PointTextForBonus multipleTier={infos?.multipleTier} /></Box>
               </Tooltip>
             }
           </StatusValue>

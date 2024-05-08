@@ -52,8 +52,8 @@ export type UserPointsView = {
     total_points: number
     referral_points: number
     name?: string
-    hasPythPoint?: boolean
-    pythPointTier?: number
+    // hasPythPoint?: boolean
+    // pythPointTier?: number
 }
 
 export const fetchAllUserPoints = async (): Promise<UserPointsView[]> => {
