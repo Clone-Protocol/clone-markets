@@ -87,7 +87,7 @@ export const fetchAllUserBonus = async (): Promise<UserBonus> => {
 }
 
 export const fetchStakingUserBonus = async (userAddress: string): Promise<UserBonus> => {
-    let url = `${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-user-staking-bonus`;
+    let url = `${process.env.NEXT_PUBLIC_API_ROOT}/.netlify/functions/get-users-staking-bonus`;
     url += `?userAddress=${userAddress}`;
     const response = await axios.get(url)
     return response.data as UserBonus
