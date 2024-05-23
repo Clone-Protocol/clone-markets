@@ -77,7 +77,7 @@ export const ASSETS = [
         mainColor: '#FFFF00',
     },
     {
-        tickerName: 'Cloned APT',
+        tickerName: 'Cloned Aptos',
         tickerSymbol: 'clAPT',
         tickerIcon: '/images/assets/on-apt.svg',
         ticker: 'apt',
@@ -141,7 +141,7 @@ export const assetMapping = (index: number) => {
             supabaseSymbol = pythSymbol
             break
         case Asset.Apt:
-            tickerName = 'Cloned APT'
+            tickerName = 'Cloned Aptos'
             tickerSymbol = 'clAPT'
             tickerIcon = '/images/assets/on-apt.svg'
             ticker = 'apt'
