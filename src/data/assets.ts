@@ -12,6 +12,7 @@ export enum AssetTickers {
     sui = 2,
     doge = 3,
     bnb = 4,
+    apt = 5,
 }
 
 export enum Asset {
@@ -20,6 +21,7 @@ export enum Asset {
     Sui,
     Doge,
     Bnb,
+    Apt,
 }
 
 export enum AssetType {
@@ -31,7 +33,7 @@ export const DEFAULT_ASSET_ID = AssetTickers.arbitrum
 export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 //@MEMO: to add more asset, need to adjust here
-export const MAX_POOLS_FOR_SHOW = 5
+export const MAX_POOLS_FOR_SHOW = 6
 
 export const ASSETS = [
     {
@@ -73,7 +75,15 @@ export const ASSETS = [
         ticker: 'bnb',
         pythSymbol: 'Crypto.BNB/USD',
         mainColor: '#FFFF00',
-    }
+    },
+    {
+        tickerName: 'Cloned Aptos',
+        tickerSymbol: 'clAPT',
+        tickerIcon: '/images/assets/on-apt.svg',
+        ticker: 'apt',
+        pythSymbol: 'Crypto.APT/USD',
+        mainColor: '#A9A9A9',
+    },
 ]
 
 export const assetMapping = (index: number) => {
@@ -130,6 +140,15 @@ export const assetMapping = (index: number) => {
             pythSymbol = 'Crypto.BNB/USD'
             supabaseSymbol = pythSymbol
             break
+        case Asset.Apt:
+            tickerName = 'Cloned Aptos'
+            tickerSymbol = 'clAPT'
+            tickerIcon = '/images/assets/on-apt.svg'
+            ticker = 'apt'
+            assetType = AssetType.Crypto
+            pythSymbol = 'Crypto.APT/USD'
+            supabaseSymbol = pythSymbol
+            break
         default:
             throw new Error('Not supported')
     }
@@ -183,4 +202,8 @@ export const ASSETS_DESC = [
         ticker: 'bnb',
         desc: "clBNB, the cloned asset of BNB, offers traders exposure to BNB token without ever leaving the Solana ecosystem. The BNB blockchain is known for its high throughput and low latency. Built on the Move language, BNB supports secure and sophisticated dApps. clBNB provides Solana users with the ability to natively trade BNB, capitalizing on the advantages of both the BNB chain and Solana ecosystems."
     },
+    {
+        ticker: 'apt',
+        desc: "clAPT, the cloned asset of APT, offers traders exposure to APT token without ever leaving the Solana ecosystem. The APT blockchain is known for its high throughput and low latency. APT supports secure and sophisticated dApps. clAPT provides Solana users with the ability to natively trade APT, capitalizing on the advantages of both the APT chain and Solana ecosystems."
+    }
 ]
