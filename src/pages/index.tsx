@@ -18,7 +18,8 @@ import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
-import { fetchCheckReferral } from '~/features/Points/PointStatus.query'
+import { discordUsername } from '~/features/globalAtom'
+import { useAtom, useSetAtom } from 'jotai'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -78,6 +79,16 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
       }
     }
   }, [connected, publicKey, refCode])
+
+  //for discord username
+  const discordUsernameParam = params.get('discordUsername')
+  const setDiscordUsername = useSetAtom(discordUsername)
+
+  useEffect(() => {
+    if (discordUsernameParam) {
+      setDiscordUsername(discordUsernameParam)
+    }
+  }, [discordUsernameParam])
 
   return (
     <div>

@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER_URL, AUDIT_URL, TERMS_URL } from '~/data/social'
 import { IS_DEV } from '~/data/networks'
 import { NETWORK_NAME } from '~/utils/constants'
+import DiscordAuthButton from '../Account/DiscordAuthButton'
 // import { NETWORK_NAME } from '~/utils/constants'
 
 interface Props {
@@ -22,7 +23,7 @@ interface Props {
   onClose?: () => void
 }
 
-const MenuIcon = ({ srcImage, hoverImage, alt }: { srcImage: string, hoverImage: string, alt: string }) => {
+export const MenuIcon = ({ srcImage, hoverImage, alt }: { srcImage: string, hoverImage: string, alt: string }) => {
   const [isHovering, setIsHovering] = useState(false)
 
   return <Box sx={{ cursor: 'pointer' }}><Image src={isHovering ? hoverImage : srcImage} alt={alt} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)} /></Box>
@@ -94,6 +95,11 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
         </HoverStack>
       </StyledMenuItem>
     </a>
+
+    <HoverStack direction='row' alignItems='center'>
+      <DiscordAuthButton />
+    </HoverStack>
+
     <StyledDivider />
     <a href={AUDIT_URL} target='_blank' rel="noreferrer">
       <LinkStack direction='row' alignItems='center' gap={1}>
