@@ -15,6 +15,7 @@ import { CAREER_URL, DISCORD_URL, DOCS_URL, LIQUIDITY_APP, OFFICIAL_WEB, TWITTER
 import { IS_DEV } from '~/data/networks'
 import { NETWORK_NAME } from '~/utils/constants'
 import DiscordAuthButton from '../Account/DiscordAuthButton'
+import { useWallet } from '@solana/wallet-adapter-react'
 // import { NETWORK_NAME } from '~/utils/constants'
 
 interface Props {
@@ -29,6 +30,7 @@ export const MenuIcon = ({ srcImage, hoverImage, alt }: { srcImage: string, hove
   return <Box sx={{ cursor: 'pointer' }}><Image src={isHovering ? hoverImage : srcImage} alt={alt} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)} /></Box>
 }
 const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => {
+  const { publicKey } = useWallet()
   const open = Boolean(anchorEl);
 
   return <Menu
@@ -96,9 +98,11 @@ const MoreMenu: React.FC<Props> = ({ anchorEl, onShowTokenFaucet, onClose }) => 
       </StyledMenuItem>
     </a>
 
-    <HoverStack direction='row' alignItems='center'>
-      <DiscordAuthButton />
-    </HoverStack>
+    {publicKey &&
+      <HoverStack direction='row' alignItems='center'>
+        <DiscordAuthButton />
+      </HoverStack>
+    }
 
     <StyledDivider />
     <a href={AUDIT_URL} target='_blank' rel="noreferrer">

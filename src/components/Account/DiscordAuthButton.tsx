@@ -9,7 +9,6 @@ import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
 import { MenuIcon } from '../Common/MoreMenu';
 
 const DiscordAuthButton = () => {
-  const { publicKey } = useWallet()
   const discordUsernameValue = useAtomValue(discordUsername)
 
   const discordLogin = async () => {
@@ -54,14 +53,12 @@ const DiscordAuthButton = () => {
     border: '1px solid white',
   };
 
-  return publicKey ?
-    !discordUsernameValue ?
-      <LinkButton onClick={discordLogin} style={buttonStyle} >
-        <Typography variant='p'>Link your Discord account</Typography>
-        <MenuIcon srcImage={DiscordIcon} hoverImage={DiscordHoverIcon} alt="discord" />
-      </LinkButton>
-      : <Box><Typography variant='p'>Discord: {discordUsernameValue}</Typography></Box>
-    : <></>
+  return !discordUsernameValue ?
+    <LinkButton onClick={discordLogin} style={buttonStyle} >
+      <Typography variant='p'>Link your Discord account</Typography>
+      <MenuIcon srcImage={DiscordIcon} hoverImage={DiscordHoverIcon} alt="discord" />
+    </LinkButton>
+    : <Box><Typography variant='p'>Discord: {discordUsernameValue}</Typography></Box>
 };
 
 const LinkButton = styled(Button)`
