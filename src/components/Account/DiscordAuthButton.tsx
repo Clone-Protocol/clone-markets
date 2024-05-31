@@ -13,7 +13,7 @@ const DiscordAuthButton = () => {
   const discordUsernameValue = useAtomValue(discordUsername)
 
   const discordLogin = async () => {
-    const url = `https://discord.com/oauth2/authorize?client_id=1245919707492520048&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fapi%2Foauth%2Fdiscord%2Fredirect&scope=identify`;
+    const url = process.env.NEXT_PUBLIC_DISCORD_OAUTH_URL || '';
 
     window.location.href = url;
 
