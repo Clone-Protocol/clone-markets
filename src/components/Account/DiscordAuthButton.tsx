@@ -16,31 +16,31 @@ const DiscordAuthButton = () => {
 
     window.location.href = url;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const code = urlParams.get('code');
 
-    if (code) {
-      const data = {
-        client_id: process.env.NEXT_PUBLIC_DISCORD_APP_CLIENT_ID,
-        client_secret: process.env.NEXT_PUBLIC_DISCORD_APP_CLIENT_SECRET,
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: `${process.env.NEXT_PUBLIC_API_ROOT}/api/oauth/discord/redirect`,
-        scope: 'identify',
-      }
+    // if (code) {
+    //   const data = {
+    //     client_id: process.env.NEXT_PUBLIC_DISCORD_APP_CLIENT_ID,
+    //     client_secret: process.env.NEXT_PUBLIC_DISCORD_APP_CLIENT_SECRET,
+    //     grant_type: 'authorization_code',
+    //     code: code,
+    //     redirect_uri: `${process.env.NEXT_PUBLIC_API_ROOT}/api/oauth/discord/redirect`,
+    //     scope: 'identify',
+    //   }
 
-      const response = await fetch('https://discord.com/api/oauth2/token', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      });
+    //   const response = await fetch('https://discord.com/api/oauth2/token', {
+    //     method: 'POST',
+    //     body: JSON.stringify(data),
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded'
+    //     }
+    //   });
 
-      const responseData = await response.json();
+    //   const responseData = await response.json();
 
-      console.log(responseData.access_token); // Here is your access token
-    }
+    //   console.log(responseData.access_token); // Here is your access token
+    // }
   };
 
   // 임시 스타일 정의
