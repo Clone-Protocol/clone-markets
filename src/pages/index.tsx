@@ -11,8 +11,8 @@ import { DehydratedState, HydrationBoundary, QueryClient, dehydrate } from '@tan
 import { fetchAssets } from '~/features/Markets/Assets.query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { useSearchParams } from 'next/navigation'
-import { fetchCheckReferralCode, fetchLinkReferralCode } from '~/utils/fetch_netlify'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { fetchCheckReferralCode, fetchLinkDiscordAccess, fetchLinkReferralCode } from '~/utils/fetch_netlify'
 import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
@@ -48,7 +48,8 @@ export const getStaticProps = (async () => {
 }>
 
 const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { publicKey, connected } = useWallet()
+  const { publicKey, connected, signMessage } = useWallet()
+  const router = useRouter()
 
   //for referral 
   const [isCompleteInitRefer, _] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
@@ -80,15 +81,41 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
     }
   }, [connected, publicKey, refCode])
 
-  //for discord username
-  const discordUsernameParam = params.get('discordUsername')
-  const setDiscordUsername = useSetAtom(discordUsername)
-
+  //for discord accesstoken
+  const discordAccessToken = params.get('accessToken')
   useEffect(() => {
-    if (discordUsernameParam) {
-      setDiscordUsername(discordUsernameParam)
+    const signAccessToken = async () => {
+      if (discordAccessToken && signMessage) {
+        try {
+          const signature = await signMessage(new TextEncoder().encode(discordAccessToken))
+          console.log('signature', signature)
+          if (signature) {
+            //store signature to db
+            const result = await fetchLinkDiscordAccess(new TextDecoder().decode(signature))
+            console.log('result', result)
+            if (result.successful) {
+              console.log('successful')
+              //@TODO: show success dialog
+              //@TODO: redirect to main
+              router.replace('/')
+            }
+          }
+        } catch (e) {
+          console.error('e', e)
+          //@TODO: show denied dialog
+          router.replace('/')
+        }
+      }
     }
-  }, [discordUsernameParam])
+    signAccessToken()
+  }, [discordAccessToken, signMessage])
+
+  // const setDiscordUsername = useSetAtom(discordUsername)
+  // useEffect(() => {
+  //   if (discordUsernameParam) {
+  //     setDiscordUsername(discordUsernameParam)
+  //   }
+  // }, [discordUsernameParam])
 
   return (
     <div>

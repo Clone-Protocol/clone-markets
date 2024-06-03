@@ -33,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       },
     });
 
+    return res.redirect(`${process.env.NEXT_PUBLIC_API_ROOT}/?accessToken=${accessToken}`);
   } catch (error) {
     console.error(`Error in getting token or user data from Discord API: ${error.message}`);
     // return res.status(500).send('Server Error');
@@ -40,10 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   // This logs the user's data
-  console.log(userResponse.data);
-  const username = userResponse.data.username
+  // console.log(userResponse.data);
+  // const username = userResponse.data.username
   // Then redirect the user back to your react app
-  res.redirect(`${process.env.NEXT_PUBLIC_API_ROOT}?discordUsername=${username}`);
-  // res.status(200).json({ username: userResponse.data.username });
-  // res.status(200).json({ message: 'Hello from Next.js!' })
+  // res.redirect(`${process.env.NEXT_PUBLIC_API_ROOT}?discordUsername=${username}`);
 }
