@@ -18,6 +18,8 @@ import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
+import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
+import { LinkDiscordAccessStatus, generateDiscordLinkMessage } from 'functions/link-discord-access/link-discord-access'
 import { discordUsername } from '~/features/globalAtom'
 import { useAtom, useSetAtom } from 'jotai'
 
@@ -85,15 +87,15 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   const discordAccessToken = params.get('accessToken')
   useEffect(() => {
     const signAccessToken = async () => {
-      if (discordAccessToken && signMessage) {
+      if (publicKey && discordAccessToken && signMessage) {
         try {
-          const signature = await signMessage(new TextEncoder().encode(discordAccessToken))
-          console.log('signature', signature)
+          const signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
           if (signature) {
             //store signature to db
-            const result = await fetchLinkDiscordAccess(new TextDecoder().decode(signature))
-            console.log('result', result)
-            if (result.successful) {
+            const { result }: { result: LinkDiscordAccessStatus } = await fetchLinkDiscordAccess(
+              publicKey.toString(), bs58.encode(signature), discordAccessToken
+            )
+            if (result === LinkDiscordAccessStatus.SUCCESS) {
               console.log('successful')
               //@TODO: show success dialog
               //@TODO: redirect to main
