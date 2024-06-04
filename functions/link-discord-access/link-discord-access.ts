@@ -64,6 +64,7 @@ export const handler: Handler = async (event, context) => {
       result = LinkDiscordAccessStatus.UNKNOWN_ERROR
     }
   }
+  console.log('r', result)
 
   return {
     statusCode: 200,

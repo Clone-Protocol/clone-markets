@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from '@mui/material';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import { styled } from '@mui/material/styles'
@@ -31,7 +30,7 @@ const DiscordAuthButton = () => {
       <Typography variant='p'>Link your Discord account</Typography>
       <MenuIcon srcImage={DiscordIcon} hoverImage={DiscordHoverIcon} alt="discord" />
     </LinkButton>
-    : <Box><Typography variant='p'>Discord: {discordUsernameValue}</Typography></Box>
+    : <Box><Typography variant='p'>Signed with Discord</Typography></Box>
 };
 
 const LinkButton = styled(Button)`

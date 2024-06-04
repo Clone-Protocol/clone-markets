@@ -22,6 +22,7 @@ import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { LinkDiscordAccessStatus, generateDiscordLinkMessage } from 'functions/link-discord-access/link-discord-access'
 import { discordUsername } from '~/features/globalAtom'
 import { useAtom, useSetAtom } from 'jotai'
+import { useSnackbar } from 'notistack'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -52,6 +53,7 @@ export const getStaticProps = (async () => {
 const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { publicKey, connected, signMessage } = useWallet()
   const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar()
 
   //for referral 
   const [isCompleteInitRefer, _] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
@@ -84,6 +86,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   }, [connected, publicKey, refCode])
 
   //for discord accesstoken
+  const setDiscordUsername = useSetAtom(discordUsername)
   const discordAccessToken = params.get('accessToken')
   useEffect(() => {
     const signAccessToken = async () => {
@@ -91,20 +94,23 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
         try {
           const signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
           if (signature) {
-            //store signature to db
             const { result }: { result: LinkDiscordAccessStatus } = await fetchLinkDiscordAccess(
               publicKey.toString(), bs58.encode(signature), discordAccessToken
             )
             if (result === LinkDiscordAccessStatus.SUCCESS) {
-              console.log('successful')
-              //@TODO: show success dialog
-              //@TODO: redirect to main
-              router.replace('/')
+              enqueueSnackbar('Successfully linked', { variant: 'success' })
+              setDiscordUsername('signed')
+            } else if (result === LinkDiscordAccessStatus.ADDRESS_ALREADY_LINKED) {
+              enqueueSnackbar('Address already linked', { variant: 'warning' })
+              setDiscordUsername('signed')
+            } else {
+              enqueueSnackbar('Failed to sign message', { variant: 'error' })
             }
           }
         } catch (e) {
           console.error('e', e)
-          //@TODO: show denied dialog
+          enqueueSnackbar('Failed to sign message', { variant: 'error' })
+        } finally {
           router.replace('/')
         }
       }
@@ -112,12 +118,6 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
     signAccessToken()
   }, [discordAccessToken, signMessage])
 
-  // const setDiscordUsername = useSetAtom(discordUsername)
-  // useEffect(() => {
-  //   if (discordUsernameParam) {
-  //     setDiscordUsername(discordUsernameParam)
-  //   }
-  // }, [discordUsernameParam])
 
   return (
     <div>
