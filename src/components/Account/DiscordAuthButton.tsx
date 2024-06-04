@@ -3,9 +3,6 @@ import { useAtomValue } from 'jotai';
 import React from 'react';
 import { styled } from '@mui/material/styles'
 import { discordUsername } from '~/features/globalAtom';
-import DiscordIcon from 'public/images/more/discord.svg'
-import DiscordHoverIcon from 'public/images/more/discord-hover.svg'
-import { MenuIcon } from '../Common/MoreMenu';
 
 const DiscordAuthButton = () => {
   const discordUsernameValue = useAtomValue(discordUsername)
@@ -16,30 +13,27 @@ const DiscordAuthButton = () => {
     window.location.href = url;
   };
 
-  const buttonStyle = {
-    color: 'white',
-    fontSize: '12px',
-    padding: '4px',
-    width: '180px',
-    borderRadius: '5px',
-    border: '1px solid white',
-  };
-
   return !discordUsernameValue ?
-    <LinkButton onClick={discordLogin} style={buttonStyle} >
-      <Typography variant='p'>Link your Discord account</Typography>
-      <MenuIcon srcImage={DiscordIcon} hoverImage={DiscordHoverIcon} alt="discord" />
+    <LinkButton onClick={discordLogin}>
+      <Typography variant='p_sm'>Link your Discord account </Typography><Typography variant='p_lg'>+</Typography>
     </LinkButton>
-    : <Box><Typography variant='p'>Signed with Discord</Typography></Box>
+    : <Box><Typography variant='p_sm' color='#c4b5fd'>Signed with Discord</Typography></Box>
 };
 
 const LinkButton = styled(Button)`
   display: flex;
   gap: 5px;
   align-items: center;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.07);
+  width: 170px;
+  height: 24px;
+  padding: 6px 15px;
+  color: #c4b5fd;
+  font-size: 10px;
   &:hover {
-    background: #000;
+    background-color: rgba(255, 255, 255, 0.14);
   }
-      `
+`
 
 export default DiscordAuthButton;
