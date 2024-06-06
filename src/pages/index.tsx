@@ -11,14 +11,18 @@ import { DehydratedState, HydrationBoundary, QueryClient, dehydrate } from '@tan
 import { fetchAssets } from '~/features/Markets/Assets.query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { useSearchParams } from 'next/navigation'
-import { fetchCheckReferralCode, fetchLinkReferralCode } from '~/utils/fetch_netlify'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { fetchCheckReferralCode, fetchLinkDiscordAccess, fetchLinkReferralCode } from '~/utils/fetch_netlify'
 import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
-import { fetchCheckReferral } from '~/features/Points/PointStatus.query'
+import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
+import { LinkDiscordAccessStatus, generateDiscordLinkMessage } from 'functions/link-discord-access/link-discord-access'
+import { discordUsername } from '~/features/globalAtom'
+import { useAtom, useSetAtom } from 'jotai'
+import { useSnackbar } from 'notistack'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -47,7 +51,9 @@ export const getStaticProps = (async () => {
 }>
 
 const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { publicKey, connected } = useWallet()
+  const { publicKey, connected, signMessage } = useWallet()
+  const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar()
 
   //for referral 
   const [isCompleteInitRefer, _] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
@@ -78,6 +84,40 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
       }
     }
   }, [connected, publicKey, refCode])
+
+  //for discord accesstoken
+  const setDiscordUsername = useSetAtom(discordUsername)
+  const discordAccessToken = params.get('accessToken')
+  useEffect(() => {
+    const signAccessToken = async () => {
+      if (publicKey && discordAccessToken && signMessage) {
+        try {
+          const signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
+          if (signature) {
+            const { result }: { result: LinkDiscordAccessStatus } = await fetchLinkDiscordAccess(
+              publicKey.toString(), bs58.encode(signature), discordAccessToken
+            )
+            if (result === LinkDiscordAccessStatus.SUCCESS) {
+              enqueueSnackbar('Successfully linked', { variant: 'success' })
+              setDiscordUsername('signed')
+            } else if (result === LinkDiscordAccessStatus.ADDRESS_ALREADY_LINKED) {
+              enqueueSnackbar('Address already linked', { variant: 'warning' })
+              setDiscordUsername('signed')
+            } else {
+              enqueueSnackbar('Failed to sign message', { variant: 'error' })
+            }
+          }
+        } catch (e) {
+          console.error('e', e)
+          enqueueSnackbar('Failed to sign message', { variant: 'error' })
+        } finally {
+          router.replace('/')
+        }
+      }
+    }
+    signAccessToken()
+  }, [discordAccessToken, signMessage])
+
 
   return (
     <div>

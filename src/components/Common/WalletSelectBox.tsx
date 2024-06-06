@@ -15,6 +15,7 @@ import { useClone } from '~/hooks/useClone';
 import { ON_USD } from '~/utils/constants';
 import { formatLocaleAmount } from '~/utils/numbers';
 import { useClickOutside } from '~/hooks/useClickOutside';
+import DiscordAuthButton from '../Account/DiscordAuthButton';
 
 const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }) => {
   const { enqueueSnackbar } = useSnackbar()
@@ -82,6 +83,11 @@ const WalletSelectBox = ({ show, onHide }: { show: boolean, onHide: () => void }
       <AssetBox>
         <Typography variant='h3'>${formatLocaleAmount(balance?.onusdVal)}</Typography> <Typography variant='p_lg'>{ON_USD}</Typography>
       </AssetBox>
+      {publicKey &&
+        <Box display='flex' justifyContent='center' my='16px'>
+          <DiscordAuthButton />
+        </Box>
+      }
     </WalletWrapper>
   ) : <></>
 }

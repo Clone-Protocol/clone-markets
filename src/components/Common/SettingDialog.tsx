@@ -5,12 +5,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FadeTransition } from '~/components/Common/Dialog'
 import { CloseButton } from '~/components/Common/CommonButtons'
 import { IndicatorGreen, IndicatorRed, IndicatorStatus, IndicatorYellow } from './StatusIndicator';
-import IconShare from 'public/images/icon-share.svg'
 import { useSnackbar } from 'notistack';
 import { useAtom, useSetAtom } from 'jotai';
 import { priorityFee, priorityFeeIndex, rpcEndpoint, rpcEndpointIndex } from '~/features/globalAtom';
 import { CUSTOM_RPC_INDEX, DEFAULT_PRIORITY_FEE_INDEX, DEVNET_PUBLIC, DEV_RPCs, IS_DEV, MAINNET_PUBLIC, MAIN_RPCs, PRIORITY_FEES } from '~/data/networks';
-import Image from 'next/image';
 import { measureRPCPings } from '~/utils/network_ping';
 
 const SettingDialog = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
