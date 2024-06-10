@@ -5,10 +5,14 @@ import { FailedStatusBox } from '~/components/Common/TransactionStateSnackbar';
 import SupportDiscordIcon from 'public/images/support-button-discord.svg'
 import Image from 'next/image';
 import * as Sentry from "@sentry/nextjs";
-import Error, { ErrorProps } from "next/error";
-import { NextPage } from 'next';
+import Error from "next/error";
+import { useEffect } from "react";
 
-const CustomErrorComponent: NextPage<ErrorProps> = (props) => {
+export default function GlobalError({ error }: { error: Error }) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
   return (
     <StyledSection sx={{ color: '#fff' }}>
       <Container>
@@ -21,11 +25,3 @@ const CustomErrorComponent: NextPage<ErrorProps> = (props) => {
     </StyledSection>
   )
 }
-
-CustomErrorComponent.getInitialProps = async (contextData) => {
-  await Sentry.captureUnderscoreErrorException(contextData);
-
-  return Error.getInitialProps(contextData);
-}
-
-export default CustomErrorComponent
