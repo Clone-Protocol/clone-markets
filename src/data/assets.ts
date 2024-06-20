@@ -13,6 +13,7 @@ export enum AssetTickers {
     doge = 3,
     bnb = 4,
     apt = 5,
+    pepe1m = 6,
 }
 
 export enum Asset {
@@ -22,6 +23,7 @@ export enum Asset {
     Doge,
     Bnb,
     Apt,
+    Pepe1M,
 }
 
 export enum AssetType {
@@ -33,7 +35,7 @@ export const DEFAULT_ASSET_ID = AssetTickers.arbitrum
 export const DEFAULT_ASSET_LINK = "/trade/arbitrum"
 
 //@MEMO: to add more asset, need to adjust here
-export const MAX_POOLS_FOR_SHOW = 6
+export const MAX_POOLS_FOR_SHOW = 7
 
 export const ASSETS = [
     {
@@ -83,6 +85,14 @@ export const ASSETS = [
         ticker: 'apt',
         pythSymbol: 'Crypto.APT/USD',
         mainColor: '#A9A9A9',
+    },
+    {
+        tickerName: 'Cloned 1MPepe',
+        tickerSymbol: 'cl1MPEPE',
+        tickerIcon: '/images/assets/on-pepe.svg',
+        ticker: 'pepe1m',
+        pythSymbol: 'Crypto.PEPE/USD',
+        mainColor: '#008000',
     },
 ]
 
@@ -149,6 +159,15 @@ export const assetMapping = (index: number) => {
             pythSymbol = 'Crypto.APT/USD'
             supabaseSymbol = pythSymbol
             break
+        case Asset.Pepe1M:
+            tickerName = 'Cloned 1MPepe'
+            tickerSymbol = 'cl1MPEPE'
+            tickerIcon = '/images/assets/on-pepe.svg'
+            ticker = 'pepe1m'
+            assetType = AssetType.Crypto
+            pythSymbol = 'Crypto.PEPE/USD'
+            supabaseSymbol = pythSymbol
+            break
         default:
             throw new Error('Not supported')
     }
@@ -205,5 +224,9 @@ export const ASSETS_DESC = [
     {
         ticker: 'apt',
         desc: "clAPT, the cloned asset of APT, offers traders exposure to APT token without ever leaving the Solana ecosystem. The APT blockchain is known for its high throughput and low latency. APT supports secure and sophisticated dApps. clAPT provides Solana users with the ability to natively trade APT, capitalizing on the advantages of both the APT chain and Solana ecosystems."
-    }
+    },
+    {
+        ticker: 'pepe1m',
+        desc: "cl1MPEPE, the cloned asset of 1MPEPE, offers traders exposure to 1MPEPE token without ever leaving the Solana ecosystem. The 1MPEPE blockchain is known for its high throughput and low latency. 1MPEPE supports secure and sophisticated dApps. cl1MPEPE provides Solana users with the ability to natively trade 1MPEPE, capitalizing on the advantages of both the 1MPEPE chain and Solana ecosystems."
+    },
 ]
