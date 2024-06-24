@@ -1,3 +1,5 @@
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
+
 const cspHeader = `
     // default-src 'self';
     // script-src 'self' 'unsafe-eval' 'unsafe-inline';
@@ -52,6 +54,10 @@ const nextConfig = {
         },
       ],
     })
+
+    config.plugins.push(sentryWebpackPlugin({
+      applicationKey: "incept-sentry"
+    }))
 
     return config
   },

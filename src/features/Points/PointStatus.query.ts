@@ -40,24 +40,15 @@ export const fetchStatus = async ({ userPubKey }: { userPubKey: PublicKey | null
   console.log('fetchStatus')
   const userPoints: UserPointsView[] = await fetchUserPoints(userPubKey.toString())
 
-  //const userBonus: UserBonus = await fetchAllUserBonus();
   const userAddress = userPubKey.toString()
   const userBonus: UserBonus = await fetchStakingUserBonus(userAddress);
 
-  const matchPythUser = userBonus.pyth.length > 0 ? userBonus.pyth[0] : undefined;
-  const matchJupUser = userBonus.jup.length > 0 ? userBonus.jup[0] : undefined;
-
-  // const matchPythUser = userBonus.pyth.find((pythUser) => {
-  //   return pythUser.user_address === userAddress
-  // })
-
-  // const matchJupUser = userBonus.jup.find((jupUser) => {
-  //   return jupUser.user_address === userAddress
-  // })
+  const matchPythUser = userBonus.pyth?.length > 0 ? userBonus.pyth[0] : undefined;
+  const matchJupUser = userBonus.jup?.length > 0 ? userBonus.jup[0] : undefined;
 
   const multipleTier = calculateMultiplierForUser(matchJupUser?.tier, matchPythUser?.tier)
 
-  if (userPoints.length === 0) return null
+  if (userPoints?.length === 0) return null
 
   return {
     myRank: userPoints[0].rank,
