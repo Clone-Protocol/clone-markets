@@ -1,4 +1,4 @@
-import { Query, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { ChartElem } from './Liquidity.query'
 import { fetchPythPriceHistory, Range } from '~/utils/pyth'
 import { FilterTime } from '~/components/Charts/TimeTabs'
@@ -115,6 +115,4 @@ export function usePriceHistoryQuery({ timeframe, pythSymbol, refetchOnMount, en
     enabled
   })
 }
-
-
 
