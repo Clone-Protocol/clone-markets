@@ -1,7 +1,6 @@
 import { Handler } from '@netlify/functions'
 import { createClient } from '@supabase/supabase-js'
 
-
 export const handler: Handler = async (event, context) => {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
   console.log('get-users-all-bonus')
@@ -19,6 +18,13 @@ export const handler: Handler = async (event, context) => {
   let { data: data2 } = await rpcCall2;
   // console.log('data2', data2)
 
+  //@TODO: get drift stakers
+  // const rpcCall3 = supabase.from(
+  //   "drift_stakers_top_100_cloners"
+  // ).select().eq('user_address', params.userAddress);
+  // let { data: data3 } = await rpcCall3;
+  let data3 = []
+
   if (error !== null) {
     console.log(error)
     return { statusCode: 500, body: JSON.stringify(error) }
@@ -26,7 +32,8 @@ export const handler: Handler = async (event, context) => {
 
   const resultObj = {
     pyth: data,
-    jup: data2
+    jup: data2,
+    drift: data3
   }
 
   return {

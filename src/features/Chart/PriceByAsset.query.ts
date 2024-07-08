@@ -74,7 +74,7 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol, networkEn
 
   const lastEntry = chartData[chartData.length - 1];
 
-  let previousPrice = chartData[0].value
+  const previousPrice = chartData[0].value
   currentPrice = lastEntry.value;
   rateOfPrice = currentPrice - previousPrice
   percentOfRate = 100 * rateOfPrice / previousPrice
