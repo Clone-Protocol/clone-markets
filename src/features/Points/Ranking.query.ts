@@ -41,7 +41,7 @@ export const fetchRanking = async () => {
       return driftUser.user_address === user.user_address
     })
 
-    const multipleTier = calculateMultiplierForUser(matchJupUser?.tier, matchPythUser?.tier)
+    const multipleTier = calculateMultiplierForUser(matchJupUser?.tier, matchPythUser?.tier, matchDriftUser?.tier)
 
     result.push({
       id,
