@@ -29,15 +29,15 @@ export const fetchRanking = async () => {
     //   return pythUser.address === user.user_address
     // })
 
-    const matchPythUser = userBonus.pyth.find((pythUser) => {
+    const matchPythUser = userBonus?.pyth.find((pythUser) => {
       return pythUser.user_address === user.user_address
     })
 
-    const matchJupUser = userBonus.jup.find((jupUser) => {
+    const matchJupUser = userBonus?.jup.find((jupUser) => {
       return jupUser.user_address === user.user_address
     })
 
-    const matchDriftUser = userBonus.drift.find((driftUser) => {
+    const matchDriftUser = userBonus?.drift.find((driftUser) => {
       return driftUser.user_address === user.user_address
     })
 

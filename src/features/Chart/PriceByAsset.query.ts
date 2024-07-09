@@ -47,7 +47,7 @@ export const fetchOraclePriceHistory = async ({ timeframe, pythSymbol, networkEn
   const rescaleFactor = pythSymbol === "Crypto.PEPE/USD" ? 1_000_000 : 1
 
   const pythHistoricalData = await fetchPythPriceHistory(pythSymbol, range)
-  if (pythHistoricalData.length === 0) {
+  if (pythHistoricalData?.length === 0) {
     return {
       chartData: [],
       currentPrice: 0,
