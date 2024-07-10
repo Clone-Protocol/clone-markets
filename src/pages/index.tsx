@@ -20,9 +20,10 @@ import useLocalStorage from '~/hooks/useLocalStorage'
 import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { LinkDiscordAccessStatus, generateDiscordLinkMessage } from 'functions/link-discord-access/link-discord-access'
-import { discordUsername } from '~/features/globalAtom'
-import { useAtom, useSetAtom } from 'jotai'
+import { cloneClient, discordUsername } from '~/features/globalAtom'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useSnackbar } from 'notistack'
+import { buildAuthTx, solanaLedgerSignTx } from '~/utils/ledger'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -86,13 +87,26 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   }, [connected, publicKey, refCode])
 
   //for discord accesstoken
+  const clientApp = useAtomValue(cloneClient)
   const setDiscordUsername = useSetAtom(discordUsername)
   const discordAccessToken = params.get('accessToken')
   useEffect(() => {
     const signAccessToken = async () => {
-      if (publicKey && discordAccessToken && signMessage) {
+      if (publicKey && discordAccessToken && signMessage && clientApp) {
         try {
           const signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
+          // @TODO: for ledger
+          // const ledgerAcc = 0
+          // const tx = await buildAuthTx(generateDiscordLinkMessage(discordAccessToken).toString());
+          // tx.feePayer = publicKey;
+          // tx.recentBlockhash = (await clientApp?.provider.connection.getLatestBlockhash()).blockhash
+          // const signature = await solanaLedgerSignTx({
+          //   tx,
+          //   signer: publicKey,
+          //   account: ledgerAcc,
+          //   // change: 0
+          // })
+
           if (signature) {
             const { result }: { result: LinkDiscordAccessStatus } = await fetchLinkDiscordAccess(
               publicKey.toString(), bs58.encode(signature), discordAccessToken
@@ -115,6 +129,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
         }
       }
     }
+
     signAccessToken()
   }, [discordAccessToken, signMessage])
 
