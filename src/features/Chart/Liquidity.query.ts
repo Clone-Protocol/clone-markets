@@ -75,7 +75,7 @@ const aggregatePoolData = (poolDataArray: ResponseValue[], interval: Interval): 
   setDatetime(startingDate)
   const dates = generateDates(startingDate, interval)
 
-  for (let i = 0; i < dates.length; i++) {
+  for (let i = 0; i < dates?.length; i++) {
 
     const currentDate = getDTKeys(dates[i])
     let record: AggregatedData = {

@@ -11,7 +11,7 @@ export const fetchTicketRanking = async ({ userPubKey }: { userPubKey: PublicKey
   console.log('fetchStatus')
   const userGiveaways: UserGiveaway[] = await fetchUserGiveaway(userPubKey.toString())
 
-  if (userGiveaways.length === 0) return null
+  if (userGiveaways?.length === 0) return null
 
   const userGiveaway = userGiveaways[0]
 
