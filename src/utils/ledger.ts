@@ -5,7 +5,7 @@ import {
   Signer,
   Transaction,
 } from "@solana/web3.js";
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
+// import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 // import Transport from "@ledgerhq/hw-transport-node-hid";
 import { TransactionInstruction } from "@solana/web3.js";
 
