@@ -4,18 +4,13 @@ import axios from "axios"
 import { ed25519 } from "@noble/curves/ed25519"
 import { PublicKey } from "@solana/web3.js"
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes"
+import { Transaction } from "@solana/web3.js"
 
 export enum LinkDiscordAccessStatus {
   SUCCESS = 0,
   ADDRESS_ALREADY_LINKED = 1,
   INVALID_SIGNATURE = 2,
   UNKNOWN_ERROR = 3,
-}
-
-export const generateDiscordLinkMessage = (accessToken: string) => {
-  return new TextEncoder().encode(
-    `Please sign this message to link your discord account.\nAccess token: ${accessToken}`
-  )
 }
 
 export const generateDiscordLinkRawMessage = (accessToken: string) => {
@@ -30,11 +25,21 @@ export const handler: Handler = async (event, context) => {
   const signature = params.signature!
   const accessToken = params.accessToken!
 
-  // Validate signature
-  const message = generateDiscordLinkMessage(accessToken)
+  const message = generateDiscordLinkRawMessage(accessToken)
   const encodedSignature = new Uint8Array(bs58.decode(signature))
-  const pubkey = new PublicKey(userAddress)
-  const isSignatureValid = ed25519.verify(encodedSignature, message, pubkey.toBytes())
+  // const pubkey = new PublicKey(userAddress)
+  // const isSignatureValid = ed25519.verify(encodedSignature, message, pubkey.toBytes())
+
+  // Validate signature
+  const signedTx = Transaction.from(encodedSignature);
+  const inx = signedTx.instructions[2];
+
+  let isSignatureValid = true
+  if (!inx.programId.equals(new PublicKey(process.env.NEXT_PUBLIC_CLONE_PROGRAM_ID!))) isSignatureValid = false
+  if (inx.data.toString() != message) isSignatureValid = false
+  if (!signedTx.verifySignatures()) isSignatureValid = false
+
+  console.log('inx', inx)
 
   if (!isSignatureValid) {
     return {
