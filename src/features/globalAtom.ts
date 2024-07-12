@@ -34,8 +34,6 @@ export const priorityFee = atom<FeeLevel>(PRIORITY_FEES[DEFAULT_PRIORITY_FEE_IND
 export const discordUsername = atom('')
 // export const discordAccessToken = atom('')
 
-export const isConnectLedger = atom(false)
-
 // for clone specific atoms
 export const cloneClient = atom<CloneClient | null>(null)
 

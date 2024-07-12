@@ -17,13 +17,13 @@ import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
-import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
+import { IS_COMPLETE_INIT_REFER, IS_CONNECT_LEDGER } from '~/data/localstorage'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { LinkDiscordAccessStatus, generateDiscordLinkMessage, generateDiscordLinkRawMessage } from 'functions/link-discord-access/link-discord-access'
-import { cloneClient, discordUsername, isConnectLedger, rpcEndpoint } from '~/features/globalAtom'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { discordUsername, rpcEndpoint } from '~/features/globalAtom'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useSnackbar } from 'notistack'
-import { buildAuthTx } from '~/utils/ledger'
+import { buildAuthTx, solanaLedgerSignTx } from '~/utils/ledger'
 import { getCloneClient } from '~/features/baseQuery'
 
 //SSR
@@ -90,7 +90,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   //for discord accesstoken
   const networkEndpoint = useAtomValue(rpcEndpoint)
   const setDiscordUsername = useSetAtom(discordUsername)
-  const [atomIsConnectLedger, setAtomIsConnectLedger] = useAtom(isConnectLedger)
+  const [isConnectLedger, setIsConnectLedger] = useLocalStorage(IS_CONNECT_LEDGER, false)
   const discordAccessToken = params.get('accessToken')
   useEffect(() => {
     const signAccessToken = async () => {
@@ -98,7 +98,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
         try {
           let signature
 
-          if (!atomIsConnectLedger) {
+          if (!isConnectLedger) {
             signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
           } else {
             console.log('ledger mode')
@@ -109,7 +109,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
 
             const signedTx = await signTransaction!(tx);
             signature = signedTx.serialize();
-
+            // const ledgerAcc = 0
             // signature = await solanaLedgerSignTx({
             //   tx,
             //   signer: publicKey,
@@ -120,13 +120,14 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
           console.log('s', signature)
 
           if (signature) {
-            const { result }: { result: LinkDiscordAccessStatus } = atomIsConnectLedger ? await fetchLinkDiscordAccessLedger(
+            const { result }: { result: LinkDiscordAccessStatus } = isConnectLedger ? await fetchLinkDiscordAccessLedger(
               publicKey.toString(), bs58.encode(signature), discordAccessToken
             ) : await fetchLinkDiscordAccess(
               publicKey.toString(), bs58.encode(signature), discordAccessToken
             )
 
-            setAtomIsConnectLedger(false)
+            setIsConnectLedger(false)
+
             if (result === LinkDiscordAccessStatus.SUCCESS) {
               enqueueSnackbar('Successfully linked', { variant: 'success' })
               setDiscordUsername('signed')

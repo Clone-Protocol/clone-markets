@@ -6,7 +6,7 @@ import {
   Transaction,
 } from "@solana/web3.js";
 // import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
-// import Transport from "@ledgerhq/hw-transport-node-hid";
+// import Transport from "@ledgerhq/hw-transport-webhid";
 import { TransactionInstruction } from "@solana/web3.js";
 
 // const INS_GET_APP_CONFIG = 0x04;

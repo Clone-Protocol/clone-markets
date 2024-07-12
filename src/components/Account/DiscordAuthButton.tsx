@@ -1,12 +1,14 @@
 import { Box, Button, Typography } from '@mui/material';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import React from 'react';
 import { styled } from '@mui/material/styles'
-import { discordUsername, isConnectLedger } from '~/features/globalAtom';
+import { discordUsername } from '~/features/globalAtom';
+import useLocalStorage from '~/hooks/useLocalStorage';
+import { IS_CONNECT_LEDGER } from '~/data/localstorage';
 
 const DiscordAuthButton = () => {
   const discordUsernameValue = useAtomValue(discordUsername)
-  const setIsConnectLedger = useSetAtom(isConnectLedger)
+  const [_, setIsConnectLedger] = useLocalStorage(IS_CONNECT_LEDGER, false)
 
   const discordLogin = async () => {
     const url = process.env.NEXT_PUBLIC_DISCORD_OAUTH_URL || '';
