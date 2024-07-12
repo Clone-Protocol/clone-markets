@@ -12,17 +12,19 @@ import { fetchAssets } from '~/features/Markets/Assets.query'
 import { IS_NOT_LOCAL_DEVELOPMENT } from '~/utils/constants'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { fetchCheckReferralCode, fetchLinkDiscordAccess, fetchLinkReferralCode } from '~/utils/fetch_netlify'
+import { fetchCheckReferralCode, fetchLinkDiscordAccess, fetchLinkDiscordAccessLedger, fetchLinkReferralCode } from '~/utils/fetch_netlify'
 import ReferralTextDialog from '~/components/Points/ReferralTextDialog'
 import { useEffect, useState } from 'react'
 import ReferralCodePutDialog from '~/components/Points/ReferralCodePutDialog'
 import useLocalStorage from '~/hooks/useLocalStorage'
-import { IS_COMPLETE_INIT_REFER } from '~/data/localstorage'
+import { IS_COMPLETE_INIT_REFER, IS_CONNECT_LEDGER } from '~/data/localstorage'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
-import { LinkDiscordAccessStatus, generateDiscordLinkMessage } from 'functions/link-discord-access/link-discord-access'
-import { discordUsername } from '~/features/globalAtom'
-import { useAtom, useSetAtom } from 'jotai'
+import { LinkDiscordAccessStatus, generateDiscordLinkMessage, generateDiscordLinkRawMessage } from 'functions/link-discord-access/link-discord-access'
+import { discordUsername, rpcEndpoint } from '~/features/globalAtom'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useSnackbar } from 'notistack'
+import { buildAuthTx, solanaLedgerSignTx } from '~/utils/ledger'
+import { getCloneClient } from '~/features/baseQuery'
 
 //SSR
 // export async function getServerSideProps({ req, res }) {
@@ -51,7 +53,7 @@ export const getStaticProps = (async () => {
 }>
 
 const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { publicKey, connected, signMessage } = useWallet()
+  const { publicKey, connected, signMessage, signTransaction } = useWallet()
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -86,17 +88,46 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   }, [connected, publicKey, refCode])
 
   //for discord accesstoken
+  const networkEndpoint = useAtomValue(rpcEndpoint)
   const setDiscordUsername = useSetAtom(discordUsername)
+  const [isConnectLedger, setIsConnectLedger] = useLocalStorage(IS_CONNECT_LEDGER, false)
   const discordAccessToken = params.get('accessToken')
   useEffect(() => {
     const signAccessToken = async () => {
       if (publicKey && discordAccessToken && signMessage) {
         try {
-          const signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
+          let signature
+
+          if (!isConnectLedger) {
+            signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
+          } else {
+            console.log('ledger mode')
+            const tx = await buildAuthTx(generateDiscordLinkRawMessage(discordAccessToken));
+            tx.feePayer = publicKey;
+            const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
+            tx.recentBlockhash = (await cloneProgram?.provider.connection.getLatestBlockhash()).blockhash
+
+            const signedTx = await signTransaction!(tx);
+            signature = signedTx.serialize();
+            // const ledgerAcc = 0
+            // signature = await solanaLedgerSignTx({
+            //   tx,
+            //   signer: publicKey,
+            //   account: ledgerAcc,
+            //   // change: 0
+            // })
+          }
+          console.log('s', signature)
+
           if (signature) {
-            const { result }: { result: LinkDiscordAccessStatus } = await fetchLinkDiscordAccess(
+            const { result }: { result: LinkDiscordAccessStatus } = isConnectLedger ? await fetchLinkDiscordAccessLedger(
+              publicKey.toString(), bs58.encode(signature), discordAccessToken
+            ) : await fetchLinkDiscordAccess(
               publicKey.toString(), bs58.encode(signature), discordAccessToken
             )
+
+            setIsConnectLedger(false)
+
             if (result === LinkDiscordAccessStatus.SUCCESS) {
               enqueueSnackbar('Successfully linked', { variant: 'success' })
               setDiscordUsername('signed')
@@ -115,6 +146,7 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
         }
       }
     }
+
     signAccessToken()
   }, [discordAccessToken, signMessage])
 
