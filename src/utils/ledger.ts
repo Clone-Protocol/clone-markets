@@ -1,8 +1,5 @@
 import {
-  Connection,
   PublicKey,
-  SignatureStatus,
-  Signer,
   Transaction,
 } from "@solana/web3.js";
 // import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'

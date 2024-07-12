@@ -1,17 +1,10 @@
 import { Handler } from "@netlify/functions"
 import { createClient } from "@supabase/supabase-js"
 import axios from "axios"
-import { ed25519 } from "@noble/curves/ed25519"
 import { PublicKey } from "@solana/web3.js"
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes"
 import { Transaction } from "@solana/web3.js"
-
-export enum LinkDiscordAccessStatus {
-  SUCCESS = 0,
-  ADDRESS_ALREADY_LINKED = 1,
-  INVALID_SIGNATURE = 2,
-  UNKNOWN_ERROR = 3,
-}
+import { LinkDiscordAccessStatus } from "functions/link-discord-access/link-discord-access"
 
 export const generateDiscordLinkRawMessage = (accessToken: string) => {
   return `Please sign this message to link your discord account.\nAccess token: ${accessToken}`
@@ -27,8 +20,6 @@ export const handler: Handler = async (event, context) => {
 
   const message = generateDiscordLinkRawMessage(accessToken)
   const encodedSignature = new Uint8Array(bs58.decode(signature))
-  // const pubkey = new PublicKey(userAddress)
-  // const isSignatureValid = ed25519.verify(encodedSignature, message, pubkey.toBytes())
 
   // Validate signature
   const signedTx = Transaction.from(encodedSignature);
