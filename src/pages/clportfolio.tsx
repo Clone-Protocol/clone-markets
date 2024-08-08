@@ -8,7 +8,7 @@ const IportfolioPage = () => {
     <div>
       <StyledSection>
         <Container>
-          <PortfolioView />
+          {/* <PortfolioView /> */}
         </Container>
       </StyledSection>
     </div>

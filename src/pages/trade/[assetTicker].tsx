@@ -82,11 +82,11 @@ const AssetPage = ({ dehydratedState, assetId }: InferGetStaticPropsType<typeof 
         <Stack direction={isMobileOnSize ? 'column' : 'row'} gap={1} justifyContent="center" alignItems={isMobileOnSize ? "center" : ""}>
           <Box minWidth={isMobileOnSize ? '360px' : '750px'}>
             <HydrationBoundary state={dehydratedState}>
-              <MarketDetail assetId={assetId} />
+              {/* <MarketDetail assetId={assetId} /> */}
             </HydrationBoundary>
           </Box>
           <Box width={showTrading ? '100%' : '360px'} height='100%' overflow={showTrading ? 'auto' : 'hidden'} display={showTrading ? 'flex' : 'block'} justifyContent={showTrading ? 'center' : ''} position={showTrading ? 'fixed' : 'relative'} bgcolor={showTrading ? '#000' : 'transparent'} top={showTrading ? '45px' : 'inherit'} mb={showTrading ? '180px' : '0px'}>
-            {isShowTradingBox && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />}
+            {/* {isShowTradingBox && <TradingBox assetId={assetId} onSelectAssetId={handleSelectAssetId} />} */}
           </Box>
         </Stack>
       </StyledSection>
