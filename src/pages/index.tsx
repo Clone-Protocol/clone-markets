@@ -58,97 +58,97 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
   const { enqueueSnackbar } = useSnackbar()
 
   //for referral 
-  const [isCompleteInitRefer, _] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
-  const params = useSearchParams()
-  const refCode = params.get('referralCode')
-  const [showReferralTextDialog, setShowReferralTextDialog] = useState(false)
-  const [showReferralCodePutDlog, setShowReferralCodePutDlog] = useState(false)
-  const [referralStatus, setReferralStatus] = useState(0)
+  // const [isCompleteInitRefer, _] = useLocalStorage(IS_COMPLETE_INIT_REFER, false)
+  // const params = useSearchParams()
+  // const refCode = params.get('referralCode')
+  // const [showReferralTextDialog, setShowReferralTextDialog] = useState(false)
+  // const [showReferralCodePutDlog, setShowReferralCodePutDlog] = useState(false)
+  // const [referralStatus, setReferralStatus] = useState(0)
 
-  useEffect(() => {
-    if (connected && publicKey) {
-      if (refCode) {
-        console.log('refCode', refCode)
-        fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
-          console.log('res', res)
-          const { status } = res
-          setReferralStatus(status)
-          setShowReferralCodePutDlog(false)
-          setShowReferralTextDialog(true)
-        })
-      } else {
-        fetchCheckReferralCode(publicKey.toString()).then((res) => {
-          console.log('res', res)
-          if (res.successful) {
-            setShowReferralCodePutDlog(true)
-          }
-        })
-      }
-    }
-  }, [connected, publicKey, refCode])
+  // useEffect(() => {
+  //   if (connected && publicKey) {
+  //     if (refCode) {
+  //       console.log('refCode', refCode)
+  //       fetchLinkReferralCode(publicKey.toString(), parseInt(refCode).toString()).then((res) => {
+  //         console.log('res', res)
+  //         const { status } = res
+  //         setReferralStatus(status)
+  //         setShowReferralCodePutDlog(false)
+  //         setShowReferralTextDialog(true)
+  //       })
+  //     } else {
+  //       fetchCheckReferralCode(publicKey.toString()).then((res) => {
+  //         console.log('res', res)
+  //         if (res.successful) {
+  //           setShowReferralCodePutDlog(true)
+  //         }
+  //       })
+  //     }
+  //   }
+  // }, [connected, publicKey, refCode])
 
-  //for discord accesstoken
-  const networkEndpoint = useAtomValue(rpcEndpoint)
-  const setDiscordUsername = useSetAtom(discordUsername)
-  const [isConnectLedger, setIsConnectLedger] = useLocalStorage(IS_CONNECT_LEDGER, false)
-  const discordAccessToken = params.get('accessToken')
-  useEffect(() => {
-    const signAccessToken = async () => {
-      if (publicKey && discordAccessToken && signMessage) {
-        try {
-          let signature
+  // //for discord accesstoken
+  // const networkEndpoint = useAtomValue(rpcEndpoint)
+  // const setDiscordUsername = useSetAtom(discordUsername)
+  // const [isConnectLedger, setIsConnectLedger] = useLocalStorage(IS_CONNECT_LEDGER, false)
+  // const discordAccessToken = params.get('accessToken')
+  // useEffect(() => {
+  //   const signAccessToken = async () => {
+  //     if (publicKey && discordAccessToken && signMessage) {
+  //       try {
+  //         let signature
 
-          if (!isConnectLedger) {
-            signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
-          } else {
-            console.log('ledger mode')
-            const tx = await buildAuthTx(generateDiscordLinkRawMessage(discordAccessToken));
-            tx.feePayer = publicKey;
-            const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
-            tx.recentBlockhash = (await cloneProgram?.provider.connection.getLatestBlockhash()).blockhash
+  //         if (!isConnectLedger) {
+  //           signature = await signMessage(generateDiscordLinkMessage(discordAccessToken))
+  //         } else {
+  //           console.log('ledger mode')
+  //           const tx = await buildAuthTx(generateDiscordLinkRawMessage(discordAccessToken));
+  //           tx.feePayer = publicKey;
+  //           const { cloneClient: cloneProgram } = await getCloneClient(networkEndpoint)
+  //           tx.recentBlockhash = (await cloneProgram?.provider.connection.getLatestBlockhash()).blockhash
 
-            const signedTx = await signTransaction!(tx);
-            signature = signedTx.serialize();
-            // const ledgerAcc = 0
-            // signature = await solanaLedgerSignTx({
-            //   tx,
-            //   signer: publicKey,
-            //   account: ledgerAcc,
-            //   // change: 0
-            // })
-          }
-          console.log('s', signature)
+  //           const signedTx = await signTransaction!(tx);
+  //           signature = signedTx.serialize();
+  //           // const ledgerAcc = 0
+  //           // signature = await solanaLedgerSignTx({
+  //           //   tx,
+  //           //   signer: publicKey,
+  //           //   account: ledgerAcc,
+  //           //   // change: 0
+  //           // })
+  //         }
+  //         console.log('s', signature)
 
-          if (signature) {
-            const { result }: { result: LinkDiscordAccessStatus } = isConnectLedger ? await fetchLinkDiscordAccessLedger(
-              publicKey.toString(), bs58.encode(signature), discordAccessToken
-            ) : await fetchLinkDiscordAccess(
-              publicKey.toString(), bs58.encode(signature), discordAccessToken
-            )
+  //         if (signature) {
+  //           const { result }: { result: LinkDiscordAccessStatus } = isConnectLedger ? await fetchLinkDiscordAccessLedger(
+  //             publicKey.toString(), bs58.encode(signature), discordAccessToken
+  //           ) : await fetchLinkDiscordAccess(
+  //             publicKey.toString(), bs58.encode(signature), discordAccessToken
+  //           )
 
-            setIsConnectLedger(false)
+  //           setIsConnectLedger(false)
 
-            if (result === LinkDiscordAccessStatus.SUCCESS) {
-              enqueueSnackbar('Successfully linked', { variant: 'success' })
-              setDiscordUsername('signed')
-            } else if (result === LinkDiscordAccessStatus.ADDRESS_ALREADY_LINKED) {
-              enqueueSnackbar('Address already linked', { variant: 'warning' })
-              setDiscordUsername('signed')
-            } else {
-              enqueueSnackbar('Failed to sign message', { variant: 'error' })
-            }
-          }
-        } catch (e) {
-          console.error('e', e)
-          enqueueSnackbar('Failed to sign message', { variant: 'error' })
-        } finally {
-          router.replace('/')
-        }
-      }
-    }
+  //           if (result === LinkDiscordAccessStatus.SUCCESS) {
+  //             enqueueSnackbar('Successfully linked', { variant: 'success' })
+  //             setDiscordUsername('signed')
+  //           } else if (result === LinkDiscordAccessStatus.ADDRESS_ALREADY_LINKED) {
+  //             enqueueSnackbar('Address already linked', { variant: 'warning' })
+  //             setDiscordUsername('signed')
+  //           } else {
+  //             enqueueSnackbar('Failed to sign message', { variant: 'error' })
+  //           }
+  //         }
+  //       } catch (e) {
+  //         console.error('e', e)
+  //         enqueueSnackbar('Failed to sign message', { variant: 'error' })
+  //       } finally {
+  //         router.replace('/')
+  //       }
+  //     }
+  //   }
 
-    signAccessToken()
-  }, [discordAccessToken, signMessage])
+  //   signAccessToken()
+  // }, [discordAccessToken, signMessage])
 
 
   return (
@@ -157,22 +157,22 @@ const Home = ({ dehydratedState }: InferGetStaticPropsType<typeof getStaticProps
         <Container>
           {publicKey &&
             <Box>
-              <PortfolioBalance />
+              {/* <PortfolioBalance /> */}
 
               <Divider />
-              {IS_DEV &&
+              {/* {IS_DEV &&
                 <Box mb='30px'>
                   <GetUSDiBadge />
                 </Box>
-              }
+              } */}
             </Box>
           }
           <HydrationBoundary state={dehydratedState}>
-            <MarketList />
+            {/* <MarketList /> */}
           </HydrationBoundary>
 
-          <ReferralTextDialog referralStatus={referralStatus} open={showReferralTextDialog} handleClose={() => setShowReferralTextDialog(false)} />
-          <ReferralCodePutDialog open={showReferralCodePutDlog && !isCompleteInitRefer} handleClose={() => { setShowReferralCodePutDlog(false); }} />
+          {/* <ReferralTextDialog referralStatus={referralStatus} open={showReferralTextDialog} handleClose={() => setShowReferralTextDialog(false)} />
+          <ReferralCodePutDialog open={showReferralCodePutDlog && !isCompleteInitRefer} handleClose={() => { setShowReferralCodePutDlog(false); }} /> */}
         </Container>
       </StyledSection>
     </div>

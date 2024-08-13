@@ -24,7 +24,7 @@ export const PoolStatusButton = ({ status }: { status: Status }) => {
 
 export const FrozenButton = () => {
   return (
-    <a href="https://docs.clone.so/clone-mainnet-guide/pool-status" target="_blank">
+    <a href="https://cloneprotocol.medium.com/6ff85310b458" target="_blank">
       <CustomButton sx={{ backgroundColor: 'rgba(255, 142, 79, 0.2)', ':hover': { backgroundColor: 'rgba(255, 142, 79, 0.35)' } }}>
         <Image src={WarningFrozen} alt='frozen' /> <Typography variant='p'>Frozen</Typography>
       </CustomButton>
@@ -34,7 +34,7 @@ export const FrozenButton = () => {
 
 export const ExtractionButton = () => {
   return (
-    <a href="https://docs.clone.so/clone-mainnet-guide/pool-status" target="_blank">
+    <a href="https://cloneprotocol.medium.com/6ff85310b458" target="_blank">
       <CustomButton sx={{ backgroundColor: 'rgba(79, 229, 255, 0.2)', ':hover': { backgroundColor: 'rgba(79, 229, 255, 0.35)' } }}>
         <Image src={WarningExtraction} alt='extraction' /> <Typography variant='p'>Extraction</Typography>
       </CustomButton>
@@ -44,7 +44,7 @@ export const ExtractionButton = () => {
 
 export const LiquidationButton = () => {
   return (
-    <a href="https://docs.clone.so/clone-mainnet-guide/pool-status" target="_blank">
+    <a href="https://cloneprotocol.medium.com/6ff85310b458" target="_blank">
       <CustomButton sx={{ backgroundColor: 'rgba(237, 37, 37, 0.2)', ':hover': { backgroundColor: 'rgba(237, 37, 37, 0.35)' } }}>
         <Image src={WarningLiquidation} alt='frozen' /> <Typography variant='p'>Liquidation</Typography>
       </CustomButton>
