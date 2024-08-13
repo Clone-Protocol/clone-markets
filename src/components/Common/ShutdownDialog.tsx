@@ -20,7 +20,7 @@ const ShutdownDialog = ({ open }: { open: boolean }) => {
 
               <p>Your passion and support have been instrumental to our journey. Together, we’ve made significant strides in decentralized finance. We’re incredibly proud of what we’ve accomplished.</p>
 
-              <p>We understand this news is unexpected and want to ensure a smooth transition. For detailed instructions on LP collateral withdrawal and clAsset holder procedures, please visit <a href='https://docs.clone.so' target='_blank' rel='noreferrer'><span style={{ color: '#c4b5fd', textDecoration: 'underline' }}>our docs page.</span></a></p>
+              <p>We understand this news is unexpected and want to ensure a smooth transition. For detailed instructions on LP collateral withdrawal and clAsset holder procedures, please visit <a href='https://cloneprotocol.medium.com/6ff85310b458' target='_blank' rel='noreferrer'><span style={{ color: '#c4b5fd', textDecoration: 'underline' }}>our docs page.</span></a></p>
 
               <p>Stay connected through our Twitter/X and Discord for the latest updates and to continue engaging with the Clone community.</p>
 
